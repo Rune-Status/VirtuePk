@@ -3,11 +3,9 @@ package org.virtue.game.node.entity.player.screen;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.messages.InterfaceMessage;
 import org.virtue.network.messages.InterfaceSettingsMessage;
-import org.virtue.network.messages.VarpMessage;
-import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceSettingsEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 import org.virtue.utility.DisplayMode;
 
 /**

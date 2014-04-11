@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 
 import org.virtue.Constants;
+import org.virtue.config.OutgoingOpcodes;
+import org.virtue.config.UpdateMasks;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
@@ -28,7 +30,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		player.getViewport().loadGlobalPlayers(new RS3PacketBuilder());
 		RS3PacketBuilder stream = new RS3PacketBuilder();
 		RS3PacketBuilder updateBlockData = new RS3PacketBuilder();
-		stream.putPacketVarShort(96);
+		stream.putPacketVarShort(OutgoingOpcodes.PLAYER_UPDATE_PACKET);
 		renderLocalPlayers(stream, updateBlockData, true);
 		renderLocalPlayers(stream, updateBlockData, false);
 		renderOutsidePlayers(stream, updateBlockData, true);
@@ -176,27 +178,27 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		/*
 		 * Signifies an update.
 		 */
-		buffer.putBits(1, 1);
+		buffer.putBits(1, 1);//update=true
 		/*
 		 * Signifies a removal.
 		 */
-		buffer.putBits(1, 0);
+		buffer.putBits(1, 0);//maskUpdate=false
 		/*
 		 * Signifies nothing happened.
 		 */
-		buffer.putBits(2, 0);
+		buffer.putBits(2, 0);//type=0
 		player.getViewport().getRegionHashes()[playerIndex] = localPlayer.getLastTile() == null ? localPlayer.getTile().getRegionHash() : localPlayer.getLastTile().getRegionHash();
 		int hash = localPlayer.getTile().getRegionHash();
 		if (hash == player.getViewport().getRegionHashes()[playerIndex]) {
 			/*
 			 * Signifies no update is required.
 			 */
-			buffer.putBits(1, 0);
+			buffer.putBits(1, 0);//regionUpdate=false
 		} else {
 			/*
 			 * Signifies an update is required.
 			 */
-			buffer.putBits(1, 1);
+			buffer.putBits(1, 1);//regionUpdate=true
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
@@ -286,6 +288,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		int xOffset = localPlayer.getTile().getX() - localPlayer.getLastTile().getX();
 		int yOffset = localPlayer.getTile().getY() - localPlayer.getLastTile().getY();
 		int planeOffset = localPlayer.getTile().getPlane() - localPlayer.getLastTile().getPlane();
+		int unknownValue = 0;//TODO: Figure out what this is...
 		if (Math.abs(localPlayer.getTile().getX() - localPlayer.getLastTile().getX()) <= 14 && Math.abs(localPlayer.getTile().getY() - localPlayer.getLastTile().getY()) <= 14) {
 			/*
 			 * Signifies X & Y distance if out of local range
@@ -300,12 +303,13 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			/*
 			 * Signifies the new coordinates data.
 			 */
-			buffer.putBits(12, yOffset + (xOffset << 5) + (planeOffset << 10));
+			buffer.putBits(15, yOffset + (xOffset << 5) + (planeOffset << 10) + (unknownValue << 12));
 		} else {
 			/*
 			 * Signifies the update was within range.
 			 */
 			buffer.putBits(1, 1);
+			buffer.putBits(3, unknownValue);
 			/*
 			 * Signifies the new coordinates data.
 			 */
@@ -368,6 +372,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			 * Lets the client know how to move the character
 			 */
 			buffer.putBits(running ? 4 : 3, opcode);
+			
+			if (!running) {
+				buffer.putBits(1, 0);//Not really sure what this does; leaving it off to be safe
+			}
 		}
 	}
 	
@@ -468,7 +476,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 */
 	private void performFlagUpdate(Player p, RS3PacketBuilder data, boolean needAppearenceUpdate, boolean added) {
 		if (needAppearenceUpdate) {
-			data.put(0x10);
+			data.put(UpdateMasks.APPEARANCE);
 			p.getUpdateArchive().getAppearance().load();
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
 				p.getUpdateArchive().queue(AppearanceBlock.class);
@@ -492,7 +500,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		int currentPlane = currentRegionHash >> 16;
 		int planeOffset = currentPlane - lastPlane;
 		if (lastRegionX == currentRegionX && lastRegionY == currentRegionY) {
-			buffer.putBits(2, 1);
+			buffer.putBits(2, 1);//type=1
 			buffer.putBits(2, planeOffset);
 		} else if (Math.abs(currentRegionX - lastRegionX) <= 1 && Math.abs(currentRegionY - lastRegionY) <= 1) {
 			int opcode;
@@ -514,13 +522,14 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				opcode = 4;
 			else
 				opcode = 6;
-			buffer.putBits(2, 2);
+			buffer.putBits(2, 2);//type=2
 			buffer.putBits(5, (planeOffset << 3) + (opcode & 0x7));
 		} else {
 			int xOffset = currentRegionX - lastRegionX;
 			int yOffset = currentRegionY - lastRegionY;
-			buffer.putBits(2, 3);
-			buffer.putBits(18, (yOffset & 0xff) + ((xOffset & 0xff) << 8) + (planeOffset << 16));
+			int unknownValue = 0;//TODO: Find out what this is...
+			buffer.putBits(2, 3);//type=3
+			buffer.putBits(20, (yOffset & 0xff) + ((xOffset & 0xff) << 8) + (planeOffset << 16) + (unknownValue << 18));
 		}
 	}
 }

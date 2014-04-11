@@ -108,10 +108,11 @@ public class Appearance {
 			mask |= title > 32 && title <= 37 ? 0x80 : 0x40;
 		}
 		buffer.put(mask);
-		if (title != -1)
-			buffer.putString("Swag");
-		buffer.put(skullIconId);
-		buffer.put(prayerIconId);
+		if (title != -1) {
+			buffer.putGJString("Swag");
+		}
+		//buffer.put(skullIconId);
+		//buffer.put(prayerIconId);
 		buffer.put(state.equals(RenderState.AS_INVISIBLE) ? 1 : 0);
 		if (state.equals(RenderState.AS_NPC) && npcId >= 0) {
 			buffer.putShort(-1);
