@@ -19,7 +19,7 @@ public class MapSceneEncoder implements PacketEncoder<Viewport> {
 			node.setSendGPI(false);
 		}
 		buffer.putByteS(0);//Map size
-		buffer.put(4);//Region count
+		buffer.put(9);//Region count
 		buffer.putShort(node.getPlayer().getTile().getChunkY());
 		buffer.putLEShortA(node.getPlayer().getTile().getChunkX());
 		buffer.putByteC(forceSend ? 1 : 0);

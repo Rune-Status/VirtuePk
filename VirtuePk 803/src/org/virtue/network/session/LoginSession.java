@@ -11,6 +11,7 @@ import org.virtue.network.loginserver.LoginServer;
 import org.virtue.network.loginserver.LoginSessions;
 import org.virtue.network.loginserver.output.LoginRequestEncoder;
 import org.virtue.network.messages.LoginResponse;
+import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
@@ -42,11 +43,7 @@ public class LoginSession extends Session {
 		}
 		System.out.println("Processing account...");
 		Account account = (Account) message;
-		getContext().getChannel().getPipeline().addFirst("packetDecoder", new RS2PacketFilter());
-		disconnect();
-		WorldSession gameSession = new WorldSession(getContext());
-		getContext().setAttachment(gameSession);
-		account.setSession(gameSession);
+		LoginType type = account.getFlag("login_type", LoginType.WORLD_PART_2);
 		LoginSessions.getPendingRequests().add(account);
 		Player player;
 		if (Lobby.getPlayers().contains(account.getUsername().getAccountName())) {
@@ -54,12 +51,21 @@ public class LoginSession extends Session {
 		} else {
 			player = new Player(account);
 		}
-		gameSession.setPlayer(player);
 		if (Constants.LOGIN_SERVER) {
 			LoginServer.getConnection().send(LoginRequestEncoder.class, player);
 		} else {
 			Launcher.getEngine().getLoginFilter().getPendingLogins().add(account);
 		}
+		if (type.equals(LoginType.WORLD_PART_1)) {
+			account.setSession(this);
+			return;//Don't change the session type yet if the login type is world part 1
+		}
+		getContext().getChannel().getPipeline().addFirst("packetDecoder", new RS2PacketFilter());
+		disconnect();
+		WorldSession gameSession = new WorldSession(getContext());
+		getContext().setAttachment(gameSession);
+		account.setSession(gameSession);
+		gameSession.setPlayer(player);
 	}
 
 	@Override

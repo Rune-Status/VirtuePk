@@ -48,14 +48,14 @@ public class RS2LoginDecoder extends FrameDecoder implements ChannelHandler {
 		if (connectionRequest != 16 && connectionRequest != 19 && connectionRequest != 18) {
 			throw new ProtocolException("Invalid connecton: " + connectionRequest);
 		}
-		type = (connectionRequest == 19 ? LoginType.LOBBY : LoginType.WORLD);
+		type = (connectionRequest == 19 ? LoginType.LOBBY : LoginType.WORLD_PART_2);
 		buffer.readShort();
 		int version = buffer.readInt();
 		int subVersion = buffer.readInt();
 		if (version != Cache.SERVER_REVISION && subVersion != Cache.SUB_BUILD) {
 			throw new ProtocolException("Client out of date.");
 		}
-		if (type.equals(LoginType.WORLD)) {
+		if (type.equals(LoginType.WORLD_PART_2)) {
 			buffer.readByte();
 		}
 		int readableBytes = buffer.readShort() & 0xFFFF;
@@ -87,7 +87,7 @@ public class RS2LoginDecoder extends FrameDecoder implements ChannelHandler {
 		String username = unEncrypted ? BufferUtils.readString(xteaBuffer) : Base37Utils.decodeBase37(xteaBuffer.readLong());
 		DisplayMode displayMode = DisplayMode.forId(xteaBuffer.readByte());
 		xteaBuffer.readByte();
-		if (type.equals(LoginType.WORLD)) {
+		if (type.equals(LoginType.WORLD_PART_2)) {
 			xteaBuffer.readShort();
 			xteaBuffer.readShort();
 		}
@@ -100,7 +100,7 @@ public class RS2LoginDecoder extends FrameDecoder implements ChannelHandler {
 			for (int i = 0; i < crcValues.length; i++)
 				crcValues[i] = xteaBuffer.readInt();
 			break;
-		case WORLD:
+		case WORLD_PART_2:
 			BufferUtils.readString(xteaBuffer);
 			xteaBuffer.readInt();
 			xteaBuffer.skipBytes(xteaBuffer.readByte() & 0xFF);

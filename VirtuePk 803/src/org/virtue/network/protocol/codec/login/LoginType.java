@@ -7,13 +7,18 @@ package org.virtue.network.protocol.codec.login;
 public enum LoginType {
 
 	/**
-	 * Represents loggin into the <i>lobby</i>.
+	 * Represents logging into the <i>lobby</i>.
 	 */
-	LOBBY, 
+	LOBBY,
 	
 	/**
-	 * Represents loggin into the <i>world</i>.
+	 * Represents the initial world login (before NIS is sent)
 	 */
-	WORLD
+	WORLD_PART_1, 
+	
+	/**
+	 * Represents the world login stage after NIS is sent
+	 */
+	WORLD_PART_2
 	
 }

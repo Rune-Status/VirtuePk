@@ -17,6 +17,7 @@ public class GameScreenEncoder implements PacketEncoder<DisplayMode> {
 		buffer.putPacket(OutgoingOpcodes.WINDOW_PANE_PACKET);
 		buffer.putByteC(0);		
 		buffer.putLEInt(0);
+		System.out.println("Sending game screen: "+node.getScreenId());
 		buffer.putLEShortA(node.getScreenId());
 		buffer.putIntV2(0);
 		buffer.putIntV2(0);

@@ -9,17 +9,17 @@ public enum DisplayMode {
 	/**
 	 * Represents a <i>fixed</i> screen.
 	 */
-	FIXED(548), 
+	FIXED(1477), //548
 	
 	/**
 	 * Represents a <i>resizable</i> screen.
 	 */
-	RESIZABLE(746), 
+	RESIZABLE(1477), //746
 	
 	/**
 	 * Represents a <i>full</i> screen.
 	 */
-	FULL(748),
+	FULL(1477),//748
 	
 	/**
 	 * Represents the lobby screen

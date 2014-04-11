@@ -26,7 +26,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 			}
 		}
 		buffer.putPacketVarByte(2);
-		switch (node.getFlag("login_type", LoginType.WORLD)) {
+		switch (node.getFlag("login_type", LoginType.WORLD_PART_2)) {
 		case LOBBY:
 			System.out.println("Sending lobby login response...");
 			/*
@@ -95,7 +95,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 			buffer.putGJString("127.0.0.1");
 			buffer.endPacketVarByte();
 			return buffer;
-		case WORLD:
+		case WORLD_PART_2:
 			/*
 			 * The rights of the user. Used to first create the client rights
 			 * field for later use.

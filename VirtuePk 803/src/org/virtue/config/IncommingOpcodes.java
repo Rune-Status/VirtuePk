@@ -26,10 +26,16 @@ public class IncommingOpcodes {
 	public final static int SCREEN_PACKET = 70;//803
 	public final static int PING_PACKET = 92;//803
 	public final static int WORLD_LIST_UPDATE = 56;//803
-        public final static int COMMANDS_PACKET = 73;//803
-        
-        public final static int MOUSE_PACKET = 93;//803
-        public final static int WINDOW_FOCUS_PACKET = 105;//803
+	public final static int COMMANDS_PACKET = 73;//803
+	
+	public final static int MOUSE_MOVEMENT_PACKET = 93;//803
+	public final static int KEY_TYPED_PACKET = 1;//803
+	public final static int CAMERA_MOVEMENT_PACKET = 7;//803
+	public final static int WINDOW_FOCUS_PACKET = 105;//803
+	public final static int CLICK_PACKET = 34;//803
+	
+	public final static int WALKING_PACKET = 95;//803
+	public final static int MINI_WALKING_PACKET = 66;//803
 	
 	public final static int ACTION_BUTTON_1_PACKET = 112;//803
 	public final static int ACTION_BUTTON_2_PACKET = 15;//803

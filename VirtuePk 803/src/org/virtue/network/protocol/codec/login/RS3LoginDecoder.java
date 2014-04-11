@@ -48,6 +48,8 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 	 * The default login state.
 	 */
 	private LoginState state = LoginState.CONNECTION_TYPE;
+	
+	private Account account = null;
 
 	//private int loginSize;
     //private int loginType;
@@ -61,6 +63,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			throw new ProtocolException("Bad buffer state.");
 		}
 		int loginOpcode = buf.readUnsignedByte();
+		//System.out.println("Received login request. Opcode="+loginOpcode);
 		switch (loginOpcode) {
 		    case GAME_DATA:
 		        return fetchPlayerData(ctx, buf);
@@ -69,7 +72,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		    	break;
 		    case GAME_LOGIN:
 		    case GAME_RECONNECT:
-		    	type = LoginType.WORLD;
+		    	type = LoginType.WORLD_PART_1;
 		    	break;
 		        //return decodeClientDetails(buf);
 		    default:
@@ -85,7 +88,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			return new LoginResponse(LoginResponse.GAME_UPDATED);//Wrong client version
 			//throw new ProtocolException("Client out of date.");
 		}
-		if (type.equals(LoginType.WORLD)) {
+		if (type.equals(LoginType.WORLD_PART_1)) {
 			buf.readByte();
 		}
 		int secureBufferSize = buf.readShort() & 0xFFFF;
@@ -136,13 +139,13 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		xteaBuffer.skipBytes(24);//24 bytes directly from file
 		
 		String clientSettings = BufferUtils.readString(xteaBuffer);
-		if (type.equals(LoginType.WORLD)) {
+		if (type.equals(LoginType.WORLD_PART_1)) {
 			xteaBuffer.readInt();
 		}
 		int indexFiles = xteaBuffer.readUnsignedByte();
 		int[] crcValues = new int[indexFiles];
 		int crcCount = 0;
-		if (type.equals(LoginType.WORLD)) {
+		if (type.equals(LoginType.WORLD_PART_1)) {
 			crcCount = xteaBuffer.readUnsignedByte();
 		}
 		for (int i = 0; i < crcValues.length; i++) {
@@ -163,7 +166,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 				return new LoginResponse(LoginResponse.BAD_SESSION);
 			}
 			xteaBuffer.readByte();// Final param (2424)
-		} else if (type.equals(LoginType.WORLD)) {
+		} else if (type.equals(LoginType.WORLD_PART_1)) {
 			xteaBuffer.readInt();// Packet receive count
 			xteaBuffer.readInt();//Unknown
 			xteaBuffer.readInt();//Unknown
@@ -197,9 +200,19 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 				}*/
 			}
 		}
-		Account account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
+		account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
 		account.putFlag("login_type", type);
 		return account;
+	}
+
+	private Object fetchPlayerData (ChannelHandlerContext ctx, ChannelBuffer buf) throws ProtocolException {
+		if (account == null) {
+			throw new ProtocolException("Invalid connecton: " + GAME_DATA);
+		}
+		//System.out.println("Received request for player data...");
+		account.removeFlag("login_type");
+		account.putFlag("login_type", LoginType.WORLD_PART_2);
+        return account;
 	}
 	
 	/**
@@ -294,13 +307,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		state = LoginState.CLIENT_DETAILS;
 		return decodeClientDetails(buffer);
 	}*/
-
-	private Object fetchPlayerData (ChannelHandlerContext ctx, ChannelBuffer buf) {
-		System.out.println("Received request for player data...");
-                //if (buf.readByte() == 26) {
-                        return new LoginPayload(LoginType.WORLD, null);
-                //}
-	}
 	
 	/*private Object decodeHeader(ChannelHandlerContext ctx, ChannelBuffer buf) {
                 new SecureRandom().nextInt();

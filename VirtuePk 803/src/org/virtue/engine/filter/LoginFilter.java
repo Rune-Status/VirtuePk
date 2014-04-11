@@ -10,9 +10,11 @@ import org.virtue.game.Lobby;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
+import org.virtue.game.node.entity.player.screen.ScreenConfig;
 import org.virtue.network.RS2Network;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.codec.login.LoginType;
+import org.virtue.network.protocol.packet.encoder.impl.ScreenConfigEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.LoginEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
@@ -39,12 +41,12 @@ public class LoginFilter extends LogicEvent {
 			return;
 		}
 		final Session session = account.getSession();
-		LoginType type = account.getFlag("login_type", LoginType.WORLD);
-		System.out.println("Processing login request for: "+account.getUsername().getAccountName());
-		account.getSession().getTransmitter().send(LoginEncoder.class, account);
+		LoginType type = account.getFlag("login_type", LoginType.WORLD_PART_2);
+		System.out.println("Processing login request for: "+account.getUsername().getAccountName()+" of type: "+type.toString().replace("_", " "));
 		switch (type) {
 		case LOBBY:
 			final Player player1 = new Player(account);
+			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			Lobby.getPlayers().add(player1);
 			int[] varps = ClientVarps.getLobbyVarps();
 			for (int i = 0; i < varps.length; i++) {
@@ -55,8 +57,12 @@ public class LoginFilter extends LogicEvent {
 			}
 			player1.startLobby();
 			break;
-		case WORLD:
+		case WORLD_PART_1:
+			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ScreenConfig());
+			break;
+		case WORLD_PART_2:
 			final Player player;
+			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			if (Lobby.getPlayers().contains(account.getUsername().getAccountName())) {
 				player = Lobby.getPlayer(account.getUsername().getAccountName());
 				Lobby.removePlayer(account.getUsername().getAccountName());
@@ -75,7 +81,9 @@ public class LoginFilter extends LogicEvent {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(account.getUsername().getName() + " has logged into the " + type.toString().toLowerCase() + ".");
+		if (!type.equals(LoginType.WORLD_PART_1)) {
+			System.out.println(account.getUsername().getName() + " has logged into the " + type.toString().split("_")[0].toLowerCase() + ".");
+		}
 	}
 
 	@Override

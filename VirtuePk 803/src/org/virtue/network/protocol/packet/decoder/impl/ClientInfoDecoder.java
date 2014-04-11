@@ -25,7 +25,9 @@ public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
 
     @Override
     public int[] getPossiblePackets() {
-        return new int[] { IncommingOpcodes.MOUSE_PACKET, IncommingOpcodes.WINDOW_FOCUS_PACKET };
+        return new int[] { IncommingOpcodes.MOUSE_MOVEMENT_PACKET, IncommingOpcodes.WINDOW_FOCUS_PACKET,
+        		IncommingOpcodes.KEY_TYPED_PACKET, IncommingOpcodes.CAMERA_MOVEMENT_PACKET,
+        		IncommingOpcodes.CLICK_PACKET };
     }
     
 }
