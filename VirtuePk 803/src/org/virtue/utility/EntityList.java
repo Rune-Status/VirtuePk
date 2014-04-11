@@ -23,35 +23,36 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
     @Override
 	public boolean add(T entity) {
     	synchronized(lock) {
-        add(entity, curIndex);
-        return true;
+	        add(entity, curIndex);
+	        return true;
     	}
     }
 
     public void remove(T entity) {
     	synchronized(lock) {
-        entities[entity.getIndex()] = null;
-        indicies.remove(entity.getIndex());
-        decreaseIndex();
+	        entities[entity.getIndex()] = null;
+	        indicies.remove(entity.getIndex());
+	        decreaseIndex();
     	}
     }
 
     @SuppressWarnings("unchecked")
     public T remove(int index) {
     	synchronized(lock) {
-        Object temp = entities[index];
-        entities[index] = null;
-        indicies.remove(index);
-        decreaseIndex();
-        return (T) temp;
+	        Object temp = entities[index];
+	        entities[index] = null;
+	        indicies.remove(index);
+	        decreaseIndex();
+	        return (T) temp;
     	}
     }
 
     @SuppressWarnings("unchecked")
     public T get(int index) {
     	synchronized(lock) {
-    		if(index >= entities.length)
+    		if(index >= entities.length) {
     			return null;
+    		}
     		return (T) entities[index];
     	}
     }
@@ -84,8 +85,9 @@ public class EntityList<T extends Entity> extends AbstractCollection<T> {
 
     public void decreaseIndex() {
         curIndex--;
-        if (curIndex <= capacity)
+        if (curIndex <= MIN_VALUE) {
             curIndex = MIN_VALUE;
+        }
     }
 
     public boolean contains(T entity) {

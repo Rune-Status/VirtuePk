@@ -4,6 +4,7 @@ import java.net.ProtocolException;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Launcher;
+import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.RS2Network;
 import org.virtue.network.protocol.handlers.PacketHandler;
@@ -53,6 +54,8 @@ public class WorldSession extends Session {
 
 	@Override
 	public void disconnect() {
+		//World.getWorld().removePlayer(player);
+		//player.destroy();
 	}
 
 	/**

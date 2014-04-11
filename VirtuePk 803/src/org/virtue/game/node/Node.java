@@ -29,6 +29,7 @@ public class Node {
 	 * @param index the index to set
 	 */
 	public void setIndex(int index) {
+		//System.out.println("Setting entity index to: "+index);
 		this.index = index;
 	}
 

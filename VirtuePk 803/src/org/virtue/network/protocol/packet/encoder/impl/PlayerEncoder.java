@@ -27,17 +27,21 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	@Override
 	public RS3PacketBuilder buildPacket(Player node) {
 		player = node;
-		player.getViewport().loadGlobalPlayers(new RS3PacketBuilder());
+		if (player.getViewport().isSendGPI()) {
+			throw new RuntimeException("The global player initialisation must be sent first!");
+			//player.getViewport().loadGlobalPlayers(new RS3PacketBuilder());
+		}
 		RS3PacketBuilder stream = new RS3PacketBuilder();
 		RS3PacketBuilder updateBlockData = new RS3PacketBuilder();
 		stream.putPacketVarShort(OutgoingOpcodes.PLAYER_UPDATE_PACKET);
 		renderLocalPlayers(stream, updateBlockData, true);
 		renderLocalPlayers(stream, updateBlockData, false);
+		//System.out.println("After local players: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));
 		renderOutsidePlayers(stream, updateBlockData, true);
 		renderOutsidePlayers(stream, updateBlockData, false);
+		//System.out.println("After global players: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));
 		stream.put(updateBlockData.buffer(), 0, updateBlockData.getPosition());
 		stream.endPacketVarShort();
-		System.out.println(Arrays.toString(stream.buffer()));
 		node.getViewport().setTotalRenderDataSentLength(0);
 		node.getViewport().setLocalPlayersIndexesCount(0);
 		node.getViewport().setOutPlayersIndexesCount(0);
@@ -64,6 +68,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	public void renderLocalPlayers(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, boolean nsn0) {
 		buffer.syncBits();
 		int skip = 0;
+		//System.out.println(player.getViewport().getLocalPlayersIndexesCount()+" local players.");
 		for (int i = 0; i < player.getViewport().getLocalPlayersIndexesCount(); i++) {
 			int playerIndex = player.getViewport().getLocalPlayersIndexes()[i];
 			if (nsn0 ? (0x1 & player.getViewport().getSlotFlags()[playerIndex]) != 0 : (0x1 & player.getViewport().getSlotFlags()[playerIndex]) == 0) {
@@ -76,9 +81,11 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			Player localPlayer = player.getViewport().getLocalPlayers()[playerIndex];
 			if (needsRemove(localPlayer)) {
+				System.out.println("[Local] Removing " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				removePlayer(buffer, playerIndex, localPlayer);
 			} else {
-				updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
+				System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
+				skip = updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
 			}
 		}
 		buffer.unSyncBits();
@@ -94,6 +101,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		buffer.syncBits();
 		int skip = 0;
 		player.getViewport().setLocalAddedPlayers(0);
+		//System.out.println(player.getViewport().getOutPlayersIndexesCount()+" outside players.");
 		for (int counter = 0; counter < player.getViewport().getOutPlayersIndexesCount(); counter++) {
 			int playerIndex = player.getViewport().getOutPlayersIndexes()[counter];
 			if (nsn2 ? (0x1 & player.getViewport().getSlotFlags()[playerIndex]) == 0 : (0x1 & player.getViewport().getSlotFlags()[playerIndex]) != 0) {
@@ -101,22 +109,23 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			if (skip > 0) {
 				skip--;
-				System.err.println("Skip " + skip);
+				//System.err.println("Skip " + skip);
 				player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 				continue;
 			}
 			Player globalPlayer = World.getWorld().getPlayer(playerIndex);
-			if (globalPlayer == null) {
+			/*if (globalPlayer == null) {
 				continue;
-			}
+			}*/
 			if (needsAdd(globalPlayer)) {
-				System.err.println("Adding " + globalPlayer.getAccount().getUsername().getName());
+				System.out.println("[Global] Adding " + globalPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				queueOutsidePlayer(buffer, updateBlockData, globalPlayer, playerIndex);
 			} else {
-				System.err.println("Skipping " + globalPlayer.getAccount().getUsername().getName());
-				skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
+				skip = skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
+				System.out.println("[Global] Skipping from" + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
 			}
 		}
+		buffer.unSyncBits();
 	}
 	
 	
@@ -159,6 +168,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		/*
 		 * Signifies a skip is happening.
 		 */
+		//System.out.println("Packing skip for "+amount+" players...");
 		stream.putBits(2, amount == 0 ? 0 : amount > 255 ? 3 : (amount > 31 ? 2 : 1));
 		if (amount > 0) {
 			/*
@@ -215,13 +225,15 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param playerIndex The index.
 	 * @param nsn0 NSN type.
 	 */
-	public void updatePlayer(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player localPlayer, int counter, int skip, int playerIndex, boolean nsn0) {
+	public int updatePlayer(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player localPlayer, int counter, int skip, int playerIndex, boolean nsn0) {
 		boolean needAppearenceUpdate = needAppearenceUpdate(localPlayer.getIndex(), localPlayer.getUpdateArchive().getAppearance().getEncryptedBuffer());
 		boolean needUpdate = localPlayer.getUpdateArchive().flagged() || needAppearenceUpdate;
+		needUpdate = false;//TODO: Remove this when ready to debug the update block(s)
 		if (needUpdate) {
 			/*
 			 * A flag update is dispatched to render player's physical properties.
 			 */
+			System.out.println("Mask updated needed for "+playerIndex);
 			performFlagUpdate(localPlayer, updateBlockData, needAppearenceUpdate, false);
 		}
 		if (localPlayer.getUpdateArchive().getMovement().hasTeleported()) {
@@ -250,7 +262,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			 */
 			buffer.putBits(2, 0);
 		} else {
-			buffer.putBits(1, 0);
+			buffer.putBits(1, 0);//No update needed
 			for (int indexCounter = counter + 1; indexCounter < player.getViewport().getLocalPlayersIndexesCount(); indexCounter++) {
 				int otherIndex = player.getViewport().getLocalPlayersIndexes()[indexCounter];
 				if (nsn0 ? (0x1 & player.getViewport().getSlotFlags()[otherIndex]) != 0 : (0x1 & player.getViewport().getSlotFlags()[otherIndex]) == 0)
@@ -264,6 +276,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			skipPlayers(buffer, skip);
 			player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 		}
+		return skip;
 	}
 	
 	/**
@@ -437,7 +450,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param skip The skip.
 	 * @param nsn2 NSN type.
 	 */
-	public void skipOutsidePlayer(RS3PacketBuilder buffer, Player outsidePlayer, int playerIndex, int counter, int skip, boolean nsn2) {
+	public int skipOutsidePlayer(RS3PacketBuilder buffer, Player outsidePlayer, int playerIndex, int counter, int skip, boolean nsn2) {
 		int hash = outsidePlayer == null ? player.getViewport().getRegionHashes()[playerIndex] : outsidePlayer.getTile().getRegionHash();
 		if (outsidePlayer != null && hash != player.getViewport().getRegionHashes()[playerIndex]) {
 			/*
@@ -461,10 +474,11 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 					break;
 				}
 				skip++;
-				skipPlayers(buffer, skip);
 				player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 			}
+			skipPlayers(buffer, skip);
 		}
+		return skip;
 	}
 	
 	/**
@@ -479,9 +493,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			data.put(UpdateMasks.APPEARANCE);
 			p.getUpdateArchive().getAppearance().load();
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
-				p.getUpdateArchive().queue(AppearanceBlock.class);
+				//p.getUpdateArchive().queue(AppearanceBlock.class);
 			}
-			p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
+			//p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
 		}
 	}
 	

@@ -279,6 +279,7 @@ public final class RS3PacketBuilder extends RS2HeapBuffer {
 
 	public void unSyncBits() {
 		setOffset((bitPos + 7) / 8);
+		//System.out.println("Byte position: "+((bitPos + 7) / 8));
 	}
 
 	public int getBitPos(int i) {

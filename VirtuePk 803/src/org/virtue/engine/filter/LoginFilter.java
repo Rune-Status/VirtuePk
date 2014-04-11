@@ -19,6 +19,7 @@ import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.LoginEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 import org.virtue.network.session.Session;
+import org.virtue.network.session.WorldSession;
 
 /**
  * @author Taylor Moon
@@ -43,11 +44,13 @@ public class LoginFilter extends LogicEvent {
 		final Session session = account.getSession();
 		LoginType type = account.getFlag("login_type", LoginType.WORLD_PART_2);
 		System.out.println("Processing login request for: "+account.getUsername().getAccountName()+" of type: "+type.toString().replace("_", " "));
+
+		final Player player;
 		switch (type) {
 		case LOBBY:
-			final Player player1 = new Player(account);
+			player = new Player(account);
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
-			Lobby.getPlayers().add(player1);
+			Lobby.addPlayer(player);
 			int[] varps = ClientVarps.getLobbyVarps();
 			for (int i = 0; i < varps.length; i++) {
 				int val = varps[i];
@@ -55,26 +58,30 @@ public class LoginFilter extends LogicEvent {
 					session.getTransmitter().send(VarpEncoder.class, new VarpMessage(i, val));
 				}
 			}
-			player1.startLobby();
+			player.startLobby();
 			break;
 		case WORLD_PART_1:
+			player = null;
 			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ScreenConfig());
-			break;
+			return;
 		case WORLD_PART_2:
-			final Player player;
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			if (Lobby.getPlayers().contains(account.getUsername().getAccountName())) {
 				player = Lobby.getPlayer(account.getUsername().getAccountName());
 				Lobby.removePlayer(account.getUsername().getAccountName());
+				World.getWorld().addPlayer(player);
+			} else if (World.getWorld().contains(account.getUsername().getAccountName())) {
+				player = World.getWorld().getPlayer(account.getUsername().getAccountName());
 			} else {
 				player = new Player(account);
+				World.getWorld().addPlayer(player);
 			}
-			World.getWorld().addPlayer(player);
 			player.getViewport().loadViewport();
 			session.getTransmitter().send(MapSceneEncoder.class, player.getViewport());
 			player.start();
 			break;
 		default:
+			player = null;
 			try {
 				throw new ProtocolException("Unexpected type: " + type);
 			} catch (ProtocolException e) {
@@ -82,7 +89,8 @@ public class LoginFilter extends LogicEvent {
 			}
 		}
 		if (!type.equals(LoginType.WORLD_PART_1)) {
-			System.out.println(account.getUsername().getName() + " has logged into the " + type.toString().split("_")[0].toLowerCase() + ".");
+			((WorldSession) session).setPlayer(player);
+			System.out.println(account.getUsername().getName() + " has logged into the " + type.toString().split("_")[0].toLowerCase() + " (index="+player.getIndex()+").");
 		}
 	}
 

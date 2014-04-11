@@ -14,7 +14,7 @@ public class MapSceneEncoder implements PacketEncoder<Viewport> {
 		buffer.putPacketVarShort(OutgoingOpcodes.STATIC_MAP_REGION_PACKET);
 		boolean forceSend = true;
 		if (node.isSendGPI()) {
-                        forceSend = true;
+			forceSend = true;
 			node.loadGlobalPlayers(buffer);
 			node.setSendGPI(false);
 		}

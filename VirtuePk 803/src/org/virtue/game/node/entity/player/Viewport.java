@@ -108,11 +108,12 @@ public class Viewport {
 		buffer.putBits(30, player.getTile().getTileHash());
 		getLocalPlayers()[player.getIndex()] = player;
 		getLocalPlayersIndexes()[localPlayersIndexesCount++] = player.getIndex();
+		System.out.println("Setting local player at index: "+player.getIndex());
 		for (int playerIndex = 1; playerIndex < 2048; playerIndex++) {
 			if (playerIndex == player.getIndex())
 				continue;
 			Player player = World.getWorld().getPlayer(playerIndex);
-			buffer.putBits(18, getRegionHashes()[playerIndex] = player == null ? 0 : player.getTile().getRegionHash());
+			buffer.putBits(18, getRegionHashes()[playerIndex] = (player == null ? 0 : player.getTile().getRegionHash()));
 			getOutPlayersIndexes()[outPlayersIndexesCount++] = playerIndex;
 		}
 		buffer.unSyncBits();
