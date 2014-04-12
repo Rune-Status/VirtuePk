@@ -1,6 +1,9 @@
 package org.virtue.engine.logic.impl;
 
+import org.virtue.Launcher;
 import org.virtue.engine.logic.LogicEvent;
+import org.virtue.game.World;
+import org.virtue.game.node.entity.player.Player;
 import org.virtue.utility.GameClock;
 
 /**
@@ -14,20 +17,20 @@ public class CharacterLogicUpdateEvent extends LogicEvent {
 
 	@Override
 	public void run() {
-//		try {
-//			for (Player player : World.getWorld().getPlayers()) {
-//				player.onCycle();
-//				player.update();
-//				player.refreshOnDemand();
-//			}
+		try {
+			for (Player player : World.getWorld().getPlayers()) {
+				player.onCycle();
+				player.update();
+				player.refreshOnDemand();
+			}
 //			for (NPC npc : World.getWorld().getNpcs()) {
 //				npc.onCycle();
 //				npc.update();
 //				npc.refreshOnDemand();
 //			}
-//		} catch (Exception e) {
-//			Launcher.getEngine().handleException(e);
-//		}
+		} catch (Exception e) {
+			Launcher.getEngine().handleException(e);
+		}
 	}
 
 	@Override

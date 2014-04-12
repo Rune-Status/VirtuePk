@@ -8,6 +8,7 @@ import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.screen.InterfaceManager;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
+import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
 import org.virtue.network.protocol.render.update.UpdateBlockArchive;
 import org.virtue.utility.DisplayMode;
@@ -104,13 +105,12 @@ public class Player extends Entity {
 	
 	@Override
 	public void update() {
-		// account.getSession().getTransmitter().send(PlayerEncoder.class,
-		// this);
+		account.getSession().getTransmitter().send(PlayerEncoder.class, this);//Send player updates
 	}
 	
 	@Override
 	public void refreshOnDemand() {
-		updateArchive.reset();
+		updateArchive.reset();//Refresh update flags
 	}
 
 	@Override

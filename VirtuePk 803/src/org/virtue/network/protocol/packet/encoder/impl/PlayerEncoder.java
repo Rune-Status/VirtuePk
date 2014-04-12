@@ -1,7 +1,6 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
 import java.security.MessageDigest;
-import java.util.Arrays;
 
 import org.virtue.Constants;
 import org.virtue.config.OutgoingOpcodes;
@@ -41,6 +40,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		renderOutsidePlayers(stream, updateBlockData, false);
 		//System.out.println("After global players: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));
 		stream.put(updateBlockData.buffer(), 0, updateBlockData.getPosition());
+		//System.out.println("After player masks: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));		
 		stream.endPacketVarShort();
 		node.getViewport().setTotalRenderDataSentLength(0);
 		node.getViewport().setLocalPlayersIndexesCount(0);
@@ -226,9 +226,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param nsn0 NSN type.
 	 */
 	public int updatePlayer(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player localPlayer, int counter, int skip, int playerIndex, boolean nsn0) {
-		boolean needAppearenceUpdate = needAppearenceUpdate(localPlayer.getIndex(), localPlayer.getUpdateArchive().getAppearance().getEncryptedBuffer());
+		boolean needAppearenceUpdate = needAppearenceUpdate(localPlayer.getIndex(), localPlayer.getUpdateArchive().getAppearance().getMD5Hash());
 		boolean needUpdate = localPlayer.getUpdateArchive().flagged() || needAppearenceUpdate;
-		needUpdate = false;//TODO: Remove this when ready to debug the update block(s)
+		//needUpdate = false;//TODO: Remove this when ready to debug the update block(s)
 		if (needUpdate) {
 			/*
 			 * A flag update is dispatched to render player's physical properties.
@@ -268,7 +268,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				if (nsn0 ? (0x1 & player.getViewport().getSlotFlags()[otherIndex]) != 0 : (0x1 & player.getViewport().getSlotFlags()[otherIndex]) == 0)
 					continue;
 				Player otherPlayer = player.getViewport().getLocalPlayers()[otherIndex];
-				if (needsRemove(otherPlayer) || otherPlayer.getUpdateArchive().getMovement().hasTeleported() || otherPlayer.getUpdateArchive().getMovement().getNextWalkDirection() != -1 || (otherPlayer.getUpdateArchive().flagged() || needAppearenceUpdate(otherPlayer.getIndex(), otherPlayer.getUpdateArchive().getAppearance().getEncryptedBuffer()))) {
+				if (needsRemove(otherPlayer) || otherPlayer.getUpdateArchive().getMovement().hasTeleported() || otherPlayer.getUpdateArchive().getMovement().getNextWalkDirection() != -1 || (otherPlayer.getUpdateArchive().flagged() || needAppearenceUpdate(otherPlayer.getIndex(), otherPlayer.getUpdateArchive().getAppearance().getMD5Hash()))) {
 					break;
 				}
 				skip++;
@@ -430,7 +430,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		 * Flags the region Y coordinate for the client to update the position.
 		 */
 		buffer.putBits(6, outsidePlayer.getTile().getYInRegion());
-		boolean needAppearenceUpdate = needAppearenceUpdate(outsidePlayer.getIndex(), outsidePlayer.getUpdateArchive().getAppearance().getEncryptedBuffer());
+		boolean needAppearenceUpdate = needAppearenceUpdate(outsidePlayer.getIndex(), outsidePlayer.getUpdateArchive().getAppearance().getMD5Hash());
 		performFlagUpdate(outsidePlayer, updateBlockData, needAppearenceUpdate, true);
 		/*
 		 * Signifies an update has happened.
@@ -489,13 +489,18 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param added If added.
 	 */
 	private void performFlagUpdate(Player p, RS3PacketBuilder data, boolean needAppearenceUpdate, boolean added) {
+		//TODO: Tidy this up so that multiple flag updates can occur
+		data.putShort(0);//Useless
 		if (needAppearenceUpdate) {
 			data.put(UpdateMasks.APPEARANCE);
 			p.getUpdateArchive().getAppearance().load();
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
-				//p.getUpdateArchive().queue(AppearanceBlock.class);
+				p.getUpdateArchive().queue(AppearanceBlock.class);
 			}
-			//p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
+			p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
+			//TODO: Move this to somewhere better...
+			//player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();
+			p.getUpdateArchive().getLiveBlocks()[8] = null;
 		}
 	}
 	

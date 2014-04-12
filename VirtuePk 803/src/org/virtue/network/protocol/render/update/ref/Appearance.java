@@ -96,6 +96,7 @@ public class Appearance {
 	}
 	
 	public void load() {
+		title = -1;//TODO: Remove this stuff - It's only for debugging purposes
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		int mask = 0;
 		if (gender.equals(Gender.FEMALE)) {
@@ -129,47 +130,70 @@ public class Appearance {
 			}
 			Item item = player.getEquipment().getItems().get(Equipment.SLOT_CHEST);
 			buffer.putShort(item == null ? 0x100 + getBodyStyles()[2] : 32768 + item.getEquipId());
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_SHIELD);
-			if (item == null)
+			if (item == null) {
 				buffer.put(0);
-			else
+			} else {
 				buffer.putShort(32768 + item.getEquipId());
+			}
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_CHEST);
-			if (item == null)
+			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[3]);
-			else
+			} else {
 				buffer.put(0);
+			}
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_LEGS);
 			buffer.putShort(item == null ? 0x100 + getBodyStyles()[5] : 32768 + item.getEquipId());
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_HAT);
-			if (item == null)
+			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[0]);
-			else
+			} else {
 				buffer.put(0);
+			}
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_HANDS);
 			buffer.putShort(item == null ? 0x100 + getBodyStyles()[4] : 32768 + item.getEquipId());
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_FEET);
 			buffer.putShort(item == null ? 0x100 + getBodyStyles()[6] : 32768 + item.getEquipId());
+			
 			item = player.getEquipment().getItems().get(gender.equals(Gender.MALE) ? Equipment.SLOT_HAT : Equipment.SLOT_CHEST);
-			if (item == null)
+			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[1]);
-			else
+			} else {
 				buffer.put(0);
+			}
+			
 			item = player.getEquipment().getItems().get(Equipment.SLOT_AURA);
-			if (item == null)
+			if (item == null) {
 				buffer.put(0);
-			else
+			} else {
 				buffer.putShort(32768 + item.getEquipId());
+			}
+			for (int index = 13; index < 15; index++) {//Two extra slots
+				item = player.getEquipment().getItems().get(index);
+				if (item == null)
+					buffer.put(0);
+				else
+					buffer.putShort(32768 + item.getEquipId());
+			}
 			buffer.putShort(0);
-			for (int index = 0; index < getBodyColors().length; index++)
+			for (int index = 0; index < getBodyColors().length; index++) {
 				buffer.put(getBodyColors()[index]);
+			}
 		}
 		buffer.putShort(getRenderEmote());
+		System.out.println("Name: "+player.getAccount().getUsername().getName());
 		buffer.putString(player.getAccount().getUsername().getName());
 		buffer.put(138);
 		buffer.put(138);
 		buffer.put(-1);
-		buffer.put(npcId >= 0 ? 1 : 0);
+		buffer.put(0);
+		//buffer.put(npcId >= 0 ? 1 : 0);
 		if (npcId >= 0) {
 //			NPCDefinitions defs = NPCDefinitions.getNPCDefinitions(npcId);
 //			buffer.putShort(defs.anInt876);
@@ -253,7 +277,7 @@ public class Appearance {
 		return buffer;
 	}
 
-	public byte[] getEncryptedBuffer() {
+	public byte[] getMD5Hash() {
 		return bufferHash;
 	}
 

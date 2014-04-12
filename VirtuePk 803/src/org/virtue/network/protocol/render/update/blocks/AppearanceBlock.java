@@ -17,7 +17,7 @@ public class AppearanceBlock extends UpdateBlock {
 	 */
 	@Override
 	public int getMask() {
-		return 0x10;
+		return 0x80;
 	}
 
 	/**
@@ -40,8 +40,9 @@ public class AppearanceBlock extends UpdateBlock {
 	public void appendToUpdateBlock(RS3PacketBuilder buf, Player player) {
 		byte[] renderData = player.getUpdateArchive().getAppearance().getBuffer();		
 		player.getViewport().setTotalRenderDataSentLength(player.getViewport().getTotalRenderDataSentLength() + renderData.length);
-		player.getViewport().getCachedAppearencesHashes()[player.getIndex()] = player.getUpdateArchive().getAppearance().getEncryptedBuffer();
-		buf.putByteA(renderData.length);
-		buf.put(renderData);
+		player.getViewport().getCachedAppearencesHashes()[player.getIndex()] = player.getUpdateArchive().getAppearance().getMD5Hash();
+		buf.putByteS(renderData.length);
+		buf.putReverseA(renderData, 0, renderData.length);
+		//System.out.println("Appearance block size: "+renderData.length);
 	}
 }
