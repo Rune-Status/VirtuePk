@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver.input;
+package org.virtue.network.dataserver.input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,20 +6,22 @@ import java.util.List;
 import org.virtue.game.Country;
 import org.virtue.game.ServerLocation;
 import org.virtue.game.WorldHub;
-import org.virtue.network.loginserver.handlers.LobbyHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.dataserver.handlers.WorldSubmissionHandler;
+import org.virtue.network.dataserver.message.WorldSubmissionResponse;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
 /**
- * @author Taylor Moon
- * @since Jan 26, 2014
+ * @author Taylor
+ * @date Jan 14, 2014
  */
-public class LobbyDecoder implements PacketDecoder<LobbyHandler> {
+public class WorldSubmissionDecoder implements PacketDecoder<WorldSubmissionHandler> {
 
 	@Override
-	public LobbyHandler decodePacket(RS2PacketReader buffer, Session session, int opcode) {
-		LobbyHandler handler = new LobbyHandler();
+	public WorldSubmissionHandler decodePacket(RS3PacketReader buffer, Session session, int opcode) {
+		WorldSubmissionHandler handler = new WorldSubmissionHandler();
+		handler.putFlag("response", WorldSubmissionResponse.values()[buffer.getInt()]);
 		List<WorldHub> worlds = new ArrayList<>();
 		int size = buffer.get();
 		for (int cycle = 0; cycle < size; cycle++) {
@@ -42,6 +44,6 @@ public class LobbyDecoder implements PacketDecoder<LobbyHandler> {
 
 	@Override
 	public int[] getPossiblePackets() {
-		return new int[] { 3 };
+		return new int[] { 0 };
 	}
 }

@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.KeepAliveHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -13,7 +13,7 @@ import org.virtue.network.session.Session;
 public class KeepAliveDecoder implements PacketDecoder<KeepAliveHandler> {
 
 	@Override
-	public KeepAliveHandler decodePacket(RS2PacketReader packet, Session session, int opcode) {
+	public KeepAliveHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		/*
 		 * Simply used to keep the client and server connected, as a
 		 * verification that connection was not lost.

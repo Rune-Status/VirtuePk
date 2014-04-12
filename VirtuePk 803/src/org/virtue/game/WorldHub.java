@@ -151,7 +151,8 @@ public class WorldHub {
 	 * @param player The player to remove.
 	 */
 	public synchronized void removePlayer(Player player) {
-		removePlayer(player.getAccount().getUsername().getAccountName());
+		PLAYERS.remove(player);
+		//removePlayer(player.getAccount().getUsername().getAccountName());
 	}
 	
 	/**
@@ -195,7 +196,7 @@ public class WorldHub {
 	public void removePlayer(String username) {
 		for (Player player : PLAYERS) {
 			if (player.getAccount().getUsername().getAccountName().equalsIgnoreCase(username)) {
-				removePlayer(player);
+				PLAYERS.remove(player);
 			}
 		}
 	}

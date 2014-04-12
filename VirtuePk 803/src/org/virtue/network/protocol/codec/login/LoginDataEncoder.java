@@ -10,7 +10,7 @@ import org.virtue.network.messages.GameLoginData;
 import org.virtue.network.messages.LobbyLoginData;
 import org.virtue.network.messages.LoginConfigData;
 import org.virtue.network.messages.LoginResponse;
-import org.virtue.network.protocol.packet.RS2Packet;
+import org.virtue.network.protocol.packet.RS3Packet;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.utility.Packet;
 import org.virtue.utility.PacketBuf;

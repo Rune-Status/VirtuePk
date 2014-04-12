@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver;
+package org.virtue.network.dataserver;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -18,7 +18,7 @@ import org.virtue.utility.FileUtils;
  * @author Taylor
  * @version 1.0
  */
-public class LoginServer {
+public class DataServer {
 	
 	/**
 	 * Represents the {@link ClientBootstrap}.
@@ -28,7 +28,7 @@ public class LoginServer {
 	/**
 	 * Represents the connection.
 	 */
-	private static LoginServerConnection connection;
+	private static DataServerConnection connection;
 	
 	/**
 	 * Represents a {@link Map} of packet decoders that will be referred to when a packet
@@ -83,7 +83,7 @@ public class LoginServer {
 			strap.setFactory(new NioClientSocketChannelFactory());
 			strap.setOption("reuseAddress", true);
 			strap.setOption("child.tcpNoDelay", true);
-			strap.setPipelineFactory(new LoginServerPipeline());
+			strap.setPipelineFactory(new DataServerPipeline());
 			strap.connect((SocketAddress) strap.getOption("remoteAddress"));
 		} catch (Exception e) {
 			System.err.println("Failed initializing a connection to login server.");
@@ -94,15 +94,15 @@ public class LoginServer {
 	/**
 	 * @return the connection
 	 */
-	public static LoginServerConnection getConnection() {
+	public static DataServerConnection getConnection() {
 		return connection;
 	}
 
 	/**
 	 * @param connection the connection to set
 	 */
-	public static void setConnection(LoginServerConnection connection) {
-		LoginServer.connection = connection;
+	public static void setConnection(DataServerConnection connection) {
+		DataServer.connection = connection;
 	}
 
 	/**

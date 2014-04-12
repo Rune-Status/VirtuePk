@@ -20,6 +20,11 @@ public class Username {
 	private String displayName;
 	
 	/**
+	 * Represents whether the player has a title or not
+	 */
+	private boolean hasTitle = false;
+	
+	/**
 	 * Constructs a new {@code Username.java}.
 	 * @param username The name of the user's account.
 	 * @param displayName The name to be displayed in game.
@@ -35,6 +40,22 @@ public class Username {
 	 */
 	public Username(String username) {
 		this(username, username);
+	}
+	
+	/**
+	 * Returns whether or not the player has a title
+	 * @return	true if the player has a title, false otherwise
+	 */
+	public boolean hasTitle () {
+		return hasTitle;
+	}
+	
+	/**
+	 * Returns the player's display name with attached titles, if any.
+	 * @return	The name.
+	 */
+	public String getNameWithTitles () {
+		return getName();
 	}
 	
 	/**

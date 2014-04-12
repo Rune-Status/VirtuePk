@@ -34,24 +34,24 @@ public class GameMessageEncoder implements PacketEncoder<GameMessage> {
 			 */
 			bitMask |= 0x1;
 		}
-		if (message.getPlayer().getAccount().getUsername().hasChangedName()) {
-			/*//TODO: Is this used for titles instead?
-			 * Signifies the player has a different display name.
+		if (message.getPlayer().getAccount().getUsername().hasTitle()) {
+			/*
+			 * Signifies the player has a different reply-to name.
 			 */
 			bitMask |= 0x2;
 		}
 		buffer.put(bitMask);
 		if (message.getPlayer().getAccount().getUsername().getName() != null) {
 			/*
-			 * Writes the account name.
-			 */
-			buffer.putString(message.getPlayer().getAccount().getUsername().getName());
-		}
-		if (message.getPlayer().getAccount().getUsername().hasChangedName()) {
-			/*
 			 * Writes the display name.
 			 */
-			buffer.putString(message.getPlayer().getAccount().getUsername().getName());
+			buffer.putString(message.getPlayer().getAccount().getUsername().getNameWithTitles());
+		}
+		if (message.getPlayer().getAccount().getUsername().hasTitle()) {
+			/*
+			 * Writes the protocol display name.
+			 */
+			buffer.putString(message.getPlayer().getAccount().getUsername().getNameAsProtocol().replace('_', ' '));
 		}
 		/*
 		 * Writes the message output.

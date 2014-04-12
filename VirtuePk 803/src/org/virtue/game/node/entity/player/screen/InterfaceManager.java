@@ -1,6 +1,7 @@
 package org.virtue.game.node.entity.player.screen;
 
 import org.virtue.game.node.entity.player.Player;
+import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.InterfaceMessage;
 import org.virtue.network.messages.InterfaceSettingsMessage;
 import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
@@ -29,7 +30,11 @@ public class InterfaceManager {
 	/**
 	 * Represenst if the screen is resizable.
 	 */
-	private boolean resizableScreen = false;
+	private ClientScreen screenInfo = new ClientScreen();
+	
+	public ClientScreen getScreen () {
+		return screenInfo;
+	}
 	
 	/**
 	 * Sends the game screen.
@@ -39,21 +44,27 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
 		sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313]
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30
-		//sendRunClientScript(8862, new Object[]{ 0, 1});//Runscript: [8862, 0, 1]
+		sendCs2(new ClientScriptVar(8862, 0, 1));
+		sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
+		
 		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293]
-		//sendRunClientScript(8862, new Object[]{ 1, 1});//Runscript: [8862, 1, 1]
+		sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
+		
 		sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130]
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(1473, 8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
 		sendInterfaceSettings(1473, 0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536
-		//sendRunClientScript(8862, new Object[]{ 2, 1});//Runscript: [8862, 2, 1]
+		sendCs2(new ClientScriptVar(8862, 2, 1));//Runscript: [8862, 2, 1]
+		
 		sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202]
 		sendInterfaceSettings(1464, 14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
 		sendInterfaceSettings(1464, 12, 2, 7, 2);//IfaceSettings: 95944716, 7, 2, 2
-		//sendRunClientScript(8862, new Object[]{ 3, 1});//Runscript: [8862, 3, 1]
+		sendCs2(new ClientScriptVar(8862, 3, 1));//Runscript: [8862, 3, 1]
+		
 		sendInterface(true, 1477, 323, 1458);//Interface: id=1458, clipped=1, parent=[1477, 323]
 		sendInterfaceSettings(1458, 24, 0, 28, 8388610);//IfaceSettings: 95551512, 28, 0, 8388610
-		//sendRunClientScript(8862, new Object[]{ 4, 1});//Runscript: [8862, 4, 1]
+		sendCs2(new ClientScriptVar(8862, 4, 1));//Runscript: [8862, 4, 1]
+		
 		sendInterface(true, 1477, 239, 1460);//Interface: id=1460, clipped=1, parent=[1477, 239]
 		sendInterface(true, 1477, 249, 1452);//Interface: id=1452, clipped=1, parent=[1477, 249]
 		sendInterface(true, 1477, 259, 1461);//Interface: id=1461, clipped=1, parent=[1477, 259]
@@ -66,42 +77,51 @@ public class InterfaceManager {
 		sendInterfaceSettings(1452, 7, 6, 14, 2);//IfaceSettings: 95158279, 14, 6, 2
 		sendInterfaceSettings(1461, 7, 6, 14, 2);//IfaceSettings: 95748103, 14, 6, 2
 		sendInterfaceSettings(1449, 7, 6, 14, 2);//IfaceSettings: 94961671, 14, 6, 2
-		//sendRunClientScript(8862, new Object[]{ 5, 1});//Runscript: [8862, 5, 1]
+		sendCs2(new ClientScriptVar(8862, 5, 1));//Runscript: [8862, 5, 1]
+		
 		sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371]
-		//sendRunClientScript(8862, new Object[]{ 14, 1});//Runscript: [8862, 14, 1]
+		sendCs2(new ClientScriptVar(8862, 14, 1));//Runscript: [8862, 14, 1]
 		sendInterfaceSettings(550, 25, 0, 500, 510);//IfaceSettings: 36044825, 500, 0, 510
 		sendInterfaceSettings(550, 23, 0, 500, 6);//IfaceSettings: 36044823, 500, 0, 6
+		
 		sendInterface(true, 1477, 602, 1427);//Interface: id=1427, clipped=1, parent=[1477, 602]
-		//sendRunClientScript(1303, new Object[]{ 93519895, 1, 1, player.getDisplayName()});//Runscript: [1303, 93519895, 1, 1, Test]
+		sendCs2(new ClientScriptVar(1303, 93519895, 1, 1, player.getAccount().getUsername().getName()));//Runscript: [1303, 93519895, 1, 1, Test]
 		sendInterfaceSettings(1427, 23, 0, 600, 1024);//IfaceSettings: 93519895, 600, 0, 1024
-		//sendRunClientScript(8862, new Object[]{ 15, 1});//Runscript: [8862, 15, 1]
+		sendCs2(new ClientScriptVar(8862, 15, 1));//Runscript: [8862, 15, 1]
+		
 		sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361]
-		//sendRunClientScript(8862, new Object[]{ 16, 1});//Runscript: [8862, 16, 1]
+		sendCs2(new ClientScriptVar(8862, 16, 1));//Runscript: [8862, 16, 1]
 		sendInterfaceSettings(1110, 20, 0, 200, 2);//IfaceSettings: 72744980, 200, 0, 2
 		sendInterfaceSettings(1110, 25, 0, 600, 2);//IfaceSettings: 72744985, 600, 0, 2
 		sendInterfaceSettings(1110, 23, 0, 600, 1024);//IfaceSettings: 72744983, 600, 0, 1024
 		sendInterfaceSettings(1110, 14, 0, 600, 1024);//IfaceSettings: 72744974, 600, 0, 1024
+		
 		sendInterface(true, 1477, 303, 590);//Interface: id=590, clipped=1, parent=[1477, 303]
-		//sendRunClientScript(4717, new Object[]{ 38666248, 38666247, 38666249, 3874});//Runscript: [4717, 38666248, 38666247, 38666249, 3874]
+		sendCs2(new ClientScriptVar(4717, 38666248, 38666247, 38666249, 3874));//Runscript: [4717, 38666248, 38666247, 38666249, 3874]
 		sendInterfaceSettings(590, 8, 0, 169, 8388614);//IfaceSettings: 38666248, 169, 0, 8388614
 		sendInterfaceSettings(590, 13, 0, 11, 2);//IfaceSettings: 38666253, 11, 0, 2
-		//sendRunClientScript(4717, new Object[]{ 94240781, 94240780, 94240782, 3874});//Runscript: [4717, 94240781, 94240780, 94240782, 3874]
-		//sendRunClientScript(8862, new Object[]{ 9, 1});//Runscript: [8862, 9, 1]
+		sendCs2(new ClientScriptVar(4717, 94240781, 94240780, 94240782, 3874));//Runscript: [4717, 94240781, 94240780, 94240782, 3874]
+		sendCs2(new ClientScriptVar(8862, 9, 1));//Runscript: [8862, 9, 1]
+		
 		sendInterface(true, 1477, 341, 1416);//Interface: id=1416, clipped=1, parent=[1477, 341]
 		sendInterfaceSettings(1416, 3, 0, 2443, 30);//IfaceSettings: 92798979, 2443, 0, 30
 		sendInterfaceSettings(1416, 11, 0, 11, 2359302);//IfaceSettings: 92798987, 11, 0, 2359302
 		sendInterfaceSettings(1416, 11, 12, 23, 4);//IfaceSettings: 92798987, 23, 12, 4
 		sendInterfaceSettings(1416, 11, 24, 24, 2097152);//IfaceSettings: 92798987, 24, 24, 2097152
-		//sendRunClientScript(8862, new Object[]{ 10, 1});//Runscript: [8862, 10, 1]
+		sendCs2(new ClientScriptVar(8862, 10, 1));//Runscript: [8862, 10, 1]
+		
 		sendInterface(true, 1477, 351, 1417);//Interface: id=1417, clipped=1, parent=[1477, 351]
 		sendInterfaceSettings(1417, 16, 0, 29, 2621470);//IfaceSettings: 92864528, 29, 0, 2621470
-		//sendRunClientScript(8862, new Object[]{ 11, 1});//Runscript: [8862, 11, 1]
-		//sendRunClientScript(8862, new Object[]{ 12, 0});//Runscript: [8862, 12, 0]
+		sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
+		sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
+		
 		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174]
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
 		sendInterfaceSettings(1477, 175, 1, 1, 2);//IfaceSettings: 96796847, 1, 1, 2
+		
 		sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58]
 		sendInterfaceSettings(1477, 80, 1, 1, 4);//IfaceSettings: 96796752, 1, 1, 4
+		
 		sendInterfaceSettings(1430, 118, -1, -1, 2098176);//IfaceSettings: 93716598, -1, -1, 2098176
 		sendInterfaceSettings(1430, 123, -1, -1, 2098176);//IfaceSettings: 93716603, -1, -1, 2098176
 		sendInterfaceSettings(1430, 124, -1, -1, 2098176);//IfaceSettings: 93716604, -1, -1, 2098176
@@ -135,6 +155,7 @@ public class InterfaceManager {
 		sendInterfaceSettings(1461, 1, 0, 168, 8485894);//IfaceSettings: 95748097, 168, 0, 8485894
 		sendInterfaceSettings(1449, 1, 0, 168, 8485894);//IfaceSettings: 94961665, 168, 0, 8485894
 		sendInterfaceSettings(590, 8, 0, 169, 8388614);//IfaceSettings: 38666248, 169, 0, 8388614
+		
 		sendInterface(true, 1477, 60, 1465);//Interface: id=1465, clipped=1, parent=[1477, 60]
 		sendInterfaceSettings(1477, 82, 1, 1, 6);//IfaceSettings: 96796754, 1, 1, 6
 		sendInterface(true, 1477, 34, 1433);//Interface: id=1433, clipped=1, parent=[1477, 34]
@@ -160,18 +181,20 @@ public class InterfaceManager {
 		sendInterfaceSettings(464, 63, 0, 99, 2046);//IfaceSettings: 30408767, 99, 0, 2046
 		sendInterfaceSettings(182, 0, 0, 99, 2046);//IfaceSettings: 11927552, 99, 0, 2046
 		sendInterfaceSettings(1477, 63, -1, -1, 2097152);//IfaceSettings: 96796735, -1, -1, 2097152
-		//sendRunClientScript(139, new Object[]{ 96796736});//Runscript: [139, 96796736]
+		sendCs2(new ClientScriptVar(139, 96796736));//Runscript: [139, 96796736]
+		
 		sendInterface(true, 1477, 38, 1488);//Interface: id=1488, clipped=1, parent=[1477, 38]
-		//sendRunClientScript(8778, null);//Runscript: [8778]
-		//sendRunClientScript(4704, null);//Runscript: [4704]
-		//sendRunClientScript(4308, new Object[]{ 18, 0});//Runscript: [4308, 18, 0]
+		sendCs2(new ClientScriptVar(8778));//Runscript: [8778]
+		sendCs2(new ClientScriptVar(4704));//Runscript: [4704]
+		sendCs2(new ClientScriptVar(4308, 18, 0));//Runscript: [4308, 18, 0]
+		
 		sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159]
 		sendInterface(true, 1477, 21, 1215);//Interface: id=1215, clipped=1, parent=[1477, 21]
-		/*sendRunClientScript(5559, new Object[]{ 3122093});//Runscript: [5559, 3122093]
-		sendRunClientScript(5559, new Object[]{ 3122093});//Runscript: [5559, 3122093]
-		sendRunClientScript(5557, new Object[]{ 1});//Runscript: [5557, 1]
-		sendRunClientScript(6501, null);//Runscript: [6501]
-		sendRunClientScript(279, null);//Runscript: [279]
+		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]
+		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]
+		sendCs2(new ClientScriptVar(5557, 1));//Runscript: [5557, 1]
+		sendCs2(new ClientScriptVar(6501));//Runscript: [6501]
+		sendCs2(new ClientScriptVar(279));//Runscript: [279]
 		sendInterfaceSettings(1477, 173, 1, 7, 9175040);//IfaceSettings: 96796845, 7, 1, 9175040
 		sendInterfaceSettings(1477, 173, 11, 13, 9175040);//IfaceSettings: 96796845, 13, 11, 9175040
 		sendInterfaceSettings(1477, 173, 0, 0, 9175040);//IfaceSettings: 96796845, 0, 0, 9175040
@@ -377,7 +400,7 @@ public class InterfaceManager {
 		sendInterfaceSettings(1477, 7, -1, -1, 2097152);//IfaceSettings: 96796679, -1, -1, 2097152
 		sendInterfaceSettings(1477, 833, 1, 2, 9175040);//IfaceSettings: 96797505, 2, 1, 9175040
 		sendInterfaceSettings(1477, 833, 0, 0, 9175040);//IfaceSettings: 96797505, 0, 0, 9175040
-		sendInterfaceSettings(1477, 833, 3, 4, 9175040);//IfaceSettings: 96797505, 4, 3, 9175040*/
+		sendInterfaceSettings(1477, 833, 3, 4, 9175040);//IfaceSettings: 96797505, 4, 3, 9175040
 		/*if (player.getAccount().getDisplayMode().equals(DisplayMode.FIXED)) {
 			sendTab(161, 752);
 			sendTab(37, 751);
@@ -447,7 +470,11 @@ public class InterfaceManager {
 	 * @param interfaceId The interface ID.
 	 */
 	public void sendInterface(boolean walkable, int windowId, int windowLocation, int interfaceId) {
-		player.getAccount().getSession().getTransmitter().send(InterfaceEncoder.class, new InterfaceMessage(interfaceId, windowLocation, windowId, walkable));
+		player.getPacketDispatcher().dispatchInterface(new InterfaceMessage(interfaceId, windowLocation, windowId, walkable));
+	}
+	
+	public void sendCs2 (ClientScriptVar scriptData) {
+		player.getPacketDispatcher().dispatchClientScriptVar(scriptData);
 	}
 	
 	public void sendInterfaceSettings(int interfaceID, int component, int fromSlot, int toSlot, int settings) {
@@ -455,7 +482,7 @@ public class InterfaceManager {
 	}
 	
 	public void sendXPPopup() {
-		sendTab(resizableScreen ? 38 : 10, 1213); //xp 
+		//sendTab(resizableScreen ? 38 : 10, 1213); //xp 
 	}
 	
 	public void sendXPDisplay() {
@@ -463,42 +490,42 @@ public class InterfaceManager {
 	}
 	
 	public void sendXPDisplay(int interfaceId) {
-		sendTab(resizableScreen ? 27 : 29, interfaceId);  //xp counter
+		//sendTab(resizableScreen ? 27 : 29, interfaceId);  //xp counter
 	}
 	
 	public void sendEquipment() {
-		sendTab(resizableScreen ? 116 : 176, 387);
+		//sendTab(resizableScreen ? 116 : 176, 387);
 	}
 
 	public void sendInventory() {
-		sendTab(resizableScreen ? 115 : 175, 679);
+		//sendTab(resizableScreen ? 115 : 175, 679);
 	}
 	
 	public void sendCombatStyles() {
-		sendTab(resizableScreen ? 111 : 171, 884);
+		//sendTab(resizableScreen ? 111 : 171, 884);
 	}
 	
 	public void sendTaskSystem() {
-		sendTab(resizableScreen ? 112 : 172, 1056);
+		//sendTab(resizableScreen ? 112 : 172, 1056);
 	}
 
 	public void sendSkills() {
-		sendTab(resizableScreen ? 113 : 173, 320);
+		//sendTab(resizableScreen ? 113 : 173, 320);
 	}
 
 	public void sendSettings(int interfaceId) {
-		sendTab(resizableScreen ? 123 : 183, interfaceId);
+		//sendTab(resizableScreen ? 123 : 183, interfaceId);
 	}
 
 	public void sendPrayerBook() {
-		sendTab(resizableScreen ? 117 : 177, 271);
+		//sendTab(resizableScreen ? 117 : 177, 271);
 	}
 
 	public void sendMagicBook() {
-		sendTab(resizableScreen ? 118 : 178, 192);
+		//sendTab(resizableScreen ? 118 : 178, 192);
 	}
 	
 	public void sendEmotes() {
-		sendTab(resizableScreen ? 124 : 184, 590);
+		//sendTab(resizableScreen ? 124 : 184, 590);
 	}
 }

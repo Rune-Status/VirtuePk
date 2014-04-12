@@ -1,14 +1,14 @@
-package org.virtue.network.loginserver;
+package org.virtue.network.dataserver;
 
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.virtue.network.loginserver.output.WorldSubmissionEncoder;
+import org.virtue.network.dataserver.output.WorldSubmissionEncoder;
 
 /**
  * @author Taylor
  * @version 1.0
  */
-public class LoginServerConnection {
+public class DataServerConnection {
 
 	/**
 	 * Represents the context.
@@ -19,7 +19,7 @@ public class LoginServerConnection {
 	 * Constructs a new {@code LSConnection.java}.
 	 * @param context The context.
 	 */
-	public LoginServerConnection(ChannelHandlerContext context) {
+	public DataServerConnection(ChannelHandlerContext context) {
 		this.context = context;
 		send(WorldSubmissionEncoder.class);
 	}
@@ -40,9 +40,9 @@ public class LoginServerConnection {
 		synchronized (context.getChannel()) {
 			if (context.getChannel().isConnected()) {
 				if (params.length > 0) {
-					context.getChannel().write(ChannelBuffers.copiedBuffer(LoginServer.getEncoders().get(packet).buildPacket(params[0]).buffer()));
+					context.getChannel().write(ChannelBuffers.copiedBuffer(DataServer.getEncoders().get(packet).buildPacket(params[0]).buffer()));
 				} else {
-					context.getChannel().write(ChannelBuffers.copiedBuffer(LoginServer.getEncoders().get(packet).buildPacket(null).buffer()));
+					context.getChannel().write(ChannelBuffers.copiedBuffer(DataServer.getEncoders().get(packet).buildPacket(null).buffer()));
 				}
 			}
 		}

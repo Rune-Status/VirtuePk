@@ -1,15 +1,22 @@
 package org.virtue.game.node.entity.player;
 
 import org.virtue.Constants;
+import org.virtue.config.OutgoingOpcodes;
+import org.virtue.game.World;
 import org.virtue.game.node.entity.Entity;
 import org.virtue.game.node.entity.player.container.Equipment;
 import org.virtue.game.node.entity.player.container.Inventory;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.screen.InterfaceManager;
+import org.virtue.game.social.OnlineStatus;
 import org.virtue.network.messages.ClientScriptVar;
+import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.OnlineStatusEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.PlayerOptionEncoder;
 import org.virtue.network.protocol.render.update.UpdateBlockArchive;
 import org.virtue.utility.DisplayMode;
 
@@ -18,6 +25,10 @@ import org.virtue.utility.DisplayMode;
  * @date Jan 13, 2014
  */
 public class Player extends Entity {
+	
+	public static final EntityOptionMessage FOLLOW = new EntityOptionMessage("Follow", 2, false, -1);
+	
+	public static final EntityOptionMessage TRADE = new EntityOptionMessage("Trade with", 4, false, -1);
 	
 	/**
 	 * Represents this player's account.
@@ -74,6 +85,10 @@ public class Player extends Entity {
 	public void start() {
 		interfaceManager.sendScreen();
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
+		account.getSession().getTransmitter().send(OnlineStatusEncoder.class, OnlineStatus.EVERYONE);
+		account.getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
+		account.getSession().getTransmitter().send(PlayerOptionEncoder.class, FOLLOW);
+		account.getSession().getTransmitter().send(PlayerOptionEncoder.class, TRADE);
 	}
 	
 	public void startLobby() {
@@ -83,12 +98,19 @@ public class Player extends Entity {
 
 	@Override
 	public void destroy() {
+		
 	}
 
 	@Override
 	public void onCycle() {
 	}
 
+	public void endSession () {
+		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
+			World.getWorld().removePlayer(this); 
+		}
+	}
+	
 	/**
 	 * @return the account
 	 */
@@ -116,6 +138,10 @@ public class Player extends Entity {
 	@Override
 	public boolean exists() {
 		return true;
+	}
+	
+	public InterfaceManager getInterfaces () {
+		return interfaceManager;
 	}
 
 	/**

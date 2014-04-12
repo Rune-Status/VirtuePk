@@ -1,11 +1,11 @@
-package org.virtue.network.loginserver.handlers;
+package org.virtue.network.dataserver.handlers;
 
 import org.virtue.Launcher;
 import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.network.loginserver.LoginServer;
-import org.virtue.network.loginserver.LoginSessions;
-import org.virtue.network.loginserver.message.LoginResult;
-import org.virtue.network.loginserver.output.LoginVerificationEncoder;
+import org.virtue.network.dataserver.DataServer;
+import org.virtue.network.dataserver.LoginSessions;
+import org.virtue.network.dataserver.message.LoginResult;
+import org.virtue.network.dataserver.output.LoginVerificationEncoder;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.Session;
 
@@ -30,7 +30,7 @@ public class LoginResultHandler extends PacketHandler<Session> {
 		if (result.equals(LoginResult.ERROR)) {
 			System.err.println("Failed loading login result for player " + username + ".");
 		} else {
-			LoginServer.getConnection().send(LoginVerificationEncoder.class, account);
+			DataServer.getConnection().send(LoginVerificationEncoder.class, account);
 			LoginSessions.removePendingRequest(username);
 			account.putFlag("login_result", result);
 			Launcher.getEngine().getLoginFilter().getPendingLogins().add(account);

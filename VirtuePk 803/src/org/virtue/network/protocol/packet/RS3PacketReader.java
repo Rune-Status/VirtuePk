@@ -1,12 +1,12 @@
 package org.virtue.network.protocol.packet;
 
-public final class RS2PacketReader extends RS2HeapBuffer {
+public final class RS3PacketReader extends RS3HeapBuffer {
 
 	/**
 	 * Constructs a new {@code PsycInBuffer.java}.
 	 * @param buffer The buffer used to allocate bytes.
 	 */
-	public RS2PacketReader(byte[] buffer) {
+	public RS3PacketReader(byte[] buffer) {
 		super(buffer);
 	}
 

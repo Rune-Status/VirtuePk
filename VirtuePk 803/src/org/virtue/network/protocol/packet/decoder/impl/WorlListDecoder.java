@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.WorldlistHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -13,7 +13,7 @@ import org.virtue.network.session.Session;
 public class WorlListDecoder implements PacketDecoder<WorldlistHandler> {
 
 	@Override
-	public WorldlistHandler decodePacket(RS2PacketReader buffer, Session session, int opcode) {
+	public WorldlistHandler decodePacket(RS3PacketReader buffer, Session session, int opcode) {
 		WorldlistHandler handler = new WorldlistHandler();
 		System.out.println("Received request for world list...");
 		/*

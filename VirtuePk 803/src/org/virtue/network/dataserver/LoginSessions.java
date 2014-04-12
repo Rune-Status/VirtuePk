@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver;
+package org.virtue.network.dataserver;
 
 import java.util.ArrayList;
 import java.util.List;

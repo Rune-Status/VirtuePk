@@ -6,7 +6,7 @@ package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.ClientInfoHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -17,7 +17,7 @@ import org.virtue.network.session.Session;
 public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
 
     @Override
-    public ClientInfoHandler decodePacket(RS2PacketReader packet, Session session, int opcode) {
+    public ClientInfoHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
         //Does nothing...
         return null;
         //throw new UnsupportedOperationException("Not supported yet.");

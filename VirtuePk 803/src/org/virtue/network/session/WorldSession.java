@@ -8,8 +8,8 @@ import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.RS2Network;
 import org.virtue.network.protocol.handlers.PacketHandler;
-import org.virtue.network.protocol.packet.RS2Packet;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3Packet;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 
 /**
@@ -23,30 +23,33 @@ public class WorldSession extends Session {
 	 */
 	private Player player;
 	
+	private boolean isLobby;
+	
 	/**
 	 * Constructs a new {@code WorldSession.java}.
 	 * @param context
 	 */
-	public WorldSession(ChannelHandlerContext context) {
+	public WorldSession(ChannelHandlerContext context, boolean isLobby) {
 		super(context);
+		this.isLobby = isLobby;
 	}
 
 	@Override
 	public void decode(Object message) {
-		if (!(message instanceof RS2Packet)) {
+		if (!(message instanceof RS3Packet)) {
 			try {
 				throw new ProtocolException(message.toString());
 			} catch (ProtocolException e) {
 				Launcher.getEngine().handleException(e);
 			}
 		}
-		PacketDecoder<? super PacketHandler<? super Session>> decoder = RS2Network.getDecoders().get(((RS2Packet) message).getOpcode());
+		PacketDecoder<? super PacketHandler<? super Session>> decoder = RS2Network.getDecoders().get(((RS3Packet) message).getOpcode());
 		if (decoder == null) {
-			System.err.println("Unhandled packet: " + ((RS2Packet) message).getOpcode());
+			System.err.println("Unhandled packet: " + ((RS3Packet) message).getOpcode());
 			return;
 		}
 		@SuppressWarnings("unchecked")
-		PacketHandler<? super Session> handler = (PacketHandler<? super Session>) decoder.decodePacket(new RS2PacketReader(((RS2Packet) message).getBuffer().buffer()), this, ((RS2Packet) message).getOpcode());
+		PacketHandler<? super Session> handler = (PacketHandler<? super Session>) decoder.decodePacket(new RS3PacketReader(((RS3Packet) message).getBuffer().buffer()), this, ((RS3Packet) message).getOpcode());
 		if (handler != null) {
 			handler.handle(this);
 		}
@@ -54,6 +57,10 @@ public class WorldSession extends Session {
 
 	@Override
 	public void disconnect() {
+		if (!isLobby) {			
+			System.out.println("Removing "+player.getAccount().getUsername().getName()+" from the game.");
+			player.endSession();
+		}
 		//World.getWorld().removePlayer(player);
 		//player.destroy();
 	}

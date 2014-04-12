@@ -31,7 +31,7 @@ public enum OnlineStatus {
 		this.statusCode = code;
 	}
 	
-	public int getCode () {
+	public int getStatusCode () {
 		return statusCode;
 	}
 	

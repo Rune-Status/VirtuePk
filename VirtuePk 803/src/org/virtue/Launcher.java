@@ -14,8 +14,8 @@ import org.virtue.engine.GameEngine;
 import org.virtue.engine.threads.MainThreadFactory;
 import org.virtue.game.Lobby;
 import org.virtue.network.RS2Network;
+import org.virtue.network.dataserver.DataServer;
 import org.virtue.network.io.IOHub;
-import org.virtue.network.loginserver.LoginServer;
 import org.virtue.utility.ConsoleLogger;
 import org.virtue.utility.TimeUtil;
 
@@ -63,7 +63,7 @@ public class Launcher {
 			loadEngine();
 			loadCache();
 			if (Constants.LOGIN_SERVER) {
-				LoginServer.load();
+				DataServer.load();
 			}
 			Lobby.load();
 			IOHub.load();

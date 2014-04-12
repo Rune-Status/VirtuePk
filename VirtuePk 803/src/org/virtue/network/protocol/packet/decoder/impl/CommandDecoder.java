@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.CommandHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -17,7 +17,7 @@ public class CommandDecoder implements PacketDecoder<CommandHandler> {
 	 * @see com.psyc.net.codec.decoder.PacketDecoder#decode(com.psyc.iobuffer.PsycInBuffer, com.psyc.net.codec.connect.Session)
 	 */
 	@Override
-	public CommandHandler decodePacket(RS2PacketReader buffer, Session session, int opcode) {
+	public CommandHandler decodePacket(RS3PacketReader buffer, Session session, int opcode) {
 		CommandHandler handler = new CommandHandler();
 		/*
 		 * Represents if the command that was executed is a client operated

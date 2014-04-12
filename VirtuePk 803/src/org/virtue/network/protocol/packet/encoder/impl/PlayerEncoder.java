@@ -81,10 +81,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			Player localPlayer = player.getViewport().getLocalPlayers()[playerIndex];
 			if (needsRemove(localPlayer)) {
-				System.out.println("[Local] Removing " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
+				//System.out.println("[Local] Removing " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				removePlayer(buffer, playerIndex, localPlayer);
 			} else {
-				System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
+				//System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				skip = updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
 			}
 		}
@@ -118,11 +118,11 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				continue;
 			}*/
 			if (needsAdd(globalPlayer)) {
-				System.out.println("[Global] Adding " + globalPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
+				//System.out.println("[Global] Adding " + globalPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				queueOutsidePlayer(buffer, updateBlockData, globalPlayer, playerIndex);
 			} else {
 				skip = skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
-				System.out.println("[Global] Skipping from" + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
+				//System.out.println("[Global] Skipping from" + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
 			}
 		}
 		buffer.unSyncBits();

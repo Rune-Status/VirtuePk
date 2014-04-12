@@ -1,5 +1,7 @@
 package org.virtue.game.node.entity.player.identity;
 
+import org.virtue.utility.Encryption;
+
 /**
  * @author Taylor
  * @date Jan 15, 2014
@@ -29,7 +31,7 @@ public class Password {
 	 * @param encrypt Encrypt.
 	 */
 	public Password(String password, boolean encrypt) {
-		this.password = password;
+		this.password = (encrypt ? Encryption.SHA1Encryption(password).getEncryption() : password);
 		this.encrypt = encrypt;
 	}
 	

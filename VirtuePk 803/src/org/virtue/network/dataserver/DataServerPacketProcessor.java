@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver;
+package org.virtue.network.dataserver;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -6,8 +6,8 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.virtue.network.protocol.handlers.PacketHandler;
-import org.virtue.network.protocol.packet.RS2Packet;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3Packet;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -15,7 +15,7 @@ import org.virtue.network.session.Session;
  * @author Taylor
  * @version 1.0
  */
-public class LoginServerPacketProcessor extends SimpleChannelUpstreamHandler {
+public class DataServerPacketProcessor extends SimpleChannelUpstreamHandler {
 
 	/**
 	 * (non-Javadoc)
@@ -25,17 +25,17 @@ public class LoginServerPacketProcessor extends SimpleChannelUpstreamHandler {
 	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-		if (!(e.getMessage() instanceof RS2Packet)) {
+		if (!(e.getMessage() instanceof RS3Packet)) {
 			return;
 		}
-		RS2Packet packet = (RS2Packet) e.getMessage();
-		PacketDecoder<? super PacketHandler<? super Session>> decoder = LoginServer.getDecoders().get(packet.getOpcode());
+		RS3Packet packet = (RS3Packet) e.getMessage();
+		PacketDecoder<? super PacketHandler<? super Session>> decoder = DataServer.getDecoders().get(packet.getOpcode());
 		if (decoder == null) {
 			System.err.println("Unhandled login server packet: " + packet.getOpcode());
 			return;
 		}
 		@SuppressWarnings("unchecked")
-		PacketHandler<? super Session> handler = (PacketHandler<? super Session>) decoder.decodePacket(new RS2PacketReader(packet.getBuffer().buffer()), (Session) ctx.getAttachment(), packet.getOpcode());
+		PacketHandler<? super Session> handler = (PacketHandler<? super Session>) decoder.decodePacket(new RS3PacketReader(packet.getBuffer().buffer()), (Session) ctx.getAttachment(), packet.getOpcode());
 		if (handler != null) {
 			handler.handle((Session) ctx.getAttachment());
 		}
@@ -71,6 +71,6 @@ public class LoginServerPacketProcessor extends SimpleChannelUpstreamHandler {
 	 */
 	@Override
 	public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
-		LoginServer.setConnection(new LoginServerConnection(ctx));
+		DataServer.setConnection(new DataServerConnection(ctx));
 	}
 }

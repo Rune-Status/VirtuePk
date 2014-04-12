@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.network.protocol.handlers.impl.InputHandler;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -12,7 +12,7 @@ import org.virtue.network.session.Session;
 public class InputDecoder implements PacketDecoder<InputHandler> {
 
 	@Override
-	public InputHandler decodePacket(RS2PacketReader packet, Session session, int opcode) {
+	public InputHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		InputHandler handler = new InputHandler();
 		/*
 		 * The incoming input from the client that the player has entered.

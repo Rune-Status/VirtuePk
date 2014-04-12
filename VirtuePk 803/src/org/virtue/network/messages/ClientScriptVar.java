@@ -21,7 +21,7 @@ public class ClientScriptVar {
 	 * @param opcode The opcode of the script.
 	 * @param parameters The parameters.
 	 */
-	public ClientScriptVar(int opcode, String... parameters) {
+	public ClientScriptVar(int opcode, Object... parameters) {
 		this.opcode = opcode;
 		this.parameters = parameters;
 	}

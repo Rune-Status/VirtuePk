@@ -26,6 +26,8 @@ public class OutgoingOpcodes {
 	public static final int KEEP_ALIVE_PACKET = 155;//803
 	public static final int LARGE_VARP_PACKET = 153;//803
 	public static final int SMALL_VARP_PACKET = 96;//803
+	public static final int LARGE_CS2_VARP_PACKET = 154;//803
+	public static final int SMALL_CS2_VARP_PACKET = 7;//803
 	
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803
 	public static final int ONLINE_STATUS_PACKET = 43;//803

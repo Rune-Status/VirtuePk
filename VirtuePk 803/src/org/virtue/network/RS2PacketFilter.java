@@ -4,8 +4,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
-import org.virtue.network.protocol.packet.RS2Packet;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.protocol.packet.RS3Packet;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
  * @author Taylor
@@ -49,7 +49,7 @@ public class RS2PacketFilter extends FrameDecoder {
 				}
 				byte[] payload = new byte[length];
 				buffer.readBytes(payload, 0, length);
-				return new RS2Packet(opcode, new RS2PacketReader(payload));
+				return new RS3Packet(opcode, new RS3PacketReader(payload));
 			}
 		}
 		return null;

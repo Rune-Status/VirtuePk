@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver;
+package org.virtue.network.dataserver;
 
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
@@ -8,7 +8,7 @@ import org.jboss.netty.channel.DefaultChannelPipeline;
  * @author Taylor
  * @version 1.0
  */
-public class LoginServerPipeline implements ChannelPipelineFactory {
+public class DataServerPipeline implements ChannelPipelineFactory {
 
 	/**
 	 * (non-Javadoc)
@@ -17,8 +17,8 @@ public class LoginServerPipeline implements ChannelPipelineFactory {
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
 		ChannelPipeline pipeline = new DefaultChannelPipeline();
-		pipeline.addLast("decoder", new LoginServerPacketFilter());
-		pipeline.addLast("multiplexer", new LoginServerPacketProcessor());
+		pipeline.addLast("decoder", new DataServerPacketFilter());
+		pipeline.addLast("multiplexer", new DataServerPacketProcessor());
 		return pipeline;
 	}
 }

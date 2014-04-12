@@ -5,7 +5,7 @@ package org.virtue.network.protocol.packet;
  * @author Taylor
  * @version 1.0
  */
-public class RS2Packet {
+public class RS3Packet {
 	
 	/**
 	 * The opcode
@@ -15,14 +15,14 @@ public class RS2Packet {
 	/**
 	 * The buffer
 	 */
-	private final RS2HeapBuffer buffer;
+	private final RS3HeapBuffer buffer;
 	
 	/**
 	 * Constructs a new {@code Packet.java}
 	 * @param opcode The opcode of this packet
 	 * @param buffer The buffer payload
 	 */
-	public RS2Packet(int opcode, RS2HeapBuffer buffer) {
+	public RS3Packet(int opcode, RS3HeapBuffer buffer) {
 		this.opcode = opcode;
 		this.buffer = buffer;
 	}
@@ -37,7 +37,7 @@ public class RS2Packet {
 	/**
 	 * @return The buffer
 	 */
-	public RS2HeapBuffer getBuffer() {
+	public RS3HeapBuffer getBuffer() {
 		return buffer;
 	}
 	

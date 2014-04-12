@@ -10,7 +10,7 @@ import org.virtue.game.Lobby;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.game.node.entity.player.screen.ScreenConfig;
+import org.virtue.game.node.entity.player.screen.ClientScreen;
 import org.virtue.network.RS2Network;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.codec.login.LoginType;
@@ -62,7 +62,7 @@ public class LoginFilter extends LogicEvent {
 			break;
 		case WORLD_PART_1:
 			player = null;
-			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ScreenConfig());
+			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ClientScreen());
 			return;
 		case WORLD_PART_2:
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);

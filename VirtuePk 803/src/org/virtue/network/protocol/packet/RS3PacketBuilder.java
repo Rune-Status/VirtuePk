@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet;
 
 import org.virtue.utility.JagString;
 
-public final class RS3PacketBuilder extends RS2HeapBuffer {
+public final class RS3PacketBuilder extends RS3HeapBuffer {
 
 	/**
 	 * Constructs a new {@code PsycOutBuffer.java}.

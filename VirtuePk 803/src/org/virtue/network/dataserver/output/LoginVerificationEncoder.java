@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver.output;
+package org.virtue.network.dataserver.output;
 
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.network.protocol.codec.login.LoginType;

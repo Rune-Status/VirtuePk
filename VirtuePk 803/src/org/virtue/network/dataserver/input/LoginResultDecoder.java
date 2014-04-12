@@ -1,8 +1,8 @@
-package org.virtue.network.loginserver.input;
+package org.virtue.network.dataserver.input;
 
-import org.virtue.network.loginserver.handlers.LoginResultHandler;
-import org.virtue.network.loginserver.message.LoginResult;
-import org.virtue.network.protocol.packet.RS2PacketReader;
+import org.virtue.network.dataserver.handlers.LoginResultHandler;
+import org.virtue.network.dataserver.message.LoginResult;
+import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
@@ -13,7 +13,7 @@ import org.virtue.network.session.Session;
 public class LoginResultDecoder implements PacketDecoder<LoginResultHandler> {
 
 	@Override
-	public LoginResultHandler decodePacket(RS2PacketReader buffer, Session session, int opcode) {
+	public LoginResultHandler decodePacket(RS3PacketReader buffer, Session session, int opcode) {
 		LoginResultHandler handler = new LoginResultHandler();
 		handler.putFlag("login_result", LoginResult.forOpcode(buffer.getInt()));
 		handler.putFlag("username", buffer.getString());

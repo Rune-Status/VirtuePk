@@ -7,9 +7,9 @@ import org.virtue.game.Lobby;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.network.RS2PacketFilter;
-import org.virtue.network.loginserver.LoginServer;
-import org.virtue.network.loginserver.LoginSessions;
-import org.virtue.network.loginserver.output.LoginRequestEncoder;
+import org.virtue.network.dataserver.DataServer;
+import org.virtue.network.dataserver.LoginSessions;
+import org.virtue.network.dataserver.output.LoginRequestEncoder;
 import org.virtue.network.messages.LoginResponse;
 import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
@@ -52,7 +52,7 @@ public class LoginSession extends Session {
 			player = new Player(account);
 		}
 		if (Constants.LOGIN_SERVER) {
-			LoginServer.getConnection().send(LoginRequestEncoder.class, player);
+			DataServer.getConnection().send(LoginRequestEncoder.class, player);
 		} else {
 			Launcher.getEngine().getLoginFilter().getPendingLogins().add(account);
 		}
@@ -62,7 +62,7 @@ public class LoginSession extends Session {
 		}
 		getContext().getChannel().getPipeline().addFirst("packetDecoder", new RS2PacketFilter());
 		disconnect();
-		WorldSession gameSession = new WorldSession(getContext());
+		WorldSession gameSession = new WorldSession(getContext(), type.equals(LoginType.LOBBY));
 		getContext().setAttachment(gameSession);
 		account.setSession(gameSession);
 		gameSession.setPlayer(player);

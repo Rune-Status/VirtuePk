@@ -1,4 +1,4 @@
-package org.virtue.network.loginserver.output;
+package org.virtue.network.dataserver.output;
 
 import org.virtue.Constants;
 import org.virtue.game.World;
@@ -12,7 +12,7 @@ import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 public class WorldSubmissionEncoder implements PacketEncoder<Object> {
 
 	@Override
-	public RS3PacketBuilder buildPacket(Object node) {//TODO: Is this even used?
+	public RS3PacketBuilder buildPacket(Object node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.put(0);
 		buffer.putInt(Constants.WORLD_ID);

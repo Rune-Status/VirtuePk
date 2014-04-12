@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet.encoder.impl.r803;
 
 import org.virtue.Constants;
 import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.network.loginserver.message.LoginResult;
+import org.virtue.network.dataserver.message.LoginResult;
 import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
@@ -105,7 +105,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 			buffer.put(0);//Boolean
 			buffer.put(0);//Boolean
 			buffer.put(1);//Boolean
-			buffer.put(0);//Boolean
+			buffer.put(1);//Is p2p account
 			buffer.putShort(1);//Player index
 			buffer.put(1);//Is p2p server
 			buffer.put24BitInteger(0);

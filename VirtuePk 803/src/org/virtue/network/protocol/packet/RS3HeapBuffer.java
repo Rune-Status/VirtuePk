@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
  * @author Taylor
  * @since Sep 15, 2013
  */
-public abstract class RS2HeapBuffer {
+public abstract class RS3HeapBuffer {
 	
 	/**
 	 * The bit masks
@@ -48,7 +48,7 @@ public abstract class RS2HeapBuffer {
 	 * 
 	 * @param capacity The capacity to allocate
 	 */
-	public RS2HeapBuffer(int capacity) {
+	public RS3HeapBuffer(int capacity) {
 		buffer = new byte[capacity];
 	}
 	
@@ -59,7 +59,7 @@ public abstract class RS2HeapBuffer {
 	 * 
 	 * @param buffer The byte buffer to allocate in this {@code XplurHeapBuffer}
 	 */
-	public RS2HeapBuffer(byte[] buffer) {
+	public RS3HeapBuffer(byte[] buffer) {
 		this.buffer = buffer;
 	}
 	
@@ -137,7 +137,7 @@ public abstract class RS2HeapBuffer {
 	 * @param buffer The byte buffer.
 	 * @return The in buffer.
 	 */
-	public static RS2PacketReader allocate(ByteBuffer buffer) {
-		return new RS2PacketReader(buffer.array());
+	public static RS3PacketReader allocate(ByteBuffer buffer) {
+		return new RS3PacketReader(buffer.array());
 	}
 }

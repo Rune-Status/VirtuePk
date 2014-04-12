@@ -1,13 +1,13 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
-import org.virtue.game.node.entity.player.screen.ScreenConfig;
+import org.virtue.game.node.entity.player.screen.ClientScreen;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
-public class ScreenConfigEncoder implements PacketEncoder<ScreenConfig> {
+public class ScreenConfigEncoder implements PacketEncoder<ClientScreen> {
 
 	@Override
-	public RS3PacketBuilder buildPacket(ScreenConfig node) {
+	public RS3PacketBuilder buildPacket(ClientScreen node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(2);
 		buffer.put(1);//Whether there is another screen config packet
