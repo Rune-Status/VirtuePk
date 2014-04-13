@@ -1,17 +1,21 @@
 package org.virtue.network.protocol.packet.encoder;
 
+import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.Viewport;
 import org.virtue.network.messages.ClientScriptVar;
+import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.messages.GameMessage;
 import org.virtue.network.messages.InterfaceMessage;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.messages.GameMessage.MessageOpcode;
+import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameMessageEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.PlayerOptionEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 
 /**
@@ -34,6 +38,25 @@ public class PacketDispatcher {
 	 */
 	public PacketDispatcher(Player player) {
 		this.player = player;
+	}
+	
+	/**
+	 * Dispatches the current run energy level for the player
+	 * @param energy	The run energy level (0 <= level <= 100)
+	 */
+	public void dispatchRunEnergy (int energy) {
+		RS3PacketBuilder buffer = new RS3PacketBuilder();
+		buffer.putPacket(OutgoingOpcodes.RUN_ENERGY_PACKET);
+		buffer.put(energy);
+		player.getAccount().getSession().getTransmitter().send(buffer);
+	}
+	
+	/**
+	 * Dispatches a default right-click option for all players
+	 * @param option	The option being dispatched
+	 */
+	public void dispatchPlayerOption (EntityOptionMessage option) {
+		player.getAccount().getSession().getTransmitter().send(PlayerOptionEncoder.class, option);
 	}
 
 	/**

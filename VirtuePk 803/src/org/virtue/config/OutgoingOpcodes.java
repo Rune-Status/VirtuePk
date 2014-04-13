@@ -29,6 +29,9 @@ public class OutgoingOpcodes {
 	public static final int LARGE_CS2_VARP_PACKET = 154;//803
 	public static final int SMALL_CS2_VARP_PACKET = 7;//803
 	
+	public static final int LOBBY_LOGOUT_PACKET = 69;//803
+	public static final int FULL_LOGOUT_PACKET = 62;//803
+	
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803
 	public static final int ONLINE_STATUS_PACKET = 43;//803
 	public static final int FRIENDS_PACKET = 56;//803
@@ -41,7 +44,7 @@ public class OutgoingOpcodes {
 	public static final int PLAYER_UPDATE_PACKET = 44;//803
 	
 	public static final int PLAYER_OPTION_PACKET = 3;//803
-	public static final int RUN_ENERGY_PACKET = 13;//795
+	public static final int RUN_ENERGY_PACKET = 94;//803
 	public static final int SKILL_DATA_PACKET = 4;//803
 	
 	public static final int INTERFACE_PACKET = 49;//803

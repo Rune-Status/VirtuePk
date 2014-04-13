@@ -1,6 +1,7 @@
 package org.virtue.game.node.entity.player;
 
 import org.virtue.Constants;
+import org.virtue.config.ClientVarps;
 import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.Entity;
@@ -11,12 +12,10 @@ import org.virtue.game.node.entity.player.screen.InterfaceManager;
 import org.virtue.game.social.OnlineStatus;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
+import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.EmptyPacketEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.OnlineStatusEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.PlayerOptionEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.*;
 import org.virtue.network.protocol.render.update.UpdateBlockArchive;
 import org.virtue.utility.DisplayMode;
 
@@ -26,9 +25,9 @@ import org.virtue.utility.DisplayMode;
  */
 public class Player extends Entity {
 	
-	public static final EntityOptionMessage FOLLOW = new EntityOptionMessage("Follow", 2, false, -1);
+	public static final EntityOptionMessage OPTION_FOLLOW = new EntityOptionMessage("Follow", 2, false, -1);
 	
-	public static final EntityOptionMessage TRADE = new EntityOptionMessage("Trade with", 4, false, -1);
+	public static final EntityOptionMessage OPTION_TRADE = new EntityOptionMessage("Trade with", 4, false, -1);
 	
 	/**
 	 * Represents this player's account.
@@ -65,6 +64,8 @@ public class Player extends Entity {
 	 */
 	private PacketDispatcher packetDispatcher;
 	
+	private boolean destroying = false;
+	
 	/**
 	 * Constructs a new {@code Player.java}.
 	 * @param account The account
@@ -83,32 +84,45 @@ public class Player extends Entity {
 
 	@Override
 	public void start() {
-		interfaceManager.sendScreen();
+		//System.out.println("Sending game information to player...");
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
+		packetDispatcher.dispatchPlayerOption(OPTION_FOLLOW);
+		packetDispatcher.dispatchPlayerOption(OPTION_TRADE);
+		int[] varps = ClientVarps.getGameVarps();
+		for (int i = 0; i < varps.length; i++) {
+			int val = varps[i];
+			if (val != 0) {
+				packetDispatcher.dispatchVarp(new VarpMessage(i, val));
+			}
+		}
+		interfaceManager.sendScreen();
 		account.getSession().getTransmitter().send(OnlineStatusEncoder.class, OnlineStatus.EVERYONE);
 		account.getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
-		account.getSession().getTransmitter().send(PlayerOptionEncoder.class, FOLLOW);
-		account.getSession().getTransmitter().send(PlayerOptionEncoder.class, TRADE);
+		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
 	}
 	
 	public void startLobby() {
-                //packetDispatcher.
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
 	}
 
 	@Override
 	public void destroy() {
-		
+		if (destroying) {
+			return;
+		}
+		destroying = true;
+		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
+			World.getWorld().removePlayer(this); 
+		}		
 	}
 
 	@Override
 	public void onCycle() {
 	}
 
-	public void endSession () {
-		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
-			World.getWorld().removePlayer(this); 
-		}
+	public void sendLogout (boolean toLobby) {
+		packetDispatcher.dispatchLogout(toLobby);
+		destroy();
 	}
 	
 	/**
@@ -245,13 +259,13 @@ public class Player extends Entity {
 	}
 	
 	/**
-	 * Sends a packet to the client that opens a small dialogue box, promting to
+	 * Sends a packet to the client that opens a small dialogue box, prompting to
 	 * enter specified data. The {@code PendingEventManager} is then used to
 	 * create a delayed event, while the client processes the input and sends it
-	 * back to the server. Once packet arival, the event is fired and the input
+	 * back to the server. Once packet arrival, the event is fired and the input
 	 * is returned. And future code in the specific block is not executed until
 	 * the client and server finish the data process.
-	 * @param dialogue The dialogue to display in the chatbox, promting the user toenter some sort of data.
+	 * @param dialogue The dialogue to display in the chatbox, prompting the user to enter some sort of data.
 	 * @return The input from the client.
 	 */
 	public int requestIntegerInput(String dialogue) {

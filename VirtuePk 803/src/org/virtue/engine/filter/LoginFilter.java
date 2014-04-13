@@ -11,12 +11,11 @@ import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.screen.ClientScreen;
-import org.virtue.network.RS2Network;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.encoder.impl.ScreenConfigEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.LoginEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.WorldSession;
@@ -65,17 +64,19 @@ public class LoginFilter extends LogicEvent {
 			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ClientScreen());
 			return;
 		case WORLD_PART_2:
+                        //System.out.println("Sending login response data...");
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
-			if (Lobby.getPlayers().contains(account.getUsername().getAccountName())) {
+			/*if (Lobby.contains(account.getUsername().getAccountName())) {//FIXME: Something is causing deadlock in this section...
 				player = Lobby.getPlayer(account.getUsername().getAccountName());
 				Lobby.removePlayer(account.getUsername().getAccountName());
 				World.getWorld().addPlayer(player);
-			} else if (World.getWorld().contains(account.getUsername().getAccountName())) {
+			} else*/ if (World.getWorld().contains(account.getUsername().getAccountName())) {
 				player = World.getWorld().getPlayer(account.getUsername().getAccountName());
 			} else {
 				player = new Player(account);
 				World.getWorld().addPlayer(player);
 			}
+                        //System.out.println("Found player.");
 			player.getViewport().loadViewport();
 			session.getTransmitter().send(MapSceneEncoder.class, player.getViewport());
 			player.start();

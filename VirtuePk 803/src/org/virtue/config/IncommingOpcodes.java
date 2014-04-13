@@ -48,7 +48,7 @@ public class IncommingOpcodes {
 	public final static int ACTION_BUTTON_9_PACKET = 6;//803
 	public final static int ACTION_BUTTON_10_PACKET = 59;//803
 	
-	public final static int JOIN_FRIEND_CHAT_PACKET = 71;//795
+	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803
 	public final static int ONLINE_STATUS_PACKET = 22;//803
 	public final static int ADD_FRIEND_PACKET = 97;//803
 	public final static int REMOVE_FRIEND_PACKET = 58;//803

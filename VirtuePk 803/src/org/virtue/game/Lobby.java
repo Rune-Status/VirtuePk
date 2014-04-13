@@ -60,7 +60,7 @@ public class Lobby {
 	 * @param username The username.
 	 * @return True if so; false otherwise.
 	 */
-	public boolean contains(String username) {
+	public static boolean contains(String username) {
 		for (Player player : players) {
 			if (player == null) {
 				continue;

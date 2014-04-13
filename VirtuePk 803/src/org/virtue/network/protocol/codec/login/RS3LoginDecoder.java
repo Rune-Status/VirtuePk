@@ -2,7 +2,6 @@ package org.virtue.network.protocol.codec.login;
 
 import java.math.BigInteger;
 import java.net.ProtocolException;
-import java.security.SecureRandom;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -16,7 +15,6 @@ import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.identity.Password;
 import org.virtue.game.node.entity.player.identity.Username;
 import org.virtue.network.messages.LoginResponse;
-import org.virtue.network.protocol.codec.login.LoginPayload;
 import org.virtue.utility.Base37Utils;
 import org.virtue.utility.BufferUtils;
 import org.virtue.utility.DisplayMode;
@@ -56,6 +54,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 	//private LoginType currentLoginType;
 
 	
+	@SuppressWarnings("unused")
 	@Override
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buf) throws Exception {
 		LoginType type;
@@ -162,7 +161,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 
 			String serverToken = BufferUtils.readString(xteaBuffer);
 			if (!serverToken.equals(Constants.SERVER_TOKEN)) {
-				//System.out.println("Expected token: "+Constants.SERVER_TOKEN+", found: "+serverToken);
+				System.err.println("Expected token: "+Constants.SERVER_TOKEN+", found: "+serverToken);
 				return new LoginResponse(LoginResponse.BAD_SESSION);
 			}
 			xteaBuffer.readByte();// Final param (2424)
@@ -178,13 +177,13 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			boolean hasJagtheora = xteaBuffer.readUnsignedByte() == 1;		
 			boolean js = xteaBuffer.readUnsignedByte() == 1;
 			boolean hc = xteaBuffer.readUnsignedByte() == 1;
-			int unknown4 = xteaBuffer.readByte();
+			//int unknown4 = xteaBuffer.readByte();
 			int unknown5 = xteaBuffer.readInt();
 			
 			String serverToken = BufferUtils.readString(xteaBuffer);
-			if (!serverToken.equals(Constants.SERVER_TOKEN)) {
-				//System.out.println("Expected token: "+Constants.SERVER_TOKEN+", found: "+serverToken);
-				return new LoginResponse(LoginResponse.BAD_SESSION);
+			if (!serverToken.equals(Constants.SERVER_TOKEN)) {//TODO: Figure out why this isn't decoding correctly on some computers...
+				//System.err.println("Expected token: "+Constants.SERVER_TOKEN+", found: "+serverToken);
+				//eturn new LoginResponse(LoginResponse.BAD_SESSION);
 			}
 			boolean unknown7 = xteaBuffer.readUnsignedByte() == 1;
 			

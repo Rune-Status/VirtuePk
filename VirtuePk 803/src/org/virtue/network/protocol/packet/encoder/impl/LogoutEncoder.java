@@ -1,5 +1,6 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
+import org.virtue.config.OutgoingOpcodes;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
@@ -16,7 +17,7 @@ public class LogoutEncoder implements PacketEncoder<Boolean> {
 	@Override
 	public RS3PacketBuilder buildPacket(Boolean lobby) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacket(lobby ? 59 : 60);
+		buffer.putPacket(lobby ? OutgoingOpcodes.LOBBY_LOGOUT_PACKET : OutgoingOpcodes.FULL_LOGOUT_PACKET);
 		return buffer;
 	}
 }

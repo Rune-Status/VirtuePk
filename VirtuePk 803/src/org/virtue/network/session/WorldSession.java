@@ -59,7 +59,7 @@ public class WorldSession extends Session {
 	public void disconnect() {
 		if (!isLobby) {			
 			System.out.println("Removing "+player.getAccount().getUsername().getName()+" from the game.");
-			player.endSession();
+			player.destroy();
 		}
 		//World.getWorld().removePlayer(player);
 		//player.destroy();
