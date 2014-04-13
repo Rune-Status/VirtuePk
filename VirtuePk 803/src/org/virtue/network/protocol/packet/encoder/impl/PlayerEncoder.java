@@ -42,20 +42,21 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		stream.put(updateBlockData.buffer(), 0, updateBlockData.getPosition());
 		//System.out.println("After player masks: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));		
 		stream.endPacketVarShort();
-		node.getViewport().setTotalRenderDataSentLength(0);
+		node.getViewport().repackViewport();
+		/*node.getViewport().setTotalRenderDataSentLength(0);
 		node.getViewport().setLocalPlayersIndexesCount(0);
 		node.getViewport().setOutPlayersIndexesCount(0);
 		for (int playerIndex = 1; playerIndex < 2048; playerIndex++) {
 			player.getViewport().getSlotFlags()[playerIndex] >>= 1;
 			Player player = node.getViewport().getLocalPlayers()[playerIndex];
 			if (player == null) {
-				node.getViewport().setOutPlayersIndexesCount(node.getViewport().getOutPlayersIndexesCount() + 1);
 				node.getViewport().getOutPlayersIndexes()[node.getViewport().getOutPlayersIndexesCount()] = playerIndex;
+				node.getViewport().increaseOutsideIndexesCount();//.setOutPlayersIndexesCount(node.getViewport().getOutPlayersIndexesCount() + 1);
 			} else {
-				node.getViewport().setLocalPlayersIndexesCount(node.getViewport().getLocalPlayersIndexesCount() + 1);
 				node.getViewport().getLocalPlayersIndexes()[node.getViewport().getLocalPlayersIndexesCount()] = playerIndex;
+				node.getViewport().increaseLocalIndexesCount();//.setLocalPlayersIndexesCount(node.getViewport().getLocalPlayersIndexesCount() + 1);
 			}
-		}
+		}*/
 		return stream;
 	}
 	
@@ -84,8 +85,8 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				//System.out.println("[Local] Removing " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				removePlayer(buffer, playerIndex, localPlayer);
 			} else {
-				//System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				skip = updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
+				//System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+", skipped="+skip+")");
 			}
 		}
 		buffer.unSyncBits();
@@ -122,7 +123,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				queueOutsidePlayer(buffer, updateBlockData, globalPlayer, playerIndex);
 			} else {
 				skip = skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
-				//System.out.println("[Global] Skipping from" + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
+				//System.out.println("[Global] Skipping from " + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
 			}
 		}
 		buffer.unSyncBits();
@@ -212,7 +213,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
-		player.getViewport().getLocalPlayers()[playerIndex] = null;
+		player.getViewport().removeLocalPlayer(playerIndex);
 	}
 	
 	/**
@@ -233,7 +234,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			/*
 			 * A flag update is dispatched to render player's physical properties.
 			 */
-			System.out.println("Mask updated needed for "+playerIndex);
+			System.out.println("Mask updated needed for "+localPlayer.getIndex());
 			performFlagUpdate(localPlayer, updateBlockData, needAppearenceUpdate, false);
 		}
 		if (localPlayer.getUpdateArchive().getMovement().hasTeleported()) {
@@ -436,9 +437,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		 * Signifies an update has happened.
 		 */
 		buffer.putBits(1, 1);
-		player.getViewport().setLocalAddedPlayers(player.getViewport().getLocalAddedPlayers() + 1);
-		player.getViewport().getLocalPlayers()[outsidePlayer.getIndex()] = outsidePlayer;
-		player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
+		/*
+		 * Adds the player to the local player queue
+		 */
+		player.getViewport().addLocalPlayer(playerIndex, outsidePlayer);
 	}
 
 	/**
@@ -493,14 +495,17 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		data.putShort(0);//Useless
 		if (needAppearenceUpdate) {
 			data.put(UpdateMasks.APPEARANCE);
-			p.getUpdateArchive().getAppearance().load();
+			//p.getUpdateArchive().getAppearance().packBlock();
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
 				p.getUpdateArchive().queue(AppearanceBlock.class);
 			}
-			p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
-			//TODO: Move this to somewhere better...
+			int length = p.getUpdateArchive().getLiveBlocks()[8].appendToUpdateBlock(data, p);
+			player.getViewport().setTotalRenderDataSentLength(p.getViewport().getTotalRenderDataSentLength() + length);
+			player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();
+			//System.out.println("Adding player appearance update to cache: hash="+player.getViewport().getCachedAppearencesHashes()[player.getIndex()]+", player="+player.getIndex());
+			System.out.println("Packing appearance update for player: "+p.getAccount().getUsername().getName()+" at index: "+p.getIndex());
 			//player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();
-			p.getUpdateArchive().getLiveBlocks()[8] = null;
+			//p.getUpdateArchive().getLiveBlocks()[8] = null;
 		}
 	}
 	

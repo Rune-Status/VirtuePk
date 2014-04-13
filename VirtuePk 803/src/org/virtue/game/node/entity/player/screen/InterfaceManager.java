@@ -188,7 +188,7 @@ public class InterfaceManager {
 		sendCs2(new ClientScriptVar(4704));//Runscript: [4704]
 		sendCs2(new ClientScriptVar(4308, 18, 0));//Runscript: [4308, 18, 0]
 		
-		sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159]
+		//sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159] (popup thing)
 		sendInterface(true, 1477, 21, 1215);//Interface: id=1215, clipped=1, parent=[1477, 21]
 		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]
 		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]

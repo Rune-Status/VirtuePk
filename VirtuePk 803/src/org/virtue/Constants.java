@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import org.virtue.game.region.Tile;
 
 /**
- * @author Taylor Moon
+ * @author Belthazar
  * @since Jan 22, 2014
  */
 public class Constants {
@@ -28,7 +28,7 @@ public class Constants {
 	/**
 	 * Default Player Location.
 	 */
-	public static final Tile DEFAULT_LOCATION = new Tile(3222, 3222, 0);
+	public static final Tile DEFAULT_LOCATION = new Tile(3200, 3200, 0);
 
 
 	/**

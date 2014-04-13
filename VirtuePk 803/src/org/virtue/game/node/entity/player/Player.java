@@ -65,6 +65,7 @@ public class Player extends Entity {
 	private PacketDispatcher packetDispatcher;
 	
 	private boolean destroying = false;
+	private boolean inWorld = false;
 	
 	/**
 	 * Constructs a new {@code Player.java}.
@@ -84,6 +85,7 @@ public class Player extends Entity {
 
 	@Override
 	public void start() {
+		inWorld = true;
 		//System.out.println("Sending game information to player...");
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
 		packetDispatcher.dispatchPlayerOption(OPTION_FOLLOW);
@@ -102,6 +104,7 @@ public class Player extends Entity {
 	}
 	
 	public void startLobby() {
+		//started = true;
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
 	}
 
@@ -141,7 +144,9 @@ public class Player extends Entity {
 	
 	@Override
 	public void update() {
-		account.getSession().getTransmitter().send(PlayerEncoder.class, this);//Send player updates
+		if (inWorld) {
+			account.getSession().getTransmitter().send(PlayerEncoder.class, this);//Send player updates
+		}
 	}
 	
 	@Override

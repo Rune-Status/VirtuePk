@@ -37,12 +37,14 @@ public class AppearanceBlock extends UpdateBlock {
 	 *      com.psyc.live.node.entity.player.account.Player, java.lang.Object)
 	 */
 	@Override
-	public void appendToUpdateBlock(RS3PacketBuilder buf, Player player) {
-		byte[] renderData = player.getUpdateArchive().getAppearance().getBuffer();		
-		player.getViewport().setTotalRenderDataSentLength(player.getViewport().getTotalRenderDataSentLength() + renderData.length);
-		player.getViewport().getCachedAppearencesHashes()[player.getIndex()] = player.getUpdateArchive().getAppearance().getMD5Hash();
+	public int appendToUpdateBlock(RS3PacketBuilder buf, Player player) {
+		byte[] renderData = player.getUpdateArchive().getAppearance().getBuffer();	
+		if (renderData == null) {
+			player.getUpdateArchive().getAppearance().packBlock();
+			renderData = player.getUpdateArchive().getAppearance().getBuffer();	
+		}
 		buf.putByteS(renderData.length);
 		buf.putReverseA(renderData, 0, renderData.length);
-		//System.out.println("Appearance block size: "+renderData.length);
+		return renderData.length+1;
 	}
 }

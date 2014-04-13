@@ -346,6 +346,44 @@ public class Viewport {
 	public void setSlotFlags(byte[] slotFlags) {
 		this.slotFlags = slotFlags;
 	}
+	/**
+	 * Adds the player to the local player update queue
+	 * @param playerIndex
+	 * @param player
+	 */
+	public void addLocalPlayer (int playerIndex, Player player) {		
+		increaseLocalAddedPlayers();
+		localPlayers[playerIndex] = player;
+		slotFlags[playerIndex] |= (byte) 2;
+	}
+	
+	/**
+	 * Removes the player from the local player update queue
+	 * @param playerIndex
+	 */
+	public void removeLocalPlayer (int playerIndex) {
+		localPlayers[playerIndex] = null;
+	}
+	
+	/**
+	 * Repacks the view port so that the local players and outside players are stored in the correct place.
+	 * This should be called at the end of each player update.
+	 */
+	public void repackViewport() {
+		totalRenderDataSentLength = 0;
+		localPlayersIndexesCount = 0;
+		outPlayersIndexesCount = 0;
+		localAddedPlayers = 0;
+		for (int playerIndex = 1; playerIndex < 2048; playerIndex++) {
+			slotFlags[playerIndex] >>= 1;
+			Player p = localPlayers[playerIndex];
+			if (p == null) {
+				outPlayersIndexes[outPlayersIndexesCount++] = playerIndex;
+			} else {
+				localPlayersIndexes[localPlayersIndexesCount++] = playerIndex;
+			}
+		}
+	}
 
 	/**
 	 * Increases the local added count.

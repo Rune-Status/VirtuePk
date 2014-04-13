@@ -22,8 +22,8 @@ import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
  * A class used for organization of outgoing packets so the transmitter doesn't
  * have to be called directly.
  * 
- * @author Taylor Moon
- * @since Jan 27, 2014
+ * @author Jamie Moore
+ * @since April, 13, 2014
  */
 public class PacketDispatcher {
 	

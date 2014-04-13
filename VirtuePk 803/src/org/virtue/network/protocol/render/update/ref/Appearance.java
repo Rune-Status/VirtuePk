@@ -91,11 +91,12 @@ public class Appearance {
 	public Appearance(Player player) {
 		this.player = player;
 		loadMaleBody();
-		if (player != null)
-			load();
+		if (player != null) {
+			packBlock();
+		}
 	}
 	
-	public void load() {
+	public void packBlock() {
 		title = -1;//TODO: Remove this stuff - It's only for debugging purposes
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		int mask = 0;
@@ -187,7 +188,7 @@ public class Appearance {
 			}
 		}
 		buffer.putShort(getRenderEmote());
-		System.out.println("Name: "+player.getAccount().getUsername().getName());
+		//System.out.println("Name: "+player.getAccount().getUsername().getName());
 		buffer.putString(player.getAccount().getUsername().getName());
 		buffer.put(138);
 		buffer.put(138);
@@ -387,7 +388,7 @@ public class Appearance {
 	 */
 	public void setPrayerIconId(int prayerIconId) {
 		this.prayerIconId = prayerIconId;
-		load();
+		packBlock();
 	}
 	
 	public void setGender(Gender gender) {

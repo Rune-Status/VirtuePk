@@ -27,6 +27,7 @@ public abstract class UpdateBlock {
 	 * @param buffer The update buffer to write data to.
 	 * @param player The player being updated.
 	 * @param ref The block reference.
+	 * @return the length of the appended block
 	 */
-	public abstract void appendToUpdateBlock(RS3PacketBuilder buffer, Player player);
+	public abstract int appendToUpdateBlock(RS3PacketBuilder buffer, Player player);
 }

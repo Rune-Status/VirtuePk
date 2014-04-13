@@ -9,8 +9,8 @@ import org.virtue.game.node.entity.player.Player;
 public interface Command {
 	
 	/**
-	 * Called whent this command is executed.
-	 * @param syntax The syntax of the commmand.
+	 * Called when this command is executed.
+	 * @param syntax The syntax of the command.
 	 * @param player The player.
 	 * @param args The arguments
 	 * @return
