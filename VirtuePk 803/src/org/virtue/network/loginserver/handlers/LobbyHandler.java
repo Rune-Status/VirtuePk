@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver.handlers;
+package org.virtue.network.loginserver.handlers;
 
 import java.net.ProtocolException;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver.output;
+package org.virtue.network.loginserver.output;
 
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;

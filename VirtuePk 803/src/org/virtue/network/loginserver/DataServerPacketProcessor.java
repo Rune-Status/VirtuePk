@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver;
+package org.virtue.network.loginserver;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;

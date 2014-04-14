@@ -48,6 +48,17 @@ public class IncommingOpcodes {
 	public final static int ACTION_BUTTON_9_PACKET = 6;//803
 	public final static int ACTION_BUTTON_10_PACKET = 59;//803
 	
+	public final static int PLAYER_OPTION_1_PACKET = 88;//803
+	public final static int PLAYER_OPTION_2_PACKET = 86;//803
+	public final static int PLAYER_OPTION_3_PACKET = 90;//803
+	public final static int PLAYER_OPTION_4_PACKET = 25;//803
+	public final static int PLAYER_OPTION_5_PACKET = 79;//803
+	public final static int PLAYER_OPTION_6_PACKET = 101;//803
+	public final static int PLAYER_OPTION_7_PACKET = 94;//803
+	public final static int PLAYER_OPTION_8_PACKET = 71;//803
+	public final static int PLAYER_OPTION_9_PACKET = 12;//803
+	public final static int PLAYER_OPTION_10_PACKET = 75;//803
+	
 	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803
 	public final static int ONLINE_STATUS_PACKET = 22;//803
 	public final static int ADD_FRIEND_PACKET = 97;//803

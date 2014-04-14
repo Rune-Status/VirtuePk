@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver;
+package org.virtue.network.loginserver;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;

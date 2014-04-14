@@ -20,7 +20,7 @@ package org.virtue.config;
  * RS3Emulator
  * LobbyConfigs.java
  * 4/04/2014
- * @author Sundays211
+ * @author James
  */
 public class ClientVarps {
 	

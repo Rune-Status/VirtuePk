@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver.output;
+package org.virtue.network.loginserver.output;
 
 import org.virtue.Constants;
 import org.virtue.game.World;

@@ -1,8 +1,8 @@
-package org.virtue.network.dataserver;
+package org.virtue.network.loginserver;
 
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.virtue.network.dataserver.output.WorldSubmissionEncoder;
+import org.virtue.network.loginserver.output.WorldSubmissionEncoder;
 
 /**
  * @author Taylor

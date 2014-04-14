@@ -1,4 +1,4 @@
-package org.virtue.network.dataserver.message;
+package org.virtue.network.loginserver.message;
 
 
 /**

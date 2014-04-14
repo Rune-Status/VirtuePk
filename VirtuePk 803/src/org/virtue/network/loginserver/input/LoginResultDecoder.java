@@ -1,7 +1,7 @@
-package org.virtue.network.dataserver.input;
+package org.virtue.network.loginserver.input;
 
-import org.virtue.network.dataserver.handlers.LoginResultHandler;
-import org.virtue.network.dataserver.message.LoginResult;
+import org.virtue.network.loginserver.handlers.LoginResultHandler;
+import org.virtue.network.loginserver.message.LoginResult;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
