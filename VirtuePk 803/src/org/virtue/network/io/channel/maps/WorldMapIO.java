@@ -48,7 +48,6 @@ public class WorldMapIO {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Loaded " + MAP_XTEAS.getData().size() + " map regions.");
 		System.out.println("Loaded " + World.getWorld().getNpcs().size() + " world NPCs");
 	}
 

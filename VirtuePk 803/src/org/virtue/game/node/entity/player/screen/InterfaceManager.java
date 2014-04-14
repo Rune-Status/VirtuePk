@@ -42,33 +42,33 @@ public class InterfaceManager {
 	public void sendScreen() {
 		player.getAccount().getSession().getTransmitter().send(GameScreenEncoder.class, player.getAccount().getDisplayMode());
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
-		sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313]
+		sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313] (Skills)
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30
 		sendCs2(new ClientScriptVar(8862, 0, 1));
 		sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
 		
-		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293]
+		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293] (Active task)
 		sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
 		
-		sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130]
+		sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130] (Inventory)
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(1473, 8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
 		sendInterfaceSettings(1473, 0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536
 		sendCs2(new ClientScriptVar(8862, 2, 1));//Runscript: [8862, 2, 1]
 		
-		sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202]
+		sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202] (Equipment)
 		sendInterfaceSettings(1464, 14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
 		sendInterfaceSettings(1464, 12, 2, 7, 2);//IfaceSettings: 95944716, 7, 2, 2
 		sendCs2(new ClientScriptVar(8862, 3, 1));//Runscript: [8862, 3, 1]
 		
-		sendInterface(true, 1477, 323, 1458);//Interface: id=1458, clipped=1, parent=[1477, 323]
+		sendInterface(true, 1477, 323, 1458);//Interface: id=1458, clipped=1, parent=[1477, 323] (Prayer tab)
 		sendInterfaceSettings(1458, 24, 0, 28, 8388610);//IfaceSettings: 95551512, 28, 0, 8388610
 		sendCs2(new ClientScriptVar(8862, 4, 1));//Runscript: [8862, 4, 1]
 		
-		sendInterface(true, 1477, 239, 1460);//Interface: id=1460, clipped=1, parent=[1477, 239]
-		sendInterface(true, 1477, 249, 1452);//Interface: id=1452, clipped=1, parent=[1477, 249]
-		sendInterface(true, 1477, 259, 1461);//Interface: id=1461, clipped=1, parent=[1477, 259]
-		sendInterface(true, 1477, 269, 1449);//Interface: id=1449, clipped=1, parent=[1477, 269]
+		sendInterface(true, 1477, 239, 1460);//Interface: id=1460, clipped=1, parent=[1477, 239] (Melee abilities)
+		sendInterface(true, 1477, 249, 1452);//Interface: id=1452, clipped=1, parent=[1477, 249] (Ranged abilities)
+		sendInterface(true, 1477, 259, 1461);//Interface: id=1461, clipped=1, parent=[1477, 259] (Magic abilities)
+		sendInterface(true, 1477, 269, 1449);//Interface: id=1449, clipped=1, parent=[1477, 269] (Defense abilities)
 		sendInterfaceSettings(1460, 1, 0, 168, 10320902);//IfaceSettings: 95682561, 168, 0, 10320902
 		sendInterfaceSettings(1452, 1, 0, 168, 10320902);//IfaceSettings: 95158273, 168, 0, 10320902
 		sendInterfaceSettings(1461, 1, 0, 168, 10320902);//IfaceSettings: 95748097, 168, 0, 10320902
@@ -79,17 +79,17 @@ public class InterfaceManager {
 		sendInterfaceSettings(1449, 7, 6, 14, 2);//IfaceSettings: 94961671, 14, 6, 2
 		sendCs2(new ClientScriptVar(8862, 5, 1));//Runscript: [8862, 5, 1]
 		
-		sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371]
+		sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371] (Friends list)
 		sendCs2(new ClientScriptVar(8862, 14, 1));//Runscript: [8862, 14, 1]
 		sendInterfaceSettings(550, 25, 0, 500, 510);//IfaceSettings: 36044825, 500, 0, 510
 		sendInterfaceSettings(550, 23, 0, 500, 6);//IfaceSettings: 36044823, 500, 0, 6
 		
-		sendInterface(true, 1477, 602, 1427);//Interface: id=1427, clipped=1, parent=[1477, 602]
+		sendInterface(true, 1477, 602, 1427);//Interface: id=1427, clipped=1, parent=[1477, 602] (Friends chat)
 		sendCs2(new ClientScriptVar(1303, 93519895, 1, 1, player.getAccount().getUsername().getName()));//Runscript: [1303, 93519895, 1, 1, Test]
 		sendInterfaceSettings(1427, 23, 0, 600, 1024);//IfaceSettings: 93519895, 600, 0, 1024
 		sendCs2(new ClientScriptVar(8862, 15, 1));//Runscript: [8862, 15, 1]
 		
-		sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361]
+		sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361] (Clan chat)
 		sendCs2(new ClientScriptVar(8862, 16, 1));//Runscript: [8862, 16, 1]
 		sendInterfaceSettings(1110, 20, 0, 200, 2);//IfaceSettings: 72744980, 200, 0, 2
 		sendInterfaceSettings(1110, 25, 0, 600, 2);//IfaceSettings: 72744985, 600, 0, 2
@@ -103,23 +103,23 @@ public class InterfaceManager {
 		sendCs2(new ClientScriptVar(4717, 94240781, 94240780, 94240782, 3874));//Runscript: [4717, 94240781, 94240780, 94240782, 3874]
 		sendCs2(new ClientScriptVar(8862, 9, 1));//Runscript: [8862, 9, 1]
 		
-		sendInterface(true, 1477, 341, 1416);//Interface: id=1416, clipped=1, parent=[1477, 341]
+		sendInterface(true, 1477, 341, 1416);//Interface: id=1416, clipped=1, parent=[1477, 341] (Music player)
 		sendInterfaceSettings(1416, 3, 0, 2443, 30);//IfaceSettings: 92798979, 2443, 0, 30
 		sendInterfaceSettings(1416, 11, 0, 11, 2359302);//IfaceSettings: 92798987, 11, 0, 2359302
 		sendInterfaceSettings(1416, 11, 12, 23, 4);//IfaceSettings: 92798987, 23, 12, 4
 		sendInterfaceSettings(1416, 11, 24, 24, 2097152);//IfaceSettings: 92798987, 24, 24, 2097152
 		sendCs2(new ClientScriptVar(8862, 10, 1));//Runscript: [8862, 10, 1]
 		
-		sendInterface(true, 1477, 351, 1417);//Interface: id=1417, clipped=1, parent=[1477, 351]
+		sendInterface(true, 1477, 351, 1417);//Interface: id=1417, clipped=1, parent=[1477, 351] (Notes)
 		sendInterfaceSettings(1417, 16, 0, 29, 2621470);//IfaceSettings: 92864528, 29, 0, 2621470
 		sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
 		sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
 		
-		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174]
+		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174] (Launcher bar (links to settings, social, powers, etc))
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
 		sendInterfaceSettings(1477, 175, 1, 1, 2);//IfaceSettings: 96796847, 1, 1, 2
 		
-		sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58]
+		sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58] (Action bar)
 		sendInterfaceSettings(1477, 80, 1, 1, 4);//IfaceSettings: 96796752, 1, 1, 4
 		
 		sendInterfaceSettings(1430, 118, -1, -1, 2098176);//IfaceSettings: 93716598, -1, -1, 2098176
@@ -156,22 +156,22 @@ public class InterfaceManager {
 		sendInterfaceSettings(1449, 1, 0, 168, 8485894);//IfaceSettings: 94961665, 168, 0, 8485894
 		sendInterfaceSettings(590, 8, 0, 169, 8388614);//IfaceSettings: 38666248, 169, 0, 8388614
 		
-		sendInterface(true, 1477, 60, 1465);//Interface: id=1465, clipped=1, parent=[1477, 60]
+		sendInterface(true, 1477, 60, 1465);//Interface: id=1465, clipped=1, parent=[1477, 60] (Minimap)
 		sendInterfaceSettings(1477, 82, 1, 1, 6);//IfaceSettings: 96796754, 1, 1, 6
-		sendInterface(true, 1477, 34, 1433);//Interface: id=1433, clipped=1, parent=[1477, 34]
-		sendInterface(true, 1477, 390, 1483);//Interface: id=1483, clipped=1, parent=[1477, 390]
-		sendInterface(true, 1477, 409, 745);//Interface: id=745, clipped=1, parent=[1477, 409]
+		sendInterface(true, 1477, 34, 1433);//Interface: id=1433, clipped=1, parent=[1477, 34] (Settings menu)
+		sendInterface(true, 1477, 390, 1483);//Interface: id=1483, clipped=1, parent=[1477, 390] (Grave timer)
+		sendInterface(true, 1477, 409, 745);//Interface: id=745, clipped=1, parent=[1477, 409] (Assisting interface)
 		sendInterface(true, 1477, 386, 1485);//Interface: id=1485, clipped=1, parent=[1477, 386]
-		sendInterface(true, 1477, 0, 1213);//Interface: id=1213, clipped=1, parent=[1477, 0]
+		sendInterface(true, 1477, 0, 1213);//Interface: id=1213, clipped=1, parent=[1477, 0] (Skill popups)
 		sendInterface(true, 1477, 76, 1448);//Interface: id=1448, clipped=1, parent=[1477, 76]
-		sendInterface(true, 1477, 832, 557);//Interface: id=557, clipped=1, parent=[1477, 832]
+		sendInterface(true, 1477, 832, 557);//Interface: id=557, clipped=1, parent=[1477, 832] (Current task)
 		sendInterface(true, 1477, 18, 1484);//Interface: id=1484, clipped=1, parent=[1477, 18]
-		sendInterface(true, 1477, 106, 137);//Interface: id=137, clipped=1, parent=[1477, 106]
-		sendInterface(true, 1477, 178, 1467);//Interface: id=1467, clipped=1, parent=[1477, 178]
-		sendInterface(true, 1477, 186, 1472);//Interface: id=1472, clipped=1, parent=[1477, 186]
-		sendInterface(true, 1477, 194, 1471);//Interface: id=1471, clipped=1, parent=[1477, 194]
-		sendInterface(true, 1477, 333, 1470);//Interface: id=1470, clipped=1, parent=[1477, 333]
-		sendInterface(true, 1477, 824, 464);//Interface: id=464, clipped=1, parent=[1477, 824]
+		sendInterface(true, 1477, 106, 137);//Interface: id=137, clipped=1, parent=[1477, 106] (Chat box)
+		sendInterface(true, 1477, 178, 1467);//Interface: id=1467, clipped=1, parent=[1477, 178] (Another chat box)
+		sendInterface(true, 1477, 186, 1472);//Interface: id=1472, clipped=1, parent=[1477, 186] (Another chat box)
+		sendInterface(true, 1477, 194, 1471);//Interface: id=1471, clipped=1, parent=[1477, 194] (Another chat box)
+		sendInterface(true, 1477, 333, 1470);//Interface: id=1470, clipped=1, parent=[1477, 333] (Another chat box)
+		sendInterface(true, 1477, 824, 464);//Interface: id=464, clipped=1, parent=[1477, 824] (Another chat box)
 		sendInterface(true, 1477, 222, 182);//Interface: id=182, clipped=1, parent=[1477, 222]
 		sendInterfaceSettings(137, 90, 0, 99, 2046);//IfaceSettings: 8978522, 99, 0, 2046
 		sendInterfaceSettings(1467, 61, 0, 99, 2046);//IfaceSettings: 96141373, 99, 0, 2046
@@ -188,8 +188,8 @@ public class InterfaceManager {
 		sendCs2(new ClientScriptVar(4704));//Runscript: [4704]
 		sendCs2(new ClientScriptVar(4308, 18, 0));//Runscript: [4308, 18, 0]
 		
-		//sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159] (popup thing)
-		sendInterface(true, 1477, 21, 1215);//Interface: id=1215, clipped=1, parent=[1477, 21]
+		//sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159] (Information box)
+		sendInterface(true, 1477, 21, 1215);//Interface: id=1215, clipped=1, parent=[1477, 21] (Experience counter)
 		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]
 		sendCs2(new ClientScriptVar(5559, 3122093));//Runscript: [5559, 3122093]
 		sendCs2(new ClientScriptVar(5557, 1));//Runscript: [5557, 1]
@@ -297,11 +297,11 @@ public class InterfaceManager {
 		sendInterfaceSettings(1477, 281, 3, 4, 9175040);//IfaceSettings: 96796953, 4, 3, 9175040
 		sendInterfaceSettings(1477, 121, -1, -1, 2097152);//IfaceSettings: 96796793, -1, -1, 2097152
 		sendInterfaceSettings(1477, 282, 1, 1, 2);//IfaceSettings: 96796954, 1, 1, 2
-		sendInterfaceSettings(1477, 316, 1, 7, 9175040);//IfaceSettings: 96796988, 7, 1, 9175040
-		sendInterfaceSettings(1477, 316, 11, 13, 9175040);//IfaceSettings: 96796988, 13, 11, 9175040
-		sendInterfaceSettings(1477, 316, 0, 0, 9175040);//IfaceSettings: 96796988, 0, 0, 9175040
-		sendInterfaceSettings(1477, 316, 3, 4, 9175040);//IfaceSettings: 96796988, 4, 3, 9175040
-		sendInterfaceSettings(1477, 122, -1, -1, 2097152);//IfaceSettings: 96796794, -1, -1, 2097152
+		//sendInterfaceSettings(1477, 316, 1, 7, 9175040);//IfaceSettings: 96796988, 7, 1, 9175040
+		//sendInterfaceSettings(1477, 316, 11, 13, 9175040);//IfaceSettings: 96796988, 13, 11, 9175040
+		//sendInterfaceSettings(1477, 316, 0, 0, 9175040);//IfaceSettings: 96796988, 0, 0, 9175040
+		//sendInterfaceSettings(1477, 316, 3, 4, 9175040);//IfaceSettings: 96796988, 4, 3, 9175040
+		//sendInterfaceSettings(1477, 122, -1, -1, 2097152);//IfaceSettings: 96796794, -1, -1, 2097152
 		sendInterfaceSettings(1477, 317, 1, 1, 2);//IfaceSettings: 96796989, 1, 1, 2
 		sendInterfaceSettings(1477, 326, 1, 7, 9175040);//IfaceSettings: 96796998, 7, 1, 9175040
 		sendInterfaceSettings(1477, 326, 11, 13, 9175040);//IfaceSettings: 96796998, 13, 11, 9175040

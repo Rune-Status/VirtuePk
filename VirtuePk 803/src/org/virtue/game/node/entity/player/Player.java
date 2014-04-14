@@ -9,6 +9,9 @@ import org.virtue.game.node.entity.player.container.Equipment;
 import org.virtue.game.node.entity.player.container.Inventory;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.screen.InterfaceManager;
+import org.virtue.game.node.entity.player.skills.Skill;
+import org.virtue.game.node.entity.player.skills.SkillData;
+import org.virtue.game.node.entity.player.skills.SkillManager;
 import org.virtue.game.social.OnlineStatus;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
@@ -55,6 +58,11 @@ public class Player extends Entity {
 	private Equipment equipment;
 	
 	/**
+	 * Represents the skill manager.
+	 */
+	private SkillManager skillManager;
+	
+	/**
 	 * Represents the update archive.
 	 */
 	private UpdateBlockArchive updateArchive;
@@ -81,6 +89,7 @@ public class Player extends Entity {
 		equipment = new Equipment(this);
 		updateArchive = new UpdateBlockArchive(this);
 		packetDispatcher = new PacketDispatcher(this);
+		skillManager = new SkillManager(this);
 	}
 
 	@Override
@@ -98,9 +107,12 @@ public class Player extends Entity {
 			}
 		}
 		interfaceManager.sendScreen();
+		skillManager.sendAllSkills();
+		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
 		account.getSession().getTransmitter().send(OnlineStatusEncoder.class, OnlineStatus.EVERYONE);
 		account.getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
-		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
+
+		//player.getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
 	public void startLobby() {

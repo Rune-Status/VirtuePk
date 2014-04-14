@@ -3,6 +3,8 @@ package org.virtue.network.protocol.packet.encoder;
 import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.Viewport;
+import org.virtue.game.node.entity.player.skills.Skill;
+import org.virtue.game.node.entity.player.skills.SkillData;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.messages.GameMessage;
@@ -16,6 +18,7 @@ import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.PlayerOptionEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.r803.SkillEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 
 /**
@@ -38,6 +41,10 @@ public class PacketDispatcher {
 	 */
 	public PacketDispatcher(Player player) {
 		this.player = player;
+	}
+	
+	public void dispatchSkill (SkillData skill) {
+		player.getAccount().getSession().getTransmitter().send(SkillEncoder.class, skill);
 	}
 	
 	/**

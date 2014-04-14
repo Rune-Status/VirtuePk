@@ -1,5 +1,7 @@
 package org.virtue.network.protocol.codec.creation;
 
+import java.util.GregorianCalendar;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandler;
@@ -16,8 +18,11 @@ public class AccountCreationDecoder extends FrameDecoder implements ChannelHandl
 	protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) throws Exception {
 		if (!buffer.readable()) 
 			return null;
-		buffer.readByte();
-		return null;
+		int day = buffer.readByte();
+		int month = buffer.readByte();
+		int year = buffer.readByte();
+		int country = buffer.readByte();
+		return new GregorianCalendar(year, month, day);
 	}
 
 }

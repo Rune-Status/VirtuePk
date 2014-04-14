@@ -12,10 +12,7 @@ import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 import org.virtue.network.protocol.render.update.blocks.AppearanceBlock;
 import org.virtue.network.protocol.render.update.movement.MovementUtils;
 
-/**
- * @author Taylor Moon
- * @since Jan 25, 2014
- */
+
 public class PlayerEncoder implements PacketEncoder<Player> {
 	
 	/**
@@ -35,12 +32,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		stream.putPacketVarShort(OutgoingOpcodes.PLAYER_UPDATE_PACKET);
 		renderLocalPlayers(stream, updateBlockData, true);
 		renderLocalPlayers(stream, updateBlockData, false);
-		//System.out.println("After local players: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));
 		renderOutsidePlayers(stream, updateBlockData, true);
 		renderOutsidePlayers(stream, updateBlockData, false);
-		//System.out.println("After global players: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));
 		stream.put(updateBlockData.buffer(), 0, updateBlockData.getPosition());
-		//System.out.println("After player masks: index="+stream.getPosition()+", data="+Arrays.toString(stream.buffer()));		
 		stream.endPacketVarShort();
 		node.getViewport().repackViewport();
 		/*node.getViewport().setTotalRenderDataSentLength(0);
@@ -69,7 +63,6 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	public void renderLocalPlayers(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, boolean nsn0) {
 		buffer.syncBits();
 		int skip = 0;
-		//System.out.println(player.getViewport().getLocalPlayersIndexesCount()+" local players.");
 		for (int i = 0; i < player.getViewport().getLocalPlayersIndexesCount(); i++) {
 			int playerIndex = player.getViewport().getLocalPlayersIndexes()[i];
 			if (nsn0 ? (0x1 & player.getViewport().getSlotFlags()[playerIndex]) != 0 : (0x1 & player.getViewport().getSlotFlags()[playerIndex]) == 0) {
@@ -82,11 +75,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			Player localPlayer = player.getViewport().getLocalPlayers()[playerIndex];
 			if (needsRemove(localPlayer)) {
-				//System.out.println("[Local] Removing " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				removePlayer(buffer, playerIndex, localPlayer);
 			} else {
 				skip = updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
-				//System.out.println("[Local] Updating " + localPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+", skipped="+skip+")");
 			}
 		}
 		buffer.unSyncBits();
@@ -102,7 +93,6 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		buffer.syncBits();
 		int skip = 0;
 		player.getViewport().setLocalAddedPlayers(0);
-		//System.out.println(player.getViewport().getOutPlayersIndexesCount()+" outside players.");
 		for (int counter = 0; counter < player.getViewport().getOutPlayersIndexesCount(); counter++) {
 			int playerIndex = player.getViewport().getOutPlayersIndexes()[counter];
 			if (nsn2 ? (0x1 & player.getViewport().getSlotFlags()[playerIndex]) == 0 : (0x1 & player.getViewport().getSlotFlags()[playerIndex]) != 0) {
@@ -110,7 +100,6 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			if (skip > 0) {
 				skip--;
-				//System.err.println("Skip " + skip);
 				player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 				continue;
 			}
@@ -119,12 +108,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				continue;
 			}*/
 			if (needsAdd(globalPlayer)) {
-				//System.out.println("[Global] Adding " + globalPlayer.getAccount().getUsername().getName()+" (index="+playerIndex+")");
 				queueOutsidePlayer(buffer, updateBlockData, globalPlayer, playerIndex);
 			} else {
 				skip = skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
-				//System.out.println("[Global] Skipping from " + (globalPlayer == null ? "[null]" : globalPlayer.getAccount().getUsername().getName())+" (index="+playerIndex+", skipped="+skip+")");
-			}
+				}
 		}
 		buffer.unSyncBits();
 	}
@@ -166,15 +153,8 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param amount The skip amount.
 	 */
 	private void skipPlayers(RS3PacketBuilder stream, int amount) {
-		/*
-		 * Signifies a skip is happening.
-		 */
-		//System.out.println("Packing skip for "+amount+" players...");
 		stream.putBits(2, amount == 0 ? 0 : amount > 255 ? 3 : (amount > 31 ? 2 : 1));
 		if (amount > 0) {
-			/*
-			 * Signifies the skip.
-			 */
 			stream.putBits(amount > 255 ? 11 : (amount > 31 ? 8 : 5), amount);
 		}
 	}
@@ -186,30 +166,15 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param localPlayer The player.
 	 */
 	private void removePlayer(RS3PacketBuilder buffer, int playerIndex, Player localPlayer) {
-		/*
-		 * Signifies an update.
-		 */
-		buffer.putBits(1, 1);//update=true
-		/*
-		 * Signifies a removal.
-		 */
-		buffer.putBits(1, 0);//maskUpdate=false
-		/*
-		 * Signifies nothing happened.
-		 */
-		buffer.putBits(2, 0);//type=0
+		buffer.putBits(1, 1);
+		buffer.putBits(1, 0);
+		buffer.putBits(2, 0);
 		player.getViewport().getRegionHashes()[playerIndex] = localPlayer.getLastTile() == null ? localPlayer.getTile().getRegionHash() : localPlayer.getLastTile().getRegionHash();
 		int hash = localPlayer.getTile().getRegionHash();
 		if (hash == player.getViewport().getRegionHashes()[playerIndex]) {
-			/*
-			 * Signifies no update is required.
-			 */
-			buffer.putBits(1, 0);//regionUpdate=false
+			buffer.putBits(1, 0);
 		} else {
-			/*
-			 * Signifies an update is required.
-			 */
-			buffer.putBits(1, 1);//regionUpdate=true
+			buffer.putBits(1, 1);
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
@@ -229,41 +194,19 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	public int updatePlayer(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player localPlayer, int counter, int skip, int playerIndex, boolean nsn0) {
 		boolean needAppearenceUpdate = needAppearenceUpdate(localPlayer.getIndex(), localPlayer.getUpdateArchive().getAppearance().getMD5Hash());
 		boolean needUpdate = localPlayer.getUpdateArchive().flagged() || needAppearenceUpdate;
-		//needUpdate = false;//TODO: Remove this when ready to debug the update block(s)
 		if (needUpdate) {
-			/*
-			 * A flag update is dispatched to render player's physical properties.
-			 */
-			System.out.println("Mask updated needed for "+localPlayer.getIndex());
 			performFlagUpdate(localPlayer, updateBlockData, needAppearenceUpdate, false);
 		}
 		if (localPlayer.getUpdateArchive().getMovement().hasTeleported()) {
-			/*
-			 * Gives the client proper instructions on how to teleport the local
-			 * player and update it's position.
-			 */
 			queueLocalTeleportUpdate(buffer, localPlayer, needUpdate);
 		} else if (localPlayer.getUpdateArchive().getMovement().getNextWalkDirection() != -1) {
-			/*
-			 * Gives the client proper instructions on how to move a local
-			 * character and update it's position.
-			 */
 			queueLocalMovementUpdate(buffer, updateBlockData, localPlayer, needUpdate, needAppearenceUpdate);
 		} else if (needUpdate) {
-			/*
-			 * Signies an update is needed.
-			 */
 			buffer.putBits(1, 1);
-			/*
-			 * Lets the client know to remove the walking queue.
-			 */
 			buffer.putBits(1, 1);
-			/*
-			 * Signies that the local player did not move.
-			 */
 			buffer.putBits(2, 0);
 		} else {
-			buffer.putBits(1, 0);//No update needed
+			buffer.putBits(1, 0);
 			for (int indexCounter = counter + 1; indexCounter < player.getViewport().getLocalPlayersIndexesCount(); indexCounter++) {
 				int otherIndex = player.getViewport().getLocalPlayersIndexes()[indexCounter];
 				if (nsn0 ? (0x1 & player.getViewport().getSlotFlags()[otherIndex]) != 0 : (0x1 & player.getViewport().getSlotFlags()[otherIndex]) == 0)
@@ -287,26 +230,14 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param blockUpdate If a block update is happening.
 	 */
 	private void queueLocalTeleportUpdate(RS3PacketBuilder buffer, Player localPlayer, boolean blockUpdate) {
-		/*
-		 * Signifies a update requirement.
-		 */
 		buffer.putBits(1, 1);
-		/*
-		 * Signifies a block update was executed.
-		 */
 		buffer.putBits(1, blockUpdate ? 1 : 0);
-		/*
-		 * Signifies a teleport update was executed.
-		 */
 		buffer.putBits(2, 3);
 		int xOffset = localPlayer.getTile().getX() - localPlayer.getLastTile().getX();
 		int yOffset = localPlayer.getTile().getY() - localPlayer.getLastTile().getY();
 		int planeOffset = localPlayer.getTile().getPlane() - localPlayer.getLastTile().getPlane();
 		int unknownValue = 0;//TODO: Figure out what this is...
 		if (Math.abs(localPlayer.getTile().getX() - localPlayer.getLastTile().getX()) <= 14 && Math.abs(localPlayer.getTile().getY() - localPlayer.getLastTile().getY()) <= 14) {
-			/*
-			 * Signifies X & Y distance if out of local range
-			 */
 			buffer.putBits(1, 0);
 			if (xOffset < 0) {
 				xOffset += 32;
@@ -314,19 +245,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			if (yOffset < 0) {
 				yOffset += 32;
 			}
-			/*
-			 * Signifies the new coordinates data.
-			 */
 			buffer.putBits(15, yOffset + (xOffset << 5) + (planeOffset << 10) + (unknownValue << 12));
 		} else {
-			/*
-			 * Signifies the update was within range.
-			 */
 			buffer.putBits(1, 1);
 			buffer.putBits(3, unknownValue);
-			/*
-			 * Signifies the new coordinates data.
-			 */
 			buffer.putBits(30, (yOffset & 0x3fff) + ((xOffset & 0x3fff) << 14) + ((planeOffset & 0x3) << 28));
 		}
 	}
@@ -357,38 +279,19 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			running = false;
 			opcode = MovementUtils.getPlayerWalkingDirection(dx, dy);
 		}
-		/*
-		 * Signifies that an update is required.
-		 */
 		buffer.putBits(1, 1);
 		if ((dx == 0 && dy == 0)) {
-			/*
-			 * Signifies nothing has changed.
-			 */
 			buffer.putBits(1, 1);
-			/*
-			 * Signifies that the player didn't move.
-			 */
 			buffer.putBits(2, 0);
 			if (!blockUpdate) {
 				performFlagUpdate(localPlayer, updateBlockData, appearanceUpdate, false);
 			}
 		} else {
-			/*
-			 * Signifies a block update.
-			 */
 			buffer.putBits(1, blockUpdate ? 1 : 0);
-			/*
-			 * Signifies the movement type 
-			 */
 			buffer.putBits(2, running ? 2 : 1);
-			/*
-			 * Lets the client know how to move the character
-			 */
 			buffer.putBits(running ? 4 : 3, opcode);
-			
 			if (!running) {
-				buffer.putBits(1, 0);//Not really sure what this does; leaving it off to be safe
+				buffer.putBits(1, 0);
 			}
 		}
 	}
@@ -401,45 +304,21 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param playerIndex The player index.
 	 */
 	private void queueOutsidePlayer(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player outsidePlayer, int playerIndex) {
-		/*
-		 * Signifies that an update happened.
-		 */
 		buffer.putBits(1, 1);
-		/*
-		 * Signifies an outer player update.
-		 */
 		buffer.putBits(2, 0);
 		int hash = outsidePlayer.getTile().getRegionHash();
 		if (hash == player.getViewport().getRegionHashes()[playerIndex]) {
-			/*
-			 * Signifies no update is happening.
-			 */
 			buffer.putBits(1, 0);
 		} else {
-			/*
-			 * Signifies an update is happening.
-			 */
 			buffer.putBits(1, 1);
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
-		/*
-		 * Flags the region X coordinate for the client to update the position.
-		 */
 		buffer.putBits(6, outsidePlayer.getTile().getXInRegion());
-		/*
-		 * Flags the region Y coordinate for the client to update the position.
-		 */
 		buffer.putBits(6, outsidePlayer.getTile().getYInRegion());
 		boolean needAppearenceUpdate = needAppearenceUpdate(outsidePlayer.getIndex(), outsidePlayer.getUpdateArchive().getAppearance().getMD5Hash());
 		performFlagUpdate(outsidePlayer, updateBlockData, needAppearenceUpdate, true);
-		/*
-		 * Signifies an update has happened.
-		 */
 		buffer.putBits(1, 1);
-		/*
-		 * Adds the player to the local player queue
-		 */
 		player.getViewport().addLocalPlayer(playerIndex, outsidePlayer);
 	}
 
@@ -455,16 +334,10 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	public int skipOutsidePlayer(RS3PacketBuilder buffer, Player outsidePlayer, int playerIndex, int counter, int skip, boolean nsn2) {
 		int hash = outsidePlayer == null ? player.getViewport().getRegionHashes()[playerIndex] : outsidePlayer.getTile().getRegionHash();
 		if (outsidePlayer != null && hash != player.getViewport().getRegionHashes()[playerIndex]) {
-			/*
-			 * Signifies an update is required.
-			 */
 			buffer.putBits(1, 1);
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		} else {
-			/*
-			 * Signifies there is no update needed.
-			 */
 			buffer.putBits(1, 0);
 			for (int otherCounter = counter + 1; otherCounter < player.getViewport().getOutPlayersIndexesCount(); otherCounter++) {
 				int otherIndex = player.getViewport().getOutPlayersIndexes()[otherCounter];
@@ -491,11 +364,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param added If added.
 	 */
 	private void performFlagUpdate(Player p, RS3PacketBuilder data, boolean needAppearenceUpdate, boolean added) {
-		//TODO: Tidy this up so that multiple flag updates can occur
 		data.putShort(0);//Useless
 		if (needAppearenceUpdate) {
 			data.put(UpdateMasks.APPEARANCE);
-			//p.getUpdateArchive().getAppearance().packBlock();
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
 				p.getUpdateArchive().queue(AppearanceBlock.class);
 			}

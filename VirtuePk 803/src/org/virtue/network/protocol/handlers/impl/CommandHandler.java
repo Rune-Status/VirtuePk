@@ -14,13 +14,12 @@ public class CommandHandler extends PacketHandler<WorldSession> {
 	@Override
 	public void handle(WorldSession session) {
 		String cmd = getFlag("syntax", "");
-		String[] args = new String[0];
 		if (cmd == null || cmd.length() < 1) {
 			return;
 		}
-		String syntax = cmd.split(" ")[0];
-//		args = new String[cmd.length() - syntax.length()];
-//		System.arraycopy(cmd, 0, args, 0, args.length);
+		String syntax = cmd.split(" ")[0];		
+		String[] args = new String[cmd.split(" ").length - 1];
+		System.arraycopy(cmd.split(" "), 1, args, 0, args.length);
 		Command command = RS2Network.getCommands().forSyntax(syntax);
 		if (command == null) {
 			System.err.println("Unhandled command: " + syntax);

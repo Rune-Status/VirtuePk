@@ -7,7 +7,7 @@ import org.virtue.game.region.Tile;
  * @author Taylor
  * @date Jan 21, 2014
  */
-public class RS2Object extends Node {
+public class RS3Object extends Node {
 	
 	/**
 	 * Represents the ID of this object.
@@ -35,7 +35,7 @@ public class RS2Object extends Node {
 	 * @param rotation The rotation.
 	 * @param type The type.
 	 */
-	public RS2Object(int id, int rotation, int type, Tile tile) {
+	public RS3Object(int id, int rotation, int type, Tile tile) {
 		this.id = id;
 		this.rotation = rotation;
 		this.type = type;

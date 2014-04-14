@@ -66,6 +66,8 @@ public class IncommingOpcodes {
 	public final static int ADD_IGNORE_PACKET = 81;//803
 	public final static int REMOVE_IGNORE_PACKET = 76;//803
 	
+	public final static int INTERFACE_CHANGE_PACKET = 10;//803
+	
 	private static final int[] SIZES_803 = new int[120];
 	static {//TODO Identify packets
 		SIZES_803[0] = -1;

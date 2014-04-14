@@ -42,6 +42,9 @@ public class HandshakeDecoder extends FrameDecoder {
 			channel.getPipeline().addFirst("xor-encoder", new XorEncoder());
 			channel.getPipeline().addBefore("upHandler", "updateDecoder", new JS5Decoder());
 			break;
+		case HANSHAKE_CREATION:
+			channel.getPipeline().addFirst("encoder", new AccountCreationEncoder());
+			channel.getPipeline().addBefore("upHandler", "decoder", new AccountCreationDecoder());
 		default:
 			break;
 		}
