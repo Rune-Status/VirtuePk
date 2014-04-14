@@ -6,9 +6,9 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.virtue.network.protocol.codec.handshake.HandshakeType;
-import org.virtue.network.session.JS5Session;
-import org.virtue.network.session.LoginSession;
 import org.virtue.network.session.Session;
+import org.virtue.network.session.impl.JS5Session;
+import org.virtue.network.session.impl.LoginSession;
 
 /**
  * @author Taylor
@@ -26,7 +26,7 @@ public class PacketUpstreamHandler extends SimpleChannelUpstreamHandler {
 			HandshakeType handshakeType = (HandshakeType) e.getMessage();
 			switch (handshakeType.getType()) {
 			case HANDSHAKE_LOGIN:
-			case ACCOUNT_CREATION:
+			case HANSHAKE_CREATION:
 				ctx.setAttachment(new LoginSession(ctx));
 				break;
 			case HANDSHAKE_ONDEMAND:

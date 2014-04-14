@@ -1,4 +1,4 @@
-package org.virtue.game.node.entity.player.skills;
+package org.virtue.game.content.skills;
 
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.messages.ClientScriptVar;

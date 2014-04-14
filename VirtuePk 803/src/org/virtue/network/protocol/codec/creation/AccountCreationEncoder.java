@@ -12,8 +12,13 @@ public class AccountCreationEncoder extends OneToOneEncoder {
 
 	@Override
 	protected Object encode(ChannelHandlerContext ctx, Channel channel, Object msg) throws Exception {
-		if (!channel.isReadable())
+		if (!channel.isWritable())
 			return null;
+		if (msg instanceof AccountCreationResponse) {
+			AccountCreationResponse response = (AccountCreationResponse) msg;
+			channel.write(response.getStatus());
+			channel.write(response.getPayload());
+		}
 		return null;
 	}
 

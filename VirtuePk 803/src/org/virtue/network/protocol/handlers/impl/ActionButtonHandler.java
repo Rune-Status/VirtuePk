@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.network.protocol.handlers.PacketHandler;
-import org.virtue.network.session.WorldSession;
+import org.virtue.network.session.impl.WorldSession;
 
 public class ActionButtonHandler extends PacketHandler<WorldSession> {
 

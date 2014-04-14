@@ -1,4 +1,4 @@
-package org.virtue.game.node.entity.player.skills;
+package org.virtue.game.content.skills;
 
 public enum Skill {
 	ATTACK(0, "Attack"),
@@ -58,7 +58,25 @@ public enum Skill {
 		return name;
 	}
 	
+	/**
+	 * Gets the maximum level for the skill
+	 * @return	The maximum level.
+	 */
 	public int getMaxLevel () {
 		return maxLevel;
+	}
+	
+	public static Skill getSkill (int id) {
+		Skill skill = Skill.values()[id];
+		if (skill.skillID == id) {
+			return skill;
+		} else {
+			for (Skill s : Skill.values()) {
+				if (s.skillID == id) {
+					return s;
+				}
+			}
+			return null;
+		}
 	}
 }

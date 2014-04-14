@@ -181,8 +181,7 @@ public final class Cache implements Closeable {
 		return -1;
 	}
 
-	public int getMemberId(int type, int fileId, String string)
-			throws IOException {
+	public int getMemberId(int type, int fileId, String string) throws IOException {
 		int identifier = Djb2.djb2(string);
 		Container tableContainer = Container.decode(store.read(255, type));
 		ReferenceTable table = ReferenceTable.decode(tableContainer.getData());

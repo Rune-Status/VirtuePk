@@ -88,10 +88,10 @@ public class Launcher {
 	 */
 	private static void loadCache() throws Exception {
 		System.out.println("Loading cache.");
-                File cacheFile = new File(System.getProperty("user.home") + "/Desktop/cache/");
-                if (!new File(cacheFile, "main_file_cache.dat2").exists()) {
-                    cacheFile = new File("data/cache/");
-                }
+		File cacheFile = new File(System.getProperty("user.home") + "/Desktop/cache/");
+		if (!new File(cacheFile, "main_file_cache.dat2").exists()) {
+			cacheFile = new File("data/cache/");
+		}
 		CACHE = new Cache(FileStore.open(cacheFile));
 		Container container = new Container(Container.COMPRESSION_NONE, CACHE.createChecksumTable().encode(true, ChecksumTable.ON_DEMAND_MODULUS, ChecksumTable.ON_DEMAND_EXPONENT));
 		CACHE.setChecksumtable(container.encode());

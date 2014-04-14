@@ -18,7 +18,7 @@ import org.virtue.network.protocol.packet.encoder.impl.r803.LoginEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
 import org.virtue.network.session.Session;
-import org.virtue.network.session.WorldSession;
+import org.virtue.network.session.impl.WorldSession;
 
 /**
  * @author Taylor Moon

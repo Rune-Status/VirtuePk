@@ -20,7 +20,7 @@ public final class HandshakeType {
 		/**
 		 * Account creation
 		 */
-		ACCOUNT_CREATION,
+		HANSHAKE_CREATION,
 
 		/**
 		 * Js5 container ondemand
@@ -53,7 +53,7 @@ public final class HandshakeType {
 		case 14:
 			return HandshakeTypes.HANDSHAKE_LOGIN;
 		case 28:
-			return HandshakeTypes.ACCOUNT_CREATION;
+			return HandshakeTypes.HANSHAKE_CREATION;
 		}
 		throw new IllegalStateException("No such state for incomming opcode: " + opcode);
 	}

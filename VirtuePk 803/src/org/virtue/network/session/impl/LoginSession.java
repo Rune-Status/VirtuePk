@@ -1,4 +1,4 @@
-package org.virtue.network.session;
+package org.virtue.network.session.impl;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Constants;
@@ -13,6 +13,7 @@ import org.virtue.network.loginserver.output.LoginRequestEncoder;
 import org.virtue.network.messages.LoginResponse;
 import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
+import org.virtue.network.session.Session;
 
 /**
  * @author Taylor

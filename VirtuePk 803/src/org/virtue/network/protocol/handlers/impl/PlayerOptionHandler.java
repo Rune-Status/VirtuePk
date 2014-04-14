@@ -3,7 +3,7 @@ package org.virtue.network.protocol.handlers.impl;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.protocol.handlers.PacketHandler;
-import org.virtue.network.session.WorldSession;
+import org.virtue.network.session.impl.WorldSession;
 
 public class PlayerOptionHandler extends PacketHandler<WorldSession> {
 

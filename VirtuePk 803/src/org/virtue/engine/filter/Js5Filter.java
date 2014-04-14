@@ -3,7 +3,7 @@ package org.virtue.engine.filter;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import org.virtue.network.session.JS5Session;
+import org.virtue.network.session.impl.JS5Session;
 
 /**
  * @author Taylor Moon

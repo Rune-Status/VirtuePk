@@ -1,10 +1,10 @@
 package org.virtue.network.protocol.packet.encoder;
 
 import org.virtue.config.OutgoingOpcodes;
+import org.virtue.game.content.skills.Skill;
+import org.virtue.game.content.skills.SkillData;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.Viewport;
-import org.virtue.game.node.entity.player.skills.Skill;
-import org.virtue.game.node.entity.player.skills.SkillData;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.messages.GameMessage;

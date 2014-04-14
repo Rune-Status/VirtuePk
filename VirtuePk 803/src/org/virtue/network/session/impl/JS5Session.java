@@ -1,4 +1,4 @@
-package org.virtue.network.session;
+package org.virtue.network.session.impl;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -18,6 +18,7 @@ import org.virtue.network.protocol.codec.ondemand.UpdateEncryptionMessage;
 import org.virtue.network.protocol.codec.ondemand.UpdateStatusMessage;
 import org.virtue.network.protocol.codec.ondemand.UpdateVersionMessage;
 import org.virtue.network.protocol.codec.ondemand.XorEncoder;
+import org.virtue.network.session.Session;
 
 /**
  * @author Taylor

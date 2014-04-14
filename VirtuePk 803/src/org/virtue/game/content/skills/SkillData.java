@@ -1,4 +1,4 @@
-package org.virtue.game.node.entity.player.skills;
+package org.virtue.game.content.skills;
 
 public class SkillData {
 

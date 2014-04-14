@@ -1,4 +1,4 @@
-package org.virtue.network.session;
+package org.virtue.network.session.impl;
 
 import java.net.ProtocolException;
 
@@ -11,6 +11,7 @@ import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.packet.RS3Packet;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
+import org.virtue.network.session.Session;
 
 /**
  * @author Taylor
