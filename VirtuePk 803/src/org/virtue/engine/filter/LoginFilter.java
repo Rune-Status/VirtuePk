@@ -13,10 +13,10 @@ import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.screen.ClientScreen;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.codec.login.LoginType;
+import org.virtue.network.protocol.packet.encoder.impl.LoginEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ScreenConfigEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.LoginEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.impl.WorldSession;
 

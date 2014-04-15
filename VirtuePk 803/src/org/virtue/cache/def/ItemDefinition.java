@@ -27,7 +27,7 @@ public class ItemDefinition {
 	
     private final int itemID;
     private String name = "null";
-	private HashMap<Skill, Integer> itemRequiriments;
+	private HashMap<Skill, Integer> itemRequirements;
 	
 	//Model size information
     public int modelZoom = 2000;
@@ -42,7 +42,7 @@ public class ItemDefinition {
     public boolean membersOnly = false;
     public boolean unnoted;
     public int teamID;
-    HashMap<Integer, Object> params;
+    HashMap<Integer, Object> paramaters;
     
 	//Wearing model information
     public int equipID;
@@ -117,11 +117,12 @@ public class ItemDefinition {
     int anInt7954;
     public boolean aBool7955;
     
-    
+    public boolean noted, lent, bound;
 
 	public static ItemDefinition forId(int id) throws IOException {
 		if (itemDefinitions == null) {
 			itemDefinitions = new ItemDefinition[getSize()];
+			System.out.println("Total items: "+itemDefinitions.length);
 		}
 		if (id < 0 || id > itemDefinitions.length) {
 			id = 0;
@@ -136,6 +137,7 @@ public class ItemDefinition {
 	public static ItemDefinition forName(String name) throws IOException {
 		if (itemDefinitions == null) {
 			itemDefinitions = new ItemDefinition[getSize()];
+			System.out.println("Total items: "+itemDefinitions.length);
 		}
 		for (int id = 0; id < itemDefinitions.length; id++) {
 			ItemDefinition itemDef = forId(id);
@@ -152,15 +154,25 @@ public class ItemDefinition {
 
 	public static int getSize() throws IOException {
 		int lastArchiveId = Launcher.getCache().getFileCount(ITEM_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(ITEM_DEFINITIONS_INDEX, lastArchiveId));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
+		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(ITEM_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
 	}
     
-    public ItemDefinition (int id) {
+    public ItemDefinition (int id) throws IOException {
     	this.itemID = id;
-    	loadItemDefinitions();
+    	loadItemDefinition();
+    	
+		if (noteTemplateID != -1) {
+			toNote();
+		}
+		if (lendTemplateID != -1) {
+			toLend();
+		}
+		if (bindTemplateID != -1) {
+			toBind();
+		}
     }
 
-	public void loadItemDefinitions() {
+	public void loadItemDefinition() {
 		try {
 			byte[] data = Launcher.getCache().read(ITEM_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
@@ -383,8 +395,8 @@ public class ItemDefinition {
 		    	stackable = 2;
 		    } else if (249 == opcode) {
 				int length = buffer.getUnsignedByte();
-				if (params == null) {
-					params = new HashMap<Integer, Object>(length);
+				if (paramaters == null) {
+					paramaters = new HashMap<Integer, Object>(length);
 				}
 				for (int index = 0; index < length; index++) {
 				    boolean stringInstance = buffer.getUnsignedByte() == 1;
@@ -395,11 +407,75 @@ public class ItemDefinition {
 				    } else {
 				    	value = new Integer(buffer.getInt());
 				    }
-				    params.put(key, value);
+				    paramaters.put(key, value);
 				}
 		    }
 		}
     }
+
+	private void toNote() throws IOException {
+		ItemDefinition realItem = forId(noteID);
+		membersOnly = realItem.membersOnly;
+		value = realItem.value;
+		name = realItem.name;
+		stackable = 1;
+		noted = true;
+		paramaters = realItem.paramaters;
+	}
+
+	private void toBind() throws IOException {
+		ItemDefinition realItem = forId(bindID);
+		originalModelColors = realItem.originalModelColors;
+		colourEquip1 = realItem.colourEquip1;
+		colourEquip2 = realItem.colourEquip2;
+		teamID = realItem.teamID;
+		value = 0;
+		membersOnly = realItem.membersOnly;
+		name = realItem.name;
+		inventoryOptions = new String[5];
+		groundOptions = realItem.groundOptions;
+		if (realItem.inventoryOptions != null) {
+			for (int optionIndex = 0; optionIndex < 4; optionIndex++) {
+				inventoryOptions[optionIndex] = realItem.inventoryOptions[optionIndex];
+			}
+		}
+		inventoryOptions[4] = "Discard";
+		maleEquip1 = realItem.maleEquip1;
+		maleEquip2 = realItem.maleEquip2;
+		femaleEquip1 = realItem.femaleEquip1;
+		femaleEquip2 = realItem.femaleEquip2;
+		paramaters = realItem.paramaters;
+		equipID = realItem.equipID;
+		equipSlotID = realItem.equipSlotID;
+		bound = true;
+	}
+
+	private void toLend() throws IOException {
+		ItemDefinition realItem = forId(lendID);
+		originalModelColors = realItem.originalModelColors;
+		colourEquip1 = realItem.colourEquip1;
+		colourEquip2 = realItem.colourEquip2;
+		teamID = realItem.teamID;
+		value = 0;
+		membersOnly = realItem.membersOnly;
+		name = realItem.name;
+		inventoryOptions = new String[5];
+		groundOptions = realItem.groundOptions;
+		if (realItem.inventoryOptions != null) {
+			for (int optionIndex = 0; optionIndex < 4; optionIndex++) {
+				inventoryOptions[optionIndex] = realItem.inventoryOptions[optionIndex];
+			}
+		}
+		inventoryOptions[4] = "Discard";
+		maleEquip1 = realItem.maleEquip1;
+		maleEquip2 = realItem.maleEquip2;
+		femaleEquip1 = realItem.femaleEquip1;
+		femaleEquip2 = realItem.femaleEquip2;
+		paramaters = realItem.paramaters;
+		equipID = realItem.equipID;
+		equipSlotID = realItem.equipSlotID;
+		lent = true;
+	}
 
 	public int getArchiveId() {
 		return itemID >>> 8;
@@ -438,43 +514,55 @@ public class ItemDefinition {
 		return equipSlotID != -1;
 	}
 
-	public int getNotedId() {
+	public int getNotedID() {
 		return noteID;
 	}
 
 	public int getValue() {
 		return value;
+	}	
+
+	public boolean isNoted() {
+		return noted;
+	}
+
+	public boolean isLent() {
+		return lent;
+	}
+
+	public boolean isBound() {
+		return bound;
 	}
 
 	public HashMap<Skill, Integer> getWearingSkillRequiriments() {
-		if (params == null) {
+		if (paramaters == null) {
 			return null;
 		}
-		if (itemRequiriments == null) {
+		if (itemRequirements == null) {
 			HashMap<Skill, Integer> skills = new HashMap<Skill, Integer>();
 			for (int i = 0; i < 10; i++) {
-				Skill skill = Skill.getSkill((Integer) params.get(749 + (i * 2)));
+				Skill skill = Skill.getSkill((Integer) paramaters.get(749 + (i * 2)));
 				if (skill != null) {
-					Integer level = (Integer) params.get(750 + (i * 2));
+					Integer level = (Integer) paramaters.get(750 + (i * 2));
 					if (level != null) {
 						skills.put(skill, level);
 					}
 				}
 			}
-			Skill maxedSkill = Skill.getSkill((Integer) params.get(277));
+			Skill maxedSkill = Skill.getSkill((Integer) paramaters.get(277));
 			if (maxedSkill != null) {
 				skills.put(maxedSkill, maxedSkill.getMaxLevel());//getID() == 19709 ? 120 : 99);
 			}
-			itemRequiriments = skills;
+			itemRequirements = skills;
 			if (getID() == 7462) {
-				itemRequiriments.put(Skill.DEFENCE, 40);
+				itemRequirements.put(Skill.DEFENCE, 40);
 			} else if (name.equals("Dragon defender")) {
-				itemRequiriments.put(Skill.ATTACK, 60);
-				itemRequiriments.put(Skill.DEFENCE, 60);
+				itemRequirements.put(Skill.ATTACK, 60);
+				itemRequirements.put(Skill.DEFENCE, 60);
 			}
 		}
 
-		return itemRequiriments;
+		return itemRequirements;
 	}
 
 	/**
@@ -503,15 +591,15 @@ public class ItemDefinition {
 	 * @return {@code True} if so.
 	 */
 	public boolean isHybridType() {
-		return params != null && (params.containsKey(2824) || params.containsKey(2828));
+		return paramaters != null && (paramaters.containsKey(2824) || paramaters.containsKey(2828));
 	}
 	
 
 
 	public boolean isStackable() {
-		/*if (isNoted()) {//TODO: Fix this.
+		if (isNoted()) {
 			return true;
-		}*/
+		}
 		if (stackable == 1) {
 			return true;
 		}
@@ -523,10 +611,10 @@ public class ItemDefinition {
 
 	public double getArmourBonus() {
 		int opcode = 2870;
-		if (params == null || !params.containsKey(opcode)) {
+		if (paramaters == null || !paramaters.containsKey(opcode)) {
 			return 0;
 		}
-		int bonus = (int) params.get(opcode);
+		int bonus = (int) paramaters.get(opcode);
 		if (bonus != 0) {
 			return bonus * .1;
 		}
@@ -571,33 +659,33 @@ public class ItemDefinition {
 
 	public int getLifeBonus() {
 		int opcode = 1326;
-		if (params == null || !params.containsKey(opcode)) {
+		if (paramaters == null || !paramaters.containsKey(opcode)) {
 			return 0;
 		}
-		return (int) params.get(opcode);
+		return (int) paramaters.get(opcode);
 	}
 
 	public int getPrayerBonus() {
 		int opcode = 2946;
-		if (params == null || !params.containsKey(opcode)) {
+		if (paramaters == null || !paramaters.containsKey(opcode)) {
 			return 0;
 		}
-		return (int) params.get(opcode);
+		return (int) paramaters.get(opcode);
 	}
 
 	public int getProjectileId() {
 		int opcode = 2940;
-		if (params == null || !params.containsKey(opcode)) {
+		if (paramaters == null || !paramaters.containsKey(opcode)) {
 			return -1;
 		}
-		return (int) params.get(opcode);
+		return (int) paramaters.get(opcode);
 	}
 
 	public int getQuestId() {
-		if (params == null) {
+		if (paramaters == null) {
 			return -1;
 		}
-		Object questId = params.get(861);
+		Object questId = paramaters.get(861);
 		if (questId != null && questId instanceof Integer) {
 			return (Integer) questId;
 		}
@@ -605,24 +693,24 @@ public class ItemDefinition {
 	}
 
 	public HashMap<Integer, Object> getClientScriptData() {
-		return (HashMap<Integer, Object>) params;
+		return (HashMap<Integer, Object>) paramaters;
 	}
 
 	public int getHealAmount(int hp) {
-		if (params.get(2645) == null) {
+		if (paramaters.get(2645) == null) {
 			return -1;
 		}
-		if (params.get(2951) == null) {
+		if (paramaters.get(2951) == null) {
 			return -1;
 		}
-		int cookingRequirement = (int) params.get(2951);
+		int cookingRequirement = (int) paramaters.get(2951);
 		return hp <= 12 || cookingRequirement == 1 ? 200 : hp >= cookingRequirement ? cookingRequirement * 20 : 16 * hp;
 	}
 
 	public int getSpeed() {
-		if (params == null) {
+		if (paramaters == null) {
 			return 6;
 		}
-		return (int) params.get(14);
+		return (int) paramaters.get(14);
 	}
 }

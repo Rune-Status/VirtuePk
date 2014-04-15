@@ -54,6 +54,10 @@ public final class RS3PacketReader extends RS3HeapBuffer {
 		return getRemaining() > 0 ? buffer[pos++] : 0;
 	}
 
+	public int peek() {
+		return getRemaining() > 0 ? buffer[pos] : 0;
+	}
+
 	public void getBytes(byte buffer[], int off, int len) {
 		for (int k = off; k < len + off; k++) {
 			buffer[k] = (byte) get();
@@ -64,7 +68,7 @@ public final class RS3PacketReader extends RS3HeapBuffer {
 		getBytes(buffer, 0, buffer.length);
 	}
 
-	public int getSmart2() {
+	public int getMiscSmart2() {
 		int var2 = 0;
 
 		int var3;
@@ -233,14 +237,30 @@ public final class RS3PacketReader extends RS3HeapBuffer {
 	}
 
 	public int getSmart() {
-		int var2 = get() & 0xFF;
+		int var2 = peek() & 0xFF;
 		if (var2 < 128) {
 			return this.getUnsignedByte();
 		} else {
 			return this.getUnsignedShort() - 32768;
 		}
-	}
-	
+	}       
+    
+        public int getSmart2() {
+		int var2 = peek() & 0xff;
+		if (var2 < 128) {
+		    return getUnsignedByte() - 1;
+		}
+		return getUnsignedShort() - 32769;
+        }
+    
+        public int getSmart3() {
+		int var2 = peek() & 0xff;
+		if (var2 < 128) {
+		    return getUnsignedByte() - 64;
+		}
+		return getUnsignedShort() - 49152;
+        }
+        
 	public int getLargeSmart() {
 		if (this.buffer[pos] < 0) {
 			return this.getInt() & Integer.MAX_VALUE;

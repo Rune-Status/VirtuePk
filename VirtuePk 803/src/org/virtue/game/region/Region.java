@@ -43,8 +43,8 @@ public class Region extends AttributeSet implements SubRegion {
 	 */
 	public Region(int id) {
 		this.id = id;
-		players = new EntityList<>(PLAYER_CAP);
-		npcs = new EntityList<>(NPC_CAP);
+		players = new EntityList<Player>(PLAYER_CAP);
+		npcs = new EntityList<NPC>(NPC_CAP);
 	}
 	
 	/**

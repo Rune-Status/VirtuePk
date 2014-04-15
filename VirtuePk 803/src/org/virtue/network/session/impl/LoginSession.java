@@ -6,7 +6,7 @@ import org.virtue.Launcher;
 import org.virtue.game.Lobby;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.network.RS2PacketFilter;
+import org.virtue.network.RS3PacketFilter;
 import org.virtue.network.loginserver.DataServer;
 import org.virtue.network.loginserver.LoginSessions;
 import org.virtue.network.loginserver.output.LoginRequestEncoder;
@@ -62,7 +62,7 @@ public class LoginSession extends Session {
 			account.setSession(this);
 			return;//Don't change the session type yet if the login type is world part 1
 		}
-		getContext().getChannel().getPipeline().addFirst("packetDecoder", new RS2PacketFilter());
+		getContext().getChannel().getPipeline().addFirst("packetDecoder", new RS3PacketFilter());
 		disconnect();
 		WorldSession gameSession = new WorldSession(getContext(), type.equals(LoginType.LOBBY));
 		getContext().setAttachment(gameSession);

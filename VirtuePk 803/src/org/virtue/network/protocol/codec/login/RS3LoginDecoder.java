@@ -48,11 +48,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 	private LoginState state = LoginState.CONNECTION_TYPE;
 	
 	private Account account = null;
-
-	//private int loginSize;
-    //private int loginType;
-	//private LoginType currentLoginType;
-
 	
 	@SuppressWarnings("unused")
 	@Override
@@ -62,7 +57,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			throw new ProtocolException("Bad buffer state.");
 		}
 		int loginOpcode = buf.readUnsignedByte();
-		//System.out.println("Received login request. Opcode="+loginOpcode);
 		switch (loginOpcode) {
 		    case GAME_DATA:
 		        return fetchPlayerData(ctx, buf);
@@ -73,7 +67,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		    case GAME_RECONNECT:
 		    	type = LoginType.WORLD_PART_1;
 		    	break;
-		        //return decodeClientDetails(buf);
 		    default:
 		    	throw new ProtocolException("Invalid connecton: " + loginOpcode);
 		}
@@ -84,8 +77,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		int version = buf.readInt();
 		int subVersion = buf.readInt();
 		if (version != Cache.SERVER_REVISION && subVersion != Cache.SUB_BUILD) {
-			return new LoginResponse(LoginResponse.GAME_UPDATED);//Wrong client version
-			//throw new ProtocolException("Client out of date.");
+			return new LoginResponse(LoginResponse.GAME_UPDATED);
 		}
 		if (type.equals(LoginType.WORLD_PART_1)) {
 			buf.readByte();
@@ -101,7 +93,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 
 		if (blockOpcode != 10) {
 			return new LoginResponse(LoginResponse.BAD_LOGIN_PACKET);
-			//session.getLoginPackets().sendClientPacket(10);
 		}
 
 		int[] xteaKey = new int[4];
@@ -110,11 +101,10 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		}
 
 		long vHash = secureBuffer.readLong();
-		if (vHash != 0L) {// rsa block check, pass part
+		if (vHash != 0L) {
 			return new LoginResponse(LoginResponse.BAD_LOGIN_PACKET);
 		}
 		String password = BufferUtils.readString(secureBuffer);
-		//System.out.println("Found password: "+password);
 		long clientSessionKey = secureBuffer.readLong();
 		long serverSessionKey = secureBuffer.readLong();
 		
@@ -125,7 +115,6 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		boolean decodeAsString = (xteaBuffer.readByte() == 1);
 		String username = decodeAsString ? BufferUtils.readString(xteaBuffer)
 				: Base37Utils.decodeBase37(xteaBuffer.readLong());
-		//System.out.println("Found username: "+username);
 		if (type.equals(LoginType.LOBBY)) {
 			xteaBuffer.readByte();//Game type
 			xteaBuffer.readByte();//Language
@@ -135,7 +124,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		int screenHeight = xteaBuffer.readUnsignedShort();
 		int unknown2 = xteaBuffer.readUnsignedByte();
 		
-		xteaBuffer.skipBytes(24);//24 bytes directly from file
+		xteaBuffer.skipBytes(24);
 		
 		String clientSettings = BufferUtils.readString(xteaBuffer);
 		if (type.equals(LoginType.WORLD_PART_1)) {

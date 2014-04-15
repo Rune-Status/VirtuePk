@@ -14,12 +14,12 @@ import org.virtue.network.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameMessageEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.MapSceneEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.PlayerOptionEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.SkillEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.VarpEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.SkillEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
 
 /**
  * A class used for organization of outgoing packets so the transmitter doesn't

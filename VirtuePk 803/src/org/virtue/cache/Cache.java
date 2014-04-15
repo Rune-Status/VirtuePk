@@ -296,14 +296,22 @@ public final class Cache implements Closeable {
 		Archive archive = Archive.decode(container.getData(), entry.capacity());
 		return archive.getEntry(member);
 	}
-
+	
 	public int getContainerCount(int type, int file) throws IOException {
+		return getContainerCount(type, file, false);
+	}
+
+	public int getContainerCount(int type, int file, boolean valid) throws IOException {
 		/* grab the container and the reference table */
 		Container tableContainer = Container.decode(store.read(255, type));
 		ReferenceTable table = ReferenceTable.decode(tableContainer.getData());
 
 		ReferenceTable.Entry entry = table.getEntry(file);
-		return entry.capacity();
+		if (valid) {
+			return entry.size();
+		} else {
+			return entry.capacity();
+		}
 	}
 
 	/**

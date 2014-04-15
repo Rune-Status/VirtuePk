@@ -4,9 +4,9 @@ import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.InterfaceMessage;
 import org.virtue.network.messages.InterfaceSettingsMessage;
-import org.virtue.network.protocol.packet.encoder.impl.r803.GameScreenEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.InterfaceSettingsEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.InterfaceEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.InterfaceSettingsEncoder;
 import org.virtue.utility.DisplayMode;
 
 /**
@@ -46,16 +46,13 @@ public class InterfaceManager {
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30
 		sendCs2(new ClientScriptVar(8862, 0, 1));
 		sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
-		
 		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293] (Active task)
 		sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
-		
 		sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130] (Inventory)
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(1473, 8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
 		sendInterfaceSettings(1473, 0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536
 		sendCs2(new ClientScriptVar(8862, 2, 1));//Runscript: [8862, 2, 1]
-		
 		sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202] (Equipment)
 		sendInterfaceSettings(1464, 14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
 		sendInterfaceSettings(1464, 12, 2, 7, 2);//IfaceSettings: 95944716, 7, 2, 2
@@ -113,7 +110,7 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 351, 1417);//Interface: id=1417, clipped=1, parent=[1477, 351] (Notes)
 		sendInterfaceSettings(1417, 16, 0, 29, 2621470);//IfaceSettings: 92864528, 29, 0, 2621470
 		sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
-		sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
+		//sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
 		
 		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174] (Launcher bar (links to settings, social, powers, etc))
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
@@ -297,11 +294,11 @@ public class InterfaceManager {
 		sendInterfaceSettings(1477, 281, 3, 4, 9175040);//IfaceSettings: 96796953, 4, 3, 9175040
 		sendInterfaceSettings(1477, 121, -1, -1, 2097152);//IfaceSettings: 96796793, -1, -1, 2097152
 		sendInterfaceSettings(1477, 282, 1, 1, 2);//IfaceSettings: 96796954, 1, 1, 2
-		//sendInterfaceSettings(1477, 316, 1, 7, 9175040);//IfaceSettings: 96796988, 7, 1, 9175040
-		//sendInterfaceSettings(1477, 316, 11, 13, 9175040);//IfaceSettings: 96796988, 13, 11, 9175040
-		//sendInterfaceSettings(1477, 316, 0, 0, 9175040);//IfaceSettings: 96796988, 0, 0, 9175040
-		//sendInterfaceSettings(1477, 316, 3, 4, 9175040);//IfaceSettings: 96796988, 4, 3, 9175040
-		//sendInterfaceSettings(1477, 122, -1, -1, 2097152);//IfaceSettings: 96796794, -1, -1, 2097152
+		sendInterfaceSettings(1477, 316, 1, 7, 9175040);//IfaceSettings: 96796988, 7, 1, 9175040
+		sendInterfaceSettings(1477, 316, 11, 13, 9175040);//IfaceSettings: 96796988, 13, 11, 9175040
+		sendInterfaceSettings(1477, 316, 0, 0, 9175040);//IfaceSettings: 96796988, 0, 0, 9175040
+		sendInterfaceSettings(1477, 316, 3, 4, 9175040);//IfaceSettings: 96796988, 4, 3, 9175040
+		sendInterfaceSettings(1477, 122, -1, -1, 2097152);//IfaceSettings: 96796794, -1, -1, 2097152
 		sendInterfaceSettings(1477, 317, 1, 1, 2);//IfaceSettings: 96796989, 1, 1, 2
 		sendInterfaceSettings(1477, 326, 1, 7, 9175040);//IfaceSettings: 96796998, 7, 1, 9175040
 		sendInterfaceSettings(1477, 326, 11, 13, 9175040);//IfaceSettings: 96796998, 13, 11, 9175040
@@ -460,6 +457,77 @@ public class InterfaceManager {
 	public void sendTab(int tabId, int interfaceId) {
 		DisplayMode mode = player.getAccount().getDisplayMode();
 		sendInterface(true, mode.equals(DisplayMode.FIXED) ? 548 : 746, tabId, interfaceId);
+	}
+	
+	public void sendMeleePowersTab() {
+		//sendConfig(3708, 33694722);
+		sendInterface(true, 1448, 3, 1450);
+		sendInterface(true, 1448, 3, 1450);
+		sendInterfaceSettings(1450, 0, 6, 14, 2);
+		sendInterfaceSettings(1450, 3, 0, 168, 10320902);
+		sendInterface(true, 1448, 5, 1454);
+		sendInterface(true, 1448, 7, 1435);
+		sendInterface(true, 1448, 9, 1436);
+		sendInterfaceSettings(1430, 97, -1, -1, 11108350);
+		sendInterfaceSettings(1430, 101, -1, -1, 11108350);
+		sendInterfaceSettings(1430, 102, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 106, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 107, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 111, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 112, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 116, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 117, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 121, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 122, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 126, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 127, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 131, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 132, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 136, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 137, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 141, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 142, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 146, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 147, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 151, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 152, -1, -1, 2098176);
+		sendInterfaceSettings(1430, 156, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 12, -1, -1, 11108350);
+		sendInterfaceSettings(1436, 16, -1, -1, 11108350);
+		sendInterfaceSettings(1436, 22, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 26, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 32, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 36, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 42, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 46, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 52, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 56, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 62, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 66, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 72, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 76, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 82, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 86, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 92, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 96, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 102, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 106, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 112, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 116, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 122, -1, -1, 2098176);
+		sendInterfaceSettings(1436, 126, -1, -1, 2098176);
+		sendInterfaceSettings(1458, 24, 0, 28, 8388610);
+		sendInterfaceSettings(1430, 4, -1, -1, 8388608);
+		sendInterfaceSettings(1465, 4, -1, -1, 8388608);
+		sendInterfaceSettings(1430, 2, -1, -1, 8650754);
+		sendInterfaceSettings(1430, 5, -1, -1, 8388608);
+		sendInterfaceSettings(1450, 3, 0, 168, 8485894);
+		sendInterfaceSettings(1460, 1, 0, 168, 8485894);
+		sendInterfaceSettings(1452, 1, 0, 168, 8485894);
+		sendInterfaceSettings(1461, 1, 0, 168, 8485894);
+		sendInterfaceSettings(1449, 1, 0, 168, 8485894);
+		sendInterfaceSettings(590, 8, 0, 166, 8388614);
+		
 	}
 	
 	/**

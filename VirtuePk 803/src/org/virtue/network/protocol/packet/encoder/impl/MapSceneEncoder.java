@@ -1,4 +1,4 @@
-package org.virtue.network.protocol.packet.encoder.impl.r803;
+package org.virtue.network.protocol.packet.encoder.impl;
 
 import org.virtue.game.node.entity.player.Viewport;
 import org.virtue.network.io.IOHub;

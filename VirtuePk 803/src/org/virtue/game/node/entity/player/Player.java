@@ -17,8 +17,10 @@ import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
+import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.r803.*;
 import org.virtue.network.protocol.render.update.UpdateBlockArchive;
 import org.virtue.utility.DisplayMode;
 

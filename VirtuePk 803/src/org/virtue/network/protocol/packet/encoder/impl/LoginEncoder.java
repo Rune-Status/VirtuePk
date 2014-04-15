@@ -1,6 +1,6 @@
 
 
-package org.virtue.network.protocol.packet.encoder.impl.r803;
+package org.virtue.network.protocol.packet.encoder.impl;
 
 import org.virtue.Constants;
 import org.virtue.game.node.entity.player.identity.Account;

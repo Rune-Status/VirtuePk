@@ -1,5 +1,7 @@
 package org.virtue.network;
 
+import java.net.ProtocolException;
+
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -11,7 +13,7 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
  * @author Taylor
  * @since Sep 15, 2013
  */
-public class RS2PacketFilter extends FrameDecoder {
+public class RS3PacketFilter extends FrameDecoder {
 
 	/**
 	 * (non-Javadoc)
@@ -24,6 +26,10 @@ public class RS2PacketFilter extends FrameDecoder {
 			if (opcode < 0) {
 				buffer.discardReadBytes();
 				return null;
+			}
+			if (opcode > RS2Network.getPacketVars().length) {
+				channel.close();
+				throw new ProtocolException("Invalid opcode received: "+opcode);
 			}
 			int length = RS2Network.getPacketVars()[opcode];
 			if (length < 0) {
