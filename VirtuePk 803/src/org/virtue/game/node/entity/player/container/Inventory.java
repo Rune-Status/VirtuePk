@@ -30,12 +30,14 @@ public class Inventory {
 	 */
 	public Inventory(Player player) {
 		this.player = player;
+		items.add(new Item(54, 1));//Just for testing purposes; This can be updated with the actual items later
 	}
 	
 	/**
 	 * Loads the interface settings.
 	 */
 	public void load() {
+		player.getPacketDispatcher().dispatchItems(93, items);
 //		player.getStack().sendWidgetSettings(INVENTORY_INTERFACE, 0, 0, 27, 4554126);
 //		player.getStack().sendWidgetSettings(INVENTORY_INTERFACE, 0, 28, 55, 2097152);
 	}
@@ -109,6 +111,7 @@ public class Inventory {
 	 * Refreshes this inventory.
 	 */
 	public void refresh() {
+		player.getPacketDispatcher().dispatchItems(93, items);
 //		player.getStack().sendItemSet(93, items.toArray());
 	}
 

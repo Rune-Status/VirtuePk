@@ -97,8 +97,13 @@ public class Launcher {
 		CACHE = new Cache(FileStore.open(cacheFile));
 		Container container = new Container(Container.COMPRESSION_NONE, CACHE.createChecksumTable().encode(true, ChecksumTable.ON_DEMAND_MODULUS, ChecksumTable.ON_DEMAND_EXPONENT));
 		CACHE.setChecksumtable(container.encode());
-                //NPCDefinition testNpc = NPCDefinition.forId(20);
-                //System.out.println("NPC: name="+testNpc.getName());
+/*		int i = 0;
+		while (i < 14484) {
+			ItemDefinition item = ItemDefinition.forId(i);
+	        System.out.println("Item: name="+item.getName()+", equiptID="+item.equipID+", equiptSlot="+item.equipSlotID+", maleModel="+item.maleEquip1);
+			i++;
+		}*/
+        
 	}
 
 	/**

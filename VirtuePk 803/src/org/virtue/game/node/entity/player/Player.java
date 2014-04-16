@@ -4,8 +4,6 @@ import org.virtue.Constants;
 import org.virtue.config.ClientVarps;
 import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.World;
-import org.virtue.game.content.skills.Skill;
-import org.virtue.game.content.skills.SkillData;
 import org.virtue.game.content.skills.SkillManager;
 import org.virtue.game.node.entity.Entity;
 import org.virtue.game.node.entity.player.container.Equipment;
@@ -109,6 +107,8 @@ public class Player extends Entity {
 			}
 		}
 		interfaceManager.sendScreen();
+		inventory.load();
+		equipment.load();
 		skillManager.sendAllSkills();
 		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
 		account.getSession().getTransmitter().send(OnlineStatusEncoder.class, OnlineStatus.EVERYONE);

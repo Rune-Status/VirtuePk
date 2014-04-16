@@ -71,7 +71,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 //			for (int i = 0; i < data.length; i++) {
 //				if (data[i] != null) {
 //					if (data[i].getId() == item.getId()) {
-//						data[i] = new Item(data[i].getId(), data[i].getAmount()
+//						data[i] = new SendItem(data[i].getId(), data[i].getAmount()
 //								+ item.getAmount());
 //						return true;
 //					}
@@ -302,7 +302,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 					amt -= toRemove;
 					toRemove = 0;
 					// data[preferredSlot] = new
-					// Item(data[preferredSlot].getDefinition().getId(), amt);
+					// SendItem(data[preferredSlot].getDefinition().getId(), amt);
 					set2(preferredSlot, new Item(data[preferredSlot].getId(),
 							amt));
 					return removed;
@@ -322,7 +322,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 						removed += toRemove;
 						amt -= toRemove;
 						toRemove = 0;
-						// data[i] = new Item(data[i].getDefinition().getId(),
+						// data[i] = new SendItem(data[i].getDefinition().getId(),
 						// amt);
 						set2(i, new Item(data[i].getId(), amt));
 						return removed;
@@ -372,7 +372,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	private boolean hasSpaceForItem(T item) {
 //		if (alwaysStackable || item.getDefinitions().isStackable()
 //				|| item.getDefinitions().isNoted()) {
-//			for (Item aData : data) {
+//			for (SendItem aData : data) {
 //				if (aData != null) {
 //					if (aData.getId() == item.getId()) {
 //						return true;

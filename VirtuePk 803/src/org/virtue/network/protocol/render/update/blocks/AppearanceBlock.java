@@ -1,5 +1,6 @@
 package org.virtue.network.protocol.render.update.blocks;
 
+import org.virtue.config.UpdateMasks;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.render.update.UpdateBlock;
@@ -17,7 +18,7 @@ public class AppearanceBlock extends UpdateBlock {
 	 */
 	@Override
 	public int getMask() {
-		return 0x80;
+		return UpdateMasks.APPEARANCE;
 	}
 
 	/**

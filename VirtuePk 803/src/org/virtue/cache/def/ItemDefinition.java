@@ -47,12 +47,12 @@ public class ItemDefinition {
 	//Wearing model information
     public int equipID;
     public int equipSlotID;
-    int maleEquip1 = -1;
-    int maleEquip2 = -1;
-    int femaleEquip1 = -1;
-    int femaleEquip2 = -1;
-    int colourEquip1 = -1;
-    int colourEquip2 = -1;
+    public int maleEquip1 = -1;
+    public int maleEquip2 = -1;
+    public int femaleEquip1 = -1;
+    public int femaleEquip2 = -1;
+    public int colourEquip1 = -1;
+    public int colourEquip2 = -1;
 
     //Transformed object information
     public int noteID = -1;
@@ -119,19 +119,24 @@ public class ItemDefinition {
     
     public boolean noted, lent, bound;
 
-	public static ItemDefinition forId(int id) throws IOException {
-		if (itemDefinitions == null) {
-			itemDefinitions = new ItemDefinition[getSize()];
-			System.out.println("Total items: "+itemDefinitions.length);
+	public static ItemDefinition forId(int id) {
+		try {
+			if (itemDefinitions == null) {
+				itemDefinitions = new ItemDefinition[getSize()];
+				System.out.println("Total items: "+itemDefinitions.length);
+			}
+			if (id < 0 || id > itemDefinitions.length) {
+				id = 0;
+			}
+			ItemDefinition itemDef = itemDefinitions[id];
+			if (itemDef == null) {
+				itemDefinitions[id] = itemDef = new ItemDefinition(id);
+			}
+			return itemDef;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
 		}
-		if (id < 0 || id > itemDefinitions.length) {
-			id = 0;
-		}
-		ItemDefinition itemDef = itemDefinitions[id];
-		if (itemDef == null) {
-			itemDefinitions[id] = itemDef = new ItemDefinition(id);
-		}
-		return itemDef;
 	}
 
 	public static ItemDefinition forName(String name) throws IOException {

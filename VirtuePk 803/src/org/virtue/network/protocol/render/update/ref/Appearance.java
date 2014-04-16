@@ -25,6 +25,11 @@ public class Appearance {
 	public enum RenderState { AS_NPC, AS_HUMAN, AS_INVISIBLE };
 	
 	/**
+	 * The default render animation ID (idle animation)
+	 */
+	public static final int DEFAULT_RENDER_EMOTE = 2699;
+	
+	/**
 	 * Represents the title ID.
 	 */
 	private int title = -1;
@@ -124,21 +129,30 @@ public class Appearance {
 		} else if (state.equals(RenderState.AS_HUMAN) || state.equals(RenderState.AS_INVISIBLE)) {
 			for (int index = 0; index < 4; index++) {
 				Item item = player.getEquipment().getItems().get(index);
-				if (item == null)
+				if (item == null) {
 					buffer.put(0);
-				else
-					buffer.putShort(32768 + item.getEquipId());
+				} else {
+					buffer.putShort(0x4000 + item.getId());
+				}
 			}
+			//Chest
 			Item item = player.getEquipment().getItems().get(Equipment.SLOT_CHEST);
-			buffer.putShort(item == null ? 0x100 + getBodyStyles()[2] : 32768 + item.getEquipId());
+			if (item == null) {
+				buffer.putShort(0x100 + getBodyStyles()[2]);
+			} else {
+				buffer.putShort(0x4000 + item.getId());
+			}
+			//buffer.putShort(item == null ? 0x100 + getBodyStyles()[2] : );
 			
-			item = player.getEquipment().getItems().get(Equipment.SLOT_SHIELD);
+			//Offhand
+			item = player.getEquipment().getItems().get(Equipment.SLOT_OFFHAND);
 			if (item == null) {
 				buffer.put(0);
 			} else {
-				buffer.putShort(32768 + item.getEquipId());
+				buffer.putShort(0x4000 + item.getId());
 			}
 			
+			//Chest (arm portion)
 			item = player.getEquipment().getItems().get(Equipment.SLOT_CHEST);
 			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[3]);
@@ -146,9 +160,16 @@ public class Appearance {
 				buffer.put(0);
 			}
 			
+			//Legs
 			item = player.getEquipment().getItems().get(Equipment.SLOT_LEGS);
-			buffer.putShort(item == null ? 0x100 + getBodyStyles()[5] : 32768 + item.getEquipId());
+			if (item == null) {
+				buffer.putShort(0x100 + getBodyStyles()[5]);
+			} else {
+				buffer.putShort(0x4000 + item.getId());
+			}
+			//buffer.putShort(item == null ? 0x100 + getBodyStyles()[5] : 32768 + item.getId());
 			
+			//Hat
 			item = player.getEquipment().getItems().get(Equipment.SLOT_HAT);
 			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[0]);
@@ -156,12 +177,25 @@ public class Appearance {
 				buffer.put(0);
 			}
 			
+			//Hands
 			item = player.getEquipment().getItems().get(Equipment.SLOT_HANDS);
-			buffer.putShort(item == null ? 0x100 + getBodyStyles()[4] : 32768 + item.getEquipId());
+			if (item == null) {
+				buffer.putShort(0x100 + getBodyStyles()[4]);
+			} else {
+				buffer.putShort(0x4000 + item.getId());
+			}
+			//buffer.putShort(item == null ? 0x100 + getBodyStyles()[4] : 32768 + item.getId());
 			
+			//Feet
 			item = player.getEquipment().getItems().get(Equipment.SLOT_FEET);
-			buffer.putShort(item == null ? 0x100 + getBodyStyles()[6] : 32768 + item.getEquipId());
+			if (item == null) {
+				buffer.putShort(0x100 + getBodyStyles()[6]);
+			} else {
+				buffer.putShort(0x4000 + item.getId());
+			}
+			//buffer.putShort(item == null ? 0x100 + getBodyStyles()[6] : 32768 + item.getId());
 			
+			//Beard
 			item = player.getEquipment().getItems().get(gender.equals(Gender.MALE) ? Equipment.SLOT_HAT : Equipment.SLOT_CHEST);
 			if (item == null) {
 				buffer.putShort(0x100 + getBodyStyles()[1]);
@@ -169,19 +203,25 @@ public class Appearance {
 				buffer.put(0);
 			}
 			
+			//Aura
 			item = player.getEquipment().getItems().get(Equipment.SLOT_AURA);
 			if (item == null) {
 				buffer.put(0);
 			} else {
-				buffer.putShort(32768 + item.getEquipId());
+				buffer.putShort(0x4000 + item.getId());
 			}
-			for (int index = 13; index < 15; index++) {//Two extra slots
-				item = player.getEquipment().getItems().get(index);
-				if (item == null)
-					buffer.put(0);
-				else
-					buffer.putShort(32768 + item.getEquipId());
+			
+			//Pocket
+			item = player.getEquipment().getItems().get(Equipment.SLOT_POCKET);
+			if (item == null) {
+				buffer.put(0);
+			} else {
+				buffer.putShort(0x4000 + item.getId());
 			}
+			
+			//Special
+			buffer.put(0);
+			
 			buffer.putShort(0);
 			for (int index = 0; index < getBodyColors().length; index++) {
 				buffer.put(getBodyColors()[index]);
@@ -221,25 +261,28 @@ public class Appearance {
 	 * @return The render emote.
 	 */
 	public int getRenderEmote() {
-		if (renderEmote > 0)
+		if (renderEmote > 0) {
 			return renderEmote;
-		Item weapon = player.getEquipment().getItems().get(3);
-		if (weapon != null)
+		}
+		Item weapon = player.getEquipment().getItems().get(Equipment.SLOT_MAINHAND);
+		if (weapon != null) {
 //			return weapon.getDefinitions().getRenderAnimId();
-			return -1;
-		return 1426;
+			//return -1;
+		}
+		return DEFAULT_RENDER_EMOTE;
 	}
 
 	/**
 	 * Loads the male body style.
 	 */
 	public void loadMaleBody() {
-		if (gender.equals(Gender.FEMALE))
+		if (gender.equals(Gender.FEMALE)) {
 			try {
 				throw new IllegalAccessException("ERROR: Male body cannot be loaded for a female render.");
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
+		}
 		getBodyStyles()[0] = 3;
 		getBodyStyles()[1] = 14;
 		getBodyStyles()[2] = 18;
@@ -256,12 +299,13 @@ public class Appearance {
 	 * Loads the female body style.
 	 */
 	public void loadFemaleBody() {
-		if (gender.equals(Gender.MALE))
+		if (gender.equals(Gender.MALE)) {
 			try {
 				throw new IllegalAccessException("ERROR: Female body cannot be loaded for a male render.");
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}
+		}
 		getBodyStyles()[0] = 48;
 		getBodyStyles()[1] = 57;
 		getBodyStyles()[2] = 57;

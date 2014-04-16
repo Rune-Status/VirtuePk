@@ -12,8 +12,8 @@ public class Equipment {
 	/**
 	 * Represents the slots.
 	 */
-	public static final byte SLOT_HAT = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_WEAPON = 3, SLOT_CHEST = 4, SLOT_SHIELD = 5, SLOT_LEGS = 7, SLOT_HANDS = 9, SLOT_FEET = 10, SLOT_RING = 12, SLOT_ARROWS = 13, SLOT_AURA = 14;
-
+	public static final byte SLOT_HAT = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_MAINHAND = 3, SLOT_CHEST = 4, SLOT_OFFHAND = 5, SLOT_LEGS = 7, SLOT_HANDS = 9, SLOT_FEET = 10, SLOT_RING = 12, SLOT_ARROWS = 13, SLOT_AURA = 14, SLOT_POCKET = 15;
+	private static final int EQUIP_SIZE = 16;
 	/**
 	 * Represents the items in the inventory.
 	 */
@@ -35,6 +35,14 @@ public class Equipment {
 	 */
 	public Equipment(Player player) {
 		this.player = player;
+		Item testItem = new Item(11724, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
+		items.set(testItem.getEquipId(), testItem);
+		testItem = new Item(4151, 1);
+		items.set(testItem.getEquipId(), testItem);
+	}
+	
+	public void load () {
+		refresh();
 	}
 	
 	/**
@@ -119,6 +127,7 @@ public class Equipment {
 	 * Refreshes this inventory.
 	 */
 	public void refresh() {
+		player.getPacketDispatcher().dispatchItems(94, items);
 //		player.getStack().sendItemSet(94, items.toArray());
 //		player.getUpdateArchive().getAppearance().load();
 	}

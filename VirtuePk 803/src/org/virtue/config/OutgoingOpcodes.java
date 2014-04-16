@@ -55,4 +55,6 @@ public class OutgoingOpcodes {
 	public static final int WORLD_LIST_PACKET = 98;//803
 	public static final int MESSAGE_PACKET = 137;//803
 	public static final int FRIENDS_CHAT_MESSAGE_PACKET = 111;
+	
+	public static final int ITEMS_CONTAINER = 130;//803
 }

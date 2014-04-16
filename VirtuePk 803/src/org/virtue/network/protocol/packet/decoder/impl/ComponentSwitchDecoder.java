@@ -1,15 +1,15 @@
 package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.config.IncommingOpcodes;
-import org.virtue.network.protocol.handlers.impl.InterfaceChangeHandler;
+import org.virtue.network.protocol.handlers.impl.ComponentSwitchHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
-public class InterfaceChangeDecoder implements PacketDecoder<InterfaceChangeHandler> {
+public class ComponentSwitchDecoder implements PacketDecoder<ComponentSwitchHandler> {
 
 	@Override
-	public InterfaceChangeHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
+	public ComponentSwitchHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		packet.getLEShort();
 		int oldHash = packet.getInt();
 		int newHash = packet.getInt();

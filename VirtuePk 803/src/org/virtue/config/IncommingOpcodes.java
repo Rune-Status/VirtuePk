@@ -33,6 +33,7 @@ public class IncommingOpcodes {
 	public final static int CAMERA_MOVEMENT_PACKET = 7;//803
 	public final static int WINDOW_FOCUS_PACKET = 105;//803
 	public final static int CLICK_PACKET = 34;//803
+	public final static int CLIENT_SPECS_PACKET = 83;//803
 	
 	public final static int WALKING_PACKET = 95;//803
 	public final static int MINI_WALKING_PACKET = 66;//803

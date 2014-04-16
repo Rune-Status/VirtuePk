@@ -3,18 +3,22 @@ package org.virtue.network.protocol.packet.encoder;
 import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.content.skills.Skill;
 import org.virtue.game.content.skills.SkillData;
+import org.virtue.game.item.Item;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.Viewport;
+import org.virtue.game.node.entity.player.container.ItemsContainer;
 import org.virtue.network.messages.ClientScriptVar;
 import org.virtue.network.messages.EntityOptionMessage;
 import org.virtue.network.messages.GameMessage;
 import org.virtue.network.messages.InterfaceMessage;
+import org.virtue.network.messages.ItemsMessage;
 import org.virtue.network.messages.VarpMessage;
 import org.virtue.network.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameMessageEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.InterfaceEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.ItemsEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
@@ -45,6 +49,16 @@ public class PacketDispatcher {
 	
 	public void dispatchSkill (SkillData skill) {
 		player.getAccount().getSession().getTransmitter().send(SkillEncoder.class, skill);
+	}
+	
+	/**
+	 * Dispatches the items for an interface
+	 * @param key		The interface key
+	 * @param items		The items
+	 */
+	public void dispatchItems (int key, ItemsContainer<Item> items) {
+		Item[] itemsClone = items.getItemsCopy();
+		player.getAccount().getSession().getTransmitter().send(ItemsEncoder.class, new ItemsMessage(key, itemsClone));
 	}
 	
 	/**

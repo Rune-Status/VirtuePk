@@ -1,5 +1,7 @@
 package org.virtue.game.item;
 
+import org.virtue.cache.def.ItemDefinition;
+
 /**
  * @author Taylor
  * @date Jan 21, 2014
@@ -17,7 +19,7 @@ public class Item {
 	private int amount;
 	
 	/**
-	 * Constructs a new {@code Item.java}.
+	 * Constructs a new {@code SendItem.java}.
 	 * @param id The id.
 	 * @param amount The amount.
 	 */
@@ -59,6 +61,6 @@ public class Item {
 	 */
 	public int getEquipId() {
 		// TODO Auto-generated method stub
-		return 0;
+		return ItemDefinition.forId(id).equipSlotID;
 	}
 }
