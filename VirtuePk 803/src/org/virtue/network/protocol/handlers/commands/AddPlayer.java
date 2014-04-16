@@ -4,7 +4,7 @@ import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.identity.Username;
-import org.virtue.game.region.Tile;
+import org.virtue.game.node.entity.region.Tile;
 
 public class AddPlayer implements Command {
 

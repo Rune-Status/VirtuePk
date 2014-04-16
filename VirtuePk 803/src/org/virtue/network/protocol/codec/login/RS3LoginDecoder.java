@@ -14,7 +14,7 @@ import org.virtue.cache.Cache;
 import org.virtue.game.node.entity.player.identity.Account;
 import org.virtue.game.node.entity.player.identity.Password;
 import org.virtue.game.node.entity.player.identity.Username;
-import org.virtue.network.messages.LoginResponse;
+import org.virtue.network.protocol.messages.LoginResponse;
 import org.virtue.utility.Base37Utils;
 import org.virtue.utility.BufferUtils;
 import org.virtue.utility.DisplayMode;

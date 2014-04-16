@@ -1,6 +1,5 @@
 package org.virtue.game.node.entity.route;
 
-import org.virtue.game.World;
 
 /**
  * @author Mangis

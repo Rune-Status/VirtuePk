@@ -41,7 +41,10 @@ public class OutgoingOpcodes {
 	
 	public static final int STATIC_MAP_REGION_PACKET = 77;//803
 	public static final int DYNAMIC_MAP_REGION_PACKET = 31;//803
+	public static final int MINIMAP_FLAG_PACKET = 138;//803
 	public static final int PLAYER_UPDATE_PACKET = 44;//803
+	public static final int NPC_UPDATE_PACKET = 27;//803
+	public static final int LARGE_NPC_UPDATE_PACKET = 150;//803
 	
 	public static final int PLAYER_OPTION_PACKET = 3;//803
 	public static final int RUN_ENERGY_PACKET = 94;//803

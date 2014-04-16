@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
 import org.virtue.config.OutgoingOpcodes;
-import org.virtue.network.messages.GameMessage;
+import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 

@@ -1,7 +1,7 @@
 package org.virtue.game.node.entity.npc;
 
 import org.virtue.game.node.entity.Entity;
-import org.virtue.game.region.Tile;
+import org.virtue.game.node.entity.region.Tile;
 
 /**
  * @author Taylor

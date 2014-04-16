@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.node.entity.player.Player;
-import org.virtue.network.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarpMessage;
 
 public class SetClientVarp implements Command {
 

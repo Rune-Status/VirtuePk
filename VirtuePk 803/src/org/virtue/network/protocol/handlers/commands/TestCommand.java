@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.node.entity.player.Player;
-import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
+import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
  * @author Taylor Moon
@@ -11,7 +11,11 @@ public class TestCommand implements Command {
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {
-		player.getAccount().getSession().getTransmitter().send(PlayerEncoder.class, player);
+                RS3PacketBuilder buffer = new RS3PacketBuilder();
+                buffer.putPacket(138);
+                buffer.put(49);
+                buffer.putByteS(51);
+		player.getAccount().getSession().getTransmitter().send(buffer);
 //		String text = player.requestInput("Enter Amount:");
 //		player.getPacketDispatcher().dispatchMessage(text);
 		return true;

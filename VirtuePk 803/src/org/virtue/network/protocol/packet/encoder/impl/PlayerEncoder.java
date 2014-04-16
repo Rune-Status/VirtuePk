@@ -7,10 +7,10 @@ import org.virtue.config.OutgoingOpcodes;
 import org.virtue.config.UpdateMasks;
 import org.virtue.game.World;
 import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.node.entity.player.update.blocks.AppearanceBlock;
+import org.virtue.game.node.entity.player.update.movement.MovementUtils;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
-import org.virtue.network.protocol.render.update.blocks.AppearanceBlock;
-import org.virtue.network.protocol.render.update.movement.MovementUtils;
 
 
 public class PlayerEncoder implements PacketEncoder<Player> {
@@ -236,7 +236,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		int xOffset = localPlayer.getTile().getX() - localPlayer.getLastTile().getX();
 		int yOffset = localPlayer.getTile().getY() - localPlayer.getLastTile().getY();
 		int planeOffset = localPlayer.getTile().getPlane() - localPlayer.getLastTile().getPlane();
-		int unknownValue = 0;//TODO: Figure out what this is...
+		int unknownValue = 4;//TODO: Figure out what this is...
 		if (Math.abs(localPlayer.getTile().getX() - localPlayer.getLastTile().getX()) <= 14 && Math.abs(localPlayer.getTile().getY() - localPlayer.getLastTile().getY()) <= 14) {
 			buffer.putBits(1, 0);
 			if (xOffset < 0) {

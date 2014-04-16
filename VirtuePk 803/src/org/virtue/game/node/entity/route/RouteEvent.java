@@ -1,6 +1,5 @@
 package org.virtue.game.node.entity.route;
 
-import org.virtue.game.node.entity.Entity;
 import org.virtue.game.node.entity.player.Player;
 
 public class RouteEvent {

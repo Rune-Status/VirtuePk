@@ -1,6 +1,8 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.node.entity.player.screen.InterfaceManager;
+import org.virtue.game.node.interfaces.ActionButton;
+import org.virtue.game.node.interfaces.InterfaceManager;
+import org.virtue.game.node.interfaces.TabInterface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
@@ -16,10 +18,20 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 	@Override
 	public void handle(WorldSession session) {
 		int interfaceHash = getFlag("interface", -1);
-		int buttonID = getFlag("button1", -1);
-		int buttonID2 = getFlag("button2", -1);
+		int slotID = getFlag("slot1", -1);
+		int slotID2 = getFlag("slot2", -1);
+		ActionButton button = ActionButton.getFromOpcode(getFlag("opcode", -1));
+		if (button == null) {
+			throw new RuntimeException("InvalidOpcode");			
+		}
 		int interfaceID = interfaceHash >> 16;
 		int component = interfaceHash & 0xffff;
+		
+		TabInterface iFace = session.getPlayer().getInterfaces().getInterface(interfaceID);
+		if (iFace != null) {
+			iFace.handleActionButton(component, slotID, slotID2, button);
+			return;
+		}
 		
 		switch (interfaceID) {
 		case 1433:
@@ -37,7 +49,7 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 			}
 			break;
 		}
-		System.out.println("InterfaceID: " + interfaceID + " ComponentID: "+ component + " ButtonId: " + buttonID + " ButtonId2: " + buttonID2);
+		System.out.println("InterfaceID: " + interfaceID + " ComponentID: "+ component + " slotID: " + slotID + " slotID2: " + slotID2);
 	}
 
 }

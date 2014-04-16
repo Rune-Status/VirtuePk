@@ -6,20 +6,20 @@ import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.World;
 import org.virtue.game.content.skills.SkillManager;
 import org.virtue.game.node.entity.Entity;
-import org.virtue.game.node.entity.player.container.Equipment;
-import org.virtue.game.node.entity.player.container.Inventory;
 import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.game.node.entity.player.screen.InterfaceManager;
-import org.virtue.game.social.OnlineStatus;
-import org.virtue.network.messages.ClientScriptVar;
-import org.virtue.network.messages.EntityOptionMessage;
-import org.virtue.network.messages.VarpMessage;
+import org.virtue.game.node.entity.player.update.UpdateBlockArchive;
+import org.virtue.game.node.entity.social.OnlineStatus;
+import org.virtue.game.node.interfaces.InterfaceManager;
+import org.virtue.game.node.interfaces.impl.Equipment;
+import org.virtue.game.node.interfaces.impl.Inventory;
+import org.virtue.network.protocol.messages.ClientScriptVar;
+import org.virtue.network.protocol.messages.EntityOptionMessage;
+import org.virtue.network.protocol.messages.VarpMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
-import org.virtue.network.protocol.render.update.UpdateBlockArchive;
 import org.virtue.utility.DisplayMode;
 
 /**

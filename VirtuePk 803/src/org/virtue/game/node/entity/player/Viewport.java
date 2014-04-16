@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.virtue.game.World;
-import org.virtue.game.region.LandscapeRepository;
-import org.virtue.game.region.RegionUpdateEvent;
-import org.virtue.game.region.Tile;
+import org.virtue.game.node.entity.region.LandscapeRepository;
+import org.virtue.game.node.entity.region.RegionUpdateEvent;
+import org.virtue.game.node.entity.region.Tile;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**

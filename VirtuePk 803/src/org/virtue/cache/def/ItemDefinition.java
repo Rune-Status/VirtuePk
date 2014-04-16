@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.virtue.Launcher;
-import org.virtue.cache.Cache;
-import org.virtue.cache.Container;
 import org.virtue.game.content.skills.Skill;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
@@ -67,8 +65,8 @@ public class ItemDefinition {
     //Model information
     short[] originalModelColors;
     short[] modifiedModelColors;
-    short[] modifiedTextureColors;
-    short[] originalTextureColors;
+    short[] modifiedTextureFace;
+    short[] originalTextureFace;
     byte[] aByteArray7928;
     byte[] aByteArray7895;
     public int[] anIntArray7949;
@@ -256,11 +254,11 @@ public class ItemDefinition {
 		    }
 		} else if (opcode == 41) {
 		    int length = buffer.getUnsignedByte();
-		    originalTextureColors = new short[length];
-		    modifiedTextureColors = new short[length];
+		    originalTextureFace = new short[length];
+		    modifiedTextureFace = new short[length];
 		    for (int index = 0; index < length; index++) {
-				originalTextureColors[index] = (short) buffer.getUnsignedShort();
-				modifiedTextureColors[index] = (short) buffer.getUnsignedShort();
+				originalTextureFace[index] = (short) buffer.getUnsignedShort();
+				modifiedTextureFace[index] = (short) buffer.getUnsignedShort();
 		    }
 		} else if (opcode == 42) {
 		    int length = buffer.getUnsignedByte();

@@ -51,6 +51,10 @@ public class Account extends AttributeSet {
 	 */
 	private final long serverSessionKey;
 	
+	private Email email;
+	
+	private Age age;
+	
 	/**
 	 * Constructs a new {@code Account.java}.
 	 * @param username The username.
@@ -141,4 +145,13 @@ public class Account extends AttributeSet {
 	public void setRank(Rank rank) {
 		this.rank = rank;
 	}
+	
+	public Email getEmail() {
+		return email;
+	}
+	
+	public Age getAge() {
+		return age;
+	}
+	
 }

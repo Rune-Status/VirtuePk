@@ -1,6 +1,6 @@
 package org.virtue.game.item;
 
-import org.virtue.game.region.Tile;
+import org.virtue.game.node.entity.region.Tile;
 
 /**
  * @author Taylor

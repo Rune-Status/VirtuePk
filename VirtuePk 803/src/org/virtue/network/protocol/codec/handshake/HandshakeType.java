@@ -1,13 +1,13 @@
 package org.virtue.network.protocol.codec.handshake;
 
 /**
- * @author Taylor
+ * @author Virtue Development
  * @version 1.0
  */
 public final class HandshakeType {
 
 	/**
-	 * @author Taylor
+	 * @author Virtue Development
 	 * @version 1.0
 	 */
 	public static enum HandshakeTypes {

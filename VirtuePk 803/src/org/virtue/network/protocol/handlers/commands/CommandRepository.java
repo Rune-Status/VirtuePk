@@ -22,6 +22,10 @@ public class CommandRepository {
 		commands.add(new AddPlayer());
 		commands.add(new SetClientVarp());
 		commands.add(new SendItem());
+		commands.add(new SendWalk());
+		commands.add(new WearItem());
+		commands.add(new ReloadAppearance());
+		
 	}
 	
 	/**

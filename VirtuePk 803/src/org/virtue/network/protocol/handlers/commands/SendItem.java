@@ -19,7 +19,7 @@ public class SendItem implements Command {
 				return false;
 			}
 			player.getInventory().add(new Item(id, amount));
-		return false;
+		return true;
 	}
 
 	@Override

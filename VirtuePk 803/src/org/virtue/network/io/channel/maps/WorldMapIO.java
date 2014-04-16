@@ -1,10 +1,8 @@
 package org.virtue.network.io.channel.maps;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.List;
 
 import org.virtue.game.World;

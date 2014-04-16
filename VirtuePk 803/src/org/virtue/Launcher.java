@@ -10,8 +10,6 @@ import org.virtue.cache.Cache;
 import org.virtue.cache.ChecksumTable;
 import org.virtue.cache.Container;
 import org.virtue.cache.FileStore;
-import org.virtue.cache.def.ItemDefinition;
-import org.virtue.cache.def.NPCDefinition;
 import org.virtue.engine.GameEngine;
 import org.virtue.engine.threads.MainThreadFactory;
 import org.virtue.game.Lobby;

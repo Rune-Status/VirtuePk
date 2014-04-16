@@ -10,8 +10,8 @@ import org.virtue.network.RS3PacketFilter;
 import org.virtue.network.loginserver.DataServer;
 import org.virtue.network.loginserver.LoginSessions;
 import org.virtue.network.loginserver.output.LoginRequestEncoder;
-import org.virtue.network.messages.LoginResponse;
 import org.virtue.network.protocol.codec.login.LoginType;
+import org.virtue.network.protocol.messages.LoginResponse;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.session.Session;
 

@@ -1,10 +1,9 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
+import org.virtue.config.OutgoingOpcodes;
 import org.virtue.game.node.entity.player.Viewport;
-import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
-import org.virtue.config.OutgoingOpcodes;
 
 public class MapSceneEncoder implements PacketEncoder<Viewport> {
 

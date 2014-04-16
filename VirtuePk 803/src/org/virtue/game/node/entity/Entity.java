@@ -1,13 +1,28 @@
 package org.virtue.game.node.entity;
 
+import java.util.List;
+
 import org.virtue.game.node.Node;
-import org.virtue.game.region.Tile;
+import org.virtue.game.node.entity.player.update.masks.Bar;
+import org.virtue.game.node.entity.region.Tile;
+
 
 /**
  * @author Taylor
  * @date Jan 13, 2014
  */
 public abstract class Entity extends Node {
+	
+
+	private int hitpoints;
+	
+	private int maxHitpoints;
+	
+	
+	/**
+	 * Properties class
+	 */
+	public Properties properties;
 	
 	/**
 	 * Represents the last tile.
@@ -28,6 +43,11 @@ public abstract class Entity extends Node {
 	 * Called evey game tick.
 	 */
 	public abstract void onCycle();
+	
+	/**
+	 * Bar
+	 */
+	private transient List<Bar> cachedBars;
 	
 	/**
 	 * Called every game tick.
@@ -57,5 +77,36 @@ public abstract class Entity extends Node {
 	 */
 	public void setLastTile(Tile lastTile) {
 		this.lastTile = lastTile;
+	}
+
+	public void appendBar(Bar... bars) {
+		for (Bar bar : bars) {
+			if (bar == null) {
+				continue;
+			}
+			this.cachedBars.add(bar);
+		}
+	}
+	
+	/**
+	 * @return
+	 */
+	public Properties getProperties() {
+		return properties;
+	}
+	public int getHitpoints() {
+		return hitpoints;
+	}
+
+	public void setHitpoints(int hitpoints) {
+		this.hitpoints = hitpoints;
+	}
+
+	public void removeHitpoints(int hitpoints) {
+		this.hitpoints -= hitpoints;
+	}
+
+	public int getMaxHitpoints() {
+		return maxHitpoints;
 	}
 }

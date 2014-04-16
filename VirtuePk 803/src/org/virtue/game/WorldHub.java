@@ -2,7 +2,7 @@ package org.virtue.game;
 
 import org.virtue.game.node.entity.npc.NPC;
 import org.virtue.game.node.entity.player.Player;
-import org.virtue.game.region.RegionManager;
+import org.virtue.game.node.entity.region.RegionManager;
 import org.virtue.utility.EntityList;
 
 /**

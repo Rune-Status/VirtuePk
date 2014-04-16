@@ -1,8 +1,6 @@
 package org.virtue.game.content.skills;
 
 import org.virtue.game.node.entity.player.Player;
-import org.virtue.network.messages.ClientScriptVar;
-import org.virtue.network.messages.InterfaceMessage;
 
 public class SkillManager {
 

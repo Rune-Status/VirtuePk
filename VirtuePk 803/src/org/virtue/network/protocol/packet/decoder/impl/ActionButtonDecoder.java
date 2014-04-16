@@ -22,8 +22,9 @@ public class ActionButtonDecoder implements PacketDecoder<ActionButtonHandler> {
 		}
 		int interfaceID = packet.getInt();
 		handler.putFlag("interface", interfaceID);
-		handler.putFlag("button1", buttonID);
-		handler.putFlag("button2", buttonID2);
+		handler.putFlag("slot1", buttonID);
+		handler.putFlag("slot2", buttonID2);
+		handler.putFlag("opcode", opcode);
 		return handler;
 	}
 
