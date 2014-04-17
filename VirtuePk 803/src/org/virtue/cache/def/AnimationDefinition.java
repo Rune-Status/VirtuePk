@@ -13,7 +13,6 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
  */
 public class AnimationDefinition {
 
-    public static final int ANIMATION_DEFINITIONS_INDEX = 20;
     
 	private static ConcurrentHashMap<Integer, AnimationDefinition> animDefs = new ConcurrentHashMap<Integer, AnimationDefinition>();
 	private static int animationCount = -1;
@@ -66,8 +65,8 @@ public class AnimationDefinition {
 	}
 
 	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(ANIMATION_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(ANIMATION_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
+		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.ANIMATION_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
+		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.ANIMATION_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
 	}
 	
 	public AnimationDefinition (int id) {
@@ -77,7 +76,7 @@ public class AnimationDefinition {
     
 	public void loadAnimationDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(ANIMATION_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
+			byte[] data = Launcher.getCache().read(CacheIndex.ANIMATION_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}

@@ -172,8 +172,13 @@ public final class Cache implements Closeable {
 		int identifier = Djb2.djb2(name);
 		Container tableContainer = Container.decode(store.read(255, type));
 		ReferenceTable table = ReferenceTable.decode(tableContainer.getData());
-		for (int id = 0; id < table.size(); id++) {
+		for (int id = 0; id <= table.capacity(); id++) {
 			Entry e = table.getEntry(id);
+			if (e == null) {
+				//System.out.println("Entry for "+id+" was not found. Total: "+table.size());
+				continue;
+				//throw new NullPointerException("Entry for "+id+" was not found.");
+			}
 			if (e.getIdentifier() == identifier) {
 				return id;
 			}

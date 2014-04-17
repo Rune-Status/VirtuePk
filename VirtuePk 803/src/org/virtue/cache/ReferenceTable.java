@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -259,8 +260,7 @@ public class ReferenceTable {
 		table.flags = buffer.get() & 0xFF;
 
 		/* read the ids */
-		int[] ids = new int[table.format >= 7 ? ByteBufferUtils
-				.getSmartInt(buffer) : buffer.getShort() & 0xFFFF];
+		int[] ids = new int[table.format >= 7 ? ByteBufferUtils.getSmartInt(buffer) : buffer.getShort() & 0xFFFF];
 		int accumulator = 0, size = -1;
 		for (int i = 0; i < ids.length; i++) {
 			int delta = table.format >= 7 ? ByteBufferUtils.getSmartInt(buffer)
@@ -273,7 +273,7 @@ public class ReferenceTable {
 		size++;
 
 		/* and allocate specific entries within that array */
-		for (int id : ids) {
+		for (int id : ids) {			
 			table.entries.put(id, new Entry());
 		}
 
@@ -446,8 +446,9 @@ public class ReferenceTable {
 	 */
 	public ChildEntry getEntry(int id, int child) {
 		Entry entry = entries.get(id);
-		if (entry == null)
+		if (entry == null) {
 			return null;
+		}
 
 		return entry.getEntry(child);
 	}

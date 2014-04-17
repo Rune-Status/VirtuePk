@@ -12,8 +12,6 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
  */
 public class NPCDefinition {
     
-    
-    public static final int NPC_DEFINITIONS_INDEX = 18;
     private static NPCDefinition[] npcDefinitions;
     
     public int npcID;
@@ -107,8 +105,8 @@ public class NPCDefinition {
 	}
 
 	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(NPC_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 128 + Launcher.getCache().getContainerCount(NPC_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
+		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.NPC_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
+		return (lastArchiveId * 128 + Launcher.getCache().getContainerCount(CacheIndex.NPC_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
 	}
     
     
@@ -119,7 +117,7 @@ public class NPCDefinition {
     
     private void loadNPCDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(NPC_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
+			byte[] data = Launcher.getCache().read(CacheIndex.NPC_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}

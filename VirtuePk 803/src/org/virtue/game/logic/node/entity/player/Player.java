@@ -7,6 +7,7 @@ import org.virtue.game.config.ClientVarps;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.skills.SkillManager;
+import org.virtue.game.logic.message.ChatType;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.region.Tile;
@@ -69,6 +70,11 @@ public class Player extends Entity {
 	 * Represents the packet dispatcher.
 	 */
 	private PacketDispatcher packetDispatcher;
+	
+	/**
+	 * Represents the type of message that the next message(s) will be
+	 */
+	private ChatType chatType;
 	
 	private boolean largeSceneView = false;
 	
@@ -227,6 +233,30 @@ public class Player extends Entity {
 	 */
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+	
+	/**
+	 * Sets the type for the player's chat messages
+	 * @param typeCode	The code representing the type
+	 */
+	public void setChatType (int typeCode) {
+		setChatType(ChatType.forCode(typeCode));
+	}
+	
+	/**
+	 * Sets the type for the player's chat messages
+	 * @param typeCode	The chat type
+	 */
+	public void setChatType (ChatType type) {
+		chatType = type;
+	}
+	
+	/**
+	 * Gets the type for the player's chat messages
+	 * @return
+	 */
+	public ChatType getChatType () {
+		return chatType;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package org.virtue;
 
 import java.io.File;
+import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -11,6 +12,7 @@ import org.virtue.cache.ChecksumTable;
 import org.virtue.cache.Container;
 import org.virtue.cache.FileStore;
 import org.virtue.cache.def.AnimationDefinition;
+import org.virtue.cache.def.CacheIndex;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
@@ -18,6 +20,7 @@ import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.loginserver.DataServer;
 import org.virtue.utility.ConsoleLogger;
+import org.virtue.utility.Huffman;
 import org.virtue.utility.TimeUtil;
 
 /**
@@ -50,6 +53,11 @@ public class Launcher {
 	 * Represents the game {@link Cache}.
 	 */
 	private static Cache CACHE;
+	
+	/**
+	 * Represents the {@link Huffman} encryption library
+	 */
+	private static Huffman HUFFMAN;
 	
 	/**
 	 * Represents the main method.
@@ -96,6 +104,11 @@ public class Launcher {
 		CACHE = new Cache(FileStore.open(cacheFile));
 		Container container = new Container(Container.COMPRESSION_NONE, CACHE.createChecksumTable().encode(true, ChecksumTable.ON_DEMAND_MODULUS, ChecksumTable.ON_DEMAND_EXPONENT));
 		CACHE.setChecksumtable(container.encode());
+		//Initialies the huffman codec
+		ByteBuffer huffmanData = Launcher.getCache().read(CacheIndex.HUFFMAN_ENCODING, CACHE.getFileId(CacheIndex.HUFFMAN_ENCODING, "huffman")).getData();
+		byte[] data = new byte[huffmanData.remaining()];
+		huffmanData.get(data);
+		HUFFMAN = new Huffman(data);
 /*		int i = 0;
 		while (i < 14484) {
 			ItemDefinition item = ItemDefinition.forId(i);
@@ -131,5 +144,12 @@ public class Launcher {
 	 */
 	public static Cache getCache() {
 		return CACHE;
+	}
+	
+	/**
+	 * @return The huffman encoding library
+	 */
+	public static Huffman getHuffman () {
+		return HUFFMAN;
 	}
 }

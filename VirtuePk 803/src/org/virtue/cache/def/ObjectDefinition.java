@@ -9,7 +9,6 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
 
 public class ObjectDefinition {
 
-    public static final int OBJECT_DEFINITIONS_INDEX = 16;
 
 	private static ObjectDefinition[] objectDefinitions;
 	
@@ -112,8 +111,8 @@ public class ObjectDefinition {
 	}
 
 	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(OBJECT_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[16].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(OBJECT_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[16].getValidFilesCount(lastArchiveId)
+		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.OBJECT_DEFINITIONS);//Cache.getStore().getIndexes()[16].getLastArchiveId();
+		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.OBJECT_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[16].getValidFilesCount(lastArchiveId)
 	}
 	
 	public ObjectDefinition (int id) {
@@ -123,7 +122,7 @@ public class ObjectDefinition {
 	
 	private void loadObjectDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(OBJECT_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[16].getFile(getArchiveId(), getFileId());
+			byte[] data = Launcher.getCache().read(CacheIndex.OBJECT_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[16].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}

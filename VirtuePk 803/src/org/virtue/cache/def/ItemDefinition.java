@@ -19,7 +19,6 @@ public class ItemDefinition {
 	public static final int CROSSBOW_WEAPON_TYPE = 9;
 	public static final int THROWN_WEAPON_TYPE = 10;
 
-    public static final int ITEM_DEFINITIONS_INDEX = 19;
     
 	private static ItemDefinition[] itemDefinitions;
 	
@@ -156,8 +155,8 @@ public class ItemDefinition {
 	}
 
 	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(ITEM_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(ITEM_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
+		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.ITEM_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
+		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.ITEM_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
 	}
     
     public ItemDefinition (int id) throws IOException {
@@ -177,7 +176,7 @@ public class ItemDefinition {
 
 	public void loadItemDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(ITEM_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
+			byte[] data = Launcher.getCache().read(CacheIndex.ITEM_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}

@@ -88,6 +88,10 @@ public class IncommingOpcodes {
 	public final static int ADD_IGNORE_PACKET = 81;//803
 	public final static int REMOVE_IGNORE_PACKET = 76;//803
 	
+	//Message
+	public final static int CHAT_TYPE_PACKET = 13;//803
+	public final static int MESSAGE_PACKET = 99;//803
+	
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
 	
 	private static final int[] SIZES_803 = new int[120];
