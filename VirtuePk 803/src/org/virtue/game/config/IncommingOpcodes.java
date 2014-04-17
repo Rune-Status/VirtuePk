@@ -28,6 +28,7 @@ public class IncommingOpcodes {
 	public final static int WORLD_LIST_UPDATE = 56;//803
 	public final static int COMMANDS_PACKET = 73;//803
 	
+	//Client information (mostly useless, apart from auto-logout)
 	public final static int MOUSE_MOVEMENT_PACKET = 93;//803
 	public final static int KEY_TYPED_PACKET = 1;//803
 	public final static int CAMERA_MOVEMENT_PACKET = 7;//803
@@ -35,9 +36,11 @@ public class IncommingOpcodes {
 	public final static int CLICK_PACKET = 34;//803
 	public final static int CLIENT_SPECS_PACKET = 83;//803
 	
+	//Movement-related
 	public final static int WALKING_PACKET = 95;//803
 	public final static int MINI_WALKING_PACKET = 66;//803
 	
+	//Action buttons
 	public final static int ACTION_BUTTON_1_PACKET = 112;//803
 	public final static int ACTION_BUTTON_2_PACKET = 15;//803
 	public final static int ACTION_BUTTON_3_PACKET = 16;//803
@@ -49,6 +52,7 @@ public class IncommingOpcodes {
 	public final static int ACTION_BUTTON_9_PACKET = 6;//803
 	public final static int ACTION_BUTTON_10_PACKET = 59;//803
 	
+	//Player options
 	public final static int PLAYER_OPTION_1_PACKET = 88;//803
 	public final static int PLAYER_OPTION_2_PACKET = 86;//803
 	public final static int PLAYER_OPTION_3_PACKET = 90;//803
@@ -60,6 +64,23 @@ public class IncommingOpcodes {
 	public final static int PLAYER_OPTION_9_PACKET = 12;//803
 	public final static int PLAYER_OPTION_10_PACKET = 75;//803
 	
+	//NPC options
+	public final static int NPC_OPTION_1_PACKET = 61;//803
+	public final static int NPC_OPTION_2_PACKET = 32;//803
+	public final static int NPC_OPTION_3_PACKET = 100;//803
+	public final static int NPC_OPTION_4_PACKET = 31;//803
+	public final static int NPC_OPTION_5_PACKET = 24;//803
+	public final static int NPC_EXAMINE_PACKET = 36;//803
+	
+	//Object options
+	public final static int OBJECT_OPTION_1_PACKET = 113;//803
+	public final static int OBJECT_OPTION_2_PACKET = 45;//803
+	public final static int OBJECT_OPTION_3_PACKET = 115;//803
+	public final static int OBJECT_OPTION_4_PACKET = 117;//803
+	public final static int OBJECT_OPTION_5_PACKET = 102;//803
+	public final static int OBJECT_EXAMINE_PACKET = 50;//803
+	
+	//Chat management
 	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803
 	public final static int ONLINE_STATUS_PACKET = 22;//803
 	public final static int ADD_FRIEND_PACKET = 97;//803

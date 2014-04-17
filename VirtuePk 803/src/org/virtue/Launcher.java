@@ -10,6 +10,7 @@ import org.virtue.cache.Cache;
 import org.virtue.cache.ChecksumTable;
 import org.virtue.cache.Container;
 import org.virtue.cache.FileStore;
+import org.virtue.cache.def.AnimationDefinition;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;

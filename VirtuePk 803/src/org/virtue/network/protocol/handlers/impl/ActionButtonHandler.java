@@ -22,7 +22,7 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 		int slotID2 = getFlag("slot2", -1);
 		ActionButton button = ActionButton.getFromOpcode(getFlag("opcode", -1));
 		if (button == null) {
-			throw new RuntimeException("InvalidOpcode");			
+			throw new RuntimeException("Invalid Opcode: "+getFlag("opcode", -1));			
 		}
 		int interfaceID = interfaceHash >> 16;
 		int component = interfaceHash & 0xffff;

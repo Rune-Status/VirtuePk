@@ -1,6 +1,7 @@
 package org.virtue.game.logic.node.entity.player.update.blocks;
 
 import org.virtue.game.config.UpdateMasks;
+import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.update.UpdateBlock;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
@@ -38,7 +39,7 @@ public class AppearanceBlock extends UpdateBlock {
 	 *      com.psyc.live.node.entity.player.account.Player, java.lang.Object)
 	 */
 	@Override
-	public int appendToUpdateBlock(RS3PacketBuilder buf, Player player) {
+	public int appendToUpdateBlock(RS3PacketBuilder buf, Entity player) {
 		byte[] renderData = player.getUpdateArchive().getAppearance().getBuffer();	
 		if (renderData == null) {
 			player.getUpdateArchive().getAppearance().packBlock();

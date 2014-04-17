@@ -1,6 +1,6 @@
 package org.virtue.game.logic.node.entity.player.update;
 
-import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
@@ -29,5 +29,5 @@ public abstract class UpdateBlock {
 	 * @param ref The block reference.
 	 * @return the length of the appended block
 	 */
-	public abstract int appendToUpdateBlock(RS3PacketBuilder buffer, Player player);
+	public abstract int appendToUpdateBlock(RS3PacketBuilder buffer, Entity player);
 }

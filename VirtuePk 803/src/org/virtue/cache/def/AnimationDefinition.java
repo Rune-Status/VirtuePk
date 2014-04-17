@@ -36,7 +36,7 @@ public class AnimationDefinition {
     public int anInt7081;
     public static boolean aBool7082 = false;
     public boolean aBool7083;
-    HashMap<Integer, Object> paramaters;
+    public HashMap<Integer, Object> paramaters;
     public int[] anIntArray7085;
     public int anInt7086;
     public int[] soundMinDelay;//anIntArray7087

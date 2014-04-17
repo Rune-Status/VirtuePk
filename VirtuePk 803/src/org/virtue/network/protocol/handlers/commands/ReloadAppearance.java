@@ -14,8 +14,12 @@ public class ReloadAppearance implements Command {
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {
-		appearance.setGender(Gender.MALE);
-		return false;
+		if (syntax.equalsIgnoreCase("female")) {
+			appearance.setGender(Gender.FEMALE);
+		} else {
+			appearance.setGender(Gender.MALE);
+		}
+		return true;
 	}
 
 	@Override

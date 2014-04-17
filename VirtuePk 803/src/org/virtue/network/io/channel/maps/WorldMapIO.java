@@ -26,8 +26,9 @@ public class WorldMapIO {
 	public void load() {
 		try {
 			List<NPC> npcs = NPC_SPAWN_PARSER.load(new BufferedReader(new FileReader(NPC_SPAWN_PARSER.getPath())));
-			for (NPC npc : npcs)
+			for (NPC npc : npcs) {
 				World.getWorld().getNpcs().add(npc);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

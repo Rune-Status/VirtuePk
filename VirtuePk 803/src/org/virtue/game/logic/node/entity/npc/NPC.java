@@ -19,26 +19,32 @@ public class NPC extends Entity {
 	 */
 	private int id;
 
+	private boolean exists = true;
+
 	/**
 	 * Constructs a new {@code NPC.java}.
 	 * @param id The id.
 	 * @param tile The tile.
 	 */
 	public NPC(int id, Tile tile) {
+		super();
 		this.id = id;
 		this.tile = tile;
 	}
 	
 	@Override
 	public void start() {
+		
 	}
 
 	@Override
 	public void destroy() {
+		
 	}
 
 	@Override
 	public void onCycle() {
+		getUpdateArchive().getMovement().process();
 	}
 
 	/**
@@ -57,11 +63,12 @@ public class NPC extends Entity {
 
 	@Override
 	public boolean exists() {
-		return true;
+		return exists;
 	}
 
 	@Override
 	public void refreshOnDemand() {
+		getUpdateArchive().reset();//Refresh update flags
 	}
 
 	@Override

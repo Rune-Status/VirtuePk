@@ -1,5 +1,7 @@
 package org.virtue.game.logic.node.entity.player;
 
+import java.util.EnumMap;
+
 import org.virtue.Constants;
 import org.virtue.game.config.ClientVarps;
 import org.virtue.game.config.OutgoingOpcodes;
@@ -7,7 +9,6 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.skills.SkillManager;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
-import org.virtue.game.logic.node.entity.player.update.UpdateBlockArchive;
 import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.game.logic.node.entity.social.OnlineStatus;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
@@ -21,6 +22,7 @@ import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.NPCEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
 import org.virtue.utility.DisplayMode;
@@ -31,9 +33,7 @@ import org.virtue.utility.DisplayMode;
  */
 public class Player extends Entity {
 	
-	public static final EntityOptionMessage OPTION_FOLLOW = new EntityOptionMessage("Follow", 2, false, -1);
-	
-	public static final EntityOptionMessage OPTION_TRADE = new EntityOptionMessage("Trade with", 4, false, -1);
+	private EnumMap<PlayerOption, EntityOptionMessage> playerOptions = new EnumMap<PlayerOption, EntityOptionMessage>(PlayerOption.class);
 	
 	/**
 	 * Represents this player's account.
@@ -66,16 +66,14 @@ public class Player extends Entity {
 	private SkillManager skillManager;
 	
 	/**
-	 * Represents the update archive.
-	 */
-	private UpdateBlockArchive updateArchive;
-	
-	/**
 	 * Represents the packet dispatcher.
 	 */
 	private PacketDispatcher packetDispatcher;
 	
-	private boolean destroying = false;
+	private boolean largeSceneView = false;
+	
+	private boolean exists = true;
+	
 	private boolean inWorld = false;
 	
 	/**
@@ -83,6 +81,8 @@ public class Player extends Entity {
 	 * @param account The account
 	 */
 	public Player(Account account) {
+		super();
+		System.out.println("Creating player: "+account.getUsername().getName());
 		this.account = account;
 		tile = Constants.DEFAULT_LOCATION;
 		lastTile = getTile();
@@ -91,7 +91,6 @@ public class Player extends Entity {
 		interfaceManager = new InterfaceManager(this);
 		inventory = new Inventory(this);
 		equipment = new Equipment(this);
-		updateArchive = new UpdateBlockArchive(this);
 		packetDispatcher = new PacketDispatcher(this);
 		skillManager = new SkillManager(this);
 	}
@@ -99,10 +98,9 @@ public class Player extends Entity {
 	@Override
 	public void start() {
 		inWorld = true;
+		getUpdateArchive().getAppearance().packBlock();
 		//System.out.println("Sending game information to player...");
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
-		packetDispatcher.dispatchPlayerOption(OPTION_FOLLOW);
-		packetDispatcher.dispatchPlayerOption(OPTION_TRADE);
 		int[] varps = ClientVarps.getGameVarps();
 		for (int i = 0; i < varps.length; i++) {
 			int val = varps[i];
@@ -121,6 +119,20 @@ public class Player extends Entity {
 		getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
+	public void sendDefaultPlayerOptions () {
+		EntityOptionMessage followOption = new EntityOptionMessage("Follow", 2, false, -1);
+		playerOptions.put(PlayerOption.TWO, followOption);
+		packetDispatcher.dispatchPlayerOption(followOption);
+		
+		EntityOptionMessage tradeOption = new EntityOptionMessage("Trade with", 4, false, -1);
+		playerOptions.put(PlayerOption.FOUR, tradeOption);
+		packetDispatcher.dispatchPlayerOption(tradeOption);
+	}
+	
+	public boolean hasLargeSceneView () {
+		return largeSceneView;
+	}
+	
 	public void startLobby() {
 		//started = true;
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
@@ -128,10 +140,10 @@ public class Player extends Entity {
 
 	@Override
 	public void destroy() {
-		if (destroying) {
+		if (!exists) {
 			return;
 		}
-		destroying = true;
+		exists = false;
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this); 
 		}		
@@ -139,7 +151,7 @@ public class Player extends Entity {
 
 	@Override
 	public void onCycle() {
-		updateArchive.getMovement().process();
+		getUpdateArchive().getMovement().process();
 	}
 	
 	@Override
@@ -171,17 +183,18 @@ public class Player extends Entity {
 	public void update() {
 		if (inWorld) {
 			account.getSession().getTransmitter().send(PlayerEncoder.class, this);//Send player updates
+			account.getSession().getTransmitter().send(NPCEncoder.class, this);//Send NPC updates
 		}
 	}
 	
 	@Override
 	public void refreshOnDemand() {
-		updateArchive.reset();//Refresh update flags
+		getUpdateArchive().reset();//Refresh update flags
 	}
 
 	@Override
 	public boolean exists() {
-		return true;
+		return exists;
 	}
 	
 	public InterfaceManager getInterfaces () {
@@ -228,20 +241,6 @@ public class Player extends Entity {
 	 */
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
-	}
-
-	/**
-	 * @return the updateArchive
-	 */
-	public UpdateBlockArchive getUpdateArchive() {
-		return updateArchive;
-	}
-
-	/**
-	 * @param updateArchive the updateArchive to set
-	 */
-	public void setUpdateArchive(UpdateBlockArchive updateArchive) {
-		this.updateArchive = updateArchive;
 	}
 
 	/**

@@ -3,6 +3,8 @@ package org.virtue.game.logic.node.entity;
 import java.util.List;
 
 import org.virtue.game.logic.node.Node;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.update.UpdateBlockArchive;
 import org.virtue.game.logic.node.entity.player.update.masks.Bar;
 import org.virtue.game.logic.node.entity.region.LandscapeRepository;
 import org.virtue.game.logic.node.entity.region.Tile;
@@ -17,8 +19,9 @@ public abstract class Entity extends Node {
 
 	private int hitpoints;
 	
-	private int maxHitpoints;
-	
+	private int maxHitpoints;	
+
+	private int direction;
 	
 	/**
 	 * Properties class
@@ -34,6 +37,11 @@ public abstract class Entity extends Node {
 	 * Represents the last tile.
 	 */
 	protected Tile lastTile;
+	
+	/**
+	 * Represents the update archive.
+	 */
+	private UpdateBlockArchive updateArchive;
 
 	/**
 	 * Called when this entity is created.
@@ -54,6 +62,10 @@ public abstract class Entity extends Node {
 	 * Bar
 	 */
 	private transient List<Bar> cachedBars;
+	
+	public Entity () {
+		updateArchive = new UpdateBlockArchive(this);
+	}
 	
 	/**
 	 * Called every game tick.
@@ -83,6 +95,31 @@ public abstract class Entity extends Node {
 	 */
 	public void setLastTile(Tile lastTile) {
 		this.lastTile = lastTile;
+	}
+
+	/**
+	 * @return the updateArchive
+	 */
+	public UpdateBlockArchive getUpdateArchive() {
+		return updateArchive;
+	}
+
+	/**
+	 * @param updateArchive the updateArchive to set
+	 */
+	public void setUpdateArchive(UpdateBlockArchive updateArchive) {
+		this.updateArchive = updateArchive;
+	}
+
+	/**
+	 * @return	The direction this entity is facing
+	 */
+	public int getDirection() {
+		return direction;
+	}
+
+	public void setDirection(int direction) {
+		this.direction = direction;
 	}
 
 	public void appendBar(Bar... bars) {

@@ -96,9 +96,9 @@ public class Appearance {
 	public Appearance(Player player) {
 		this.player = player;
 		loadMaleBody();
-		if (player != null) {
+		/*if (player != null) {
 			packBlock();
-		}
+		}*/
 	}
 	
 	public void packBlock() {
@@ -128,6 +128,9 @@ public class Appearance {
 			// we still gotta put data even if their invisible.
 		} else if (state.equals(RenderState.AS_HUMAN) || state.equals(RenderState.AS_INVISIBLE)) {
 			for (int index = 0; index < 4; index++) {
+				if (player.getEquipment() == null) {
+					throw new RuntimeException("Test...");
+				}
 				Item item = player.getEquipment().getItems().get(index);
 				if (item == null) {
 					buffer.put(0);

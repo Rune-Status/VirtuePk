@@ -1,9 +1,11 @@
 package org.virtue.game.logic.node.entity.player;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.region.LandscapeRepository;
 import org.virtue.game.logic.node.entity.region.RegionUpdateEvent;
 import org.virtue.game.logic.node.entity.region.Tile;
@@ -19,6 +21,11 @@ public class Viewport {
 	 * The map region ids.
 	 */
 	private final List<Integer> REGIONS = new ArrayList<>();
+	
+	/**
+	 * 
+	 */
+	private final LinkedList<NPC> localNpcs = new LinkedList<NPC>();
 	
 	/**
 	 * Represents the player.
@@ -212,6 +219,13 @@ public class Viewport {
 	 */
 	public Player[] getLocalPlayers() {
 		return localPlayers;
+	}
+	
+	/**
+	 * @return	the local NPCs
+	 */
+	public LinkedList<NPC> getLocalNPCs() {
+		return localNpcs;
 	}
 
 	/**
