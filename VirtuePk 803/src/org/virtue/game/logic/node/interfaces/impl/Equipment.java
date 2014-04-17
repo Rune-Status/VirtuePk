@@ -4,13 +4,13 @@ import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.TabInterface;
+import org.virtue.game.logic.node.interfaces.AbstractInterface;
 
 /**
  * @author Taylor
  * @version 1.0
  */
-public class Equipment extends TabInterface {
+public class Equipment extends AbstractInterface {
 
 	/**
 	 * Represents the slots.

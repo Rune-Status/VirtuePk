@@ -23,7 +23,7 @@ public class InterfaceManager {
 	/**
 	 * Represents all interfaces currently in use for the player
 	 */
-	private HashMap<Integer, TabInterface> tabInterfaces = new HashMap<Integer, TabInterface>();
+	private HashMap<Integer, AbstractInterface> tabInterfaces = new HashMap<Integer, AbstractInterface>();
 	
 	/**
 	 * Constructs a new {@code InterfaceManager.java}.
@@ -57,7 +57,7 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293] (Active task)
 		sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
 		
-		sendTab(player.getInventory(), 130, true);//Inventory tab
+		sendInterface(player.getInventory(), 130, true);//Inventory tab
 		
 		/*sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130] (Inventory)
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
@@ -65,7 +65,7 @@ public class InterfaceManager {
 		sendInterfaceSettings(1473, 0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536
 		sendCs2(new ClientScriptVar(8862, 2, 1));//Runscript: [8862, 2, 1]*/
 		
-		sendTab(player.getEquipment(), 202, true);//Equipment tab
+		sendInterface(player.getEquipment(), 202, true);//Equipment tab
 		
 		/*sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202] (Equipment)
 		sendInterfaceSettings(1464, 14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
@@ -130,10 +130,12 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
 		sendInterfaceSettings(1477, 175, 1, 1, 2);//IfaceSettings: 96796847, 1, 1, 2
 		
-		sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58] (Action bar)
+		sendInterface(player.getActionBar(), 58, true);//Action bar
+		
+		//sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58] (Action bar)
 		sendInterfaceSettings(1477, 80, 1, 1, 4);//IfaceSettings: 96796752, 1, 1, 4
 		
-		sendInterfaceSettings(1430, 118, -1, -1, 2098176);//IfaceSettings: 93716598, -1, -1, 2098176
+		/*sendInterfaceSettings(1430, 118, -1, -1, 2098176);//IfaceSettings: 93716598, -1, -1, 2098176
 		sendInterfaceSettings(1430, 123, -1, -1, 2098176);//IfaceSettings: 93716603, -1, -1, 2098176
 		sendInterfaceSettings(1430, 124, -1, -1, 2098176);//IfaceSettings: 93716604, -1, -1, 2098176
 		sendInterfaceSettings(1430, 129, -1, -1, 2098176);//IfaceSettings: 93716609, -1, -1, 2098176
@@ -156,11 +158,11 @@ public class InterfaceManager {
 		sendInterfaceSettings(1430, 178, -1, -1, 2098176);//IfaceSettings: 93716658, -1, -1, 2098176
 		sendInterfaceSettings(1430, 183, -1, -1, 2098176);//IfaceSettings: 93716663, -1, -1, 2098176
 		sendInterfaceSettings(1430, 184, -1, -1, 2098176);//IfaceSettings: 93716664, -1, -1, 2098176
-		sendInterfaceSettings(1430, 189, -1, -1, 2098176);//IfaceSettings: 93716669, -1, -1, 2098176
+		sendInterfaceSettings(1430, 189, -1, -1, 2098176);//IfaceSettings: 93716669, -1, -1, 2098176*/
 		sendInterfaceSettings(1458, 24, 0, 28, 8388610);//IfaceSettings: 95551512, 28, 0, 8388610
-		sendInterfaceSettings(1430, 10, -1, -1, 8388608);//IfaceSettings: 93716490, -1, -1, 8388608
+		/*sendInterfaceSettings(1430, 10, -1, -1, 8388608);//IfaceSettings: 93716490, -1, -1, 8388608
 		sendInterfaceSettings(1430, 8, -1, -1, 8650758);//IfaceSettings: 93716488, -1, -1, 8650758
-		sendInterfaceSettings(1430, 11, -1, -1, 8388608);//IfaceSettings: 93716491, -1, -1, 8388608
+		sendInterfaceSettings(1430, 11, -1, -1, 8388608);//IfaceSettings: 93716491, -1, -1, 8388608*/
 		sendInterfaceSettings(1460, 1, 0, 168, 8485894);//IfaceSettings: 95682561, 168, 0, 8485894
 		sendInterfaceSettings(1452, 1, 0, 168, 8485894);//IfaceSettings: 95158273, 168, 0, 8485894
 		sendInterfaceSettings(1461, 1, 0, 168, 8485894);//IfaceSettings: 95748097, 168, 0, 8485894
@@ -474,7 +476,7 @@ public class InterfaceManager {
 	}*/
 	
 	public void sendMeleePowersTab() {
-		//sendConfig(3708, 33694722);
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(3708));
 		sendInterface(true, 1448, 3, 1450);
 		sendInterface(true, 1448, 3, 1450);
 		sendInterfaceSettings(1450, 0, 6, 14, 2);
@@ -544,11 +546,11 @@ public class InterfaceManager {
 		
 	}
 	
-	public void sendTab(TabInterface tab, int windowLocation, boolean clipped) {
-		sendTab(tab, windowLocation, clipped, GAME_WINDOW_PANE);
+	public void sendInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
+		sendInterface(tab, windowLocation, clipped, GAME_WINDOW_PANE);
 	}
 	
-	public void sendTab(TabInterface tab, int windowLocation, boolean clipped, int windowID) {
+	public void sendInterface(AbstractInterface tab, int windowLocation, boolean clipped, int windowID) {
 		tab.send(windowID, windowLocation, clipped);
 		tabInterfaces.put(tab.getID(), tab);
 	}
@@ -558,7 +560,7 @@ public class InterfaceManager {
 	 * @param id	The ID for the interface
 	 * @return		The {@code AbstractInterface} object for the interface 
 	 */
-	public TabInterface getInterface (int id) {
+	public AbstractInterface getInterface (int id) {
 		return tabInterfaces.get(id);
 	}
 	
@@ -576,6 +578,7 @@ public class InterfaceManager {
 	public void sendCs2 (ClientScriptVar scriptData) {
 		player.getPacketDispatcher().dispatchClientScriptVar(scriptData);
 	}
+	
 	
 	public void sendInterfaceSettings(int interfaceID, int component, int fromSlot, int toSlot, int settings) {
 		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, fromSlot, toSlot, settings));

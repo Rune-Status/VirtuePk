@@ -77,6 +77,31 @@ public final class FileStore implements Closeable {
 		return new FileStore(dataChannel,
 				indexChannels.toArray(new FileChannel[0]), metaChannel);
 	}
+	
+	public static FileStore create(String root, int indexes) throws IOException {
+		return create(new File(root), indexes);
+	}
+
+	public static FileStore create(File root, int indexes) throws IOException {
+		if (!root.mkdirs())
+			throw new IOException();
+
+		for (int i = 0; i < indexes; i++) {
+			File index = new File(root, "main_file_cache.idx" + i);
+			if (!index.createNewFile())
+				throw new IOException();
+		}
+
+		File meta = new File(root, "main_file_cache.idx255");
+		if (!meta.createNewFile())
+			throw new IOException();
+
+		File data = new File(root, "main_file_cache.dat2");
+		if (!data.createNewFile())
+			throw new IOException();
+
+		return open(root);
+	}
 
 	/**
 	 * The data file.

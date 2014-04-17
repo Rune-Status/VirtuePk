@@ -189,6 +189,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			}
 		}
 		account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
+		//account = JSONPlayerSaving.loadPlayer(new File("./data/characters/"+username+".json"), channel, displayMode, clientSessionKey, serverSessionKey);
 		account.putFlag("login_type", type);
 		return account;
 	}

@@ -2,18 +2,11 @@ package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
-import org.virtue.game.logic.node.interfaces.TabInterface;
+import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
 public class ActionButtonHandler extends PacketHandler<WorldSession> {
-
-
-	
-	/**
-	 * Represents the interface manager.
-	 */
-	private InterfaceManager interfaceManager;
 	
 	@Override
 	public void handle(WorldSession session) {
@@ -27,7 +20,7 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 		int interfaceID = interfaceHash >> 16;
 		int component = interfaceHash & 0xffff;
 		
-		TabInterface iFace = session.getPlayer().getInterfaces().getInterface(interfaceID);
+		AbstractInterface iFace = session.getPlayer().getInterfaces().getInterface(interfaceID);
 		if (iFace != null) {
 			iFace.handleActionButton(component, slotID, slotID2, button);
 			return;
@@ -45,7 +38,7 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 			break;
 		case 1431:
 			if (component == 7) {
-				interfaceManager.sendMeleePowersTab();
+				session.getPlayer().getInterfaces().sendMeleePowersTab();
 			}
 			break;
 		}

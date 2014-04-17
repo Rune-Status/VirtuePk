@@ -17,6 +17,7 @@ import org.virtue.game.core.threads.LogicThreadFactory;
 import org.virtue.game.core.threads.SynchronousThreadFactory;
 import org.virtue.game.core.threads.WorkerThreadFactory;
 import org.virtue.game.logic.node.entity.region.RegionUpdateManager;
+import org.virtue.script.GroovyManager;
 import org.virtue.utility.GameClock;
 import org.virtue.utility.TimeUtil;
 
@@ -103,6 +104,7 @@ public class GameEngine implements Runnable {
 //		SYNCHRONOUS_POOL.execute(SYNCHRONOUS_EXECUTOR);
 		LOGIC_PROCESSOR.registerEvent(new CharacterLogicUpdateEvent());
 		LOGIC_PROCESSOR.registerEvent(new RegionUpdateManager());
+		//GroovyManager.Init();//XXX TODO fix this
 	}
 	
 	@Override

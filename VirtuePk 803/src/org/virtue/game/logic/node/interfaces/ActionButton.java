@@ -2,6 +2,10 @@ package org.virtue.game.logic.node.interfaces;
 
 import org.virtue.game.config.IncommingOpcodes;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 17, 2014
+ */
 public enum ActionButton {
 	ONE(1, IncommingOpcodes.ACTION_BUTTON_1_PACKET), TWO(2, IncommingOpcodes.ACTION_BUTTON_2_PACKET), 
 	THREE(3, IncommingOpcodes.ACTION_BUTTON_3_PACKET), FOUR(4, IncommingOpcodes.ACTION_BUTTON_4_PACKET), 

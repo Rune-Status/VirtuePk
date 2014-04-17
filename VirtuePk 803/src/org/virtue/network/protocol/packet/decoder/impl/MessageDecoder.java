@@ -13,7 +13,7 @@ public class MessageDecoder implements PacketDecoder<MessageHandler> {
 	@Override
 	public MessageHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		if (opcode == IncommingOpcodes.CHAT_TYPE_PACKET) {
-			((WorldSession) session).getPlayer().setChatType(packet.get());
+			((WorldSession) session).getPlayer().getChatManager().setChatType(packet.get());
 		} else {
 			MessageHandler handler = new MessageHandler();
 			handler.putFlag("colourEffect", packet.get());

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.virtue.Launcher;
+import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
@@ -19,6 +19,7 @@ public class ItemDefinition {
 	public static final int CROSSBOW_WEAPON_TYPE = 9;
 	public static final int THROWN_WEAPON_TYPE = 10;
 
+    public static final int ITEM_DEFINITIONS_INDEX = 19;
     
 	private static ItemDefinition[] itemDefinitions;
 	
@@ -64,8 +65,8 @@ public class ItemDefinition {
     //Model information
     short[] originalModelColors;
     short[] modifiedModelColors;
-    short[] modifiedTextureFace;
-    short[] originalTextureFace;
+    short[] modifiedTextureColors;
+    short[] originalTextureColors;
     byte[] aByteArray7928;
     byte[] aByteArray7895;
     public int[] anIntArray7949;
@@ -115,7 +116,7 @@ public class ItemDefinition {
     public boolean aBool7955;
     
     public boolean noted, lent, bound;
-
+    
 	public static ItemDefinition forId(int id) {
 		try {
 			if (itemDefinitions == null) {
@@ -155,8 +156,8 @@ public class ItemDefinition {
 	}
 
 	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.ITEM_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.ITEM_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
+		int lastArchiveId = CacheLoader.getCache().getFileCount(ITEM_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
+		return (lastArchiveId * 256 + CacheLoader.getCache().getContainerCount(ITEM_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
 	}
     
     public ItemDefinition (int id) throws IOException {
@@ -176,7 +177,7 @@ public class ItemDefinition {
 
 	public void loadItemDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(CacheIndex.ITEM_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
+			byte[] data = CacheLoader.getCache().read(ITEM_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}
@@ -253,11 +254,11 @@ public class ItemDefinition {
 		    }
 		} else if (opcode == 41) {
 		    int length = buffer.getUnsignedByte();
-		    originalTextureFace = new short[length];
-		    modifiedTextureFace = new short[length];
+		    originalTextureColors = new short[length];
+		    modifiedTextureColors = new short[length];
 		    for (int index = 0; index < length; index++) {
-				originalTextureFace[index] = (short) buffer.getUnsignedShort();
-				modifiedTextureFace[index] = (short) buffer.getUnsignedShort();
+				originalTextureColors[index] = (short) buffer.getUnsignedShort();
+				modifiedTextureColors[index] = (short) buffer.getUnsignedShort();
 		    }
 		} else if (opcode == 42) {
 		    int length = buffer.getUnsignedByte();

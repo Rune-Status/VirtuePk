@@ -1,12 +1,21 @@
 package org.virtue.network.io.channel;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.io.File;
 
+import org.jboss.netty.channel.Channel;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.game.logic.node.entity.player.identity.Password;
+import org.virtue.game.logic.node.entity.player.identity.Email;
+import org.virtue.game.logic.node.entity.player.identity.Age;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.entity.region.Tile;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import org.virtue.utility.DisplayMode;
 
 public class JSONPlayerSaving {
 
@@ -35,8 +44,8 @@ public class JSONPlayerSaving {
 		int skillIds = 28;
 		for (int id = 0; id < skillIds; id++) {
 			skillSets.addProperty("skillID", id);
-			//skillSets.addProperty("level", skillData.getCurrentLevel());
-			//skillSets.addProperty("experience", skillData.getExperience());
+			skillSets.addProperty("level", 1);
+			skillSets.addProperty("experience", 0);
 			skills.add(skillSets);
 		}
 		obj.add("skills", skills);
@@ -47,9 +56,24 @@ public class JSONPlayerSaving {
 		
 	}
 	
-	public Player loadPlayer(File p) {
-		return null;
-		//return new Player();
+	public Account loadPlayer(File path, Channel channel, DisplayMode mode, long clientSessionKey, long serverSessionKey) {
+		JsonObject obj = new JsonObject();
+		String username = obj.get("username").getAsString();
+		String password = obj.get("password").getAsString();
+		String email = obj.get("email").getAsString();
+		int age = obj.get("age").getAsInt();
+		String dateofbirth = obj.get("dateofbirth").getAsString();
+		String rank = obj.get("rank").getAsString();
+		
+		JsonArray arr = obj.get("location").getAsJsonArray();
+		int x=0, y=0, z=0;
+		for (JsonElement e : arr) {
+			 x = obj.get("x").getAsInt();
+			 y = obj.get("y").getAsInt();
+			 z = obj.get("z").getAsInt();
+		}
+		Account account = new Account(new Username(username), new Password(password, false), Rank.ADMINISTRATOR, new Email(email), new Age(age), new Tile(x, y, z), channel, mode, clientSessionKey, serverSessionKey);
+		return account;
 	}
 	
 }	

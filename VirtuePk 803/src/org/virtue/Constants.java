@@ -21,6 +21,12 @@ public class Constants {
 	public static final boolean LOGIN_SERVER = false;
 	
 	/**
+	 * Represents if Developer mode is enabled.
+	 */
+
+	public static final boolean DEVELOPER_MODE = true;
+	
+	/**
 	 * Represents the world ID.
 	 */
 	public static final int WORLD_ID = 1;
@@ -46,6 +52,8 @@ public class Constants {
 	public static final String SERVER_TOKEN = "BgTFo+lHy/lilpFjXLk4n6pf9X/x/B6L";	
 	
 	public static final int[] NIS_CONFIG = new int[5000];
+
+
 	
 	static {
 		NIS_CONFIG[2989] = -2147344282;

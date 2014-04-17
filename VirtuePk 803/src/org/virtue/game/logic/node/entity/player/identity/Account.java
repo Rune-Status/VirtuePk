@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.entity.player.identity;
 
 import org.jboss.netty.channel.Channel;
 import org.virtue.game.core.AttributeSet;
+import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.network.session.Session;
 import org.virtue.utility.DisplayMode;
 
@@ -55,6 +56,8 @@ public class Account extends AttributeSet {
 	
 	private Age age;
 	
+	private Tile tile;
+	
 	/**
 	 * Constructs a new {@code Account.java}.
 	 * @param username The username.
@@ -63,6 +66,24 @@ public class Account extends AttributeSet {
 	public Account(Username username, Password password, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
 		this.username = username;
 		this.password = password;
+		this.channel = channel;
+		this.displayMode = displayMode;
+		this.clientSessionKey = clientSessionKey;
+		this.serverSessionKey = serverSessionKey;
+	}
+	
+	/**
+	 * Constructs a new {@code Account.java}.
+	 * @param username The username.
+	 * @param password The password.
+	 */
+	public Account(Username username, Password password, Rank rank, Email email, Age age, Tile tile, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
+		this.username = username;
+		this.password = password;
+		this.rank = rank;
+		this.email = email;
+		this.age = age;
+		this.tile = tile;
 		this.channel = channel;
 		this.displayMode = displayMode;
 		this.clientSessionKey = clientSessionKey;
@@ -152,6 +173,10 @@ public class Account extends AttributeSet {
 	
 	public Age getAge() {
 		return age;
+	}
+	
+	public Tile getTile() {
+		return tile;
 	}
 	
 }

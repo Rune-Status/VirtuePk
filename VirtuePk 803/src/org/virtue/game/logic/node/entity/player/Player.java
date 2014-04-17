@@ -6,11 +6,14 @@ import org.virtue.Constants;
 import org.virtue.game.config.ClientVarps;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.content.combat.ability.AbilityBook;
+import org.virtue.game.logic.content.combat.ability.ActionBar;
 import org.virtue.game.logic.content.skills.SkillManager;
-import org.virtue.game.logic.message.ChatType;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.node.entity.social.ChatManager;
+import org.virtue.game.logic.node.entity.social.ChatType;
 import org.virtue.game.logic.node.entity.social.OnlineStatus;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
@@ -72,15 +75,26 @@ public class Player extends Entity {
 	private PacketDispatcher packetDispatcher;
 	
 	/**
-	 * Represents the type of message that the next message(s) will be
+	 * Represents the chat manager
 	 */
-	private ChatType chatType;
+	private ChatManager chatManager;
 	
 	private boolean largeSceneView = false;
 	
 	private boolean exists = true;
 	
 	private boolean inWorld = false;
+	
+
+	/**
+	 * The player's ability book.
+	 */
+	public AbilityBook abilityBook;
+	
+	/**
+	 * The player's action bar.
+	 */
+	public ActionBar actionBar;
 	
 	/**
 	 * Constructs a new {@code Player.java}.
@@ -97,8 +111,11 @@ public class Player extends Entity {
 		interfaceManager = new InterfaceManager(this);
 		inventory = new Inventory(this);
 		equipment = new Equipment(this);
+		abilityBook = new AbilityBook(this);
+		actionBar = new ActionBar(this);
 		packetDispatcher = new PacketDispatcher(this);
 		skillManager = new SkillManager(this);
+		chatManager = new ChatManager(this);
 	}
 
 	@Override
@@ -234,30 +251,6 @@ public class Player extends Entity {
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
 	}
-	
-	/**
-	 * Sets the type for the player's chat messages
-	 * @param typeCode	The code representing the type
-	 */
-	public void setChatType (int typeCode) {
-		setChatType(ChatType.forCode(typeCode));
-	}
-	
-	/**
-	 * Sets the type for the player's chat messages
-	 * @param typeCode	The chat type
-	 */
-	public void setChatType (ChatType type) {
-		chatType = type;
-	}
-	
-	/**
-	 * Gets the type for the player's chat messages
-	 * @return
-	 */
-	public ChatType getChatType () {
-		return chatType;
-	}
 
 	/**
 	 * @return the equipment
@@ -285,6 +278,17 @@ public class Player extends Entity {
 	 */
 	public void setPacketDispatcher(PacketDispatcher packetDispatcher) {
 		this.packetDispatcher = packetDispatcher;
+	}
+	
+	/**
+	 * @return	The chat manager
+	 */
+	public ChatManager getChatManager () {
+		return chatManager;
+	}
+	
+	public ActionBar getActionBar () {
+		return actionBar;
 	}
 	
 	/**

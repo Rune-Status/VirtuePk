@@ -14,7 +14,7 @@ public class GameMessageEncoder implements PacketEncoder<GameMessage> {
 	@Override
 	public RS3PacketBuilder buildPacket(GameMessage message) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacketVarByte(OutgoingOpcodes.MESSAGE_PACKET);
+		buffer.putPacketVarByte(OutgoingOpcodes.GAME_MESSAGE_PACKET);
 		buffer.putSmart(message.getOpcode().getOpcode());
 		buffer.putInt(message.getPlayer().getTile().getTileHash());
 		int bitMask = 0;
