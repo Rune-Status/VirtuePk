@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.handlers;
 
-import org.virtue.engine.AttributeSet;
+import org.virtue.game.core.AttributeSet;
 import org.virtue.network.session.Session;
 
 /**

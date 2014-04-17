@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 
-import org.virtue.game.World;
-import org.virtue.game.node.entity.npc.NPC;
+import org.virtue.game.logic.World;
+import org.virtue.game.logic.node.entity.npc.NPC;
 
 /**
  * @author Taylor

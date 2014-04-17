@@ -1,8 +1,8 @@
 package org.virtue.network.protocol.handlers.commands;
 
-import org.virtue.game.node.entity.player.Player;
-import org.virtue.game.node.entity.player.update.ref.Appearance;
-import org.virtue.game.node.entity.player.update.ref.Appearance.Gender;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
+import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
 
 /**
  * @author Virtue Development Team 2014 (c).

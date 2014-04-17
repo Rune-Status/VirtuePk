@@ -1,8 +1,8 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.node.interfaces.ActionButton;
-import org.virtue.game.node.interfaces.InterfaceManager;
-import org.virtue.game.node.interfaces.TabInterface;
+import org.virtue.game.logic.node.interfaces.ActionButton;
+import org.virtue.game.logic.node.interfaces.InterfaceManager;
+import org.virtue.game.logic.node.interfaces.TabInterface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 

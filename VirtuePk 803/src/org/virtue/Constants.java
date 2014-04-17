@@ -2,7 +2,7 @@ package org.virtue;
 
 import java.math.BigInteger;
 
-import org.virtue.game.node.entity.region.Tile;
+import org.virtue.game.logic.node.entity.region.Tile;
 
 /**
  * @author Belthazar

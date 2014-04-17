@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.Constants;
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 /**

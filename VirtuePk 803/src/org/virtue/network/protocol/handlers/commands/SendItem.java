@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
-import org.virtue.game.item.Item;
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.item.Item;
+import org.virtue.game.logic.node.entity.player.Player;
 
 /**
  * @author Virtue Development Team 2014 (c).

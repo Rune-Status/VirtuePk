@@ -3,9 +3,9 @@ package org.virtue.network.loginserver.input;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.virtue.game.Country;
-import org.virtue.game.ServerLocation;
-import org.virtue.game.WorldHub;
+import org.virtue.game.logic.Country;
+import org.virtue.game.logic.ServerLocation;
+import org.virtue.game.logic.WorldHub;
 import org.virtue.network.loginserver.handlers.LobbyHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;

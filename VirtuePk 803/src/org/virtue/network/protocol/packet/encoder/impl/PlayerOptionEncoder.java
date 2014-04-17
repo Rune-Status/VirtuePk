@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
-import org.virtue.config.OutgoingOpcodes;
+import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;

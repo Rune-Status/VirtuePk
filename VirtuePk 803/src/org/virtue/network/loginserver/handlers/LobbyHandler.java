@@ -4,8 +4,8 @@ import java.net.ProtocolException;
 import java.util.List;
 
 import org.virtue.Launcher;
-import org.virtue.game.Lobby;
-import org.virtue.game.WorldHub;
+import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.WorldHub;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.Session;
 

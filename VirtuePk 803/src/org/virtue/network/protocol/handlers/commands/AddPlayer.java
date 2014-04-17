@@ -1,10 +1,10 @@
 package org.virtue.network.protocol.handlers.commands;
 
-import org.virtue.game.World;
-import org.virtue.game.node.entity.player.Player;
-import org.virtue.game.node.entity.player.identity.Account;
-import org.virtue.game.node.entity.player.identity.Username;
-import org.virtue.game.node.entity.region.Tile;
+import org.virtue.game.logic.World;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.game.logic.node.entity.region.Tile;
 
 public class AddPlayer implements Command {
 

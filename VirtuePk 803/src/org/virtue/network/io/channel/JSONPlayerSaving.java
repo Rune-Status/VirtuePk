@@ -2,8 +2,8 @@ package org.virtue.network.io.channel;
 
 import java.io.File;
 
-import org.virtue.game.node.entity.region.Tile;
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.region.Tile;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -19,7 +19,7 @@ public class JSONPlayerSaving {
 		obj.addProperty("password", p.getAccount().getPassword().getPassword());
 		obj.addProperty("email", p.getAccount().getEmail().getEmail());
 		obj.addProperty("age", p.getAccount().getAge().getAge());
-		obj.addProperty("dateofbirth", p.getAccount().getDateOfBirth().getDateOfBirth());
+		//obj.addProperty("dateofbirth", p.getAccount().getDateOfBirth().getDateOfBirth());
 		obj.addProperty("rank", p.getAccount().getRank().name());
 		
 		JsonArray location = new JsonArray();
@@ -35,8 +35,8 @@ public class JSONPlayerSaving {
 		int skillIds = 28;
 		for (int id = 0; id < skillIds; id++) {
 			skillSets.addProperty("skillID", id);
-			skillSets.addProperty("level", skillData.getCurrentLevel());
-			skillSets.addProperty("experience", skillData.getExperience());
+			//skillSets.addProperty("level", skillData.getCurrentLevel());
+			//skillSets.addProperty("experience", skillData.getExperience());
 			skills.add(skillSets);
 		}
 		obj.add("skills", skills);

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.virtue.Launcher;
-import org.virtue.config.IncommingOpcodes;
+import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.handlers.commands.CommandRepository;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;

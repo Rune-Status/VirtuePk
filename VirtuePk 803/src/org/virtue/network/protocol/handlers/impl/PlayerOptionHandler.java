@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.World;
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.World;
+import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 

@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.messages;
 
-import org.virtue.game.World;
+import org.virtue.game.logic.World;
 
 /**
  * @author Virtue Development Team 2014 (c).

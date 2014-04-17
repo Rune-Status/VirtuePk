@@ -3,7 +3,7 @@ package org.virtue.network.loginserver;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.virtue.game.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Account;
 
 /**
  * @author Taylor Moon

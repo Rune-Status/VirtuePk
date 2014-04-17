@@ -11,7 +11,7 @@ import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Launcher;
 import org.virtue.cache.Cache;
-import org.virtue.engine.filter.Js5Filter;
+import org.virtue.game.core.filter.Js5Filter;
 import org.virtue.network.protocol.codec.ondemand.ArchiveRequest;
 import org.virtue.network.protocol.codec.ondemand.FileResponse;
 import org.virtue.network.protocol.codec.ondemand.UpdateEncryptionMessage;

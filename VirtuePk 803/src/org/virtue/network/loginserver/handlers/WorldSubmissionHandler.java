@@ -3,8 +3,8 @@ package org.virtue.network.loginserver.handlers;
 import java.util.ArrayList;
 
 import org.virtue.Constants;
-import org.virtue.game.Lobby;
-import org.virtue.game.WorldHub;
+import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.WorldHub;
 import org.virtue.network.loginserver.DataServer;
 import org.virtue.network.loginserver.message.WorldSubmissionResponse;
 import org.virtue.network.protocol.handlers.PacketHandler;

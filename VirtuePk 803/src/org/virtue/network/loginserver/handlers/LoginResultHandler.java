@@ -1,7 +1,7 @@
 package org.virtue.network.loginserver.handlers;
 
 import org.virtue.Launcher;
-import org.virtue.game.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.network.loginserver.DataServer;
 import org.virtue.network.loginserver.LoginSessions;
 import org.virtue.network.loginserver.message.LoginResult;

@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.virtue.game.node.entity.npc.NPC;
-import org.virtue.game.node.entity.region.Tile;
+import org.virtue.game.logic.node.entity.npc.NPC;
+import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.network.io.IOParser;
 
 /**

@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.messages;
 
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.Player;
 
 /**
  * @author Taylor Moon

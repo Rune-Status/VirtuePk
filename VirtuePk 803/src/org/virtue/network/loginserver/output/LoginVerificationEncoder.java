@@ -1,6 +1,6 @@
 package org.virtue.network.loginserver.output;
 
-import org.virtue.game.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;

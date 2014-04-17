@@ -3,12 +3,12 @@ package org.virtue.network.protocol.packet.encoder.impl;
 import java.security.MessageDigest;
 
 import org.virtue.Constants;
-import org.virtue.config.OutgoingOpcodes;
-import org.virtue.config.UpdateMasks;
-import org.virtue.game.World;
-import org.virtue.game.node.entity.player.Player;
-import org.virtue.game.node.entity.player.update.blocks.AppearanceBlock;
-import org.virtue.game.node.entity.player.update.movement.MovementUtils;
+import org.virtue.game.config.OutgoingOpcodes;
+import org.virtue.game.config.UpdateMasks;
+import org.virtue.game.logic.World;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.update.blocks.AppearanceBlock;
+import org.virtue.game.logic.node.entity.player.update.movement.MovementUtils;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 

@@ -1,9 +1,9 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
-import org.virtue.config.OutgoingOpcodes;
-import org.virtue.game.Lobby;
-import org.virtue.game.ServerLocation;
-import org.virtue.game.WorldHub;
+import org.virtue.game.config.OutgoingOpcodes;
+import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.ServerLocation;
+import org.virtue.game.logic.WorldHub;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 

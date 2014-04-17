@@ -4,7 +4,7 @@
  */
 package org.virtue.network.protocol.packet.decoder.impl;
 
-import org.virtue.config.IncommingOpcodes;
+import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.ClientInfoHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;

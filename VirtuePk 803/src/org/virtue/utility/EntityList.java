@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.virtue.game.node.entity.Entity;
+import org.virtue.game.logic.node.entity.Entity;
 
 
 public class EntityList<T extends Entity> extends AbstractCollection<T> {

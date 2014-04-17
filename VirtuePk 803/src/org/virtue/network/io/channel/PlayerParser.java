@@ -1,6 +1,6 @@
 package org.virtue.network.io.channel;
 
-import org.virtue.game.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.io.IOParser;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 

@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.node.entity.player.screen.ClientScreen;
+import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 import org.virtue.utility.DisplayMode;

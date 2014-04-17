@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.virtue.Launcher;
-import org.virtue.game.content.skills.Skill;
+import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**

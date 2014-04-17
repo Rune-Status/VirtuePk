@@ -6,9 +6,9 @@ import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
-import org.virtue.engine.GameEngine;
-import org.virtue.engine.threads.ChannelThreadFactory;
-import org.virtue.engine.threads.NetworkThreadFactory;
+import org.virtue.game.GameEngine;
+import org.virtue.game.core.threads.ChannelThreadFactory;
+import org.virtue.game.core.threads.NetworkThreadFactory;
 
 /**
  * @author Taylor

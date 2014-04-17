@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.messages;
 
-import org.virtue.game.item.Item;
+import org.virtue.game.logic.item.Item;
 
 public class ItemsMessage {
 	private Item[] items;
