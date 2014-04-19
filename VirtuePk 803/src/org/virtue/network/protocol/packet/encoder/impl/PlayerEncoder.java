@@ -7,6 +7,7 @@ import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.config.UpdateMasks;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.update.UpdateBlock;
 import org.virtue.game.logic.node.entity.player.update.blocks.AppearanceBlock;
 import org.virtue.game.logic.node.entity.player.update.movement.MovementUtils;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
@@ -365,7 +366,49 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 */
 	private void performFlagUpdate(Player p, RS3PacketBuilder data, boolean needAppearenceUpdate, boolean added) {
 		data.putShort(0);//Useless
+		int mask = 0;
+		if(needAppearenceUpdate) {
+			mask |= UpdateMasks.APPEARANCE;
+			if (p.getUpdateArchive().getLiveBlocks()[14] == null) {
+				p.getUpdateArchive().queue(AppearanceBlock.class);
+			}
+		}
+		for (UpdateBlock block : p.getUpdateArchive().getLiveBlocks()) {
+			if (block == null) {
+				continue;
+			}
+			if (block instanceof AppearanceBlock && needAppearenceUpdate) {
+				continue;
+			}
+			mask |= block.getMask();
+		}
+		//System.out.println("Mask=0x"+Integer.toHexString(mask));
+		if (mask >= 0x100) {
+			mask |= 0x8;
+			if (mask >= 0x10000) {
+				mask |= 0x2000;
+				data.put(mask & 0xFF);
+				data.put((mask >> 8) & 0xFFFF);
+				data.put(mask >> 16);
+			} else {
+				data.put(mask & 0xFF);
+				data.put(mask >> 8);
+			}
+		} else {
+			data.put(mask & 0xFF);
+		}
+		for (UpdateBlock block : p.getUpdateArchive().getLiveBlocks()) {
+			if (block == null) {
+				continue;
+			}
+			int length = block.appendToUpdateBlock(data, p);
+			player.getViewport().incrementTotalRenderDataSentLength(length);//.setTotalRenderDataSentLength(p.getViewport().getTotalRenderDataSentLength() + length);
+			System.out.println("Appending update block...");
+		}
 		if (needAppearenceUpdate) {
+			player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();
+		}
+		/*if (needAppearenceUpdate) {
 			data.put(UpdateMasks.APPEARANCE);
 			if (p.getUpdateArchive().getLiveBlocks()[8] == null) {
 				p.getUpdateArchive().queue(AppearanceBlock.class);
@@ -377,7 +420,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			System.out.println("Packing appearance update for player: "+p.getAccount().getUsername().getName()+" at index: "+p.getIndex());
 			//player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();
 			//p.getUpdateArchive().getLiveBlocks()[8] = null;
-		}
+		}*/
 	}
 	
 	/**

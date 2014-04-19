@@ -1,4 +1,4 @@
-package org.virtue.network.protocol.messages;
+package org.virtue.game.logic.social.messages;
 
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 

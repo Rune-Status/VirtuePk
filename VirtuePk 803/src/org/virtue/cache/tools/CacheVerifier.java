@@ -12,10 +12,14 @@ import org.virtue.cache.ReferenceTable.Entry;
 public final class CacheVerifier {
 
 	public static void main(String[] args) throws IOException {
-		try (FileStore store = FileStore.open("C:/rsps/BattleRune/Server/data/cache/")) {
+		try (FileStore store = FileStore.open(System.getProperty("user.home") + "/Desktop/cache/")) {
 			for (int type = 0; type < store.getFileCount(255); type++) {
+				System.out.println(type);
+				if (type == 4 || type == 6 || type == 11)
+					continue;
 				ReferenceTable table = ReferenceTable.decode(Container.decode(store.read(255, type)).getData());
 				for (int file = 0; file < table.capacity(); file++) {
+					System.out.println(type+":"+file);
 					Entry entry = table.getEntry(file);
 					if (entry == null)
 						continue;

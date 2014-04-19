@@ -46,7 +46,7 @@ public class Equipment extends AbstractInterface {
 	}
 	
 	@Override
-	public void sendInitData () {
+	public void postSend () {
 		sendInterfaceSettings(14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
 		sendInterfaceSettings(12, 2, 7, 2);//IfaceSettings: 95944716, 7, 2, 2
 	}

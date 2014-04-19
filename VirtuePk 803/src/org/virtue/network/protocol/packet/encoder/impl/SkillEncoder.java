@@ -13,7 +13,8 @@ public class SkillEncoder implements PacketEncoder<SkillData> {
 		buffer.putPacket(OutgoingOpcodes.SKILL_DATA_PACKET);
 		buffer.putByteC(node.getSkill().getID());
 		buffer.putByteS(node.getCurrentLevel());
-		buffer.putInt(node.getExperience());
+		buffer.putInt(node.getExperience()/10);
+		//System.out.println("Sending skill. Xp="+node.getExperience());
 		return buffer;
 	}
 

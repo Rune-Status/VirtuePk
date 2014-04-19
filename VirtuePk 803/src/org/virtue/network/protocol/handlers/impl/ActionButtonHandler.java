@@ -13,7 +13,7 @@ public class ActionButtonHandler extends PacketHandler<WorldSession> {
 		int interfaceHash = getFlag("interface", -1);
 		int slotID = getFlag("slot1", -1);
 		int slotID2 = getFlag("slot2", -1);
-		ActionButton button = ActionButton.getFromOpcode(getFlag("opcode", -1));
+		ActionButton button = ActionButton.forOpcode(getFlag("opcode", -1));
 		if (button == null) {
 			throw new RuntimeException("Invalid Opcode: "+getFlag("opcode", -1));			
 		}

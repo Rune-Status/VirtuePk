@@ -18,7 +18,11 @@ public class GameMessage {
 		 * Represents a default game message in the chatbox.
 		 */
 		CHAT_BOX(0),
-
+		
+		/**
+		 * Friend/Ignore-related
+		 */
+		GAME_PRIVATE(4),
 		/**
 		 * Represents a default game message in the chatbox, yet with filter
 		 * properties enabled.

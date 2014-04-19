@@ -1,26 +1,22 @@
 package org.virtue.cache.def;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.virtue.Launcher;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 public class ObjectDefinition {
 
 
-	private static ObjectDefinition[] objectDefinitions;
-	
-    public final int objectID;
-    public String name = "null";
-    public boolean membersObject;
+	private final int objectID;
+    private String name = "null";
+    private boolean membersObject;
 
     public String[] options = new String[] { null, null, null, null, null, "Examine" };
     HashMap<Integer, Object> parameters;
 
-    public int sizeX = 1;
-    public int sizeY = 1;
+    private int sizeX = 1;
+    private int sizeY = 1;
     public int clipType = 2;
     
     
@@ -96,36 +92,9 @@ public class ObjectDefinition {
     //public Class272 aClass272_6905;
     int[] anIntArray6906;
 
-	public static ObjectDefinition forId(int id) throws IOException {
-		if (objectDefinitions == null) {
-			objectDefinitions = new ObjectDefinition[getSize()];
-		}
-		if (id < 0 || id > objectDefinitions.length) {
-			id = 0;
-		}
-		ObjectDefinition objectDef = objectDefinitions[id];
-		if (objectDef == null) {
-			objectDefinitions[id] = objectDef = new ObjectDefinition(id);
-		}
-		return objectDef;
-	}
-
-	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.OBJECT_DEFINITIONS);//Cache.getStore().getIndexes()[16].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.OBJECT_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[16].getValidFilesCount(lastArchiveId)
-	}
-	
-	public ObjectDefinition (int id) {
+	public ObjectDefinition (int id, byte[] data) {
 		this.objectID = id;
-		loadObjectDefinition();
-	}
-	
-	private void loadObjectDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(CacheIndex.OBJECT_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[16].getFile(getArchiveId(), getFileId());
-			if (data == null) {
-				return;
-			}
 			read(new RS3PacketReader(data));
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -427,14 +396,6 @@ public class ObjectDefinition {
 		    }
 		}
     }
-
-	private int getFileId() {
-		return objectID & 0xFF;
-	}
-
-	private int getArchiveId() {
-		return objectID >>> 8;
-	}
 	
 	public String getName () {
 		return name;
@@ -442,6 +403,14 @@ public class ObjectDefinition {
 	
 	public int getID () {
 		return objectID;
+	}
+	
+	public int[] getSize () {
+		return new int[] { sizeX, sizeY };
+	}
+	
+	public boolean isMembers () {
+		return membersObject;
 	}
 
 	public boolean containsOption(String option) {

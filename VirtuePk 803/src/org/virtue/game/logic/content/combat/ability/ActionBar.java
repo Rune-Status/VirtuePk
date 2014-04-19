@@ -29,7 +29,7 @@ public static final int[] SHORTCUT_CHILD_IDS = new int[] { 32, 72, 76, 80, 84, 8
 	}
 
 	@Override
-	public void sendInitData() {
+	public void postSend() {
 		sendInterfaceSettings(118, -1, -1, 2098176);//IfaceSettings: 93716598, -1, -1, 2098176
 		sendInterfaceSettings(123, -1, -1, 2098176);//IfaceSettings: 93716603, -1, -1, 2098176
 		sendInterfaceSettings(124, -1, -1, 2098176);//IfaceSettings: 93716604, -1, -1, 2098176
@@ -110,8 +110,7 @@ public static final int[] SHORTCUT_CHILD_IDS = new int[] { 32, 72, 76, 80, 84, 8
 
 	@Override
 	public int getTabID() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 1003;
 	}
 
 }

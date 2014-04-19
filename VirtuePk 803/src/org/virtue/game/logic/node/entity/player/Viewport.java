@@ -334,6 +334,13 @@ public class Viewport {
 	}
 
 	/**
+	 * @param length The length to increment by
+	 */
+	public void incrementTotalRenderDataSentLength(int length) {
+		this.totalRenderDataSentLength += length;
+	}
+
+	/**
 	 * @return the localAddedPlayers
 	 */
 	public int getLocalAddedPlayers() {

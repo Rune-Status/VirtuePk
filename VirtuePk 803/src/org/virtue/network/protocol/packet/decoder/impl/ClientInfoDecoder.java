@@ -22,7 +22,7 @@ public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
         	int var1 = packet.getByteA();
         	int ping = packet.getShortA();
         	int fps = packet.getByteC();
-        	System.out.println("Client specs: var1="+var1+", ping="+ping+", fps="+fps);
+        	//System.out.println("Client specs: var1="+var1+", ping="+ping+", fps="+fps);
         }
         return null;
         //throw new UnsupportedOperationException("Not supported yet.");

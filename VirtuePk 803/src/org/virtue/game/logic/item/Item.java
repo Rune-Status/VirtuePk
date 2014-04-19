@@ -1,6 +1,6 @@
 package org.virtue.game.logic.item;
 
-import org.virtue.cache.def.ItemDefinition;
+import org.virtue.cache.def.ItemDefinitionLoader;
 
 /**
  * @author Taylor
@@ -61,6 +61,6 @@ public class Item {
 	 */
 	public int getEquipId() {
 		// TODO Auto-generated method stub
-		return ItemDefinition.forId(id).equipSlotID;
+		return ItemDefinitionLoader.forId(id).equipSlotID;
 	}
 }

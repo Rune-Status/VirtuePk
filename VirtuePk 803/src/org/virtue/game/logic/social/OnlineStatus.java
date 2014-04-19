@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Ieldor.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.node.entity.social;
+package org.virtue.game.logic.social;
 /**
  * An {@link Enum} that represents a player's online status
  *

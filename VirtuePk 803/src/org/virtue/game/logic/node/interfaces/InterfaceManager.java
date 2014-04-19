@@ -52,13 +52,12 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
 		sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313] (Skills)
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30
-		sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
+		//sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
 		
 		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293] (Active task)
-		sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
+		//sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
 		
 		sendInterface(player.getInventory(), 130, true);//Inventory tab
-		
 		/*sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130] (Inventory)
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(1473, 8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
@@ -74,7 +73,7 @@ public class InterfaceManager {
 		
 		sendInterface(true, 1477, 323, 1458);//Interface: id=1458, clipped=1, parent=[1477, 323] (Prayer tab)
 		sendInterfaceSettings(1458, 24, 0, 28, 8388610);//IfaceSettings: 95551512, 28, 0, 8388610
-		sendCs2(new ClientScriptVar(8862, 4, 1));//Runscript: [8862, 4, 1]
+		//sendCs2(new ClientScriptVar(8862, 4, 1));//Runscript: [8862, 4, 1]
 		
 		sendInterface(true, 1477, 239, 1460);//Interface: id=1460, clipped=1, parent=[1477, 239] (Melee abilities)
 		sendInterface(true, 1477, 249, 1452);//Interface: id=1452, clipped=1, parent=[1477, 249] (Ranged abilities)
@@ -88,42 +87,42 @@ public class InterfaceManager {
 		sendInterfaceSettings(1452, 7, 6, 14, 2);//IfaceSettings: 95158279, 14, 6, 2
 		sendInterfaceSettings(1461, 7, 6, 14, 2);//IfaceSettings: 95748103, 14, 6, 2
 		sendInterfaceSettings(1449, 7, 6, 14, 2);//IfaceSettings: 94961671, 14, 6, 2
-		sendCs2(new ClientScriptVar(8862, 5, 1));//Runscript: [8862, 5, 1]
+		//sendCs2(new ClientScriptVar(8862, 5, 1));//Runscript: [8862, 5, 1]
 		
 		sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371] (Friends list)
-		sendCs2(new ClientScriptVar(8862, 14, 1));//Runscript: [8862, 14, 1]
+		//sendCs2(new ClientScriptVar(8862, 14, 1));//Runscript: [8862, 14, 1]
 		sendInterfaceSettings(550, 25, 0, 500, 510);//IfaceSettings: 36044825, 500, 0, 510
 		sendInterfaceSettings(550, 23, 0, 500, 6);//IfaceSettings: 36044823, 500, 0, 6
 		
 		sendInterface(true, 1477, 602, 1427);//Interface: id=1427, clipped=1, parent=[1477, 602] (Friends chat)
-		sendCs2(new ClientScriptVar(1303, 93519895, 1, 1, player.getAccount().getUsername().getName()));//Runscript: [1303, 93519895, 1, 1, Test]
+		sendCs2(new ClientScriptVar(1303, player.getAccount().getUsername().getName(), 1, 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
 		sendInterfaceSettings(1427, 23, 0, 600, 1024);//IfaceSettings: 93519895, 600, 0, 1024
-		sendCs2(new ClientScriptVar(8862, 15, 1));//Runscript: [8862, 15, 1]
+		//sendCs2(new ClientScriptVar(8862, 15, 1));//Runscript: [8862, 15, 1]
 		
 		sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361] (Clan chat)
-		sendCs2(new ClientScriptVar(8862, 16, 1));//Runscript: [8862, 16, 1]
+		//sendCs2(new ClientScriptVar(8862, 16, 1));//Runscript: [8862, 16, 1]
 		sendInterfaceSettings(1110, 20, 0, 200, 2);//IfaceSettings: 72744980, 200, 0, 2
 		sendInterfaceSettings(1110, 25, 0, 600, 2);//IfaceSettings: 72744985, 600, 0, 2
 		sendInterfaceSettings(1110, 23, 0, 600, 1024);//IfaceSettings: 72744983, 600, 0, 1024
 		sendInterfaceSettings(1110, 14, 0, 600, 1024);//IfaceSettings: 72744974, 600, 0, 1024
 		
 		sendInterface(true, 1477, 303, 590);//Interface: id=590, clipped=1, parent=[1477, 303]
-		sendCs2(new ClientScriptVar(4717, 38666248, 38666247, 38666249, 3874));//Runscript: [4717, 38666248, 38666247, 38666249, 3874]
+		sendCs2(new ClientScriptVar(4717, 3874, 38666249, 38666247, 38666248));//Runscript: [4717, 38666248, 38666247, 38666249, 3874]
 		sendInterfaceSettings(590, 8, 0, 169, 8388614);//IfaceSettings: 38666248, 169, 0, 8388614
 		sendInterfaceSettings(590, 13, 0, 11, 2);//IfaceSettings: 38666253, 11, 0, 2
-		sendCs2(new ClientScriptVar(4717, 94240781, 94240780, 94240782, 3874));//Runscript: [4717, 94240781, 94240780, 94240782, 3874]
-		sendCs2(new ClientScriptVar(8862, 9, 1));//Runscript: [8862, 9, 1]
+		sendCs2(new ClientScriptVar(4717, 3874, 94240782, 94240780, 94240781));//Runscript: [4717, 94240781, 94240780, 94240782, 3874]
+		//sendCs2(new ClientScriptVar(8862, 9, 1));//Runscript: [8862, 9, 1]
 		
 		sendInterface(true, 1477, 341, 1416);//Interface: id=1416, clipped=1, parent=[1477, 341] (Music player)
 		sendInterfaceSettings(1416, 3, 0, 2443, 30);//IfaceSettings: 92798979, 2443, 0, 30
 		sendInterfaceSettings(1416, 11, 0, 11, 2359302);//IfaceSettings: 92798987, 11, 0, 2359302
 		sendInterfaceSettings(1416, 11, 12, 23, 4);//IfaceSettings: 92798987, 23, 12, 4
 		sendInterfaceSettings(1416, 11, 24, 24, 2097152);//IfaceSettings: 92798987, 24, 24, 2097152
-		sendCs2(new ClientScriptVar(8862, 10, 1));//Runscript: [8862, 10, 1]
+		//sendCs2(new ClientScriptVar(8862, 10, 1));//Runscript: [8862, 10, 1]
 		
 		sendInterface(true, 1477, 351, 1417);//Interface: id=1417, clipped=1, parent=[1477, 351] (Notes)
 		sendInterfaceSettings(1417, 16, 0, 29, 2621470);//IfaceSettings: 92864528, 29, 0, 2621470
-		sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
+		//sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
 		//sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
 		
 		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174] (Launcher bar (links to settings, social, powers, etc))
@@ -199,7 +198,7 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 38, 1488);//Interface: id=1488, clipped=1, parent=[1477, 38]
 		sendCs2(new ClientScriptVar(8778));//Runscript: [8778]
 		sendCs2(new ClientScriptVar(4704));//Runscript: [4704]
-		sendCs2(new ClientScriptVar(4308, 18, 0));//Runscript: [4308, 18, 0]
+		sendCs2(new ClientScriptVar(4308, 0, 18));//Runscript: [4308, 18, 0]
 		
 		//sendInterface(true, 1477, 159, 669);//Interface: id=669, clipped=1, parent=[1477, 159] (Information box)
 		sendInterface(true, 1477, 21, 1215);//Interface: id=1215, clipped=1, parent=[1477, 21] (Experience counter)

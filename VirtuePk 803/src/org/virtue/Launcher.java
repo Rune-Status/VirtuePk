@@ -13,6 +13,9 @@ import org.virtue.cache.Container;
 import org.virtue.cache.FileStore;
 import org.virtue.cache.def.AnimationDefinition;
 import org.virtue.cache.def.CacheIndex;
+import org.virtue.cache.def.ItemDefinitionLoader;
+import org.virtue.cache.def.NPCDefinitionLoader;
+import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
@@ -105,18 +108,18 @@ public class Launcher {
 		CACHE = CacheLoader.getCache();//new Cache(FileStore.open(cacheFile));
 		Container container = new Container(Container.COMPRESSION_NONE, CACHE.createChecksumTable().encode(true, ChecksumTable.ON_DEMAND_MODULUS, ChecksumTable.ON_DEMAND_EXPONENT));
 		CACHE.setChecksumtable(container.encode());
+		
+		ItemDefinitionLoader.load(CACHE);//Loads the item definitions
+		
+		NPCDefinitionLoader.load(CACHE);//Loads the NPC definitions
+		
+		ObjectDefinitionLoader.load(CACHE);//Loads the object definitions
+		
 		//Initialies the huffman codec
 		ByteBuffer huffmanData = Launcher.getCache().read(CacheIndex.HUFFMAN_ENCODING, CACHE.getFileId(CacheIndex.HUFFMAN_ENCODING, "huffman")).getData();
 		byte[] data = new byte[huffmanData.remaining()];
 		huffmanData.get(data);
 		HUFFMAN = new Huffman(data);
-		
-/*	int i = 0;
-		while (i < 14484) {
-			ItemDefinition item = ItemDefinition.forId(i);
-	        System.out.println("Item: name="+item.getName()+", equiptID="+item.equipID+", equiptSlot="+item.equipSlotID+", maleModel="+item.maleEquip1);
-			i++;
-		}*/
         
 	}
 

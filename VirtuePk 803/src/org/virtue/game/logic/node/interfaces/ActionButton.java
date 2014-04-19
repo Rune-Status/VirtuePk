@@ -28,12 +28,26 @@ public enum ActionButton {
 		return opcode;
 	}
 	
-	public static ActionButton getFromOpcode (int opcode) {
+	public static ActionButton forOpcode (int opcode) {
 		for (ActionButton button : ActionButton.values()) {
 			if (button.opcode == opcode) {
 				return button;
 			}
 		}
 		return null;
+	}
+	
+	public static ActionButton forID (int id) {
+		ActionButton button = ActionButton.values()[id+1];
+		if (button.id == id) {
+			return button;
+		} else {
+			for (ActionButton b : ActionButton.values()) {
+				if (b.id == id) {
+					return b;
+				}
+			}
+			return null;
+		}
 	}
 }

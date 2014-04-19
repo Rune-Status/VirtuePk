@@ -1,10 +1,13 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.virtue.Launcher;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
@@ -14,14 +17,11 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
 public class AnimationDefinition {
 
     
-	private static ConcurrentHashMap<Integer, AnimationDefinition> animDefs = new ConcurrentHashMap<Integer, AnimationDefinition>();
-	private static int animationCount = -1;
-
- 	public boolean aBool7066;
+	public boolean aBool7066;
     //AnimationDefinitionLoader loader;//aClass556_7067
     public int[][] handledSounds;//anIntArrayArray7068
     public int[] anIntArray7069;
-    public int animationID;//anInt7070
+    private int animationID;//anInt7070
     public int[] anIntArray7071;
     public int duration = 0;//anInt7072
     //public AnimationConfig config;//aClass543_7073
@@ -43,40 +43,9 @@ public class AnimationDefinition {
     public int[] soundMaxDelay;//anIntArray7089
 
 
-
-	public static final AnimationDefinition forId(int id) {
-		try {
-			if (animationCount < 0) {
-				animationCount = getSize();
-			}
-			if (id >= animationCount) {
-				return null;
-			}
-			AnimationDefinition defs = animDefs.get(id);
-			if (defs != null) {
-				return defs;
-			}
-			defs = new AnimationDefinition(id);
-			animDefs.put(id, defs);
-			return defs;
-		} catch (Throwable t) {
-			return null;
-		}
-	}
-
-	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.ANIMATION_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + Launcher.getCache().getContainerCount(CacheIndex.ANIMATION_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
-	}
-	
-	public AnimationDefinition (int id) {
+	public AnimationDefinition (int id, byte[] data) {
 		this.animationID = id;
-		loadAnimationDefinition();
-	}
-    
-	public void loadAnimationDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(CacheIndex.ANIMATION_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
 			if (data == null) {
 				return;
 			}
@@ -201,6 +170,10 @@ public class AnimationDefinition {
 		    }
 		}
     }
+	
+	public int getID () {
+		return animationID;
+	}
     
     void postDecodeEvent() {
 		/*if (2119332939 * anInt7088 == -1) {
@@ -255,12 +228,45 @@ public class AnimationDefinition {
 	public int getDurationTicks() {
 		return getDuration() / 600;
 	}
+	
+	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
+		File file = new File("./dumps/anim/"+animationID+".txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		for (Field field : this.getClass().getFields()) {
+			if (field == null) {
+				continue;
+			}
+			Object value = field.get(this);
+			if (value == null) {
+				continue;
+			}
 
-	public int getArchiveId() {
-		return animationID >>> 7;
-	}
+			if (value instanceof String[]) {
+				value = Arrays.toString((String[]) value);
+			}
+			if (value instanceof int[]) {
+				value = Arrays.toString((int[]) value);
+			}
+			if (value instanceof byte[]) {
+				value = Arrays.toString((byte[]) value);
+			}
+			if (value instanceof short[]) {
+				value = Arrays.toString((short[]) value);
+			}
 
-	public int getFileId() {
-		return 0x7f & animationID;
+			//System.out.println(field.getName() + "->" + value);
+
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.write(field.getName() + "->" + value);
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.newLine();
+			writer.flush();
+
+		}
+		writer.close();
 	}
 }

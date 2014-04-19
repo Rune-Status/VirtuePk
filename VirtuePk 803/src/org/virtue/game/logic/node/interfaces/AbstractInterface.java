@@ -50,13 +50,14 @@ public abstract class AbstractInterface {
 	 */
 	public void send (int parentID, int parentComponent, boolean clipped) {
 		player.getPacketDispatcher().dispatchInterface(new InterfaceMessage(interfaceID, parentComponent, parentID, clipped));
-		sendInitData();
+		postSend();
+		setLock(false);
 	}
 	
 	/**
 	 * Called after the interface has been sent
 	 */
-	public abstract void sendInitData ();
+	public abstract void postSend ();
 	
 	/**
 	 * Called whenever the player clicks on a component on the interface
@@ -68,10 +69,15 @@ public abstract class AbstractInterface {
 	public abstract void handleActionButton (int componentID, int slotID1, int slotID2, ActionButton button);
 	
 	public void setLock (boolean isLocked) {
-		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(UNLOCK_SCRIPT, getTabID(), (isLocked ? 0 : 1)));
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(UNLOCK_SCRIPT, (isLocked ? 0 : 1), getTabID()));
 	}
 	
-	public abstract int getTabID ();
+	public abstract int getTabID ();//Skills=0, Active task=1, Backpack=2, Equipment=3, Prayer Abilities=4
+	//Magic Abilities=5 (also does other abilities), Melee Abilities=6, Ranged Abilities=7, Defence Abilities=8
+	//Emotes=9, Music Player=10, Notes=11, Familiar=12, Friends=14, Friends Chat Info=15, Minigames=17,
+	//Clan=16, Private Chat=19, All Chat=18, Clan Chat=21, Friends Chat=20, Trade and Assistance=23,
+	//Guest Clan Chat=22
+	//Action Bar=1004
 	
 
 	public void sendInterfaceSettings(int component, int fromSlot, int toSlot, int settings) {

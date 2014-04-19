@@ -38,7 +38,7 @@ public class Inventory extends AbstractInterface {
 	}
 
 	@Override
-	public void sendInitData() {
+	public void postSend() {
 		sendInterfaceSettings(8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
 		sendInterfaceSettings(0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536

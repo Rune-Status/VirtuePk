@@ -46,12 +46,7 @@ public class WorldHub {
 	/**
 	 * Represents the flag.
 	 */
-	private int flag;
-	
-	/**
-	 * Represents the region.
-	 */
-	private String region;
+	private int flags;
 	
 	/**
 	 * Represents the country.
@@ -74,16 +69,23 @@ public class WorldHub {
 	private boolean members;
 	
 	/**
+	 * Represents whether the world has lootshare enabled
+	 */
+	private boolean lootshare = false;//By default, no lootshare (as it hasn't been implemented yet)
+	
+	/**
 	 * Represents if this worldframe should appear online.
 	 */
 	protected boolean online = true;
+	
+	private String name;
 	
 	/**
 	 * Constructs a new {@code World.java}.
 	 * @param id The id.
 	 * @param activity The activity.
-	 * @param server The server.
-	 * @param flag The flag.
+	 * @param server The location of the server.
+	 * @param flag The flags for this world.
 	 * @param region The region.
 	 * @param country The country.
 	 * @param ip The IP.
@@ -92,17 +94,17 @@ public class WorldHub {
 	 * @param members Members or not.
 	 * @param online Online of offline.
 	 */
-	public WorldHub(int id, String activity, ServerLocation server, int flag, String region, Country country, String ip, int playerCount, boolean members, boolean online) {
+	public WorldHub(int id, String activity, ServerLocation server, Country country, String ip, int playerCount, boolean members, boolean online) {
 		this.id = id;
 		this.activity = activity;
 		this.server = server;
-		this.flag = flag;
-		this.region = region;
 		this.country = country;
 		this.ip = ip;
 		this.playerCount = playerCount;
 		this.members = members;
 		this.online = online;
+		this.name = "World "+id;
+		applyFlags();
 	}
 	
 	/**
@@ -245,6 +247,10 @@ public class WorldHub {
 		return REGION_MANAGER;
 	}
 	
+	public String getName () {
+		return name;
+	}
+	
 	/**
 	 * @return the id
 	 */
@@ -290,29 +296,25 @@ public class WorldHub {
 	/**
 	 * @return the flag
 	 */
-	public int getFlag() {
-		return flag;
+	public int getFlags() {
+		return flags;
 	}
 
 	/**
 	 * @param flag the flag to set
 	 */
-	public void setFlag(int flag) {
-		this.flag = flag;
+	public void setFlags(int flags) {
+		this.flags = flags;
 	}
-
-	/**
-	 * @return the region
-	 */
-	public String getRegion() {
-		return region;
-	}
-
-	/**
-	 * @param region the region to set
-	 */
-	public void setRegion(String region) {
-		this.region = region;
+	
+	public void applyFlags() {
+		flags = 0;
+		if (members) {
+			flags |= 0x1;
+		}
+		if (lootshare) {
+			flags |= 0x8;
+		}
 	}
 
 	/**
@@ -369,5 +371,19 @@ public class WorldHub {
 	 */
 	public void setMembers(boolean members) {
 		this.members = members;
+	}
+
+	/**
+	 * @return Whether lootshare is enabled
+	 */
+	public boolean lootshareEnabled() {
+		return lootshare;
+	}
+
+	/**
+	 * @param lootshare Whether lootshare should be enabled
+	 */
+	public void setLootshare(boolean lootshare) {
+		this.lootshare = lootshare;
 	}
 }

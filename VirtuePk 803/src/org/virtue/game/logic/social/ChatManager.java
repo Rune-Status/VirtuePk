@@ -1,8 +1,11 @@
-package org.virtue.game.logic.node.entity.social;
+package org.virtue.game.logic.social;
 
+import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.network.protocol.messages.PublicMessage;
+import org.virtue.game.logic.social.messages.PublicMessage;
+import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PublicMessageEncoder;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
@@ -24,11 +27,19 @@ public class ChatManager {
 	private ChatType chatType;
 	
 	/**
+	 * Represents the current online status of the player
+	 */
+	private OnlineStatus onlineStatus = OnlineStatus.EVERYONE;
+	
+	private FriendManager friendManager;
+	
+	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
 	 * @param player	The player
 	 */
 	public ChatManager (Player player) {
 		this.player = player;
+		friendManager = new InternalFriendManager(player);
 	}
 	
 	/**
@@ -47,12 +58,22 @@ public class ChatManager {
 		chatType = type;
 	}
 	
+	public FriendManager getFriendManager () {
+		return friendManager;
+	}
+	
 	/**
 	 * Gets the type for the player's chat messages
 	 * @return
 	 */
 	public ChatType getChatType () {
 		return chatType;
+	}
+	
+	public void init (boolean lobby) {
+		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
+		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
+		friendManager.init();
 	}
 	
 	/**

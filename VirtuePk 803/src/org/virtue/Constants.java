@@ -13,7 +13,7 @@ public class Constants {
 	/**
 	 * Represents the name of the server.
 	 */
-	public static final String NAME = "Virtue 803";
+	public static final String NAME = "RuneLove 3";
 	
 	/**
 	 * Represents if the login server is enabled.

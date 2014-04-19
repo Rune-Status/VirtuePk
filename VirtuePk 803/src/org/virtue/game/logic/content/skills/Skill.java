@@ -58,6 +58,10 @@ public enum Skill {
 		return name;
 	}
 	
+	public boolean startsWithVowel () {
+		return name.startsWith("A") || name.startsWith("E") || name.startsWith("I") || name.startsWith("O") || name.startsWith("U");
+	}
+	
 	/**
 	 * Gets the maximum level for the skill
 	 * @return	The maximum level.
@@ -67,6 +71,9 @@ public enum Skill {
 	}
 	
 	public static Skill getSkill (int id) {
+		if (id >= Skill.values().length) {
+			return null;
+		}
 		Skill skill = Skill.values()[id];
 		if (skill.skillID == id) {
 			return skill;

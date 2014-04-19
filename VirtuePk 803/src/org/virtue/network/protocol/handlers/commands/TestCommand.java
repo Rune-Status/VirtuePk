@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
+import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
  * @author Taylor Moon
@@ -11,11 +11,17 @@ public class TestCommand implements Command {
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {
-                RS3PacketBuilder buffer = new RS3PacketBuilder();
-                buffer.putPacket(138);
-                buffer.put(49);
-                buffer.putByteS(51);
-		player.getAccount().getSession().getTransmitter().send(buffer);
+		float amountToAdd = 100.0f;
+		Skill s = Skill.ATTACK;
+		if (args.length > 0) {
+			try {
+				amountToAdd = Float.parseFloat(args[0]);
+			} catch (NumberFormatException ex) {
+				//Do nothing, as we will just use the default value
+			}
+		}
+		player.getSkillManager().addExperience(s, amountToAdd);
+//		player.getUpdateArchive().queueAnimation(918);
 //		String text = player.requestInput("Enter Amount:");
 //		player.getPacketDispatcher().dispatchMessage(text);
 		return true;

@@ -2,7 +2,7 @@ package org.virtue.network.protocol.packet.encoder.impl;
 
 import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
-import org.virtue.network.protocol.messages.PublicMessage;
+import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 

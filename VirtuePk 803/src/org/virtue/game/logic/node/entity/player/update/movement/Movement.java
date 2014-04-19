@@ -94,7 +94,7 @@ public class Movement {
 		this.walkSteps = walkSteps;
 	}
 	
-	public void clearWalkSteps() {
+	public void resetWalkSteps() {
 		walkSteps.clear();
 	}
 
@@ -141,15 +141,15 @@ public class Movement {
 			int distanceX = myX - destX;
 			int distanceY = myY - destY;
 			if (!(distanceX > sizeX || distanceX < -1 || distanceY > sizeY || distanceY < -1)) {
-				return true;
+				return true;//Reached an adjacent tile
 			}
 			if (stepCount == maxStepsCount) {
-				return true;
+				return true;//Overshot the maximum number of steps
 			}
 			lastTile[0] = myX;
 			lastTile[1] = myY;
 			if (lastTile[0] == destX && lastTile[1] == destY) {
-				return true;
+				return true;//Reached the target tile
 			}
 		}
 	}
@@ -216,22 +216,27 @@ public class Movement {
 		int stepCount = 0;
 		while (true) {
 			stepCount++;
-			if (myX < destX)
+			if (myX < destX) {
 				myX++;
-			else if (myX > destX)
+			} else if (myX > destX) {
 				myX--;
-			if (myY < destY)
+			}
+			if (myY < destY) {
 				myY++;
-			else if (myY > destY)
+			} else if (myY > destY) {
 				myY--;
-			if (!addWalkStep(myX, myY, lastTile[0], lastTile[1], check))
+			}
+			if (!addWalkStep(myX, myY, lastTile[0], lastTile[1], check)) {
 				return false;
-			if (stepCount == maxStepsCount)
+			}
+			if (stepCount == maxStepsCount) {
 				return true;
+			}
 			lastTile[0] = myX;
 			lastTile[1] = myY;
-			if (lastTile[0] == destX && lastTile[1] == destY)
+			if (lastTile[0] == destX && lastTile[1] == destY) {
 				return true;
+			}
 		}
 	}
 
@@ -253,8 +258,9 @@ public class Movement {
 	
 	public boolean addWalkStep(int nextX, int nextY, int lastX, int lastY, boolean check) {
 		int dir = MovementUtils.getMoveDirection(nextX - lastX, nextY - lastY);
-		if (dir == -1)
+		if (dir == -1) {
 			return false;
+		}
 //		if (check) {
 //			if (!World.getWorld().checkWalkStep(entity.getTile().getPlane(), lastX, lastY, dir, entity.getUpdateArchive().getAppearance().getSize()))
 //				return false;

@@ -1,10 +1,13 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
@@ -18,12 +21,8 @@ public class ItemDefinition {
 	public static final int BOW_WEAPON_TYPE = 8;
 	public static final int CROSSBOW_WEAPON_TYPE = 9;
 	public static final int THROWN_WEAPON_TYPE = 10;
-
-    public static final int ITEM_DEFINITIONS_INDEX = 19;
     
-	private static ItemDefinition[] itemDefinitions;
-	
-    private final int itemID;
+	private final int itemID;
     private String name = "null";
 	private HashMap<Skill, Integer> itemRequirements;
 	
@@ -117,52 +116,17 @@ public class ItemDefinition {
     
     public boolean noted, lent, bound;
     
-	public static ItemDefinition forId(int id) {
-		try {
-			if (itemDefinitions == null) {
-				itemDefinitions = new ItemDefinition[getSize()];
-				System.out.println("Total items: "+itemDefinitions.length);
+    public ItemDefinition (int id, byte[] data) throws IOException {
+    	this.itemID = id;
+    	try {
+			if (data == null) {
+				return;
 			}
-			if (id < 0 || id > itemDefinitions.length) {
-				id = 0;
-			}
-			ItemDefinition itemDef = itemDefinitions[id];
-			if (itemDef == null) {
-				itemDefinitions[id] = itemDef = new ItemDefinition(id);
-			}
-			return itemDef;
+			read(new RS3PacketReader(data));
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return null;
 		}
-	}
-
-	public static ItemDefinition forName(String name) throws IOException {
-		if (itemDefinitions == null) {
-			itemDefinitions = new ItemDefinition[getSize()];
-			System.out.println("Total items: "+itemDefinitions.length);
-		}
-		for (int id = 0; id < itemDefinitions.length; id++) {
-			ItemDefinition itemDef = forId(id);
-			if (itemDef == null) {
-				continue;
-			}
-			String itemName = itemDef.getName().toLowerCase();
-			if (name.equalsIgnoreCase(itemName)) {
-				return itemDef;
-			}
-		}
-		return null;
-	}
-
-	public static int getSize() throws IOException {
-		int lastArchiveId = CacheLoader.getCache().getFileCount(ITEM_DEFINITIONS_INDEX);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 256 + CacheLoader.getCache().getContainerCount(ITEM_DEFINITIONS_INDEX, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
-	}
-    
-    public ItemDefinition (int id) throws IOException {
-    	this.itemID = id;
-    	loadItemDefinition();
+    	//loadItemDefinition(data);
     	
 		if (noteTemplateID != -1) {
 			toNote();
@@ -174,18 +138,6 @@ public class ItemDefinition {
 			toBind();
 		}
     }
-
-	public void loadItemDefinition() {
-		try {
-			byte[] data = CacheLoader.getCache().read(ITEM_DEFINITIONS_INDEX, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
-			if (data == null) {
-				return;
-			}
-			read(new RS3PacketReader(data));
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
     
     void read(RS3PacketReader buffer) {
 		for (;;) {
@@ -417,7 +369,7 @@ public class ItemDefinition {
     }
 
 	private void toNote() throws IOException {
-		ItemDefinition realItem = forId(noteID);
+		ItemDefinition realItem = ItemDefinitionLoader.forId(noteID);
 		membersOnly = realItem.membersOnly;
 		value = realItem.value;
 		name = realItem.name;
@@ -427,7 +379,7 @@ public class ItemDefinition {
 	}
 
 	private void toBind() throws IOException {
-		ItemDefinition realItem = forId(bindID);
+		ItemDefinition realItem = ItemDefinitionLoader.forId(bindID);
 		originalModelColors = realItem.originalModelColors;
 		colourEquip1 = realItem.colourEquip1;
 		colourEquip2 = realItem.colourEquip2;
@@ -454,7 +406,7 @@ public class ItemDefinition {
 	}
 
 	private void toLend() throws IOException {
-		ItemDefinition realItem = forId(lendID);
+		ItemDefinition realItem = ItemDefinitionLoader.forId(lendID);
 		originalModelColors = realItem.originalModelColors;
 		colourEquip1 = realItem.colourEquip1;
 		colourEquip2 = realItem.colourEquip2;
@@ -716,4 +668,46 @@ public class ItemDefinition {
 		}
 		return (int) paramaters.get(14);
 	}
+	
+	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
+		File file = new File("./dumps/items/"+itemID+"-"+name.replace("/", " ")+".txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		for (Field field : this.getClass().getFields()) {
+			if (field == null) {
+				continue;
+			}
+			Object value = field.get(this);
+			if (value == null) {
+				continue;
+			}
+
+			if (value instanceof String[]) {
+				value = Arrays.toString((String[]) value);
+			}
+			if (value instanceof int[]) {
+				value = Arrays.toString((int[]) value);
+			}
+			if (value instanceof byte[]) {
+				value = Arrays.toString((byte[]) value);
+			}
+			if (value instanceof short[]) {
+				value = Arrays.toString((byte[]) value);
+			}
+
+			//System.out.println(field.getName() + "->" + value);
+
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.write(field.getName() + "->" + value);
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.newLine();
+			writer.flush();
+
+		}
+		writer.close();
+	}
+	
 }

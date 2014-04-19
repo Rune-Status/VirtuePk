@@ -18,8 +18,8 @@ public class WorldSubmissionEncoder implements PacketEncoder<Object> {
 		buffer.putInt(Constants.WORLD_ID);
 		buffer.putString(World.getWorld().getActivity());
 		buffer.putInt(World.getWorld().getServer().getID());//Server location
-		buffer.putInt(World.getWorld().getFlag());
-		buffer.putString(World.getWorld().getRegion());
+		buffer.putInt(World.getWorld().getFlags());
+		//buffer.putString(World.getWorld().getRegion());
 		buffer.put(World.getWorld().getCountry().ordinal());
 		buffer.putString(World.getWorld().getIp());
 		//buffer.putInt(World.getWorld().getLocation());

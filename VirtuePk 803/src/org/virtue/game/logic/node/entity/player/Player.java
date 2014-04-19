@@ -12,12 +12,11 @@ import org.virtue.game.logic.content.skills.SkillManager;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.region.Tile;
-import org.virtue.game.logic.node.entity.social.ChatManager;
-import org.virtue.game.logic.node.entity.social.ChatType;
-import org.virtue.game.logic.node.entity.social.OnlineStatus;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
+import org.virtue.game.logic.social.ChatManager;
+import org.virtue.game.logic.social.OnlineStatus;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.messages.InterfaceMessage;
@@ -136,9 +135,7 @@ public class Player extends Entity {
 		equipment.load();
 		skillManager.sendAllSkills();
 		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
-		account.getSession().getTransmitter().send(OnlineStatusEncoder.class, OnlineStatus.EVERYONE);
-		account.getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
-
+		chatManager.init(false);
 		getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
@@ -159,6 +156,7 @@ public class Player extends Entity {
 	public void startLobby() {
 		//started = true;
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
+		chatManager.init(true);
 	}
 
 	@Override
@@ -220,6 +218,13 @@ public class Player extends Entity {
 		return exists;
 	}
 	
+	public boolean isInWorld () {
+		return inWorld;
+	}
+	
+	/**
+	 * @return	The interface manager for the player
+	 */
 	public InterfaceManager getInterfaces () {
 		return interfaceManager;
 	}
@@ -285,6 +290,10 @@ public class Player extends Entity {
 	 */
 	public ChatManager getChatManager () {
 		return chatManager;
+	}
+	
+	public SkillManager getSkillManager () {
+		return skillManager;
 	}
 	
 	public ActionBar getActionBar () {

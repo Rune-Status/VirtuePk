@@ -26,6 +26,7 @@ public class CommandRepository {
 		commands.add(new WearItem());
 		commands.add(new ReloadAppearance());
 		commands.add(new SpawnNpc());
+		commands.add(new AddExperience());
 		
 	}
 	

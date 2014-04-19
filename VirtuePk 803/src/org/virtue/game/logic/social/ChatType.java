@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.social;
+package org.virtue.game.logic.social;
 
 /**
  * @author Virtue Development Team 2014 (c).

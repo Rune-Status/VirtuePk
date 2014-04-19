@@ -80,13 +80,14 @@ public class IncommingOpcodes {
 	public final static int OBJECT_OPTION_5_PACKET = 102;//803
 	public final static int OBJECT_EXAMINE_PACKET = 50;//803
 	
-	//Chat management
+	//Friends/Ignores management
 	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803
 	public final static int ONLINE_STATUS_PACKET = 22;//803
 	public final static int ADD_FRIEND_PACKET = 97;//803
 	public final static int REMOVE_FRIEND_PACKET = 58;//803
 	public final static int ADD_IGNORE_PACKET = 81;//803
 	public final static int REMOVE_IGNORE_PACKET = 76;//803
+	public final static int FRIEND_OPTION_PACKET = 2;//803
 	
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803

@@ -66,7 +66,11 @@ public class Graphics {
 		return (speed & 0xffff) | (height << 16);
 	}
 
-	public int getRotationSettingsHash() {
+	/**
+	 * Gets the rotation settings hash.
+	 * @return The settings hash.
+	 */
+	public int getRotationHash() {
 		int hash = 0;
 		hash |= rotation & 0x7;
 		// hash |= value << 3; //TODO wtf these do

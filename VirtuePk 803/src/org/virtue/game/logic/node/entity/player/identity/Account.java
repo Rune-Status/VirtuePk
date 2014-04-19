@@ -56,6 +56,8 @@ public class Account extends AttributeSet {
 	
 	private Age age;
 	
+	private DateOfBirth dateofbirth;
+	
 	private Tile tile;
 	
 	/**
@@ -76,13 +78,15 @@ public class Account extends AttributeSet {
 	 * Constructs a new {@code Account.java}.
 	 * @param username The username.
 	 * @param password The password.
+	 * @param dateOfBirth2 
 	 */
-	public Account(Username username, Password password, Rank rank, Email email, Age age, Tile tile, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
+	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
 		this.username = username;
 		this.password = password;
 		this.rank = rank;
 		this.email = email;
 		this.age = age;
+		this.dateofbirth = dateofbirth;
 		this.tile = tile;
 		this.channel = channel;
 		this.displayMode = displayMode;
@@ -173,6 +177,10 @@ public class Account extends AttributeSet {
 	
 	public Age getAge() {
 		return age;
+	}
+	
+	public DateOfBirth getDateOfBirth() {
+		return dateofbirth;
 	}
 	
 	public Tile getTile() {

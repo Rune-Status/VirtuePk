@@ -1,9 +1,13 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
-import org.virtue.Launcher;
+
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
@@ -12,17 +16,15 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
  */
 public class NPCDefinition {
     
-    private static NPCDefinition[] npcDefinitions;
-    
-    public int npcID;
-    public String name = "null";
+	private int npcID;
+    private String name = "null";
     public String[] options = new String[] { null, null, null, null, null, "Examine" };
     public boolean visibleOnMap = true;
     
     public int respawnDirection = 4;
     public int[] modelIDs;
-    public int size = 1;
-    public int combatLevel = -1;
+    private int size = 1;
+    private int combatLevel = -1;
     public int headsIcon = 32;
     public int[] transformTo;
     public int renderEmote = -1;
@@ -88,44 +90,14 @@ public class NPCDefinition {
     public static final int anInt5870 = 1;
     public boolean aBool5871;
     
-    
-	public static NPCDefinition forId(int id) throws IOException {
-		if (npcDefinitions == null) {
-			npcDefinitions = new NPCDefinition[getSize()];
-			System.out.println("Total NPCs: "+npcDefinitions.length);
-		}
-		if (id < 0 || id > npcDefinitions.length) {
-			id = 0;
-		}
-		NPCDefinition npcDef = npcDefinitions[id];
-		if (npcDef == null) {
-			npcDefinitions[id] = npcDef = new NPCDefinition(id);
-		}
-		return npcDef;
-	}
-
-	public static int getSize() throws IOException {
-		int lastArchiveId = Launcher.getCache().getFileCount(CacheIndex.NPC_DEFINITIONS);//Cache.getStore().getIndexes()[19].getLastArchiveId();
-		return (lastArchiveId * 128 + Launcher.getCache().getContainerCount(CacheIndex.NPC_DEFINITIONS, lastArchiveId-1));//Cache.getStore().getIndexes()[19].getValidFilesCount(lastArchiveId));
-	}
-    
-    
-    public NPCDefinition (int id) {
+    public NPCDefinition (int id, byte[] data) {
         this.npcID = id;
-        loadNPCDefinition();
-    }
-    
-    private void loadNPCDefinition() {
 		try {
-			byte[] data = Launcher.getCache().read(CacheIndex.NPC_DEFINITIONS, getArchiveId(), getFileId()).array();//Cache.getStore().getIndexes()[19].getFile(getArchiveId(), getFileId());
-			if (data == null) {
-				return;
-			}
 			read(new RS3PacketReader(data));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-	}
+    }
     
     void read(RS3PacketReader buffer) {
 		for (;;) {
@@ -404,14 +376,6 @@ public class NPCDefinition {
 		    }
 		}
     }
-
-	public int getArchiveId() {
-		return npcID >>> 7;
-	}
-
-	public int getFileId() {
-		return 0x7F & npcID;
-	}
 	
 	public String getName () {
 		return name;
@@ -421,7 +385,13 @@ public class NPCDefinition {
 		return npcID;
 	}
         
-        
+    public int getSize () {
+    	return size;
+    }
+    
+    public int getCombatLevel () {
+    	return combatLevel;
+    }
 
 	public boolean hasMarkOption() {
 		for (String option : options) {
@@ -450,4 +420,46 @@ public class NPCDefinition {
 		}
 		return false;
 	}
+	
+	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
+		File file = new File("./dumps/npcs/"+npcID+"-"+name.replace("/", " ")+".txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		for (Field field : this.getClass().getFields()) {
+			if (field == null) {
+				continue;
+			}
+			Object value = field.get(this);
+			if (value == null) {
+				continue;
+			}
+
+			if (value instanceof String[]) {
+				value = Arrays.toString((String[]) value);
+			}
+			if (value instanceof int[]) {
+				value = Arrays.toString((int[]) value);
+			}
+			if (value instanceof byte[]) {
+				value = Arrays.toString((byte[]) value);
+			}
+			if (value instanceof short[]) {
+				value = Arrays.toString((short[]) value);
+			}
+
+			//System.out.println(field.getName() + "->" + value);
+
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.write(field.getName() + "->" + value);
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.newLine();
+			writer.flush();
+
+		}
+		writer.close();
+	}
+	
 }

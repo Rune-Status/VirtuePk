@@ -19,10 +19,12 @@ public class NpcOptionHandler extends MovementHandler {
 		}
 		NPC npc = World.getWorld().getNpcs().get(npcIndex);
 		int baseX = npc.getTile().getX();
-		int baseY = npc.getTile().getY();
+		int baseY = npc.getTile().getY();		
 		if (!option.equals(NPCOption.EXAMINE)) {
 			putFlag("baseX", baseX);
 			putFlag("baseY", baseY);
+			putFlag("sizeX", npc.getDefinition().getSize());
+			putFlag("sizeY", npc.getDefinition().getSize());
 			super.handle(session);//Handle the movement aspect. TODO: Track the NPC if they move
 		}
 		System.out.println("Clicked NPC: npcIndex="+npcIndex+", id="+npc.getId()+", xCoord="+baseX+", yCoord="+baseY+", optionID="+option.getID());

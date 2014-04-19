@@ -2,7 +2,6 @@ package org.virtue.game.logic.node.entity.player.update.blocks;
 
 import org.virtue.game.config.UpdateMasks;
 import org.virtue.game.logic.node.entity.Entity;
-import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.update.UpdateBlock;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
@@ -29,7 +28,7 @@ public class AppearanceBlock extends UpdateBlock {
 	 */
 	@Override
 	public int getBlockPosition() {
-		return 8;
+		return 14;
 	}
 
 	/**

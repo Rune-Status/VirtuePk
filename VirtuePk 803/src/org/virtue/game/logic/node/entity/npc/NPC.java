@@ -1,5 +1,7 @@
 package org.virtue.game.logic.node.entity.npc;
 
+import org.virtue.cache.def.NPCDefinition;
+import org.virtue.cache.def.NPCDefinitionLoader;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.region.Tile;
 
@@ -20,6 +22,8 @@ public class NPC extends Entity {
 	private int id;
 
 	private boolean exists = true;
+	
+	private NPCDefinition definition;
 
 	/**
 	 * Constructs a new {@code NPC.java}.
@@ -30,6 +34,10 @@ public class NPC extends Entity {
 		super();
 		this.id = id;
 		this.tile = tile;
+		this.definition = NPCDefinitionLoader.forId(id);
+		if (this.definition == null) {
+			throw new RuntimeException("Definition for NPC "+id+" was not found.");
+		}
 	}
 	
 	@Override
@@ -45,6 +53,10 @@ public class NPC extends Entity {
 	@Override
 	public void onCycle() {
 		getUpdateArchive().getMovement().process();
+	}
+	
+	public NPCDefinition getDefinition () {
+		return definition;
 	}
 
 	/**

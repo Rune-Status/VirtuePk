@@ -46,6 +46,10 @@ public class PacketDispatcher {
 		this.player = player;
 	}
 	
+	/**
+	 * Dispatches the information for the specified skill to the player
+	 * @param skill		The skill data to dispatch
+	 */
 	public void dispatchSkill (SkillData skill) {
 		player.getAccount().getSession().getTransmitter().send(SkillEncoder.class, skill);
 	}

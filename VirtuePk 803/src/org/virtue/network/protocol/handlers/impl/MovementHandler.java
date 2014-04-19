@@ -16,12 +16,12 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		int maxStepCount = 100;
 		int currentX = session.getPlayer().getTile().getX();
 		int currentY = session.getPlayer().getTile().getY();
-		int sizeX = baseX - currentX;//TODO: Figure out which values to use...
-		int sizeY = baseY - currentY;//TODO: Figure out which values to use...
+		int sizeX = getFlag("sizeX", 0);
+		int sizeY = getFlag("sizeY", 0);
 		
 		//System.out.println("Movement request: x="+baseX+", y="+baseY+", forceRun="+forceRun);
 		Movement movement = session.getPlayer().getUpdateArchive().getMovement();
-		movement.clearWalkSteps();
+		movement.resetWalkSteps();
 		if (forceRun) {
 			//TODO: Implement run handling
 			//movement.swapRunning();
