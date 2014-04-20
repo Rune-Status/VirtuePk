@@ -50,6 +50,8 @@ public class Constants {
 	 * The server token.
 	 */
 	public static final String SERVER_TOKEN = "BgTFo+lHy/lilpFjXLk4n6pf9X/x/B6L";	
+        
+        public static final int MAX_WALK_STEPS = 25;
 	
 	public static final int[] NIS_CONFIG = new int[5000];
 

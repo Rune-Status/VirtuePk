@@ -100,7 +100,7 @@ public class JSONPlayerSaving {
 			 y = obj.get("y").getAsInt();
 			 z = obj.get("z").getAsInt();
 		}
-		Account account = new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth) ,new Tile(x, y, z), channel, mode, clientSessionKey, serverSessionKey);
+		Account account = new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z), channel, mode, clientSessionKey, serverSessionKey);
 		return account;
 	}
 	

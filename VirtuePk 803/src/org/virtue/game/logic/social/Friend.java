@@ -57,9 +57,15 @@ public class Friend {
 	
 	public void setWorld (WorldHub world) {
 		this.currentWorld = world;
-		this.worldNodeID = world.getNodeID();
-		this.worldName = world.getName();
-		this.worldFlags = world.getFlags();
+		if (world == null) {//TODO: Handle lobby in a better way
+			this.worldNodeID = 0;
+			this.worldName = "";
+			this.worldFlags = 0;
+		} else {
+			this.worldNodeID = world.getNodeID();
+			this.worldName = world.getName();
+			this.worldFlags = world.getFlags();
+		}
 	}
 	
 	public void setWorld (int nodeID, String name, int flags) {

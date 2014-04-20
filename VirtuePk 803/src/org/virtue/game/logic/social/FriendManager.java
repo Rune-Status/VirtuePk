@@ -24,6 +24,6 @@ public interface FriendManager {
 	
 	public void setOnlineStatus (OnlineStatus status);
 	
-	public void sendPrivateMessage (String friend, String message);
+	public void sendPrivateMessage (String recipient, String message);
 	
 }

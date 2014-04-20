@@ -272,8 +272,9 @@ public class Movement {
 	
 	private int getNextWalkStep() {
 		int step[] = walkSteps.poll();
-		if (step == null)
+		if (step == null) {
 			return -1;
+		}
 		return step[0];
 	}
 	

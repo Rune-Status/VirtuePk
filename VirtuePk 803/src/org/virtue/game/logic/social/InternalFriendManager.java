@@ -19,15 +19,19 @@ package org.virtue.game.logic.social;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.virtue.Launcher;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.WorldHub;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.messages.FriendsMessage;
 import org.virtue.game.logic.social.messages.IgnoresMessage;
+import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
-import org.virtue.network.protocol.packet.encoder.impl.FriendEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.IgnoreEncoder;
+import org.virtue.network.protocol.packet.RS3PacketBuilder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.IgnoreEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.PrivateMessageEncoder;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
@@ -42,6 +46,10 @@ public class InternalFriendManager implements FriendManager {
 	
 	private static final ConcurrentHashMap<String, InternalFriendManager> onlinePlayers = new ConcurrentHashMap<String, InternalFriendManager>();
 	
+	static {
+		onlinePlayers.put("test44", new InternalFriendManager(null));
+	}
+	
 	private Player player;
 	//private NameManager nameManager;
 	
@@ -51,7 +59,7 @@ public class InternalFriendManager implements FriendManager {
 	private HashMap<String, Friend> friends = new HashMap<String, Friend>(FRIENDS_LIST_MAX);
 	private HashMap<String, Ignore> ignores = new HashMap<String, Ignore>(IGNORE_LIST_MAX);
 	
-	private OnlineStatus onlineStatus = OnlineStatus.NOBODY;
+	private OnlineStatus onlineStatus = OnlineStatus.EVERYONE;
 	
 	private WorldHub currentWorld = null;
 	
@@ -62,7 +70,7 @@ public class InternalFriendManager implements FriendManager {
 	}
 	
 	
-	public String getUsername () {
+	public String getProtocolName () {
 		return player.getAccount().getUsername().getAccountNameAsProtocol();
 	}
 	
@@ -103,6 +111,7 @@ public class InternalFriendManager implements FriendManager {
 		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresMessage(ignores.values().toArray(new Ignore[ignores.size()])));
 		onlinePlayers.put(player.getAccount().getUsername().getAccountNameAsProtocol(), this);
 		sendStatusUpdate(this, false);
+		System.out.println("Registered "+player.getAccount().getUsername().getName()+" on friend server.");
 	}
 	
 	@Override
@@ -172,7 +181,7 @@ public class InternalFriendManager implements FriendManager {
 		if (onlineStatus == OnlineStatus.EVERYONE) {
 			return currentWorld;
 		} else if (onlineStatus == OnlineStatus.FRIENDS 
-				&& friends.containsKey(friend.getUsername())) {
+				&& friends.containsKey(friend.getProtocolName())) {
 			return currentWorld;
 		} else {
 			return null;
@@ -202,8 +211,8 @@ public class InternalFriendManager implements FriendManager {
 	}
 	
 	private void setFriendStatus (InternalFriendManager p2, boolean isNameChange) {
-		if (friends.containsKey(p2.getUsername())) {
-			Friend f = friends.get(p2.getUsername());
+		if (friends.containsKey(p2.getProtocolName())) {
+			Friend f = friends.get(p2.getProtocolName());
 			f.setWorld(p2.getWorldInfo(this));
 			if (p2.isLobby) {
 				f.setWorld(1100, "Lobby", 0);
@@ -256,11 +265,16 @@ public class InternalFriendManager implements FriendManager {
 			}
 			friends.put(protocolName, friend);
 		}
-		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsMessage(friend, false));
 		InternalFriendManager friendData = onlinePlayers.get(protocolName);
 		if (friendData != null) {
+			friend.setWorld(friendData.getWorldInfo(this));
+			if (friend.getWorld() != null && friendData.isLobby) {//TODO: Replace this work-around with proper handling for the lobby
+				friend.setWorld(1100, "Lobby", 0);
+			}
 			friendData.setFriendStatus(this, false);//Updates the online status displayed of the current player visible to the player who was removed
 		}
+		//System.out.println("Adding friend: "+displayName);
+		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsMessage(friend, false));
 	}
 
 	@Override
@@ -350,9 +364,53 @@ public class InternalFriendManager implements FriendManager {
 	}
 
 	@Override
-	public void sendPrivateMessage(String friend, String message) {
-		// TODO Auto-generated method stub
-		
+	public void sendPrivateMessage(String recipient, String message) {
+		String protocolName = StringUtils.format(recipient, FormatType.PROTOCOL);
+		System.out.println("Sending message '"+message+"' to player "+recipient);
+		if (!friends.containsKey(protocolName)) {
+			System.out.println("Cannot send message - "+recipient+" is not on friends list.");
+			//TODO: Not on friends list; Show a message for this...
+			return;
+		}
+		if (!onlinePlayers.containsKey(protocolName)) {
+			System.out.println("Cannot send message - "+recipient+" is offline.");
+			//TODO: Not online; Show a message for this...
+			return;
+		}
+		InternalFriendManager friend = onlinePlayers.get(protocolName);
+		if (friend.getWorldInfo(this) == null) {
+			System.out.println("Cannot send message - "+recipient+" does not show online to player.");
+			//TODO: Not displayed as online; Show a message for this...
+			return;
+		}
+		message = StringUtils.format(message, FormatType.DISPLAY);
+		PrivateMessage messageObject = new PrivateMessage(message, player.getAccount().getUsername().getName(),
+				player.getAccount().getUsername().getName(), player.getAccount().getRank());
+		friend.receivePrivateMessage(getProtocolName(), messageObject);
+		messageObject = messageObject.clone();
+		messageObject.setIncomming(false);
+		player.getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, messageObject);
+		/*RS3PacketBuilder buffer = new RS3PacketBuilder(260);//This is only for testing purposes. Remove when done.
+		buffer.putPacketVarShort(38);
+		buffer.putString(getProtocolName());
+		Launcher.getHuffman().huffmanEncrypt(buffer, message);
+		buffer.endPacketVarShort();
+		player.getAccount().getSession().getTransmitter().send(buffer);*/
 	}	
+	
+	public void receivePrivateMessage (String sender, PrivateMessage message) {
+		/*RS3PacketBuilder buffer = new RS3PacketBuilder(260);//This is only for testing purposes. Remove when done.
+		buffer.putPacketVarShort(116);
+		buffer.put(0);
+		buffer.putString(sender);
+		byte[] hash = new byte[5];
+		Launcher.getRandom().nextBytes(hash);
+		for (byte v : hash) {
+			buffer.put(v);
+		}
+		buffer.put(0);
+		buffer.endPacketVarShort();*/
+		player.getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, message);
+	}
 	
 }

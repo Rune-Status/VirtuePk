@@ -148,6 +148,10 @@ public abstract class Entity extends Node {
 		return Math.abs(lastRegionX - regionX) >= size || Math.abs(lastRegionY - regionY) >= size;
 	}
 	
+	public Tile getLastLoadedRegion () {
+		return lastLoadedRegion;
+	}
+	
 	/**
 	 * @return
 	 */

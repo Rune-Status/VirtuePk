@@ -1,12 +1,13 @@
 package org.virtue.game.logic.social;
 
+import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.PublicMessageEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.OnlineStatusEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.PublicMessageEncoder;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
@@ -95,5 +96,11 @@ public class ChatManager {
 			}
 			p.getAccount().getSession().getTransmitter().send(PublicMessageEncoder.class, msgObject);
 		}
+	}
+	
+	public static byte[] generateMessageHash () {
+		byte[] hash = new byte[5];
+		Launcher.getRandom().nextBytes(hash);
+		return hash;
 	}
 }

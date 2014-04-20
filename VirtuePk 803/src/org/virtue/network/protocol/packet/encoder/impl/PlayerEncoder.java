@@ -281,6 +281,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			opcode = MovementUtils.getPlayerWalkingDirection(dx, dy);
 		}
 		buffer.putBits(1, 1);
+		System.out.println("Moved by x="+dx+", y="+dy+", running="+running+", direction="+opcode);
 		if ((dx == 0 && dy == 0)) {
 			buffer.putBits(1, 1);
 			buffer.putBits(2, 0);

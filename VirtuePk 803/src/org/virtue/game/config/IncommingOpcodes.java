@@ -92,6 +92,7 @@ public class IncommingOpcodes {
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803
 	public final static int MESSAGE_PACKET = 99;//803
+	public final static int PRIVATE_MESSAGE_PACKET = 44;//803
 	
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
 	

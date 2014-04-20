@@ -29,16 +29,11 @@ public class OutgoingOpcodes {
 	public static final int LARGE_CS2_VARP_PACKET = 154;//803
 	public static final int SMALL_CS2_VARP_PACKET = 7;//803
 	
+	//Logout
 	public static final int LOBBY_LOGOUT_PACKET = 69;//803
 	public static final int FULL_LOGOUT_PACKET = 62;//803
 	
-	public static final int UNLOCK_FRIENDS_LIST = 18;//803
-	public static final int ONLINE_STATUS_PACKET = 43;//803
-	public static final int FRIENDS_PACKET = 56;//803
-	public static final int IGNORES_PACKET = 68;//803
-	public static final int FRIENDS_CHANNEL_PACKET = 82;
-	public static final int CLAN_CHANNEL_PACKET = 47;//795
-	
+	//Game scene related
 	public static final int STATIC_MAP_REGION_PACKET = 77;//803
 	public static final int DYNAMIC_MAP_REGION_PACKET = 31;//803
 	public static final int MINIMAP_FLAG_PACKET = 138;//803
@@ -50,14 +45,26 @@ public class OutgoingOpcodes {
 	public static final int RUN_ENERGY_PACKET = 94;//803
 	public static final int SKILL_DATA_PACKET = 4;//803
 	
+	//Interface-related
 	public static final int INTERFACE_PACKET = 49;//803
 	public static final int INTERFACE_SETTINGS_PACKET = 134;//803
 	public static final int WINDOW_PANE_PACKET = 76;//803
 	public static final int RUN_CS2_PACKET = 167;//803
 	
+	//Messages
 	public static final int GAME_MESSAGE_PACKET = 137;//803
 	public static final int PUBLIC_MESSAGE_PACKET = 158;//803
+	public static final int INCOMMING_PRIVATE_MESSAGE_PACKET = 116;//803
+	public static final int OUTGOING_PRIVATE_MESSAGE_PACKET = 38;//803
 	public static final int FRIENDS_CHAT_MESSAGE_PACKET = 111;
+	
+	//Chat-related
+	public static final int UNLOCK_FRIENDS_LIST = 18;//803
+	public static final int ONLINE_STATUS_PACKET = 43;//803
+	public static final int FRIENDS_PACKET = 56;//803
+	public static final int IGNORES_PACKET = 68;//803
+	public static final int FRIENDS_CHANNEL_PACKET = 82;
+	public static final int CLAN_CHANNEL_PACKET = 47;//795
 	
 	public static final int ITEMS_CONTAINER = 130;//803
 	public static final int WORLD_LIST_PACKET = 98;//803

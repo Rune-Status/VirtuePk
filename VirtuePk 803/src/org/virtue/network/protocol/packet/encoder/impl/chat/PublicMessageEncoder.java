@@ -1,4 +1,4 @@
-package org.virtue.network.protocol.packet.encoder.impl;
+package org.virtue.network.protocol.packet.encoder.impl.chat;
 
 import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;

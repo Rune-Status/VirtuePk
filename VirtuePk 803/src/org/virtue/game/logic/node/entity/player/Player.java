@@ -26,8 +26,8 @@ import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.NPCEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.OnlineStatusEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.OnlineStatusEncoder;
 import org.virtue.utility.DisplayMode;
 
 /**

@@ -19,9 +19,10 @@ public class MinimapFlagEncoder implements PacketEncoder<Tile> {
             buffer.put(255);
             buffer.putByteS(255);
         } else {
-            buffer.put(node.getLocalY());
-            buffer.putByteS(node.getLocalX());//TODO: Make sure this is right
+            buffer.put(node.getY());
+            buffer.putByteS(node.getX());//TODO: Make sure this is right
         }
+        //System.out.println("Sending minimap flag: x="+node.getX()+", y="+node.getY());
         return buffer;
     }
     
