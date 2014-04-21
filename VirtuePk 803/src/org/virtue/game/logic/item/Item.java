@@ -1,5 +1,6 @@
 package org.virtue.game.logic.item;
 
+import org.virtue.cache.def.ItemDefinition;
 import org.virtue.cache.def.ItemDefinitionLoader;
 
 /**
@@ -17,6 +18,8 @@ public class Item {
 	 * Represents the amount.
 	 */
 	private int amount;
+        
+        private ItemDefinition definition;
 	
 	/**
 	 * Constructs a new {@code SendItem.java}.
@@ -26,6 +29,7 @@ public class Item {
 	public Item(int id, int amount) {
 		this.id = id;
 		this.amount = amount;
+                this.definition = ItemDefinitionLoader.forId(id);
 	}
 
 	/**
@@ -55,12 +59,15 @@ public class Item {
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	public ItemDefinition getDefinition () {
+		return definition;
+	}
 
 	/**
 	 * @return
 	 */
 	public int getEquipId() {
-		// TODO Auto-generated method stub
-		return ItemDefinitionLoader.forId(id).equipSlotID;
+		return definition.equipSlotID;
 	}
 }

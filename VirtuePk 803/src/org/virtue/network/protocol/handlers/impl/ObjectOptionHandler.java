@@ -5,6 +5,10 @@ import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.logic.node.object.ObjectOption;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 20, 2014
+ */
 public class ObjectOptionHandler extends MovementHandler {
 
 	@Override

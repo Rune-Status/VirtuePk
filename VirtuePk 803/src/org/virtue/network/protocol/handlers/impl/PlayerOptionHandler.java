@@ -6,6 +6,10 @@ import org.virtue.game.logic.node.entity.player.PlayerOption;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 20, 2014
+ */
 public class PlayerOptionHandler extends PacketHandler<WorldSession> {
 
 	@Override

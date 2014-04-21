@@ -23,9 +23,13 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		Movement movement = session.getPlayer().getUpdateArchive().getMovement();
 		movement.resetWalkSteps();
 		if (forceRun) {
-			//TODO: Implement run handling
-			//movement.setRunning(true);
+			if (!movement.isForceRun()) {
+				movement.swapRunning(true);
+			}
+		} else if (movement.isForceRun()) {
+			movement.swapRunning(false);
 		}
+		movement.setNeedsTypeUpdate(true);
 		//movement.setRunning(true);
 		movement.addWalkStepsInteract(baseX, baseY, Constants.MAX_WALK_STEPS, sizeX, sizeY, true);
 		int targetX = movement.getLastWalkTile()[0];

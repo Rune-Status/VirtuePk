@@ -72,4 +72,18 @@ public class ObjectDefinitionLoader {
 		}*/
 		return objectDefinitions[id];
 	}	
+	
+	public static void dumpObjects () throws IOException, IllegalArgumentException, IllegalAccessException {
+		load(CacheLoader.getCache());
+		for (ObjectDefinition def : objectDefinitions) {
+			if (def == null) {
+				continue;
+			}	
+			  // if (!def.getName().contains("Kalphite"))
+			   // continue;
+			System.out.println("===== ID: " + def.getID() + " =====");
+			def.printFields();
+			//System.out.println("=======================================\n");
+		}
+	}
 }

@@ -50,6 +50,16 @@ public class Movement {
 	private boolean running;
 	
 	/**
+	 * Represents whether this is a forceRun movement
+	 */
+	private boolean forceRun;
+	
+	/**
+	 * Represents whether this movement requires the movement type to be re-sent
+	 */
+	private boolean isFirstStep;
+	
+	/**
 	 * @return The nextWalkDirection
 	 */
 	public int getNextWalkDirection() {
@@ -279,35 +289,40 @@ public class Movement {
 	}
 	
 	public void teleport(Tile tile) {
-		entity.setLastTile(entity.getTile());
+		entity.getLastTile().copy(entity.getTile());
 		entity.getTile().copy(tile);
 		setTeleported(true);
 	}
 
 	public void process() {
 		nextWalkDirection = nextRunDirection = -1;
-		nextWalkDirection = getNextWalkStep();
+		nextWalkDirection = getNextWalkStep();		
 		if (nextWalkDirection != -1) {
-			entity.setLastTile(entity.getTile());
+			//entity.setLastTile(entity.getTile());
+			entity.getLastTile().copy(entity.getTile());
 			Tile next = Tile.edit(entity.getTile(), MovementUtils.DIRECTION_DELTA_X[nextWalkDirection], MovementUtils.DIRECTION_DELTA_Y[nextWalkDirection], 0);
-			if (!(entity instanceof NPC))
+			if (!(entity instanceof NPC)) {
 				if (next.getRegionId() != entity.getTile().getRegionId()) {
 //					World.getWorld().getRegion(entity.getTile().getRegionId()).removePlayer((Player) entity);
 //					World.getWorld().getRegion(next.getRegionId()).addPlayer((Player) entity);
 				}
+			}
+			//System.out.println("Current: x="+entity.getLastTile().getX()+", y="+entity.getLastTile().getY());
 			entity.getTile().copy(next);
+			//System.out.println("New: x="+entity.getTile().getX()+", y="+entity.getTile().getY());
 		}
 		if (running) {
 			nextRunDirection = getNextWalkStep();
 			if (nextRunDirection != -1) {
-				entity.setLastTile(entity.getTile());
+				//entity.setLastTile(entity.getTile());
 				Tile next = Tile.edit(entity.getTile(), MovementUtils.DIRECTION_DELTA_X[nextRunDirection], MovementUtils.DIRECTION_DELTA_Y[nextRunDirection], 0);
-				if (!(entity instanceof NPC)) {
+				if (entity instanceof Player) {
+					((Player) entity).drainRunEnergy();
 //					if (next.getRegionId() != entity.getTile().getRegionId()) {
 //						World.getWorld().getRegion(entity.getTile().getRegionId()).removePlayer((Player) entity);
 //						World.getWorld().getRegion(next.getRegionId()).addPlayer((Player) entity);
 //					}
-				}
+				}				
 				entity.getTile().copy(next);
 			}
 		}
@@ -333,6 +348,27 @@ public class Movement {
 		this.teleported = teleported;
 	}
 	
+	public int getMoveType () {
+		int movementType = 0;
+		if (getNextWalkDirection() != -1) {
+			movementType = 1;
+		} else if (running) {
+			movementType = 2;
+		}
+		return movementType;
+	}
+	
+	/**
+	 * @return	Whether the next update needs the movement type included
+	 */
+	public boolean needsTypeUpdate() {
+		return isFirstStep;
+	}
+	
+	public void setNeedsTypeUpdate (boolean needsTypeUpdate) {
+		this.isFirstStep = needsTypeUpdate;
+	}
+	
 	/**
 	 * @return The running
 	 */
@@ -340,14 +376,25 @@ public class Movement {
 		return running;
 	}
 	
+	public boolean isForceRun () {
+		return forceRun;
+	}
+	
 	/**
 	 * @param running The running to set
 	 */
 	public void setRunning(boolean running) {
 		this.running = running;
+		setNeedsTypeUpdate(true);
 	}
 	
 	public void swapRunning() {
+		swapRunning(false);
+	}
+	
+	public void swapRunning(boolean isForced) {
 		running = !running;
+		setNeedsTypeUpdate(true);
+		forceRun = isForced;
 	}
 }

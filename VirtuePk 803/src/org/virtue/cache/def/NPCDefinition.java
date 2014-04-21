@@ -422,9 +422,11 @@ public class NPCDefinition {
 	}
 	
 	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
-		File file = new File("./dumps/npcs/"+npcID+"-"+name.replace("/", " ")+".txt");
+		File directory = new File("./dumps/npcs/"+((npcID/1000)*1000)+"/");
+		directory.mkdirs();
+		File file = new File(directory, npcID+"-"+name.replace("/", " ")+".txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		for (Field field : this.getClass().getFields()) {
+		for (Field field : this.getClass().getDeclaredFields()) {
 			if (field == null) {
 				continue;
 			}

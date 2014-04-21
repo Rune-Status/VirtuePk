@@ -61,6 +61,7 @@ public class OutgoingOpcodes {
 	//Chat-related
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803
 	public static final int ONLINE_STATUS_PACKET = 43;//803
+        public static final int TRADE_PUBLIC_STATUS_PACKET = 128;//803
 	public static final int FRIENDS_PACKET = 56;//803
 	public static final int IGNORES_PACKET = 68;//803
 	public static final int FRIENDS_CHANNEL_PACKET = 82;

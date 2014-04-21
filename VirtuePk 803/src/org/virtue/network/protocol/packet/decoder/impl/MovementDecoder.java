@@ -5,6 +5,7 @@ import org.virtue.network.protocol.handlers.impl.MovementHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
+import org.virtue.network.session.impl.WorldSession;
 
 public class MovementDecoder implements PacketDecoder<MovementHandler> {
 
@@ -14,6 +15,9 @@ public class MovementDecoder implements PacketDecoder<MovementHandler> {
 		handler.putFlag("baseX", packet.getShortA());
 		handler.putFlag("baseY", packet.getLEShortA());
 		handler.putFlag("forceRun", (packet.getByteA() == 1));
+		if (((WorldSession) session).getPlayer().getUpdateArchive().getFaceEntity() != null) {
+			((WorldSession) session).getPlayer().getUpdateArchive().queueFaceEntity(null);
+		}
 		//TODO: Minimap packet has more information; include this somewhere
 		return handler;
 	}

@@ -2,6 +2,7 @@ package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.network.protocol.messages.GameMessage;
 
 /**
  * @author Virtue Development Team 2014 (c).
@@ -18,13 +19,19 @@ public class SendItem implements Command {
 			} catch (Exception ex) {
 				return false;
 			}
-			player.getInventory().add(new Item(id, amount));
+                        Item item = new Item(id, amount);
+                        if (item.getDefinition() == null) {
+                            player.getPacketDispatcher().dispatchMessage("Item "+id+" does not exist!", GameMessage.MessageOpcode.CONSOLE);
+                            return false;
+                        }
+                        player.getPacketDispatcher().dispatchMessage("Spawned item: "+item.getDefinition().getName(), GameMessage.MessageOpcode.CONSOLE);
+			player.getInventory().add(item);
 		return true;
 	}
 
 	@Override
 	public String[] getPossibleSyntaxes() {
-        return new String[] { "pickup", "item" };
+            return new String[] { "pickup", "item" };
 	}
 	
 	

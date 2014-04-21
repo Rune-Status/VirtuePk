@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
+import org.virtue.game.logic.node.interfaces.impl.FriendsList;
+import org.virtue.game.logic.node.interfaces.impl.MinimapInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.InterfaceSettingsMessage;
@@ -36,7 +38,7 @@ public class InterfaceManager {
 	public static final int GAME_WINDOW_PANE = 1477;
 	
 	/**
-	 * Represenst if the screen is resizable.
+	 * Represents if the screen is resizable.
 	 */
 	private ClientScreen screenInfo = new ClientScreen();
 	
@@ -50,21 +52,24 @@ public class InterfaceManager {
 	public void sendScreen() {
 		player.getAccount().getSession().getTransmitter().send(GameScreenEncoder.class, player.getAccount().getDisplayMode());
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
-		sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313] (Skills)
+		
+		setInterface(player.getSkillManager(), 313, true);
+		
+		/*sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313] (Skills)
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30
-		//sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]
+		//sendCs2(new ClientScriptVar(8862, 0, 1));//Runscript: [8862, 0, 1]*/
 		
 		sendInterface(true, 1477, 293, 1220);//Interface: id=1220, clipped=1, parent=[1477, 293] (Active task)
 		//sendCs2(new ClientScriptVar(8862, 1, 1));//Runscript: [8862, 1, 1]
 		
-		sendInterface(player.getInventory(), 130, true);//Inventory tab
+		setInterface(player.getInventory(), 130, true);//Inventory tab
 		/*sendInterface(true, 1477, 130, 1473);//Interface: id=1473, clipped=1, parent=[1477, 130] (Inventory)
 		sendInterfaceSettings(1473, 8, -1, -1, 2097152);//IfaceSettings: 96534536, -1, -1, 2097152
 		sendInterfaceSettings(1473, 8, 0, 27, 15302030);//IfaceSettings: 96534536, 27, 0, 15302030
 		sendInterfaceSettings(1473, 0, 0, 27, 1536);//IfaceSettings: 96534528, 27, 0, 1536
 		sendCs2(new ClientScriptVar(8862, 2, 1));//Runscript: [8862, 2, 1]*/
 		
-		sendInterface(player.getEquipment(), 202, true);//Equipment tab
+		setInterface(player.getEquipment(), 202, true);//Equipment tab
 		
 		/*sendInterface(true, 1477, 202, 1464);//Interface: id=1464, clipped=1, parent=[1477, 202] (Equipment)
 		sendInterfaceSettings(1464, 14, 0, 15, 15302654);//IfaceSettings: 95944718, 15, 0, 15302654
@@ -89,10 +94,12 @@ public class InterfaceManager {
 		sendInterfaceSettings(1449, 7, 6, 14, 2);//IfaceSettings: 94961671, 14, 6, 2
 		//sendCs2(new ClientScriptVar(8862, 5, 1));//Runscript: [8862, 5, 1]
 		
-		sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371] (Friends list)
+                setInterface(new FriendsList(player), 371, true);
+                
+		/*sendInterface(true, 1477, 371, 550);//Interface: id=550, clipped=1, parent=[1477, 371] (Friends list)
 		//sendCs2(new ClientScriptVar(8862, 14, 1));//Runscript: [8862, 14, 1]
 		sendInterfaceSettings(550, 25, 0, 500, 510);//IfaceSettings: 36044825, 500, 0, 510
-		sendInterfaceSettings(550, 23, 0, 500, 6);//IfaceSettings: 36044823, 500, 0, 6
+		sendInterfaceSettings(550, 23, 0, 500, 6);//IfaceSettings: 36044823, 500, 0, 6*/
 		
 		sendInterface(true, 1477, 602, 1427);//Interface: id=1427, clipped=1, parent=[1477, 602] (Friends chat)
 		sendCs2(new ClientScriptVar(1303, player.getAccount().getUsername().getName(), 1, 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
@@ -129,7 +136,7 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
 		sendInterfaceSettings(1477, 175, 1, 1, 2);//IfaceSettings: 96796847, 1, 1, 2
 		
-		sendInterface(player.getActionBar(), 58, true);//Action bar
+		setInterface(player.getActionBar(), 58, true);//Action bar
 		
 		//sendInterface(true, 1477, 58, 1430);//Interface: id=1430, clipped=1, parent=[1477, 58] (Action bar)
 		sendInterfaceSettings(1477, 80, 1, 1, 4);//IfaceSettings: 96796752, 1, 1, 4
@@ -168,7 +175,9 @@ public class InterfaceManager {
 		sendInterfaceSettings(1449, 1, 0, 168, 8485894);//IfaceSettings: 94961665, 168, 0, 8485894
 		sendInterfaceSettings(590, 8, 0, 169, 8388614);//IfaceSettings: 38666248, 169, 0, 8388614
 		
-		sendInterface(true, 1477, 60, 1465);//Interface: id=1465, clipped=1, parent=[1477, 60] (Minimap)
+		setInterface(new MinimapInterface(player), 60, true);
+		
+		//sendInterface(true, 1477, 60, 1465);//Interface: id=1465, clipped=1, parent=[1477, 60] (Minimap)
 		sendInterfaceSettings(1477, 82, 1, 1, 6);//IfaceSettings: 96796754, 1, 1, 6
 		sendInterface(true, 1477, 34, 1433);//Interface: id=1433, clipped=1, parent=[1477, 34] (Settings menu)
 		sendInterface(true, 1477, 390, 1483);//Interface: id=1483, clipped=1, parent=[1477, 390] (Grave timer)
@@ -533,7 +542,7 @@ public class InterfaceManager {
 		sendInterfaceSettings(1436, 126, -1, -1, 2098176);
 		sendInterfaceSettings(1458, 24, 0, 28, 8388610);
 		sendInterfaceSettings(1430, 4, -1, -1, 8388608);
-		sendInterfaceSettings(1465, 4, -1, -1, 8388608);
+		//sendInterfaceSettings(1465, 4, -1, -1, 8388608);
 		sendInterfaceSettings(1430, 2, -1, -1, 8650754);
 		sendInterfaceSettings(1430, 5, -1, -1, 8388608);
 		sendInterfaceSettings(1450, 3, 0, 168, 8485894);
@@ -545,7 +554,7 @@ public class InterfaceManager {
 		
 	}
 	
-	public void sendInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
+	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
 		sendInterface(tab, windowLocation, clipped, GAME_WINDOW_PANE);
 	}
 	

@@ -1,5 +1,10 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -422,5 +427,53 @@ public class ObjectDefinition {
 			}
 		}
 		return false;
+	}
+	
+	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
+		File directory = new File("./dumps/objects/"+((objectID/1000)*1000)+"/");
+		directory.mkdirs();
+		File file = new File(directory, objectID+"-"+name.replace("/", " ")+".txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+		for (Field field : this.getClass().getDeclaredFields()) {
+			if (field == null) {
+				continue;
+			}
+			Object value = field.get(this);
+			if (value == null) {
+				continue;
+			}
+			if (value instanceof int[][]) {
+				String[] values = new String[((int[][]) value).length];
+				int i=0;
+				for (int[] v : ((int[][]) value)) {
+					values[i++] = Arrays.toString(v);
+				}
+				value = values;
+			}
+			
+			if (value instanceof String[]) {
+				value = Arrays.toString((String[]) value);
+			} else if (value instanceof int[]) {
+				value = Arrays.toString((int[]) value);
+			} else if (value instanceof byte[]) {
+				value = Arrays.toString((byte[]) value);
+			} else if (value instanceof short[]) {
+				value = Arrays.toString((short[]) value);
+			}
+
+			//System.out.println(field.getName() + "->" + value);
+
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.write(field.getName() + "->" + value);
+			//writer.write("");
+			//writer.write("=================================");
+			//writer.write("");
+			writer.newLine();
+			writer.flush();
+
+		}
+		writer.close();
 	}
 }

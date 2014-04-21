@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.virtue.game.logic.node.entity.player.update.blocks.AnimationBlock;
 import org.virtue.game.logic.node.entity.player.update.blocks.AppearanceBlock;
+import org.virtue.game.logic.node.entity.player.update.blocks.FaceDirectionBlock;
+import org.virtue.game.logic.node.entity.player.update.blocks.FaceEntityBlock;
 import org.virtue.game.logic.node.entity.player.update.blocks.GraphicsBlock;
 
 /**
@@ -25,6 +27,9 @@ public class UpdateBlockProvider {
 		BLOCKS.add(new GraphicsBlock(2));
 		BLOCKS.add(new GraphicsBlock(3));
 		BLOCKS.add(new GraphicsBlock(4));
+		BLOCKS.add(new GraphicsBlock(5));
+		BLOCKS.add(new FaceEntityBlock());
+		BLOCKS.add(new FaceDirectionBlock());
 	}
 
 	

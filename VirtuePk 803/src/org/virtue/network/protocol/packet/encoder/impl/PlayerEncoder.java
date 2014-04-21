@@ -263,6 +263,25 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param appearanceUpdate If appearance update.
 	 */
 	private void queueLocalMovementUpdate(RS3PacketBuilder buffer, RS3PacketBuilder updateBlockData, Player localPlayer, boolean blockUpdate, boolean appearanceUpdate) {
+		if (localPlayer.getUpdateArchive().getMovement().needsTypeUpdate()) {
+			buffer.putBits(1, 1);
+			buffer.putBits(1, blockUpdate ? 1 : 0);
+			buffer.putBits(2, 3);
+			int xOffset = localPlayer.getTile().getX() - localPlayer.getLastTile().getX();
+			int yOffset = localPlayer.getTile().getY() - localPlayer.getLastTile().getY();
+			int planeOffset = localPlayer.getTile().getPlane() - localPlayer.getLastTile().getPlane();
+			buffer.putBits(1, 0);
+			if (xOffset < 0) {
+				xOffset += 32;
+			}
+			if (yOffset < 0) {
+				yOffset += 32;
+			}
+			//System.out.println("yOffset="+yOffset+", xOffset="+xOffset+", type="+(localPlayer.getUpdateArchive().getMovement().isRunning() ? 3 : 2));
+			//System.out.println("newX="+localPlayer.getTile().getX()+", oldX="+localPlayer.getLastTile().getX()+", newY="+localPlayer.getTile().getY()+", oldY="+localPlayer.getLastTile().getY());
+			buffer.putBits(15, (yOffset) + (xOffset << 5) + (planeOffset << 10) + ((localPlayer.getUpdateArchive().getMovement().isRunning() ? 3 : 2) << 12));
+			return;
+		}
 		int dx = MovementUtils.DIRECTION_DELTA_X[localPlayer.getUpdateArchive().getMovement().getNextWalkDirection()];
 		int dy = MovementUtils.DIRECTION_DELTA_Y[localPlayer.getUpdateArchive().getMovement().getNextWalkDirection()];
 		boolean running;
@@ -281,7 +300,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			opcode = MovementUtils.getPlayerWalkingDirection(dx, dy);
 		}
 		buffer.putBits(1, 1);
-		System.out.println("Moved by x="+dx+", y="+dy+", running="+running+", direction="+opcode);
+		//System.out.println("Moved by x="+dx+", y="+dy+", running="+running+", direction="+opcode);
 		if ((dx == 0 && dy == 0)) {
 			buffer.putBits(1, 1);
 			buffer.putBits(2, 0);
@@ -466,9 +485,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		} else {
 			int xOffset = currentRegionX - lastRegionX;
 			int yOffset = currentRegionY - lastRegionY;
-			int unknownValue = 0;//TODO: Find out what this is...
+			int movementType = 0;//TODO: Find out what this is...
 			buffer.putBits(2, 3);//type=3
-			buffer.putBits(20, (yOffset & 0xff) + ((xOffset & 0xff) << 8) + (planeOffset << 16) + (unknownValue << 18));
+			buffer.putBits(20, (yOffset & 0xff) + ((xOffset & 0xff) << 8) + (planeOffset << 16) + (movementType << 18));
 		}
 	}
 }

@@ -3,13 +3,12 @@ package org.virtue.game.logic.node.interfaces.impl;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
+import org.virtue.game.logic.node.interfaces.RSInterface;
 
 public class FriendsList extends AbstractInterface {
-	
-	public static final int FRIENDS_LIST_INTERFACE = 550;
 
 	public FriendsList(Player p) {
-		super(FRIENDS_LIST_INTERFACE, p);
+		super(RSInterface.FRIENDS_LIST, p);
 	}
 
 	@Override
@@ -19,9 +18,8 @@ public class FriendsList extends AbstractInterface {
 	}
 
 	@Override
-	public void handleActionButton(int componentID, int slotID1, int slotID2, ActionButton button) {
-		// TODO Auto-generated method stub
-
+	public void handleActionButton(int componentID, int slot1, int slot2, ActionButton button) {
+		System.out.println("Friends list button pressed: component="+componentID+", button="+button+", slot1="+slot1+", slot2="+slot2);
 	}
 
 	@Override

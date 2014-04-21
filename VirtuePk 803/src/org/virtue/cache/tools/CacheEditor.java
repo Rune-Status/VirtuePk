@@ -5,8 +5,10 @@ import java.io.IOException;
 import javax.swing.JFrame;
 
 import org.virtue.cache.def.AnimationDefinitionLoader;
+import org.virtue.cache.def.GraphicsDefinitionLoader;
 import org.virtue.cache.def.ItemDefinitionLoader;
 import org.virtue.cache.def.NPCDefinitionLoader;
+import org.virtue.cache.def.ObjectDefinitionLoader;
 
 /**
  * @author Virtue Development Team 2014 (c).
@@ -29,7 +31,9 @@ public class CacheEditor {
 		}*/
 		//ItemDefinitionLoader.dumpItems();
 		//NPCDefinitionLoader.dumpNpc();
-		AnimationDefinitionLoader.dumpAnimations();
+		ObjectDefinitionLoader.dumpObjects();
+		//AnimationDefinitionLoader.dumpAnimations();
+		//GraphicsDefinitionLoader.dumpGfx();
 		System.out.println("done");
 	}
 	

@@ -88,7 +88,7 @@ public class SkillData {
 			if ((experience/10) >= levelXpNeeded[i]) {
 				continue;
 			} else {
-				baseLevel = i;
+				baseLevel = i+1;
 				return;
 			}
 		}

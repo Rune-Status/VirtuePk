@@ -95,6 +95,7 @@ public class IncommingOpcodes {
 	public final static int PRIVATE_MESSAGE_PACKET = 44;//803
 	
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
+        public final static int ITEM_ON_ITEM_PACKET = 82;//803
 	
 	private static final int[] SIZES_803 = new int[120];
 	static {//TODO Identify packets

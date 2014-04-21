@@ -5,6 +5,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
+import org.virtue.game.logic.node.interfaces.RSInterface;
 
 /**
  * @author Taylor
@@ -27,17 +28,13 @@ public class Equipment extends AbstractInterface {
 	 */
 	//private Player player;
 
-	/**
-	 * Represents the equipment interface ID.
-	 */
-	public static final int EQUIPMENT_INTERFACE_ID = 1464;
 	
 	/**
 	 * Constructs a new {@code inventory.java}.
 	 * @param player The player.
 	 */
 	public Equipment(Player player) {
-		super(EQUIPMENT_INTERFACE_ID, player);
+		super(RSInterface.EQUIPMENT, player);
 		//this.player = player;
 		Item testItem = new Item(26587, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
 		items.set(testItem.getEquipId(), testItem);

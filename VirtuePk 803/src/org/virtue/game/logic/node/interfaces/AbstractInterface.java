@@ -11,7 +11,7 @@ import org.virtue.network.protocol.packet.encoder.impl.InterfaceSettingsEncoder;
  * @since Apr 15, 2014
  */
 public abstract class AbstractInterface {
-	
+    
 	public static final int UNLOCK_SCRIPT = 8862;
 	
 	private final int interfaceID;
@@ -61,12 +61,12 @@ public abstract class AbstractInterface {
 	
 	/**
 	 * Called whenever the player clicks on a component on the interface
-	 * @param componentID	The id of the component
-	 * @param slotID1		The first custom slot ID
-	 * @param slotID2		The second custom slot ID
-	 * @param button		The {@link ActionButton} that was clicked
+	 * @param component	The id of the component
+	 * @param slot1		The first custom slot ID
+	 * @param slot2		The second custom slot ID
+	 * @param button	The {@link ActionButton} that was clicked
 	 */
-	public abstract void handleActionButton (int componentID, int slotID1, int slotID2, ActionButton button);
+	public abstract void handleActionButton (int component, int slot1, int slot2, ActionButton button);
 	
 	public void setLock (boolean isLocked) {
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(UNLOCK_SCRIPT, (isLocked ? 0 : 1), getTabID()));

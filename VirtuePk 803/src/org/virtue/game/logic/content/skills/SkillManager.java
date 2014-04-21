@@ -2,12 +2,15 @@ package org.virtue.game.logic.content.skills;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
+import org.virtue.game.logic.node.interfaces.AbstractInterface;
+import org.virtue.game.logic.node.interfaces.ActionButton;
+import org.virtue.game.logic.node.interfaces.RSInterface;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class SkillManager {
+public class SkillManager extends AbstractInterface {
 
 	private Player player;
 	
@@ -19,8 +22,14 @@ public class SkillManager {
 	private static final int XP_COUNTER_3_VALUE = 93;
 	
 	public SkillManager (Player player) {
+		super(RSInterface.SKILLS, player);
 		this.player = player;
 		init();
+	}
+
+	@Override
+	public void postSend() {
+		sendInterfaceSettings(10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30		
 	}
 	
 	/*public SkillData getSkill (Skills s) {
@@ -32,11 +41,11 @@ public class SkillManager {
 		int levelBefore = skill.getBaseLevel();
 		skill.addExperienceFloat(amountToAdd);
 		int levelAfter = skill.getBaseLevel();
-		player.getPacketDispatcher().dispatchSkill(skill);
-		System.out.println("Level before: "+levelBefore+", level after: "+levelAfter);
+		//System.out.println("Level before: "+levelBefore+", level after: "+levelAfter);
 		if (levelAfter > levelBefore) {//Player has advanced in level
 			handleAdvancement(skill, (levelAfter - levelBefore));
 		}
+		player.getPacketDispatcher().dispatchSkill(skill);
 	}
 	
 	private void handleAdvancement (SkillData skill, int advancement) {
@@ -54,7 +63,7 @@ public class SkillManager {
 	private void init () {
 		for (Skill s : Skill.values()) {
 			if (s.equals(Skill.CONSTITUTION)) {
-				skills[s.getID()] = new SkillData(s, 1184, 10);
+				skills[s.getID()] = new SkillData(s, 11840, 10);
 			} else {
 				skills[s.getID()] = new SkillData(s);
 			}
@@ -92,5 +101,15 @@ public class SkillManager {
 			int level = data.get("level").getAsInt();
 			skills[s.getID()] = new SkillData(s, xp, level);
 		}
+	}
+
+	@Override
+	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
+		System.out.println("Clicked skill: component="+component+", slot1="+slot1+", slot2="+slot2+", button="+button.getID());
+	}
+
+	@Override
+	public int getTabID() {
+		return 0;
 	}
 }

@@ -92,10 +92,10 @@ public abstract class Entity extends Node {
 
 	/**
 	 * @param lastTile the lastTile to set
-	 */
-	public void setLastTile(Tile lastTile) {
+	 *///Safer to remove this, because tiles are mutable objects and we don't want to accidently set it to the current tile
+	/*public void setLastTile(Tile lastTile) {
 		this.lastTile = lastTile;
-	}
+	}*/
 
 	/**
 	 * @return the updateArchive

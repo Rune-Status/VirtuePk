@@ -5,11 +5,14 @@ import java.util.List;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.update.blocks.AnimationBlock;
+import org.virtue.game.logic.node.entity.player.update.blocks.FaceDirectionBlock;
+import org.virtue.game.logic.node.entity.player.update.blocks.FaceEntityBlock;
 import org.virtue.game.logic.node.entity.player.update.blocks.GraphicsBlock;
 import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
 import org.virtue.game.logic.node.entity.player.update.movement.Movement;
 import org.virtue.game.logic.node.entity.player.update.ref.Animation;
 import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
+import org.virtue.game.logic.node.entity.region.Tile;
 
 /**
  * @author Taylor
@@ -35,7 +38,17 @@ public class UpdateBlockArchive {
 	/**
 	 * Represents the graphics mask.
 	 */
-	private Graphics[] graphics = new Graphics[4];
+	private Graphics[] graphics = new Graphics[5];
+	
+	/**
+	 * Represents the direction to face.
+	 */
+	private Tile faceDirection;
+	
+	/**
+	 * Represents the entity to face.
+	 */
+	private Entity faceEntity;
 	
 	/**
 	 * Represents the movement flags.
@@ -96,13 +109,6 @@ public class UpdateBlockArchive {
 	}
 	
 	/**
-	 * @param animation The animation to set
-	 */
-	private void setAnimation(Animation animation) {
-		this.animation = animation;
-	}
-	
-	/**
 	 * Queues an animation.
 	 * @param id The ID to queue.
 	 * @param delay The delay.
@@ -122,13 +128,15 @@ public class UpdateBlockArchive {
 	}
 	
 	public void queueGraphic (Graphics newGraphics) {
-		int type = 4;
+		int type = 5;
 		if (graphics[0] == null) {
 			type = 1;
 		} else if (graphics[1] == null) {
 			type = 2;
 		} else if (graphics[2] == null) {
 			type = 3;
+		} else if (graphics[3] == null) {
+			type = 4;
 		}
 		queueGraphic(newGraphics, type);
 	}
@@ -148,12 +156,65 @@ public class UpdateBlockArchive {
 	public Graphics[] getGraphics() {
 		return graphics;
 	}
+	
+	/**
+	 * Queues a face direction.
+	 * @param direction The direction.
+	 */
+	public void queueFaceDirection(Tile direction) {
+		setFaceDirection(direction);
+		queue(FaceDirectionBlock.class);
+	}
+
+	/**
+	 * @return The faceDirection
+	 */
+	public Tile getFaceDirection() {
+		return faceDirection;
+	}
+	
+	/**
+	 * Queues a face entity.
+	 * @param direction The entity.
+	 */
+	public void queueFaceEntity(Entity entity) {
+		setFaceEntity(entity);
+		queue(FaceEntityBlock.class);
+	}
+
+	/**
+	 * @return The faceEntity
+	 */
+	public Entity getFaceEntity() {
+		return faceEntity;
+	}
+	
+	/**
+	 * @param animation The animation to set
+	 */
+	private void setAnimation(Animation animation) {
+		this.animation = animation;
+	}
 
 	/**
 	 * @param graphics The graphics to set
 	 */
 	private void setGraphics(int type, Graphics graphics) {
 		this.graphics[type-1] = graphics;
+	}
+
+	/**
+	 * @param faceDirection The faceDirection to set
+	 */
+	private void setFaceDirection(Tile faceDirection) {
+		this.faceDirection = faceDirection;
+	}
+
+	/**
+	 * @param faceEntity The faceEntity to set
+	 */
+	private void setFaceEntity(Entity faceEntity) {
+		this.faceEntity = faceEntity;
 	}
 
 	/**

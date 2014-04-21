@@ -5,6 +5,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
+import org.virtue.game.logic.node.interfaces.RSInterface;
 
 /**
  * @author Taylor
@@ -22,17 +23,13 @@ public class Inventory extends AbstractInterface {
 	 */
 	//private Player player;
 
-	/**
-	 * Represenst the interface ID.
-	 */
-	public static final int INVENTORY_INTERFACE = 1473;
 	
 	/**
 	 * Constructs a new {@code inventory.java}.
 	 * @param player The player.
 	 */
 	public Inventory(Player player) {
-		super(INVENTORY_INTERFACE, player);
+		super(RSInterface.INVENTORY, player);
 		//this.player = player;
 		items.add(new Item(54, 1));//Just for testing purposes; This can be updated with the actual items later
 	}
@@ -173,7 +170,16 @@ public class Inventory extends AbstractInterface {
 
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {
-		System.out.println("Inventory button pressed: component="+componentID+", slot="+slotID+", item="+itemID+", button="+button.getID());
+            if (componentID == 8) {
+                Item item = items.get(slotID);
+                    if (item == null) {
+                        return;//Invalid item
+                    }
+                    String option = item.getDefinition().getOption(false, button.getID());
+                    System.out.println("Inventory item pressed: slot="+slotID+", itemID="+itemID+", option="+option);
+                    return;
+            }
+            System.out.println("Inventory button pressed: component="+componentID+", slot="+slotID+", item="+itemID+", button="+button.getID());
 	}
 
 	@Override

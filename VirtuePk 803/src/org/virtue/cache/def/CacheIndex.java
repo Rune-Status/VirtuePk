@@ -11,4 +11,6 @@ public class CacheIndex {
     public static final int ITEM_DEFINITIONS = 19;
     
     public static final int ANIMATION_DEFINITIONS = 20;
+    
+    public static final int GRAPHICS_DEFINITIONS = 21;
 }

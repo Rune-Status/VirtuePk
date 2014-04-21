@@ -32,13 +32,15 @@ public class GraphicsBlock extends UpdateBlock {
 	public int getMask() {
 		switch (type) {
 		case 1:
-			return 0x400000;
+			return 0x1;
 		case 2:
 			return 0x8000;
 		case 3:
 			return 0x400;
 		case 4:
-			return 0x1;
+			return 0x800000;
+		case 5:
+			return 0x400000;
 		default:
 			return 0;
 		}
@@ -48,13 +50,15 @@ public class GraphicsBlock extends UpdateBlock {
 	public int getBlockPosition() {
 		switch (type) {
 		case 1:
-			return 2;
+			return 11;
 		case 2:
 			return 5;
 		case 3:
 			return 8;
 		case 4:
-			return 11;
+			return 18;
+		case 5:
+			return 2;
 		default:
 			return -1;
 		}
@@ -67,8 +71,8 @@ public class GraphicsBlock extends UpdateBlock {
 		case 1:
 			Graphics gfx1 = player.getUpdateArchive().getGraphics()[0];
 			buffer.putShort(gfx1.getId());
-			buffer.putIntV2(gfx1.getSettingsHash());
-			buffer.putByteA(gfx1.getRotationHash());
+			buffer.putIntV1(gfx1.getSettingsHash());
+			buffer.putByteS(gfx1.getRotationHash());
 			break;
 		case 2:
 			Graphics gfx2 = player.getUpdateArchive().getGraphics()[1];
@@ -85,8 +89,14 @@ public class GraphicsBlock extends UpdateBlock {
 		case 4:
 			Graphics gfx4 = player.getUpdateArchive().getGraphics()[3];
 			buffer.putShort(gfx4.getId());
-			buffer.putIntV1(gfx4.getSettingsHash());
+			buffer.putInt(gfx4.getSettingsHash());
 			buffer.putByteS(gfx4.getRotationHash());
+			break;
+		case 5:
+			Graphics gfx5 = player.getUpdateArchive().getGraphics()[4];
+			buffer.putShort(gfx5.getId());
+			buffer.putIntV2(gfx5.getSettingsHash());
+			buffer.putByteA(gfx5.getRotationHash());
 			break;
 		}
 		//System.out.println("Appended graphic type="+type+", mask="+Integer.toHexString(getMask()));

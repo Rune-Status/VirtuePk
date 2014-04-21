@@ -68,10 +68,10 @@ public class PacketDispatcher {
 	 * Dispatches the current run energy level for the player
 	 * @param energy	The run energy level (0 <= level <= 100)
 	 */
-	public void dispatchRunEnergy (int energy) {
+	public void dispatchRunEnergy (float energy) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacket(OutgoingOpcodes.RUN_ENERGY_PACKET);
-		buffer.put(energy);
+		buffer.put((int) energy);
 		player.getAccount().getSession().getTransmitter().send(buffer);
 	}
 	

@@ -1,11 +1,14 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
+import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 20, 2014
+ */
 public class ActionButtonHandler extends PacketHandler<WorldSession> {
 	
 	@Override

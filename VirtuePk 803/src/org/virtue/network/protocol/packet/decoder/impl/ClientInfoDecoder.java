@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
@@ -11,8 +7,8 @@ import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
 /**
- *
- * @author Francis
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 20, 2014
  */
 public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
 

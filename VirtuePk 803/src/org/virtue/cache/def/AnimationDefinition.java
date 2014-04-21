@@ -25,6 +25,7 @@ public class AnimationDefinition {
     public int[] anIntArray7071;
     public int duration = 0;//anInt7072
     //public AnimationConfig config;//aClass543_7073
+    public int configID = -1;
     public int[] frameDurations;//anIntArray7074
     public int anInt7075 = -1;
     public int anInt7076 = 5;
@@ -148,7 +149,7 @@ public class AnimationDefinition {
 		    } else if (opcode == 23) {
 		    	buffer.getUnsignedShort();
 		    } else if (opcode == 24) {
-				int configID = buffer.getUnsignedShort();
+				configID = buffer.getUnsignedShort();
 				//config = loader.animationConfigLoader.getConfig(configID, -1946742207);
 		    } else if (249 == opcode) {
 				int length = buffer.getUnsignedByte();
@@ -193,7 +194,7 @@ public class AnimationDefinition {
 		if (frameDurations != null) {
 		    duration = 0;
 		    for (int i_21_ = 0; i_21_ < frameDurations.length; i_21_++) {
-		    	duration += frameDurations[i_21_] * -184347003;
+		    	duration += frameDurations[i_21_];
 		    }
 		}
     }
@@ -230,9 +231,11 @@ public class AnimationDefinition {
 	}
 	
 	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
-		File file = new File("./dumps/anim/"+animationID+".txt");
+		File directory = new File("./dumps/anim/"+((animationID/1000)*1000)+"/");
+		directory.mkdirs();
+		File file = new File(directory, animationID+".txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		for (Field field : this.getClass().getFields()) {
+		for (Field field : this.getClass().getDeclaredFields()) {
 			if (field == null) {
 				continue;
 			}

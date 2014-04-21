@@ -9,7 +9,8 @@ public enum ChatType {
 	PUBLIC(0),
 	FRIENDS(1),
 	CLAN(2),
-	GUEST_CLAN(3);
+	GUEST_CLAN(3),
+	PRIVATE(4);
 	
 	private int code;
 	
@@ -22,16 +23,17 @@ public enum ChatType {
 	}
 	
 	public static ChatType forCode (int code) {
-		ChatType type = ChatType.values()[code];
-		if (type.code == code) {
-			return type;
-		} else {
-			for (ChatType t : ChatType.values()) {
-				if (t.code == code) {
-					return t;
-				}
+		if (code < ChatType.values().length) {
+			ChatType type = ChatType.values()[code];
+			if (type.code == code) {
+				return type;
 			}
-			return null;
 		}
+		for (ChatType t : ChatType.values()) {
+			if (t.code == code) {
+				return t;
+			}
+		}
+		return null;
 	}
 }

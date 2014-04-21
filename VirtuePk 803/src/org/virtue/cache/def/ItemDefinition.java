@@ -71,8 +71,8 @@ public class ItemDefinition {
     public int[] anIntArray7949;
     
     //Options
-    public String[] groundOptions = new String[] { null, null, "take", null, null };
-    public String[] inventoryOptions = new String[] { null, null, null, null, "drop" };    
+    private String[] groundOptions = new String[] { null, null, "take", null, null };
+    private String[] inventoryOptions = new String[] { null, null, null, null, "drop" };    
 	
 	int anInt7879;
     /*public static final int anInt7880 = 1;
@@ -447,6 +447,17 @@ public class ItemDefinition {
 	public int getID () {
 		return itemID;
 	}
+        
+        public String getOption (boolean ground, int id) {
+            if (id <= 0 || id > 5) {
+                return null;
+            }
+            if (ground) {
+                return groundOptions[id-1];
+            } else {
+                return inventoryOptions[id-1];
+            }
+        }
 
 	public boolean hasOption(String option) {
 		if (inventoryOptions == null) {
@@ -670,9 +681,11 @@ public class ItemDefinition {
 	}
 	
 	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {
-		File file = new File("./dumps/items/"+itemID+"-"+name.replace("/", " ")+".txt");
+		File directory = new File("./dumps/items/"+((itemID/1000)*1000)+"/");
+		directory.mkdirs();
+		File file = new File(directory, itemID+"-"+name.replace("/", " ")+".txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		for (Field field : this.getClass().getFields()) {
+		for (Field field : this.getClass().getDeclaredFields()) {
 			if (field == null) {
 				continue;
 			}
@@ -691,7 +704,7 @@ public class ItemDefinition {
 				value = Arrays.toString((byte[]) value);
 			}
 			if (value instanceof short[]) {
-				value = Arrays.toString((byte[]) value);
+				value = Arrays.toString((short[]) value);
 			}
 
 			//System.out.println(field.getName() + "->" + value);

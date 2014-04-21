@@ -4,7 +4,6 @@ import java.util.EnumMap;
 
 import org.virtue.Constants;
 import org.virtue.game.config.ClientVarps;
-import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.combat.ability.AbilityBook;
 import org.virtue.game.logic.content.combat.ability.ActionBar;
@@ -16,18 +15,14 @@ import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
 import org.virtue.game.logic.social.ChatManager;
-import org.virtue.game.logic.social.OnlineStatus;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
-import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.VarpMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
-import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.NPCEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.chat.OnlineStatusEncoder;
 import org.virtue.utility.DisplayMode;
 
 /**
@@ -78,12 +73,23 @@ public class Player extends Entity {
 	 */
 	private ChatManager chatManager;
 	
+	private int[] clientVarps = ClientVarps.getGameVarps().clone();
+	
 	private boolean largeSceneView = false;
 	
 	private boolean exists = true;
 	
 	private boolean inWorld = false;
 	
+	/**
+	 * Represents the player's current run energy level
+	 */
+	private float runEnergy = 100;
+	
+	/**
+	 * Represents whether the player is resting or not
+	 */
+	private boolean resting;
 
 	/**
 	 * The player's ability book.
@@ -103,8 +109,8 @@ public class Player extends Entity {
 		super();
 		System.out.println("Creating player: "+account.getUsername().getName());
 		this.account = account;
-		tile = Constants.DEFAULT_LOCATION;
-		lastTile = getTile();
+		tile = new Tile(Constants.DEFAULT_LOCATION);
+		lastTile = new Tile(getTile());
 		lastLoadedRegion = new Tile(lastTile);
 		viewport = new Viewport(this);
 		interfaceManager = new InterfaceManager(this);
@@ -120,10 +126,11 @@ public class Player extends Entity {
 	@Override
 	public void start() {
 		inWorld = true;
+		this.clientVarps[463] = resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0;
 		getUpdateArchive().getAppearance().packBlock();
 		//System.out.println("Sending game information to player...");
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
-		int[] varps = ClientVarps.getGameVarps();
+		int[] varps = clientVarps;
 		for (int i = 0; i < varps.length; i++) {
 			int val = varps[i];
 			if (val != 0) {
@@ -131,12 +138,20 @@ public class Player extends Entity {
 			}
 		}
 		interfaceManager.sendScreen();
+		int[] varps2 = ClientVarps.getGameVarps2();
+		for (int i = 0; i < varps2.length; i++) {
+			int val = varps2[i];
+			if (val != 0) {
+				packetDispatcher.dispatchVarp(new VarpMessage(i, val));
+			}
+		}
 		inventory.load();
 		equipment.load();
 		skillManager.sendAllSkills();
-		packetDispatcher.dispatchRunEnergy(100);//Sends the current run energy level to the player
+		packetDispatcher.dispatchRunEnergy(runEnergy);//Sends the current run energy level to the player
+		//sendRunButtonConfig();
 		chatManager.init(false);
-		getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
+		//getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
 	public void sendDefaultPlayerOptions () {
@@ -172,7 +187,13 @@ public class Player extends Entity {
 
 	@Override
 	public void onCycle() {
+		if (runEnergy == 0) {
+			getUpdateArchive().getMovement().setRunning(false);
+			sendRunButtonConfig();
+		}
 		getUpdateArchive().getMovement().process();
+		restoreRunEnergy();
+		//System.out.println("Run direction: "+getUpdateArchive().getMovement().getNextRunDirection());
 	}
 	
 	@Override
@@ -211,6 +232,7 @@ public class Player extends Entity {
 	@Override
 	public void refreshOnDemand() {
 		getUpdateArchive().reset();//Refresh update flags
+		getUpdateArchive().getMovement().setNeedsTypeUpdate(false);
 	}
 
 	@Override
@@ -220,6 +242,45 @@ public class Player extends Entity {
 	
 	public boolean isInWorld () {
 		return inWorld;
+	}
+	
+	public int getRunEnergy () {
+		return (int) runEnergy;
+	}
+	
+	public void setRunEnergy (float energy) {
+		if (energy < 0) {
+			energy = 0;
+		} else if (energy > 100) {
+			energy = 100;
+		}
+		this.runEnergy = energy;
+		packetDispatcher.dispatchRunEnergy(energy);
+	}
+	
+	public void toggleRun () {
+		getUpdateArchive().getMovement().swapRunning();
+		sendRunButtonConfig();
+	}
+	
+	public void sendRunButtonConfig() {
+		packetDispatcher.dispatchVarp(new VarpMessage(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0));
+	}
+	
+	public void drainRunEnergy () {
+		setRunEnergy(runEnergy-1);		
+	}
+
+	public void restoreRunEnergy() {		
+		if (getUpdateArchive().getMovement().getNextRunDirection() == -1 && runEnergy < 100) {
+			float increase = 0;
+			increase = 0.5f;
+			if (resting && runEnergy < 100) {
+				increase += 0.5f;
+			}
+			setRunEnergy(runEnergy+increase);
+			//packetDispatcher.dispatchRunEnergy(runEnergy);
+		}
 	}
 	
 	/**
