@@ -1,18 +1,21 @@
 package org.virtue.network.io;
 
+import java.io.FileNotFoundException;
+
 
 /**
  * @author Taylor
  * @version 1.0
  */
-public interface IOParser<T extends Object, F extends Object> {
+public interface IOParser<T extends Object> {
 
 	/**
 	 * Called when the file should be parsed.
 	 * @param buffer The buffer used to parse the file data
 	 * @return The object.
+	 * @throws FileNotFoundException 
 	 */
-	T load(F buffer);
+	T load(Object... params) throws FileNotFoundException;
 	
 	/**
 	 * Called when the file should be saved.

@@ -440,6 +440,10 @@ public class Appearance {
 		packBlock();
 	}
 	
+	public Gender getGender () {
+		return gender;
+	}
+	
 	public void setGender(Gender gender) {
 		this.gender = gender;
 		switch(gender) {

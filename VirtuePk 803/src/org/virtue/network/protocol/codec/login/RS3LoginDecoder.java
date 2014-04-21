@@ -14,6 +14,7 @@ import org.virtue.cache.Cache;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.player.identity.Password;
 import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.LoginResponse;
 import org.virtue.utility.Base37Utils;
 import org.virtue.utility.BufferUtils;
@@ -188,8 +189,16 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 				}*/
 			}
 		}
-		account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
-		//account = JSONPlayerSaving.loadPlayer(new File("./data/characters/"+username+".json"), channel, displayMode, clientSessionKey, serverSessionKey);
+		if ((IOHub.getAccountIo().exists(username.trim())) == false)
+			account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
+		else {
+			System.out.println("loading player");
+			account = IOHub.getAccountIo().load(username.trim());
+			account.setChannel(channel);
+			account.setDisplayMode(displayMode);
+			account.setClientSessionKey(clientSessionKey);
+			account.setServerSessionKey(serverSessionKey);
+		}
 		account.putFlag("login_type", type);
 		return account;
 	}

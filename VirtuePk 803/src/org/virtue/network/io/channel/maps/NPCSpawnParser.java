@@ -12,15 +12,16 @@ import org.virtue.network.io.IOParser;
  * @author Taylor
  * @version 1.0
  */
-public class NPCSpawnParser implements IOParser<List<NPC>, BufferedReader> {
+public class NPCSpawnParser implements IOParser<List<NPC>> {
 
 	/**
 	 * (non-Javadoc)
 	 * @see org.virtue.network.io.IOParser#load(java.lang.Object)
 	 */
 	@Override
-	public List<NPC> load(BufferedReader buffer) {
+	public List<NPC> load(Object... params) {
 		final List<NPC> npc_spawns = new ArrayList<>();
+		BufferedReader buffer = (BufferedReader) params[0];
 		try {
 			String line;
 			while ((line = buffer.readLine()) != null) {

@@ -6,6 +6,8 @@ import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.network.session.Session;
 import org.virtue.utility.DisplayMode;
 
+import com.google.gson.JsonObject;
+
 /**
  * @author Taylor
  * @date Jan 15, 2014
@@ -30,7 +32,7 @@ public class Account extends AttributeSet {
 	/**
 	 * Represents the bound channel on this account.
 	 */
-	private final Channel channel;
+	private Channel channel;
 	
 	/**
 	 * Represents the bound session.
@@ -45,12 +47,12 @@ public class Account extends AttributeSet {
 	/**
 	 * Represents the key for the ongoing client session.
 	 */
-	private final long clientSessionKey;
+	private long clientSessionKey;
 	
 	/**
 	 * Represents the key for the ongoing server session.
 	 */
-	private final long serverSessionKey;
+	private long serverSessionKey;
 	
 	private Email email;
 	
@@ -59,6 +61,8 @@ public class Account extends AttributeSet {
 	private DateOfBirth dateofbirth;
 	
 	private Tile tile;
+	
+	private JsonObject charFile;
 	
 	/**
 	 * Constructs a new {@code Account.java}.
@@ -78,9 +82,10 @@ public class Account extends AttributeSet {
 	 * Constructs a new {@code Account.java}.
 	 * @param username The username.
 	 * @param password The password.
+	 * @param obj 
 	 * @param dateOfBirth2 
 	 */
-	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
+	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, JsonObject charFile) {
 		this.username = username;
 		this.password = password;
 		this.rank = rank;
@@ -88,10 +93,11 @@ public class Account extends AttributeSet {
 		this.age = age;
 		this.dateofbirth = dateofbirth;
 		this.tile = tile;
-		this.channel = channel;
-		this.displayMode = displayMode;
-		this.clientSessionKey = clientSessionKey;
-		this.serverSessionKey = serverSessionKey;
+		this.channel = null;
+		this.displayMode = null;
+		this.clientSessionKey = 0L;
+		this.serverSessionKey = 0L;
+		this.charFile = charFile;
 	}
 
 	/**
@@ -113,6 +119,10 @@ public class Account extends AttributeSet {
 	 */
 	public Channel getChannel() {
 		return channel;
+	}
+	
+	public void setChannel(Channel channel) {
+		this.channel = channel;
 	}
 
 	/**
@@ -136,11 +146,19 @@ public class Account extends AttributeSet {
 		return clientSessionKey;
 	}
 
+	public void setClientSessionKey(long clientSessionKey) {
+		this.clientSessionKey = clientSessionKey;
+	}
+	
 	/**
 	 * @return the serverSessionKey
 	 */
 	public long getServerSessionKey() {
 		return serverSessionKey;
+	}
+	
+	public void setServerSessionKey(long serverSessionKey) {
+		this.serverSessionKey = serverSessionKey;
 	}
 
 	/**
@@ -185,6 +203,10 @@ public class Account extends AttributeSet {
 	
 	public Tile getTile() {
 		return tile;
+	}
+	
+	public JsonObject getCharFile() {
+		return charFile;
 	}
 	
 }

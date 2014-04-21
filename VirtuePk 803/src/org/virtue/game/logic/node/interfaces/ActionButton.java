@@ -38,16 +38,17 @@ public enum ActionButton {
 	}
 	
 	public static ActionButton forID (int id) {
-		ActionButton button = ActionButton.values()[id+1];
-		if (button.id == id) {
+                if (id+1 < ActionButton.values().length) {
+                    ActionButton button = ActionButton.values()[id+1];
+                    if (button.id == id) {
 			return button;
-		} else {
-			for (ActionButton b : ActionButton.values()) {
-				if (b.id == id) {
-					return b;
-				}
-			}
-			return null;
-		}
+                    }
+                }
+                for (ActionButton b : ActionButton.values()) {
+                        if (b.id == id) {
+                                return b;
+                        }
+                }
+                return null;
 	}
 }

@@ -15,6 +15,7 @@ import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
 import org.virtue.game.logic.social.ChatManager;
+import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.messages.VarpMessage;
@@ -147,6 +148,10 @@ public class Player extends Entity {
 		}
 		inventory.load();
 		equipment.load();
+		
+		if ((IOHub.getAccountIo().exists(this.getAccount().getUsername().getAccountName())) == true)
+			skillManager.deserialise(this);
+			
 		skillManager.sendAllSkills();
 		packetDispatcher.dispatchRunEnergy(runEnergy);//Sends the current run energy level to the player
 		//sendRunButtonConfig();

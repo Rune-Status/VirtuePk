@@ -18,6 +18,7 @@ public class OnlineStatusHandler extends PacketHandler<WorldSession> {
         }
         int val1 = getFlag("publicStatus", -1);
         int val3 = getFlag("tradeStatus", -1);
+        session.getPlayer().getChatManager().setOnlineStatus(onlineStatus);
         System.out.println("val1="+val1+", onlineStatus="+onlineStatus.getStatusCode()+", val3="+val3);
     }
     

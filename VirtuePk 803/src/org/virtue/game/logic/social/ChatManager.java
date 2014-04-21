@@ -97,6 +97,11 @@ public class ChatManager {
 			p.getAccount().getSession().getTransmitter().send(PublicMessageEncoder.class, msgObject);
 		}
 	}
+        
+        public void setOnlineStatus (OnlineStatus status) {
+            this.onlineStatus = status;
+            friendManager.setOnlineStatus(status);
+        }
 	
 	public static byte[] generateMessageHash () {
 		byte[] hash = new byte[5];

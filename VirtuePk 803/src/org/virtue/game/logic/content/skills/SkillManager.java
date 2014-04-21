@@ -93,7 +93,8 @@ public class SkillManager extends AbstractInterface {
 	 * Deserialises the skill data from the specified JSON array
 	 * @param skillsData	The {@link com.google.gson.JsonArray} containing the skill data
 	 */
-	public void deserialise (JsonArray skillsData) {		
+	public void deserialise (Player player) {
+		JsonArray skillsData = player.getAccount().getCharFile().get("skills").getAsJsonArray();
 		for (JsonElement skillData : skillsData) {
 			JsonObject data = (JsonObject) skillData;
 			Skill s = Skill.getSkill(data.get("id").getAsInt());

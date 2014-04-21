@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.interfaces.impl;
 
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
@@ -21,7 +22,7 @@ public class Equipment extends AbstractInterface {
 	/**
 	 * Represents the items in the inventory.
 	 */
-	private ItemsContainer<Item> items = new ItemsContainer<>(15, false);
+	private ItemsContainer<Item> items = new ItemsContainer<>(EQUIP_SIZE, false);
 
 	/**
 	 * Represents the player.
@@ -37,9 +38,9 @@ public class Equipment extends AbstractInterface {
 		super(RSInterface.EQUIPMENT, player);
 		//this.player = player;
 		Item testItem = new Item(26587, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
-		items.set(testItem.getEquipId(), testItem);
+		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);
 		testItem = new Item(26591, 1);
-		items.set(testItem.getEquipId(), testItem);
+		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);
 	}
 	
 	@Override
@@ -79,6 +80,24 @@ public class Equipment extends AbstractInterface {
 	public void add(int slot, Item item) {
 		items.set(slot, item);
 		refresh();
+	}
+	
+	public void add(EquipSlot slot, Item item) {
+		items.set(slot.getSlotID(), item);
+		refresh();
+	}
+	
+	/**
+	 * Switches the item in the given slot with the given item
+	 * @param slot	The slot to switch
+	 * @param item	The item to switch to
+	 * @return		The old item
+	 */
+	public Item swapItem (EquipSlot slot, Item item) {
+		Item oldItem = items.get(slot.getSlotID());
+		items.set(slot.getSlotID(), item);
+		refresh();
+		return oldItem;
 	}
 	
 	/**
@@ -152,21 +171,6 @@ public class Equipment extends AbstractInterface {
 	public void setItems(ItemsContainer<Item> items) {
 		this.items = items;
 	}
-
-	/**
-	 * @return the player
-	 */
-	/*public Player getPlayer() {
-		return player;
-	}*/
-
-	/**
-	 * @param player the player to set
-	 */
-	/*public void setPlayer(Player player) {
-		this.player = player;
-	}*/
-
 	
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {

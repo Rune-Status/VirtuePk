@@ -2,6 +2,7 @@ package org.virtue.game.logic.item;
 
 import org.virtue.cache.def.ItemDefinition;
 import org.virtue.cache.def.ItemDefinitionLoader;
+import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 
 /**
  * @author Taylor
@@ -60,14 +61,11 @@ public class Item {
 		this.id = id;
 	}
 	
+	public EquipSlot getEquipSlot () {
+	    return EquipSlot.forID(definition.getEquiptSlotID());
+	}
+	
 	public ItemDefinition getDefinition () {
 		return definition;
-	}
-
-	/**
-	 * @return
-	 */
-	public int getEquipId() {
-		return definition.equipSlotID;
 	}
 }

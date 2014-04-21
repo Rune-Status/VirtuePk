@@ -1,6 +1,6 @@
 package org.virtue.network.io;
 
-import org.virtue.network.io.channel.PlayerParser;
+import org.virtue.network.io.channel.AccountParser;
 import org.virtue.network.io.channel.maps.WorldMapIO;
 
 /**
@@ -17,7 +17,7 @@ public class IOHub {
 	/**
 	 * Represenst the player IO stream handler.
 	 */
-	private static final PlayerParser PLAYER_IO = new PlayerParser();
+	private static final AccountParser ACCOUNT_IO = new AccountParser();
 	
 	/**
 	 * Loads any parsers that need to be ran on startup.
@@ -36,7 +36,7 @@ public class IOHub {
 	/**
 	 * @return The playerIo
 	 */
-	public static PlayerParser getPlayerIo() {
-		return PLAYER_IO;
+	public static AccountParser getAccountIo() {
+		return ACCOUNT_IO;
 	}
 }

@@ -2,7 +2,10 @@ package org.virtue.game.logic.node.interfaces.impl;
 
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
+import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
+import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.RSInterface;
@@ -154,32 +157,37 @@ public class Inventory extends AbstractInterface {
 		this.items = items;
 	}
 
-	/**
-	 * @return the player
-	 */
-	/*public Player getPlayer() {
-		return player;
-	}*/
-
-	/**
-	 * @param player the player to set
-	 */
-	/*public void setPlayer(Player player) {
-		this.player = player;
-	}*/
-
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {
             if (componentID == 8) {
-                Item item = items.get(slotID);
+                    Item item = items.get(slotID);
                     if (item == null) {
                         return;//Invalid item
                     }
                     String option = item.getDefinition().getOption(false, button.getID());
-                    System.out.println("Inventory item pressed: slot="+slotID+", itemID="+itemID+", option="+option);
+					
+                    if (button.equals(ActionButton.TWO) && item.getDefinition().isWearItem(
+							getPlayer().getUpdateArchive().getAppearance().getGender() == Gender.MALE)) {
+                        handleEquip(item, slotID, option);
+                    }
+                    System.out.println("Inventory item pressed: slot="+slotID+", itemID="+itemID+", option="+option+" ("+button.getID()+")");
                     return;
             }
             System.out.println("Inventory button pressed: component="+componentID+", slot="+slotID+", item="+itemID+", button="+button.getID());
+	}
+        
+	public boolean handleEquip (Item item, int slotID, String option) {
+		EquipSlot targetSlot = item.getEquipSlot();
+		if (targetSlot == null) {
+			return false;
+		}
+		//TODO: Further checks to make sure it's possible (level requirements, etc)
+		Item oldItem = getPlayer().getEquipment().swapItem(targetSlot, item);
+		//System.out.println("Swapping item "+oldItem.getDefinition().getName()+" with "+item.getDefinition().getName());
+		items.set(slotID, oldItem);
+		refresh();
+		getPlayer().getUpdateArchive().getAppearance().packBlock();
+		return true;
 	}
 
 	@Override

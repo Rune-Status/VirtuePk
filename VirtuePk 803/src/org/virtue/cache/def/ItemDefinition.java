@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import org.virtue.game.logic.content.skills.Skill;
+import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
@@ -42,8 +43,8 @@ public class ItemDefinition {
     HashMap<Integer, Object> paramaters;
     
 	//Wearing model information
-    public int equipID;
-    public int equipSlotID;
+    public int equipID = -1;
+    public int equipSlotID = -1;
     public int maleEquip1 = -1;
     public int maleEquip2 = -1;
     public int femaleEquip1 = -1;
@@ -432,13 +433,13 @@ public class ItemDefinition {
 		lent = true;
 	}
 
-	public int getArchiveId() {
+	/*public int getArchiveId() {
 		return itemID >>> 8;
 	}
 
 	public int getFileId() {
 		return 0xFF & itemID;
-	}
+	}*/
 	
 	public String getName () {
 		return name;
@@ -476,8 +477,18 @@ public class ItemDefinition {
 		return false;
 	}
 
-	public boolean isWearItem() {
+	public boolean isWearItem(boolean male) {
+		//System.out.println("maleEquip1="+maleEquip1+", femaleEquip1="+femaleEquip1+", equipSlotID="+equipSlotID);
+		if (equipSlotID < EquipSlot.RING.getSlotID() && 
+				(male ? maleEquip1 == -1 : femaleEquip1 == -1)) {
+			//System.out.println("Not equiptable");
+			return false;
+		}
 		return equipSlotID != -1;
+	}
+        
+	public int getEquiptSlotID () {
+		return equipSlotID;
 	}
 
 	public int getNotedID() {

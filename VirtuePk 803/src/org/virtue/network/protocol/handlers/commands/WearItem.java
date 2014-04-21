@@ -21,7 +21,7 @@ public class WearItem implements Command {
 				return false;
 			} 
 			Item item = new Item(id, 1);
-			player.getEquipment().add(item.getEquipId(), item);
+			player.getEquipment().add(item.getDefinition().getEquiptSlotID(), item);
 			equipment = new Equipment(player);
 		return true;
 	}

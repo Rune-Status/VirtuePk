@@ -6,6 +6,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.RS2Network;
+import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.packet.RS3Packet;
 import org.virtue.network.protocol.packet.RS3PacketReader;
@@ -59,6 +60,7 @@ public class WorldSession extends Session {
 	public void disconnect() {
 		if (!isLobby) {			
 			System.out.println("Removing "+player.getAccount().getUsername().getName()+" from the game.");
+			IOHub.getAccountIo().save(player);
 			player.destroy();
 		}
 		//World.getWorld().removePlayer(player);
