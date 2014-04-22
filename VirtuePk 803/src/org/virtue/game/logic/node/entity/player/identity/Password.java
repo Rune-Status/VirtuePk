@@ -48,11 +48,16 @@ public class Password {
 	public String getPassword() {
 		return password;
 	}
+	
+	public void applyEncryption () {
+		this.password = Encryption.SHA1Encryption(password).getEncryption();
+		this.encrypt = true;
+	}
 
 	/**
 	 * @param password the password to set
 	 */
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = (encrypt ? Encryption.SHA1Encryption(password).getEncryption() : password);
 	}
 }

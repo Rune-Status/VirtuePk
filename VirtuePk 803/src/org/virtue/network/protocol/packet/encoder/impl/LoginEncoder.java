@@ -30,12 +30,12 @@ public class LoginEncoder implements PacketEncoder<Account> {
 		buffer.putPacketVarByte(2);
 		switch (node.getFlag("login_type", LoginType.WORLD_PART_2)) {
 		case LOBBY:
-			System.out.println("Sending lobby login response...");
+			//System.out.println("Building lobby login response.");
 			/*
 			 * The rights of the user. Used to first create the client rights
 			 * field for later use.
 			 */
-			buffer.put(node.getRank().ordinal());
+			buffer.put(node.getRank().getID());
 			buffer.put(0);
 			buffer.put(0);//Boolean
 			buffer.put24BitInteger(0);

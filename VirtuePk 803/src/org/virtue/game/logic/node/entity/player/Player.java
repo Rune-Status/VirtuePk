@@ -108,9 +108,9 @@ public class Player extends Entity {
 	 */
 	public Player(Account account) {
 		super();
-		System.out.println("Creating player: "+account.getUsername().getName());
+		//System.out.println("Creating player: "+account.getUsername().getName());
 		this.account = account;
-		tile = new Tile(Constants.DEFAULT_LOCATION);
+		tile = new Tile(account.getTile());
 		lastTile = new Tile(getTile());
 		lastLoadedRegion = new Tile(lastTile);
 		viewport = new Viewport(this);

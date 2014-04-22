@@ -1,5 +1,6 @@
 package org.virtue.network.io;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 
@@ -27,5 +28,5 @@ public interface IOParser<T extends Object> {
 	 * Returns the path of the file being parsed.
 	 * @return The path.
 	 */
-	String getPath();
+	File getPath();
 }

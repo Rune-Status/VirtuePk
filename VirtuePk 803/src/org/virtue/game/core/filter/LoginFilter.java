@@ -49,6 +49,7 @@ public class LoginFilter extends LogicEvent {
 		case LOBBY:
 			player = new Player(account);
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
+			System.out.println("Adding player "+account.getUsername().getAccountName()+" to the lobby...");
 			Lobby.addPlayer(player);
 			int[] varps = ClientVarps.getLobbyVarps();
 			for (int i = 0; i < varps.length; i++) {
@@ -57,6 +58,7 @@ public class LoginFilter extends LogicEvent {
 					session.getTransmitter().send(VarpEncoder.class, new VarpMessage(i, val));
 				}
 			}
+			System.out.println("Initialising lobby for player "+account.getUsername().getAccountName());
 			player.startLobby();
 			break;
 		case WORLD_PART_1:

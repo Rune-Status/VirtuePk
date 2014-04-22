@@ -36,6 +36,8 @@ public class AccountParser implements IOParser<Account> {
 			System.out.println("Could not save player");
 	}*/
 	
+	public static final File SAVE_PATH = new File("data/characters/");
+	
 	/**
 	 * (non-Javadoc)
 	 * @throws FileNotFoundException 
@@ -45,7 +47,7 @@ public class AccountParser implements IOParser<Account> {
 	 */
 	@Override
 	public Account load(Object... params) throws FileNotFoundException {
-		File character = new File(getPath()+params[0]+".json");
+		File character = new File(getPath(), params[0]+".json");
 
 		JsonParser parser = new JsonParser();
 		Object parsed = parser.parse(new FileReader(character));
@@ -57,10 +59,13 @@ public class AccountParser implements IOParser<Account> {
 		String email = obj.get("email").getAsString();
 		int age = obj.get("age").getAsInt();
 		String dateofbirth = obj.get("dateofbirth").getAsString();
-		String permission = obj.get("rank").getAsString();
+		int rankID = obj.get("rank").getAsInt();
 		
-		Rank rank = null;
-		switch (permission.toUpperCase()) {
+		Rank rank = Rank.forID(rankID);
+		if (rank == null) {
+			rank = Rank.PLAYER;
+		}
+		/*switch (permission.toUpperCase()) {
 		case "ADMINISTRATOR":
 			rank = Rank.ADMINISTRATOR;
 			break;
@@ -70,7 +75,7 @@ public class AccountParser implements IOParser<Account> {
 		case "PLAYER":
 			rank = Rank.PLAYER;
 			break;
-		}
+		}*/
 		
 		JsonArray loc = obj.get("location").getAsJsonArray();
 		int x=0, y=0, z=0;
@@ -100,24 +105,26 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.addProperty("username", p.getAccount().getUsername().getAccountName());
 		obj.addProperty("password", p.getAccount().getPassword().getPassword());
-		obj.addProperty("email", p.getAccount().getEmail().getEmail());
-		obj.addProperty("age", p.getAccount().getAge().getAge());
-		obj.addProperty("dateofbirth", p.getAccount().getDateOfBirth().getDateOfBirth());
-		obj.addProperty("rank", p.getAccount().getRank().name());
+		obj.addProperty("email", (p.getAccount().getEmail() == null ? "null" : p.getAccount().getEmail().getEmail()));
+		obj.addProperty("age", (p.getAccount().getAge() == null ? -1 : p.getAccount().getAge().getAge()));
+		obj.addProperty("dateofbirth", (p.getAccount().getDateOfBirth() == null ? "null" : p.getAccount().getDateOfBirth().getDateOfBirth()));
+		obj.addProperty("rank", p.getAccount().getRank().getID());
 		
 		JsonArray location = new JsonArray();
 		JsonObject coords = new JsonObject();
-		coords.addProperty("x", p.getLastTile().getX());
-		coords.addProperty("y", p.getLastTile().getY());
-		coords.addProperty("z", p.getLastTile().getPlane());
+		coords.addProperty("x", p.getTile().getX());
+		coords.addProperty("y", p.getTile().getY());
+		coords.addProperty("z", p.getTile().getPlane());
 		location.add(coords);
 		obj.add("location", location);
 		
 		obj.add("skills", p.getSkillManager().serialise());
 		
-		File file = new File(getPath()+p.getAccount().getUsername().getAccountName()+".json");
-		if (file.exists())
-			file.delete();
+		System.out.println("Saving player...");
+		
+		File file = new File(getPath(), p.getAccount().getUsername().getAccountName()+".json");
+		/*if (file.exists())
+			file.delete();*/
 		try {
 			FileWriter writer = new FileWriter(file);
 			writer.write(obj.toString());
@@ -136,12 +143,12 @@ public class AccountParser implements IOParser<Account> {
 	 * @see org.virtue.network.io.IOParser#getPath()
 	 */
 	@Override
-	public String getPath() {
-		return "data/characters/";
+	public File getPath() {
+		return SAVE_PATH;
 	}
 	
 	public boolean exists(String name) {
-		File file = new File(getPath()+name+".json");
+		File file = new File(getPath(), name+".json");
 		if (file.exists())
 			return true;
 		else

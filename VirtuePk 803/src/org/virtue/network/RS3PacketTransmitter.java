@@ -10,7 +10,7 @@ import org.virtue.network.session.Session;
  * @author Taylor Moon
  * @since Jan 25, 2014
  */
-public class RS2PacketTransmitter {
+public class RS3PacketTransmitter {
 	
 	
 	/**
@@ -21,7 +21,7 @@ public class RS2PacketTransmitter {
 	/**
 	 * Constructs a new {@code RS2PacketTransmitter.java}.
 	 */
-	public RS2PacketTransmitter(Session session) {
+	public RS3PacketTransmitter(Session session) {
 		this.session = session;
 	}
 	
@@ -30,13 +30,14 @@ public class RS2PacketTransmitter {
 	 * @param buffer The {@link RS2PacketBuilder} containing the message.
 	 */
 	public ChannelFuture processPacket(final RS3PacketBuilder buffer) {
+		ChannelFuture response = null;
 		if (session.getContext().getChannel().isConnected()) {
 			ChannelBuffer b = ChannelBuffers.copiedBuffer(buffer.buffer(), 0, buffer.getPosition());
 			synchronized (session.getContext().getChannel()) {
-				return session.getContext().getChannel().write(b);
+				response = session.getContext().getChannel().write(b);
 			}
 		}
-		return null;
+		return response;
 	}
 	
 	/**

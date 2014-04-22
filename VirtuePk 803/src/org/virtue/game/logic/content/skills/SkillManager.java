@@ -79,8 +79,8 @@ public class SkillManager extends AbstractInterface {
 	
 	public JsonArray serialise () {
 		JsonArray skillsData = new JsonArray();
-		JsonObject skill = new JsonObject();
 		for (SkillData s : skills) {
+			JsonObject skill = new JsonObject();
 			skill.addProperty("id", s.getSkill().getID());
 			skill.addProperty("xp", s.getExperience());
 			skill.addProperty("level", s.getCurrentLevel());

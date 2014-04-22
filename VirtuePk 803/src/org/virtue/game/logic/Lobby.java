@@ -2,6 +2,7 @@ package org.virtue.game.logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.virtue.game.logic.node.entity.player.Player;
 
@@ -14,7 +15,7 @@ public class Lobby {
 	/**
 	 * Represents the players.
 	 */
-	private static List<Player> players = new ArrayList<>();
+	private static CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<>();
 	
 	/**
 	 * Represents the worlds in this lobby.
@@ -43,7 +44,7 @@ public class Lobby {
 	 * Adds a {@link Player} to this {@link World}.
 	 * @param player The player to add.
 	 */
-	public static synchronized void addPlayer(Player player) {
+	public static void addPlayer(Player player) {
 		players.add(player);
 	}
 
@@ -51,7 +52,7 @@ public class Lobby {
 	 * Removes a {@link Player} from this {@link World}.
 	 * @param player The player to remove.
 	 */
-	public static synchronized void removePlayer(Player player) {
+	public static void removePlayer(Player player) {
 		removePlayer(player.getAccount().getUsername().getAccountName());
 	}
 	

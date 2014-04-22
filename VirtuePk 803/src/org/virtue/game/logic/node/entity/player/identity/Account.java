@@ -1,6 +1,7 @@
 package org.virtue.game.logic.node.entity.player.identity;
 
 import org.jboss.netty.channel.Channel;
+import org.virtue.Constants;
 import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.network.session.Session;
@@ -60,7 +61,10 @@ public class Account extends AttributeSet {
 	
 	private DateOfBirth dateofbirth;
 	
-	private Tile tile;
+	/**
+	 * Represents the default tile for the player
+	 */
+	private Tile tile = new Tile(Constants.DEFAULT_LOCATION);
 	
 	private JsonObject charFile;
 	

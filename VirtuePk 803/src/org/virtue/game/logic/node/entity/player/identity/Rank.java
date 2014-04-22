@@ -1,5 +1,7 @@
 package org.virtue.game.logic.node.entity.player.identity;
 
+import org.virtue.game.logic.social.ChatType;
+
 /**
  * @author Taylor
  * @date Jan 16, 2014
@@ -33,5 +35,20 @@ public enum Rank {
 	 */
 	public int getID () {
 		return code;
+	}
+	
+	public static Rank forID (int id) {
+		if (id < Rank.values().length) {
+			Rank rank = Rank.values()[id];
+			if (rank.code == id) {
+				return rank;
+			}
+		}
+		for (Rank r : Rank.values()) {
+			if (r.code == id) {
+				return r;
+			}
+		}
+		return null;
 	}
 }

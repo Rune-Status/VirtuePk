@@ -1,6 +1,7 @@
 package org.virtue.network.io.channel.maps;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import org.virtue.network.io.IOParser;
  */
 public class NPCSpawnParser implements IOParser<List<NPC>> {
 
+	public static final File SAVE_PATH = new File("data/landscape/NPCSpawns.txt");
+	
 	/**
 	 * (non-Javadoc)
 	 * @see org.virtue.network.io.IOParser#load(java.lang.Object)
@@ -53,8 +56,8 @@ public class NPCSpawnParser implements IOParser<List<NPC>> {
 	 * @see org.virtue.network.io.IOParser#getPath()
 	 */
 	@Override
-	public String getPath() {
-		return "data/landscape/NPCSpawns.txt";
+	public File getPath() {
+		return SAVE_PATH;
 	}
 
 }

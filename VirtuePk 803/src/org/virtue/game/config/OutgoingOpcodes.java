@@ -23,11 +23,16 @@ package org.virtue.game.config;
  * @author Sundays211
  */
 public class OutgoingOpcodes {
-	public static final int KEEP_ALIVE_PACKET = 155;//803
+	
+	//Configuration related
 	public static final int LARGE_VARP_PACKET = 153;//803
 	public static final int SMALL_VARP_PACKET = 96;//803
 	public static final int LARGE_CS2_VARP_PACKET = 154;//803
 	public static final int SMALL_CS2_VARP_PACKET = 7;//803
+	
+	//Item containers
+	public static final int ITEMS_PACKET = 130;//803
+	public static final int UPDATE_ITEMS_PACKET = 5;//803
 	
 	//Logout
 	public static final int LOBBY_LOGOUT_PACKET = 69;//803
@@ -41,9 +46,22 @@ public class OutgoingOpcodes {
 	public static final int NPC_UPDATE_PACKET = 27;//803
 	public static final int LARGE_NPC_UPDATE_PACKET = 150;//803
 	
+	//World tile related
+	public static final int ADD_GROUND_ITEM = 149;//803
+	public static final int REMOVE_GROUND_ITEM_PACKET = 110;//803
+	public static final int PROJECTILE_PACKET = 90;//803
+	public static final int WORLD_TILE_PACKET = 122;//803
+	public static final int TILE_MESSAGE_PACKET = 45;//803
+	public static final int SPAWN_OBJECT_PACKET = 111;//803
+	public static final int DESTROY_OBJECT_PACKET = 114;//803
+	
+	//Miscellaneous
 	public static final int PLAYER_OPTION_PACKET = 3;//803
 	public static final int RUN_ENERGY_PACKET = 94;//803
 	public static final int SKILL_DATA_PACKET = 4;//803
+	public static final int KEEP_ALIVE_PACKET = 155;//803
+	public static final int WORLD_LIST_PACKET = 98;//803
+	public static final int SYSTEM_UPDATE_PACKET = 89;//803
 	
 	//Interface-related
 	public static final int INTERFACE_PACKET = 49;//803
@@ -61,12 +79,10 @@ public class OutgoingOpcodes {
 	//Chat-related
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803
 	public static final int ONLINE_STATUS_PACKET = 43;//803
-        public static final int TRADE_PUBLIC_STATUS_PACKET = 128;//803
+	public static final int TRADE_PUBLIC_STATUS_PACKET = 128;//803
 	public static final int FRIENDS_PACKET = 56;//803
 	public static final int IGNORES_PACKET = 68;//803
 	public static final int FRIENDS_CHANNEL_PACKET = 82;
 	public static final int CLAN_CHANNEL_PACKET = 47;//795
 	
-	public static final int ITEMS_CONTAINER = 130;//803
-	public static final int WORLD_LIST_PACKET = 98;//803
 }

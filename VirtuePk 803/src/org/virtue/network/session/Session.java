@@ -1,7 +1,7 @@
 package org.virtue.network.session;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
-import org.virtue.network.RS2PacketTransmitter;
+import org.virtue.network.RS3PacketTransmitter;
 
 /**
  * @author Taylor
@@ -15,9 +15,9 @@ public abstract class Session {
 	private final ChannelHandlerContext context;
 	
 	/**
-	 * Represents the {@link RS2PacketTransmitter} responsible for processing outgoing packets.
+	 * Represents the {@link RS3PacketTransmitter} responsible for processing outgoing packets.
 	 */
-	private final RS2PacketTransmitter TRASMITTER = new RS2PacketTransmitter(this);
+	private final RS3PacketTransmitter TRASMITTER = new RS3PacketTransmitter(this);
 	
 	/**
 	 * Constructs a new {@code Session.java}.
@@ -48,7 +48,7 @@ public abstract class Session {
 	/**
 	 * @return The transmitter
 	 */
-	public RS2PacketTransmitter getTransmitter() {
+	public RS3PacketTransmitter getTransmitter() {
 		return TRASMITTER;
 	}
 }

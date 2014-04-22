@@ -11,7 +11,7 @@ public class ItemsEncoder implements PacketEncoder<ItemsMessage> {
 	@Override
 	public RS3PacketBuilder buildPacket(ItemsMessage node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacketVarShort(OutgoingOpcodes.ITEMS_CONTAINER);
+		buffer.putPacketVarShort(OutgoingOpcodes.ITEMS_PACKET);
 		buffer.putShort(node.getKey());
 		buffer.put(node.isNegitiveKey() ? 0x1 : 0);
 		buffer.putShort(node.getItems().length);
