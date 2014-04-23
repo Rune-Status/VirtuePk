@@ -24,6 +24,15 @@ public class SocialActionHandler extends PacketHandler<WorldSession> {
 		case IncommingOpcodes.REMOVE_IGNORE_PACKET:
 			friendManager.removeIgnore(name);
 			break;
+		case IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET:
+			System.out.println("Unhandled request to join/leave friends chat: "+name);
+			break;
+		case IncommingOpcodes.IGNORE_NOTE_PACKET:
+			friendManager.setNote(name, getFlag("note", ""), false);
+			break;
+		case IncommingOpcodes.FRIEND_NOTE_PACKET:
+			friendManager.setNote(name, getFlag("note", ""), true);
+			break;
 		}
 	}
 

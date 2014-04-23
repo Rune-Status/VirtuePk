@@ -11,9 +11,14 @@ public class SocialActionDecoder implements PacketDecoder<SocialActionHandler> {
 	@Override
 	public SocialActionHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		SocialActionHandler handler = new SocialActionHandler();
+		if (opcode == IncommingOpcodes.FRIEND_NOTE_PACKET) {
+			handler.putFlag("note", packet.getString());			
+		}
 		handler.putFlag("name", packet.getString());
 		if (opcode == IncommingOpcodes.ADD_IGNORE_PACKET) {
 			handler.putFlag("tillLogout", (packet.get() == 1));
+		} else if (opcode == IncommingOpcodes.IGNORE_NOTE_PACKET) {
+			handler.putFlag("note", packet.getString());
 		}
 		handler.putFlag("opcode", opcode);
 		return handler;
@@ -23,7 +28,8 @@ public class SocialActionDecoder implements PacketDecoder<SocialActionHandler> {
 	public int[] getPossiblePackets() {
 		return new int[] { IncommingOpcodes.ADD_FRIEND_PACKET, IncommingOpcodes.REMOVE_FRIEND_PACKET,
 				IncommingOpcodes.ADD_IGNORE_PACKET, IncommingOpcodes.REMOVE_IGNORE_PACKET,
-				IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET };
+				IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET, IncommingOpcodes.IGNORE_NOTE_PACKET,
+				IncommingOpcodes.FRIEND_NOTE_PACKET };
 	}
 
 }

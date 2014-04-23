@@ -26,4 +26,6 @@ public interface FriendManager {
 	
 	public void sendPrivateMessage (String recipient, String message);
 	
+	public void setNote (String displayName, String note, boolean isFriendNote);
+	
 }

@@ -9,9 +9,8 @@ import org.virtue.network.protocol.messages.InterfaceMessage;
 
 public class FriendsList extends AbstractInterface {
 	
-	public static InterfaceMessage dialog = new InterfaceMessage(1418, 233, RSInterface.GAME_SCREEN, true);
-	public static InterfaceMessage input = new InterfaceMessage(1469, 0, 1418, true);
-
+	public static InterfaceMessage noteEdit = new InterfaceMessage(451, 234, RSInterface.GAME_SCREEN, false);
+		
 	public FriendsList(Player p) {
 		super(RSInterface.FRIENDS_LIST, p);
 	}
@@ -25,32 +24,39 @@ public class FriendsList extends AbstractInterface {
 	@Override
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
 		switch (component) {
+		case 23://Ignore option
+			if (button.equals(ActionButton.ONE)) {
+				getPlayer().getPacketDispatcher().dispatchInterface(noteEdit);
+				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
+				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9206, slot1/2, 1, 29556758, 29556742, 29556743));
+			}
+			break;
 		case 42://Show "add friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(103));
 			break;
 		case 44://Show "remove friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(104));
 			break;
 		case 71://Show "add ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(105));			
 			break;
 		case 54://Show "remove ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1419));			
 			break;
 		default:
-			System.out.println("Friends list button pressed: component="+component+", button="+button+", slot1="+slot1+", slot2="+slot2);
+			System.out.println("Unhandled friends list button: component="+component+", button="+button+", slot1="+slot1+", slot2="+slot2);
 			break;
 		}
 		

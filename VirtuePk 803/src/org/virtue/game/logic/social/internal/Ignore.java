@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Ieldor.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social;
+package org.virtue.game.logic.social.internal;
 
 /**
  * An {@link Object} that represents a player's ignore
@@ -48,6 +48,10 @@ public class Ignore {
 	
 	public String getPreviousName () {
 		return previousName;
+	}
+	
+	protected void setNote (String note) {
+		this.note = note;
 	}
 	
 	public String getNote () {

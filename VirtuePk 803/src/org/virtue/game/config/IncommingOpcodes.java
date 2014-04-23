@@ -88,6 +88,8 @@ public class IncommingOpcodes {
 	public final static int ADD_IGNORE_PACKET = 81;//803
 	public final static int REMOVE_IGNORE_PACKET = 76;//803
 	public final static int FRIEND_OPTION_PACKET = 2;//803
+	public final static int FRIEND_NOTE_PACKET = 108;//803
+	public final static int IGNORE_NOTE_PACKET = 77;//803
 	
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803
@@ -95,10 +97,10 @@ public class IncommingOpcodes {
 	public final static int PRIVATE_MESSAGE_PACKET = 44;//803
 	
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
-        public final static int ITEM_ON_ITEM_PACKET = 82;//803
+	public final static int ITEM_ON_ITEM_PACKET = 82;//803
 	
 	private static final int[] SIZES_803 = new int[120];
-	static {//TODO Identify packets
+	static {
 		SIZES_803[0] = -1;
 		SIZES_803[1] = -2;
 		SIZES_803[2] = -1;

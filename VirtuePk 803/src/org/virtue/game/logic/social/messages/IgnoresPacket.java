@@ -1,6 +1,6 @@
 package org.virtue.game.logic.social.messages;
 
-import org.virtue.game.logic.social.Ignore;
+import org.virtue.game.logic.social.internal.Ignore;
 
 public class IgnoresPacket {
 	

@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.packet.encoder.impl.chat;
 
 import org.virtue.game.config.OutgoingOpcodes;
-import org.virtue.game.logic.social.Ignore;
+import org.virtue.game.logic.social.internal.Ignore;
 import org.virtue.game.logic.social.messages.IgnoresPacket;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;

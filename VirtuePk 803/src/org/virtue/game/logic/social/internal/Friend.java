@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Ieldor.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social;
+package org.virtue.game.logic.social.internal;
 
 import org.virtue.game.logic.WorldHub;
+import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 

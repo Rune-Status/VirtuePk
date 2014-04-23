@@ -1,6 +1,7 @@
 package org.virtue.game.logic.social;
 
 import org.virtue.game.logic.social.internal.InternalFriendManager;
+import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
@@ -45,7 +46,7 @@ public class ChatManager {
 	 */
 	public ChatManager (Player player) {
 		this.player = player;
-		friendManager = new InternalFriendManager(player);
+		friendManager = new InternalFriendManager(new SocialUser(player));
 	}
 	
 	/**
