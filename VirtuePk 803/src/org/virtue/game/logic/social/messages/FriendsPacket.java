@@ -2,19 +2,19 @@ package org.virtue.game.logic.social.messages;
 
 import org.virtue.game.logic.social.Friend;
 
-public class FriendsMessage {
+public class FriendsPacket {
 
 	private Friend[] friends;
 	
 	private boolean isNameChange;
 	private boolean fullUpdate;
 	
-	public FriendsMessage (Friend[] friends) {
+	public FriendsPacket (Friend[] friends) {
 		this.friends = friends;
 		fullUpdate = true;
 	}
 	
-	public FriendsMessage (Friend friend, boolean isNameChange) {
+	public FriendsPacket (Friend friend, boolean isNameChange) {
 		this.isNameChange = isNameChange;
 		friends = new Friend[] { friend.clone() };
 	}

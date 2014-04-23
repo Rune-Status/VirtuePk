@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.region;
+package org.virtue.game.logic.region;
 
 import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.World;

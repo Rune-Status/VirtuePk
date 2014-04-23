@@ -34,15 +34,15 @@ public class Friend {
 	private String worldName = "";
 	private int worldNodeID = 0;
 	private int worldFlags = 0;
-	private int friendsChatRank = 0;
+	private ChannelRank friendsChatRank;
 	private boolean isReferred = false;
 	private String note = "";
 	
 	public Friend (String username, boolean referred) {
-		this(username, referred, 0, "");
+		this(username, referred, ChannelRank.FRIEND, "");
 	}
 	
-	public Friend (String username, boolean referred, int fcRank, String note) {
+	public Friend (String username, boolean referred, ChannelRank fcRank, String note) {
 		this.username = username;
 		this.currentName = StringUtils.format(username, FormatType.NAME);
 		this.isReferred = referred;
@@ -74,7 +74,7 @@ public class Friend {
 		this.worldFlags = flags;
 	}
 	
-	protected void setFcRank (int rank) {
+	protected void setFcRank (ChannelRank rank) {
 		this.friendsChatRank = rank;
 	}
 	
@@ -106,7 +106,7 @@ public class Friend {
 		return worldFlags;
 	}
 	
-	public int getFcRank () {
+	public ChannelRank getFcRank () {
 		return friendsChatRank;
 	}
 	

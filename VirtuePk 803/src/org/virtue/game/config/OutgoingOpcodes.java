@@ -82,7 +82,8 @@ public class OutgoingOpcodes {
 	public static final int TRADE_PUBLIC_STATUS_PACKET = 128;//803
 	public static final int FRIENDS_PACKET = 56;//803
 	public static final int IGNORES_PACKET = 68;//803
-	public static final int FRIENDS_CHANNEL_PACKET = 82;
+	public static final int FRIENDS_CHANNEL_PACKET = 8;//803
+	public static final int FRIENDS_CHANNEL_UPDATE_PACKET = 119;//803
 	public static final int CLAN_CHANNEL_PACKET = 47;//795
 	
 }

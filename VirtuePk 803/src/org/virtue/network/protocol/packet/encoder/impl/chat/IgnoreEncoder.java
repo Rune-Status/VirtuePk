@@ -2,14 +2,14 @@ package org.virtue.network.protocol.packet.encoder.impl.chat;
 
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.social.Ignore;
-import org.virtue.game.logic.social.messages.IgnoresMessage;
+import org.virtue.game.logic.social.messages.IgnoresPacket;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
-public class IgnoreEncoder implements PacketEncoder<IgnoresMessage> {
+public class IgnoreEncoder implements PacketEncoder<IgnoresPacket> {
 
 	@Override
-	public RS3PacketBuilder buildPacket(IgnoresMessage node) {
+	public RS3PacketBuilder buildPacket(IgnoresPacket node) {
 		RS3PacketBuilder builder = new RS3PacketBuilder();
 		builder.putPacketVarShort(OutgoingOpcodes.IGNORES_PACKET);
 		if (node.isFullUpdate()) {

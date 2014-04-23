@@ -16,4 +16,6 @@ public class RSInterface {
         
         public static final int SKILLS = 1466;
         
+        public static final int GAME_SCREEN = 1477;
+        
 }

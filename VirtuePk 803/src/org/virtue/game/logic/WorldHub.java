@@ -2,7 +2,7 @@ package org.virtue.game.logic;
 
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.region.RegionManager;
+import org.virtue.game.logic.region.RegionManager;
 import org.virtue.utility.EntityList;
 
 /**

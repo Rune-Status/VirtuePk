@@ -1,5 +1,6 @@
 package org.virtue.game.logic.social;
 
+import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
@@ -32,7 +33,11 @@ public class ChatManager {
 	 */
 	private OnlineStatus onlineStatus = OnlineStatus.EVERYONE;
 	
-	private FriendManager friendManager;
+	private final FriendManager friendManager;
+	
+	private static FriendsChatManager friendsChatManager;
+	
+	private String currentFriendsChat = null;
 	
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
@@ -59,6 +64,10 @@ public class ChatManager {
 		chatType = type;
 	}
 	
+	/**
+	 * Gets the manager for this player's friends and ignores
+	 * @return	The friend manager
+	 */
 	public FriendManager getFriendManager () {
 		return friendManager;
 	}
@@ -97,11 +106,11 @@ public class ChatManager {
 			p.getAccount().getSession().getTransmitter().send(PublicMessageEncoder.class, msgObject);
 		}
 	}
-        
-        public void setOnlineStatus (OnlineStatus status) {
-            this.onlineStatus = status;
-            friendManager.setOnlineStatus(status);
-        }
+	
+	public void setOnlineStatus (OnlineStatus status) {
+		this.onlineStatus = status;
+		friendManager.setOnlineStatus(status);
+	}
 	
 	public static byte[] generateMessageHash () {
 		byte[] hash = new byte[5];

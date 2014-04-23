@@ -16,7 +16,7 @@ import org.virtue.game.core.threads.AsynchronousThreadFactory;
 import org.virtue.game.core.threads.LogicThreadFactory;
 import org.virtue.game.core.threads.SynchronousThreadFactory;
 import org.virtue.game.core.threads.WorkerThreadFactory;
-import org.virtue.game.logic.node.entity.region.RegionUpdateManager;
+import org.virtue.game.logic.region.RegionUpdateManager;
 import org.virtue.script.GroovyManager;
 import org.virtue.utility.GameClock;
 import org.virtue.utility.TimeUtil;

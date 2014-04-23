@@ -14,7 +14,7 @@ import org.virtue.game.logic.node.entity.player.identity.Email;
 import org.virtue.game.logic.node.entity.player.identity.Password;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.entity.player.identity.Username;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.io.IOParser;
 
 import com.google.gson.JsonArray;

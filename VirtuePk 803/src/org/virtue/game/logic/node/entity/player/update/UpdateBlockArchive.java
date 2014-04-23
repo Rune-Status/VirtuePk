@@ -12,7 +12,7 @@ import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
 import org.virtue.game.logic.node.entity.player.update.movement.Movement;
 import org.virtue.game.logic.node.entity.player.update.ref.Animation;
 import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 /**
  * @author Taylor

@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.region;
+package org.virtue.game.logic.region;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

@@ -2,7 +2,7 @@ package org.virtue.game.logic;
 
 import org.virtue.Constants;
 import org.virtue.game.logic.node.entity.npc.NPC;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 
 public class World extends WorldHub {

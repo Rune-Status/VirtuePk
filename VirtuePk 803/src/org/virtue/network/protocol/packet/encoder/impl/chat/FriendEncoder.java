@@ -2,14 +2,14 @@ package org.virtue.network.protocol.packet.encoder.impl.chat;
 
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.social.Friend;
-import org.virtue.game.logic.social.messages.FriendsMessage;
+import org.virtue.game.logic.social.messages.FriendsPacket;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
-public class FriendEncoder implements PacketEncoder<FriendsMessage> {
+public class FriendEncoder implements PacketEncoder<FriendsPacket> {
 
 	@Override
-	public RS3PacketBuilder buildPacket(FriendsMessage node) {
+	public RS3PacketBuilder buildPacket(FriendsPacket node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_PACKET);
 		if (node.isFullUpdate()) {
@@ -36,7 +36,7 @@ public class FriendEncoder implements PacketEncoder<FriendsMessage> {
 		buffer.putString(f.getName());//Current display name
 		buffer.putString(f.getPrevName() == null ? "" : f.getPrevName());//Previous display name, or empty string if null
 		buffer.putShort(putOnline ? f.getWorldNodeID() : 0);//NodeID (world ID) of friend, or 0 if offline
-		buffer.put(f.getFcRank());//Rank in player's friends chat
+		buffer.put(f.getFcRank().getID());//Rank in player's friends chat
 		buffer.put(flags);//Flags (0x2=referred, 0x1=recruited)
 		if (putOnline) {
 			buffer.putString(f.getWorldName());//Friend world name

@@ -2,19 +2,19 @@ package org.virtue.game.logic.social.messages;
 
 import org.virtue.game.logic.social.Ignore;
 
-public class IgnoresMessage {
+public class IgnoresPacket {
 	
 	private Ignore[] ignores;
 	
 	private boolean isNameChange;
 	private boolean fullUpdate;
 	
-	public IgnoresMessage (Ignore[] ignores) {
+	public IgnoresPacket (Ignore[] ignores) {
 		this.ignores = ignores;
 		fullUpdate = true;
 	}
 	
-	public IgnoresMessage (Ignore i, boolean isNameChange) {
+	public IgnoresPacket (Ignore i, boolean isNameChange) {
 		ignores = new Ignore[] { i.clone() };
 		this.isNameChange = isNameChange;
 	}

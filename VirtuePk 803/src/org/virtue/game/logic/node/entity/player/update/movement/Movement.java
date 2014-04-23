@@ -6,7 +6,7 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 /**
  * @author Taylor

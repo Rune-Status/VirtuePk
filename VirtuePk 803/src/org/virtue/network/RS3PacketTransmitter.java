@@ -19,7 +19,7 @@ public class RS3PacketTransmitter {
 	private Session session;
 	
 	/**
-	 * Constructs a new {@code RS2PacketTransmitter.java}.
+	 * Constructs a new {@code RS3PacketTransmitter.java}.
 	 */
 	public RS3PacketTransmitter(Session session) {
 		this.session = session;
@@ -27,7 +27,7 @@ public class RS3PacketTransmitter {
 	
 	/**
 	 * Transmits a message to the client
-	 * @param buffer The {@link RS2PacketBuilder} containing the message.
+	 * @param buffer The {@link RS3PacketBuilder} containing the message.
 	 */
 	public ChannelFuture processPacket(final RS3PacketBuilder buffer) {
 		ChannelFuture response = null;

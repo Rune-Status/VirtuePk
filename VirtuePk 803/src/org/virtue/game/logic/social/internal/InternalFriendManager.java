@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social;
+package org.virtue.game.logic.social.internal;
 
+import org.virtue.game.logic.social.ChannelRank;
+import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,8 +26,12 @@ import org.virtue.Launcher;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.WorldHub;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.social.messages.FriendsMessage;
-import org.virtue.game.logic.social.messages.IgnoresMessage;
+import org.virtue.game.logic.social.Friend;
+import org.virtue.game.logic.social.FriendManager;
+import org.virtue.game.logic.social.Ignore;
+import org.virtue.game.logic.social.OnlineStatus;
+import org.virtue.game.logic.social.messages.FriendsPacket;
+import org.virtue.game.logic.social.messages.IgnoresPacket;
 import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -50,14 +57,30 @@ public class InternalFriendManager implements FriendManager {
 		onlinePlayers.put("test44", new InternalFriendManager(null));
 	}
 	
+	protected static boolean isOnline (String name) {
+		return onlinePlayers.containsKey(name);
+	}
+	
+	protected static InternalFriendManager getPlayer (String name) {
+		return onlinePlayers.get(name);
+	}
+	
 	private Player player;
 	//private NameManager nameManager;
 	
 	private static final int FRIENDS_LIST_MAX = 400;
 	private static final int IGNORE_LIST_MAX = 400;
 	
-	private HashMap<String, Friend> friends = new HashMap<String, Friend>(FRIENDS_LIST_MAX);
-	private HashMap<String, Ignore> ignores = new HashMap<String, Ignore>(IGNORE_LIST_MAX);
+	public enum FcPermission {
+		JOIN, TALK, KICK
+	}
+	
+	private final EnumMap<FcPermission, ChannelRank> fcPermissions = new EnumMap<FcPermission, ChannelRank>(FcPermission.class);
+	
+	private String channelName = "Test";//TODO: Replace this with "null" when done
+	
+	private final HashMap<String, Friend> friends = new HashMap<String, Friend>(FRIENDS_LIST_MAX);
+	private final HashMap<String, Ignore> ignores = new HashMap<String, Ignore>(IGNORE_LIST_MAX);
 	
 	private OnlineStatus onlineStatus = OnlineStatus.EVERYONE;
 	
@@ -67,11 +90,18 @@ public class InternalFriendManager implements FriendManager {
 	
 	public InternalFriendManager (Player player) {
 		this.player = player;
+		fcPermissions.put(FcPermission.JOIN, ChannelRank.GUEST);
+		fcPermissions.put(FcPermission.TALK, ChannelRank.FRIEND);
+		fcPermissions.put(FcPermission.KICK, ChannelRank.OWNER);
 	}
 	
 	
 	public String getProtocolName () {
 		return player.getAccount().getUsername().getAccountNameAsProtocol();
+	}
+	
+	public String getDisplayName () {
+		return (player == null ? "Null" : player.getAccount().getUsername().getName());
 	}
 	
 	@Override
@@ -107,8 +137,8 @@ public class InternalFriendManager implements FriendManager {
 				i.setDisplayNames(nameData.getDisplayName(), nameData.getPrevName());
 			}*/
 		}
-		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsMessage(friends.values().toArray(new Friend[friends.size()])));
-		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresMessage(ignores.values().toArray(new Ignore[ignores.size()])));
+		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friends.values().toArray(new Friend[friends.size()])));
+		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignores.values().toArray(new Ignore[ignores.size()])));
 		onlinePlayers.put(player.getAccount().getUsername().getAccountNameAsProtocol(), this);
 		sendStatusUpdate(this, false);
 		System.out.println("Registered "+player.getAccount().getUsername().getName()+" on friend server.");
@@ -118,6 +148,32 @@ public class InternalFriendManager implements FriendManager {
 	public void shutdown () {
 		this.currentWorld = null;
 		sendStatusUpdate(this, false);
+	}
+	
+	protected HashMap<String, ChannelRank> getChannelRanks () {
+		HashMap<String, ChannelRank> ranks = new HashMap<String, ChannelRank>(friends.size());
+		synchronized (friends) {
+			for (Friend f : friends.values()) {
+				ranks.put(f.username, f.getFcRank());
+			}
+		}
+		return ranks;
+	}
+	
+	protected ArrayList<String> getChannelBans () {
+		ArrayList<String> bans;
+		synchronized (ignores) {
+			bans = new ArrayList<String>(ignores.keySet());
+		}
+		return bans;
+	}
+	
+	protected ChannelRank getPermission (FcPermission p) {
+		return fcPermissions.get(p);
+	}
+	
+	protected String getChannelName () {
+		return channelName;
 	}
 	
 	/*public void serialise (DataOutputStream output) throws IOException {
@@ -217,7 +273,7 @@ public class InternalFriendManager implements FriendManager {
 			if (p2.isLobby) {
 				f.setWorld(1100, "Lobby", 0);
 			}
-			player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsMessage(f, isNameChange));
+			player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(f, isNameChange));
 		}
 	}
 
@@ -274,7 +330,7 @@ public class InternalFriendManager implements FriendManager {
 			friendData.setFriendStatus(this, false);//Updates the online status displayed of the current player visible to the player who was removed
 		}
 		//System.out.println("Adding friend: "+displayName);
-		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsMessage(friend, false));
+		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friend, false));
 	}
 
 	@Override
@@ -337,7 +393,7 @@ public class InternalFriendManager implements FriendManager {
 			}
 			ignores.put(protocolName, ignore);
 		}
-		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresMessage(ignore, false));
+		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignore, false));
 	}
 
 	@Override

@@ -10,10 +10,10 @@ import org.virtue.game.logic.content.combat.ability.ActionBar;
 import org.virtue.game.logic.content.skills.SkillManager;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
-import org.virtue.game.logic.node.entity.region.Tile;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.game.logic.social.ChatManager;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
@@ -186,7 +186,8 @@ public class Player extends Entity {
 		}
 		exists = false;
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
-			World.getWorld().removePlayer(this); 
+			World.getWorld().removePlayer(this);
+			IOHub.getAccountIo().save(this);
 		}		
 	}
 

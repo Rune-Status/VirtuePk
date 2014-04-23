@@ -3,7 +3,7 @@ package org.virtue.network.protocol.handlers.commands;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 public class SpawnNpc implements Command {

@@ -6,9 +6,9 @@ import java.util.List;
 
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.npc.NPC;
-import org.virtue.game.logic.node.entity.region.LandscapeRepository;
-import org.virtue.game.logic.node.entity.region.RegionUpdateEvent;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.LandscapeRepository;
+import org.virtue.game.logic.region.RegionUpdateEvent;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**

@@ -3,7 +3,7 @@ package org.virtue.game.logic.node.entity.npc;
 import org.virtue.cache.def.NPCDefinition;
 import org.virtue.cache.def.NPCDefinitionLoader;
 import org.virtue.game.logic.node.entity.Entity;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 /**
  * @author Taylor

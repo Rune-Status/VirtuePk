@@ -1,7 +1,7 @@
 package org.virtue.game.logic.node.object;
 
 import org.virtue.game.logic.node.Node;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 /**
  * @author Taylor

@@ -77,6 +77,10 @@ public class SkillManager extends AbstractInterface {
 		//player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(6504, 1, 0, 0, 0, 4420));
 	}
 	
+	/**
+	 * Serialises the current skill data into a {@link com.google.gson.JsonArray}
+	 * @return	A JsonArray containing the skill data
+	 */
 	public JsonArray serialise () {
 		JsonArray skillsData = new JsonArray();
 		for (SkillData s : skills) {

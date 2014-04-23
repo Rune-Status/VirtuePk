@@ -2,7 +2,7 @@ package org.virtue;
 
 import java.math.BigInteger;
 
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 
 /**
  * @author Belthazar
@@ -51,7 +51,7 @@ public class Constants {
 	 */
 	public static final String SERVER_TOKEN = "BgTFo+lHy/lilpFjXLk4n6pf9X/x/B6L";	
         
-        public static final int MAX_WALK_STEPS = 25;
+	public static final int MAX_WALK_STEPS = 25;
 	
 	public static final int[] NIS_CONFIG = new int[5000];
 

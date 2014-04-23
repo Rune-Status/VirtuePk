@@ -3,7 +3,7 @@ package org.virtue.game.logic.node.entity.player.identity;
 import org.jboss.netty.channel.Channel;
 import org.virtue.Constants;
 import org.virtue.game.core.AttributeSet;
-import org.virtue.game.logic.node.entity.region.Tile;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.session.Session;
 import org.virtue.utility.DisplayMode;
 
