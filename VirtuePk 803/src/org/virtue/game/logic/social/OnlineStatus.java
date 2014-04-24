@@ -35,7 +35,7 @@ public enum OnlineStatus {
 		return statusCode;
 	}
 	
-	public static OnlineStatus get (int code) {
+	public static OnlineStatus forCode (int code) {
 		switch (code) {
 		case 0:
 			return EVERYONE;

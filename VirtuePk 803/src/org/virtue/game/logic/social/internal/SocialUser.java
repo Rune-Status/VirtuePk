@@ -1,15 +1,20 @@
 package org.virtue.game.logic.social.internal;
 
+import org.virtue.Constants;
+import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.game.logic.social.messages.FriendsPacket;
 import org.virtue.game.logic.social.messages.IgnoresPacket;
+import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
+import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.IgnoreEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.PrivateMessageEncoder;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
@@ -23,8 +28,12 @@ public class SocialUser {
 	private final String protocolName;
 	
 	public SocialUser (Player p) {
+		this(p, p.getAccount().getUsername().getAccountNameAsProtocol());
+	}
+	
+	public SocialUser (Player p, String protocolName) {
 		this.player = p;
-		this.protocolName = p.getAccount().getUsername().getAccountNameAsProtocol();
+		this.protocolName = protocolName;
 	}
 	
 	@Deprecated
@@ -40,6 +49,14 @@ public class SocialUser {
 		return protocolName;
 	}
 	
+	public String getWorldName () {
+		return "World 1";
+	}
+	
+	public int getWorldID () {
+		return (player.isInWorld() ? 1 : 1100);
+	}
+	
 	public Rank getRank () {
 		return player.getAccount().getRank();
 	}
@@ -48,8 +65,31 @@ public class SocialUser {
 		player.getPacketDispatcher().dispatchMessage(message, type);
 	}
 	
+	public void sendPrivateMessage (PrivateMessage message) {
+		player.getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, message);
+	}
+	
 	public void sendFriendsChatPacket (FriendsChatPacket packet) {
-		player.getAccount().getSession().getTransmitter().send(FriendsChatEncoder.class, packet);
+		try {
+			player.getAccount().getSession().getTransmitter().send(FriendsChatEncoder.class, packet);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void sendLeaveFriendsChat () {
+		RS3PacketBuilder buffer = new RS3PacketBuilder();
+		buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_CHANNEL_PACKET);
+		buffer.endPacketVarShort();
+		player.getAccount().getSession().getTransmitter().send(buffer);
+	}
+	
+	public void sendFriendsList (Friend[] friends) {
+		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friends));
+	}
+	
+	public void sendIgnoreList(Ignore[] ignores) {
+		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignores));
 	}
 	
 	public void sendFriendUpdate (Friend friend, boolean isNameChange) {

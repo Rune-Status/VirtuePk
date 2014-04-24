@@ -14,17 +14,23 @@ public class FriendsChatEncoder implements PacketEncoder<FriendsChatPacket> {
 	@Override
 	public RS3PacketBuilder buildPacket(FriendsChatPacket node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacket(node.isFullUpdate() ? OutgoingOpcodes.FRIENDS_CHANNEL_PACKET 
-				: OutgoingOpcodes.FRIENDS_CHANNEL_UPDATE_PACKET);
 		if (node.isFullUpdate()) {
+			buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_CHANNEL_PACKET);
 			buffer.putString(node.getOwnerName());
 			buffer.put(0);//Since it's not handled on the client side, no point in using owner reply-to names
 			buffer.putString(node.getChannelName());
 			buffer.put(node.getKickReq().getID());
 			buffer.put(node.getUsers().length);
+		} else {
+			buffer.putPacketVarByte(OutgoingOpcodes.FRIENDS_CHANNEL_UPDATE_PACKET);
 		}
 		for (FriendsChatPacket.User user : node.getUsers()) {
 			packUser(user, buffer);
+		}
+		if (node.isFullUpdate()) {
+			buffer.endPacketVarShort();
+		} else {
+			buffer.endPacketVarByte();
 		}
 		return buffer;
 	}
@@ -37,7 +43,7 @@ public class FriendsChatEncoder implements PacketEncoder<FriendsChatPacket> {
 		}
 		buffer.putShort(user.getWorldNodeID());
 		if (user.getRank() == null) {
-			buffer.put(-128);
+			buffer.put(Byte.MIN_VALUE);
 		} else {
 			buffer.put(user.getRank().getID());
 			buffer.putString(user.getWorldName());

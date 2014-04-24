@@ -1,6 +1,7 @@
 package org.virtue.network.io;
 
 import org.virtue.network.io.channel.AccountParser;
+import org.virtue.network.io.channel.FriendsParser;
 import org.virtue.network.io.channel.maps.WorldMapIO;
 
 /**
@@ -15,9 +16,14 @@ public class IOHub {
 	private static final WorldMapIO WORLD_MAP_IO = new WorldMapIO();
 
 	/**
-	 * Represenst the player IO stream handler.
+	 * Represents the player IO stream handler.
 	 */
 	private static final AccountParser ACCOUNT_IO = new AccountParser();
+	
+	/**
+	 * Represents the friends/ignores IO stream handler
+	 */
+	private static final FriendsParser FRIEND_IO = new FriendsParser();
 	
 	/**
 	 * Loads any parsers that need to be ran on startup.
@@ -38,5 +44,12 @@ public class IOHub {
 	 */
 	public static AccountParser getAccountIo() {
 		return ACCOUNT_IO;
+	}
+	
+	/**
+	 * @return The friend IO manager
+	 */
+	public static FriendsParser getFriendsIO () {
+		return FRIEND_IO;
 	}
 }

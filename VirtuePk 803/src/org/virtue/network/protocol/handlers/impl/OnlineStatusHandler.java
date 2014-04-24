@@ -12,7 +12,7 @@ public class OnlineStatusHandler extends PacketHandler<WorldSession> {
 
     @Override
     public void handle(WorldSession session) {
-        OnlineStatus onlineStatus = OnlineStatus.get(getFlag("onlineStatus", -1));
+        OnlineStatus onlineStatus = OnlineStatus.forCode(getFlag("onlineStatus", -1));
         if (onlineStatus == null) {
             return;//Invalid online status
         }

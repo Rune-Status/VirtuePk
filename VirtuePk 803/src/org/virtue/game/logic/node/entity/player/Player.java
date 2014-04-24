@@ -185,6 +185,7 @@ public class Player extends Entity {
 			return;
 		}
 		exists = false;
+		chatManager.disconnect();
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this);
 			IOHub.getAccountIo().save(this);

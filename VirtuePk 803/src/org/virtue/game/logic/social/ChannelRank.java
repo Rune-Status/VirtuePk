@@ -20,8 +20,8 @@ public enum ChannelRank {
 	}
 	
 	public static ChannelRank forID (int id) {
-		if (id <= ChannelRank.values().length) {
-			ChannelRank rank = ChannelRank.values()[id-1];
+		if (id <= ChannelRank.values().length && id > -2) {
+			ChannelRank rank = ChannelRank.values()[id+1];
 			if (rank.id == id) {
 				return rank;
 			}

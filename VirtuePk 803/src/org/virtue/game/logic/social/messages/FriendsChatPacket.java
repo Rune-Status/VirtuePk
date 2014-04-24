@@ -8,14 +8,22 @@ import org.virtue.game.logic.social.ChannelRank;
  */
 public class FriendsChatPacket {
 	
-	public class User {
-		private String replyName;
-		private String displayName;
-		private ChannelRank rank;
-		private int nodeID;
-		private String worldName;
+	public static class User {
+		private final String replyName;
+		private final String displayName;
+		private final ChannelRank rank;
+		private final int nodeID;
+		private final String worldName;
 		
-		public User (String replyName, String displayName, ChannelRank rank, int nodeID, String worldName) {
+		/**
+		 * Constructs a new {@code User} object for use within the {@code FriendsChatPacket}
+		 * @param displayName	The display name of the player
+		 * @param replyName		The reply-to name of the player
+		 * @param rank			The player's rank within the channel
+		 * @param nodeID		The node ID of the world the player is in
+		 * @param worldName		The name of the world the player is in
+		 */
+		public User (String displayName, String replyName, ChannelRank rank, int nodeID, String worldName) {
 			this.replyName = replyName;
 			this.displayName = displayName;
 			this.rank = rank;
@@ -39,19 +47,38 @@ public class FriendsChatPacket {
 			return replyName;
 		}
 		
+		/**
+		 * Gets the rank of the player within the channel
+		 * @return	The rank
+		 */
 		public ChannelRank getRank () {
 			return rank;
 		}
 		
+		/**
+		 * Gets the node ID of the world the player is currently in
+		 * @return	The world node ID
+		 */
 		public int getWorldNodeID () {
 			return nodeID;
 		}
 		
+		/**
+		 * Gets the name of the world the player is currently in
+		 * @return	The world name
+		 */
 		public String getWorldName () {
 			return worldName;
 		}
 		
+		/**
+		 * Returns whether the 'reply-to' name is different to the 'display' name
+		 * @return	True if the names are different, false if they are the same
+		 */
 		public boolean hasReplyName () {
+			if (replyName == null) {
+				return false;
+			}
 			return !displayName.equalsIgnoreCase(replyName);
 		}
 	}
@@ -62,10 +89,17 @@ public class FriendsChatPacket {
 	
 	private ChannelRank kickReq;
 	
-	private User[] users;
+	private final User[] users;
 	
-	private boolean fullUpdate;
+	private final boolean fullUpdate;
 	
+	/**
+	 * Constructs a new {@code FriendsChatPacket} representing a full update
+	 * @param users			The people who are currently in the channel
+	 * @param ownerName		The channel owner's name
+	 * @param channelName	The channel's name
+	 * @param kickReq		The minimum {@link org.virtue.game.logic.social.ChannelRank} required to kick in the channel
+	 */
 	public FriendsChatPacket (User[] users, String ownerName, String channelName, ChannelRank kickReq) {
 		this.ownerName = ownerName;
 		this.channelName = channelName;

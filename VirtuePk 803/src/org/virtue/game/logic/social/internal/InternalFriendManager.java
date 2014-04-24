@@ -16,28 +16,24 @@
  */
 package org.virtue.game.logic.social.internal;
 
-import org.virtue.game.logic.social.ChannelRank;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.virtue.Launcher;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.WorldHub;
-import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.game.logic.social.OnlineStatus;
-import org.virtue.game.logic.social.messages.FriendsPacket;
-import org.virtue.game.logic.social.messages.IgnoresPacket;
 import org.virtue.game.logic.social.messages.PrivateMessage;
-import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
-import org.virtue.network.protocol.packet.RS3PacketBuilder;
-import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.chat.IgnoreEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.chat.PrivateMessageEncoder;
+import org.virtue.utility.RS2Utils;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
@@ -51,6 +47,8 @@ import org.virtue.utility.StringUtils.FormatType;
 public class InternalFriendManager implements FriendManager {
 	
 	private static final ConcurrentHashMap<String, InternalFriendManager> onlinePlayers = new ConcurrentHashMap<String, InternalFriendManager>();
+	
+	protected static final Queue<InternalFriendManager> immediateChangeQueue = new LinkedList<InternalFriendManager>();
 	
 	static {
 		onlinePlayers.put("test44", new InternalFriendManager(null));
@@ -70,6 +68,8 @@ public class InternalFriendManager implements FriendManager {
 	private static final int FRIENDS_LIST_MAX = 400;
 	private static final int IGNORE_LIST_MAX = 400;
 	
+	private static final int FILE_VERSION = 2;
+	
 	public enum FcPermission {
 		JOIN, TALK, KICK
 	}
@@ -77,6 +77,8 @@ public class InternalFriendManager implements FriendManager {
 	private final EnumMap<FcPermission, ChannelRank> fcPermissions = new EnumMap<FcPermission, ChannelRank>(FcPermission.class);
 	
 	private String channelName = "Test";//TODO: Replace this with "null" when done
+	
+	private boolean fcUpdateFlagged = false;
 	
 	private final HashMap<String, Friend> friends = new HashMap<String, Friend>(FRIENDS_LIST_MAX);
 	private final HashMap<String, Ignore> ignores = new HashMap<String, Ignore>(IGNORE_LIST_MAX);
@@ -136,8 +138,8 @@ public class InternalFriendManager implements FriendManager {
 				i.setDisplayNames(nameData.getDisplayName(), nameData.getPrevName());
 			}*/
 		}
-		player.getPlayer().getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friends.values().toArray(new Friend[friends.size()])));
-		player.getPlayer().getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignores.values().toArray(new Ignore[ignores.size()])));
+		player.sendFriendsList(friends.values().toArray(new Friend[friends.size()]));//.getPlayer().getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friends.values().toArray(new Friend[friends.size()])));
+		player.sendIgnoreList(ignores.values().toArray(new Ignore[ignores.size()]));//.getPlayer().getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignores.values().toArray(new Ignore[ignores.size()])));
 		onlinePlayers.put(player.getProtocolName(), this);
 		sendStatusUpdate(this, false);
 		System.out.println("Registered "+player.getDisplayName()+" on friend server.");
@@ -145,8 +147,31 @@ public class InternalFriendManager implements FriendManager {
 	
 	@Override
 	public void shutdown () {
+		if (fcUpdateFlagged) {
+			synchronized (immediateChangeQueue) {
+				immediateChangeQueue.offer(this);
+			}
+		}
 		this.currentWorld = null;
 		sendStatusUpdate(this, false);
+	}
+	
+	/**
+	 * Queues an update to the player's friends chat channel
+	 */
+	private void queueChannelUpdate () {
+		if (!fcUpdateFlagged) {
+			player.sendGameMessage("Changes will take effect on your friends chat in the next 60 seconds.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		}
+		fcUpdateFlagged = true;
+	}
+	
+	public boolean fcUpdateFlagged () {
+		return fcUpdateFlagged;
+	}
+	
+	public void resetFcUpdateFlag () {
+		fcUpdateFlagged = false;		
 	}
 	
 	protected HashMap<String, ChannelRank> getChannelRanks () {
@@ -175,62 +200,60 @@ public class InternalFriendManager implements FriendManager {
 		return channelName;
 	}
 	
-	/*public void serialise (DataOutputStream output) throws IOException {
+	public void serialise (DataOutputStream output) throws IOException {
+		output.write(FILE_VERSION);
 		synchronized (this) {
 			output.writeShort(friends.size());
 			for (Friend f : friends.values()) {
-				StreamUtil.writeString(output, f.username);
+				RS2Utils.writeString(output, f.username);
 				output.writeByte(f.isReferred() ? 1 : 0);
-				output.writeByte(f.getFcRank());
-				StreamUtil.writeString(output, f.getNote());
+				output.writeByte(f.getFcRank().getID());
+				RS2Utils.writeString(output, f.getNote());
 			}
 			output.writeShort(ignores.size());
 			for (Ignore i : ignores.values()) {
-				StreamUtil.writeString(output, i.username);
-				StreamUtil.writeString(output, i.getNote());
+				RS2Utils.writeString(output, i.username);
+				RS2Utils.writeString(output, i.getNote());
 			}
-			output.writeByte(onlineStatus.getCode());
 		}
 	}
 	
-	public void deserialise (DataInputStream input, int version) throws IOException {
+	public void deserialise (DataInputStream input) throws IOException {
+		int version = input.read();
 		synchronized (this) {
-			if (version >= 1) {
+			if (version >= 2) {
 				int friendListSize = input.readUnsignedShort();
 				String name, note;
-				int fcRank;
+				ChannelRank fcRank;
 				boolean isReferred;
 				friends.clear();
 				for (int i=0;i<friendListSize;i++) {
-					name = StreamUtil.readString(input);
+					name = StringUtils.format(RS2Utils.readString(input), FormatType.PROTOCOL);
 					isReferred = (input.readUnsignedByte() == 1);
-					fcRank = input.readByte();
-					note = StreamUtil.readString(input);
+					fcRank = ChannelRank.forID(input.readByte());
+					note = RS2Utils.readString(input);
+					if (fcRank == null || fcRank.getID() > ChannelRank.GENERAL.getID() || fcRank.getID() < ChannelRank.FRIEND.getID()) {
+						fcRank = ChannelRank.FRIEND;
+					}
 					if (name.length() == 0) {
 						continue;
 					}
 					Friend f = new Friend(name, isReferred, fcRank, note);
-					friends.put(NameManager.simplifyName(name), f);
+					friends.put(name, f);
 				}
 				int ignoreListSize = input.readUnsignedShort();
 				for (int i=0;i<ignoreListSize;i++) {
-					name = StreamUtil.readString(input);
-					note = StreamUtil.readString(input);
+					name = StringUtils.format(RS2Utils.readString(input), FormatType.PROTOCOL);
+					note = RS2Utils.readString(input);
 					if (name.length() == 0) {
 						continue;
 					}
 					Ignore ig = new Ignore(name, note);
-					ignores.put(NameManager.simplifyName(name), ig);
+					ignores.put(name, ig);
 				}
-				int onlineStatusCode = input.readUnsignedByte();
-				onlineStatus = OnlineStatus.get(onlineStatusCode);
 			}
 		}
-	}*/
-	
-	/*public OnlineStatus getOnlineStatus () {
-		return onlineStatus;
-	}*/
+	}
 	
 	public WorldHub getWorldInfo (InternalFriendManager friend) {
 		if (onlineStatus == OnlineStatus.EVERYONE) {
@@ -284,7 +307,7 @@ public class InternalFriendManager implements FriendManager {
 		}
 		String protocolName = StringUtils.format(displayName, FormatType.PROTOCOL);
 		if (protocolName.equals(player.getProtocolName())) {
-			player.sendGameMessage("You can't add yourself to your own friends list.", MessageOpcode.GAME_PRIVATE);
+			player.sendGameMessage("You can't add yourself to your own friends list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		Friend friend = new Friend(protocolName, false);
@@ -307,16 +330,16 @@ public class InternalFriendManager implements FriendManager {
 		
 		synchronized (this) {//Synchronised to avoid concurrent modification issues
 			if (friends.size() >= FRIENDS_LIST_MAX) {
-				player.sendGameMessage("Your friends list is full (400 names maximum)", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage("Your friends list is full (400 names maximum)", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			
 			if (ignores.containsKey(protocolName)) {
-				player.sendGameMessage("Please remove "+displayName+" from your ignore list first.", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage("Please remove "+displayName+" from your ignore list first.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}		
 			if (friends.containsKey(protocolName)) {
-				player.sendGameMessage(displayName+" is already on your friends list.", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage(displayName+" is already on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			friends.put(protocolName, friend);
@@ -331,6 +354,7 @@ public class InternalFriendManager implements FriendManager {
 		}
 		//System.out.println("Adding friend: "+displayName);
 		player.sendFriendUpdate(friend, false);
+		queueChannelUpdate();
 		//player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(friend, false));
 	}
 
@@ -354,6 +378,7 @@ public class InternalFriendManager implements FriendManager {
 			friends.remove(NameManager.simplifyName(names.username));
 			friendData = onlinePlayers.get(NameManager.simplifyName(names.username));
 		}*/
+		queueChannelUpdate();
 	}
 
 	@Override
@@ -363,7 +388,7 @@ public class InternalFriendManager implements FriendManager {
 		}
 		String protocolName = StringUtils.format(displayName, FormatType.PROTOCOL);
 		if (protocolName.equals(player.getProtocolName())) {
-			player.sendGameMessage("You can't add yourself to your own ignore list.", MessageOpcode.GAME_PRIVATE);
+			player.sendGameMessage("You can't add yourself to your own ignore list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		Ignore ignore = new Ignore(protocolName);
@@ -380,21 +405,22 @@ public class InternalFriendManager implements FriendManager {
 		}*/
 		synchronized (this) {
 			if (ignores.size() >= IGNORE_LIST_MAX) {
-				player.sendGameMessage("Your ignore list is full. Max of 400 users.", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage("Your ignore list is full. Max of 400 users.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			
 			if (friends.containsKey(ignore.username)) {
-				player.sendGameMessage("Please remove "+displayName+" from your friends list first.", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage("Please remove "+displayName+" from your friends list first.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			if (ignores.containsKey(ignore.username)) {
-				player.sendGameMessage(displayName+" is already on your ignore list.", MessageOpcode.GAME_PRIVATE);
+				player.sendGameMessage(displayName+" is already on your ignore list.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			ignores.put(protocolName, ignore);
 		}
 		player.sendIgnoreUpdate(ignore, false);
+		queueChannelUpdate();
 		//player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignore, false));
 	}
 
@@ -404,6 +430,7 @@ public class InternalFriendManager implements FriendManager {
 		synchronized (this) {
 			ignores.remove(protocolName);
 		}
+		queueChannelUpdate();
 		/*DisplayName names = nameManager.getNameObject(displayName);
 		if (names == null) {
 			//This removes a player based off their display name. If the server allows players to choose display names which are being used as usernames, this should be removed.
@@ -426,19 +453,16 @@ public class InternalFriendManager implements FriendManager {
 		String protocolName = StringUtils.format(recipient, FormatType.PROTOCOL);
 		System.out.println("Sending message '"+message+"' to player "+recipient);
 		if (!friends.containsKey(protocolName)) {
-			System.out.println("Cannot send message - "+recipient+" is not on friends list.");
-			//TODO: Not on friends list; Show a message for this...
+			player.sendGameMessage("Unable to send message - player not on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		if (!onlinePlayers.containsKey(protocolName)) {
-			System.out.println("Cannot send message - "+recipient+" is offline.");
-			//TODO: Not online; Show a message for this...
+			player.sendGameMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		InternalFriendManager friend = onlinePlayers.get(protocolName);
 		if (friend.getWorldInfo(this) == null) {
-			System.out.println("Cannot send message - "+recipient+" does not show online to player.");
-			//TODO: Not displayed as online; Show a message for this...
+			player.sendGameMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		message = StringUtils.format(message, FormatType.DISPLAY);
@@ -447,17 +471,11 @@ public class InternalFriendManager implements FriendManager {
 		friend.receivePrivateMessage(getProtocolName(), messageObject);
 		messageObject = messageObject.clone();
 		messageObject.setIncomming(false);
-		player.getPlayer().getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, messageObject);
-		/*RS3PacketBuilder buffer = new RS3PacketBuilder(260);//This is only for testing purposes. Remove when done.
-		buffer.putPacketVarShort(38);
-		buffer.putString(getProtocolName());
-		Launcher.getHuffman().huffmanEncrypt(buffer, message);
-		buffer.endPacketVarShort();
-		player.getAccount().getSession().getTransmitter().send(buffer);*/
+		player.sendPrivateMessage(messageObject);
 	}	
 	
 	public void receivePrivateMessage (String sender, PrivateMessage message) {
-		player.getPlayer().getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, message);
+		player.sendPrivateMessage(message);
 	}
 
 	@Override

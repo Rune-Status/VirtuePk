@@ -22,7 +22,13 @@ public class GameMessage {
 		/**
 		 * Friend/Ignore-related
 		 */
-		GAME_PRIVATE(4),
+		PRIVATE_SYSTEM(4),
+		
+		/**
+		 * Friends chat related system message
+		 */
+		FRIENDS_CHAT_SYSTEM(11),
+		
 		/**
 		 * Represents a default game message in the chatbox, yet with filter
 		 * properties enabled.
@@ -40,7 +46,7 @@ public class GameMessage {
 		TRADE_REQUEST(100),
 
 		/**
-		 * Represetns a default minigame/activity request message.
+		 * Represents a default minigame/activity request message.
 		 */
 		DEFAULT_REQUEST(101);
 

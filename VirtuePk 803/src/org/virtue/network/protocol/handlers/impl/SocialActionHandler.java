@@ -1,6 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
+import org.virtue.game.logic.social.ChatManager;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
@@ -25,7 +26,7 @@ public class SocialActionHandler extends PacketHandler<WorldSession> {
 			friendManager.removeIgnore(name);
 			break;
 		case IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET:
-			System.out.println("Unhandled request to join/leave friends chat: "+name);
+			session.getPlayer().getChatManager().handleFriendsChatJoin(name);
 			break;
 		case IncommingOpcodes.IGNORE_NOTE_PACKET:
 			friendManager.setNote(name, getFlag("note", ""), false);
