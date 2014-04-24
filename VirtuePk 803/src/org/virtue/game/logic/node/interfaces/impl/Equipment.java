@@ -8,6 +8,10 @@ import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 /**
  * @author Taylor
  * @version 1.0
@@ -125,12 +129,14 @@ public class Equipment extends AbstractInterface {
 	 */
 	public Item getItem(int id) {
 		for (Item item : items.toArray()) {
-			if (item == null)
+			if (item == null) {
 				continue;
-			if (item.getId() == id)
+			}
+			if (item.getId() == id) {
 				return item;
-			else
+			} else {
 				continue;
+			}
 		}
 		return null;
 	}
@@ -159,6 +165,47 @@ public class Equipment extends AbstractInterface {
 	}
 	
 	/**
+	 * Serialises the current equipment data into a {@link com.google.gson.JsonArray}
+	 * @return	A JsonArray containing the inventory data
+	 */
+	public JsonArray serialise () {
+		JsonArray equipment = new JsonArray();
+		int slotID = 0;
+		for (Item i : items.getItems()) {
+			if (i == null) {
+				slotID++;
+				continue;
+			}
+			JsonObject item = new JsonObject();
+			item.addProperty("slot", slotID);
+			item.addProperty("item", i.getId());
+			item.addProperty("amount", i.getAmount());
+			equipment.add(item);
+			slotID++;
+		}
+		return equipment;
+	}
+	
+	/**
+	 * Deserialises the equipment data from the specified JSON array
+	 * @param equipment The {@link com.google.gson.JsonArray} containing the equipment data
+	 */
+	public void deserialise (JsonArray equipment) {
+		items.reset();
+		for (JsonElement itemData : equipment) {
+			JsonObject data = (JsonObject) itemData;
+			int slotID = data.get("slot").getAsInt();
+			int itemID = data.get("item").getAsInt();
+			int amount = data.get("amount").getAsInt();
+			Item item = new Item(itemID, amount);
+			if (item.getDefinition() == null) {
+				continue;//Item does not exist
+			}
+			items.set(slotID, item);
+		}
+	}
+	
+	/**
 	 * @return The items
 	 */
 	public ItemsContainer<Item> getItems() {
@@ -174,7 +221,28 @@ public class Equipment extends AbstractInterface {
 	
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {
+		if (componentID == 14) {
+			Item item = items.get(slotID);
+            if (item == null) {
+                return;//Invalid item
+            }
+            if (item.getId() != itemID) {
+            	refresh();//Something is out of sync, resynchronised the equipment
+            	return;
+            }
+            if (button.equals(ActionButton.ONE)) {
+            	handleRemove(item, slotID);
+            }
+		}
 		System.out.println("Equipment button pressed: component="+componentID+", slot="+slotID+", item="+itemID+", button="+button.getID());
+	}
+	
+	public void handleRemove (Item item, int slot) {
+		if (getPlayer().getInventory().add(item)) {
+			items.remove(slot, item);
+			refresh();
+			getPlayer().getUpdateArchive().getAppearance().packBlock();
+		}
 	}
 
 	@Override

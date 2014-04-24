@@ -15,14 +15,23 @@ public class FriendsChatInfo extends AbstractInterface {
 	@Override
 	public void postSend() {
 		//Sends the last friends chat the player joined:// getPlayer().getAccount().getUsername().getName()
-		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1303, "Test 2", 1, 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
 		sendInterfaceSettings(23, 0, 600, 1024);//IfaceSettings: 93519895, 600, 0, 1024
 	}
 
 	@Override
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
 		switch (component) {
+		case 29://Lootshare
+			
+			break;
+		case 31://Kick/ban
+			
+			break;
 		case 33://Join friends chat
+			if (getPlayer().getChatManager().getCurrentChannelOwner() != null) {
+				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));
+				return;
+			}		
 			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
 			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));

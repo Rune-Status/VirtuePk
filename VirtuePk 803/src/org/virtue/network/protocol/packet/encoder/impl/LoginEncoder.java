@@ -108,7 +108,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 			buffer.put(0);//Boolean
 			buffer.put(1);//Boolean
 			buffer.put(0);//Chat disabled
-			buffer.putShort(1);//Player index
+			buffer.putShort(node.getFlag("playerIndex", -1));//Player index
 			buffer.put(1);//Is p2p account
 			buffer.put24BitInteger(0);
 			/*

@@ -15,6 +15,7 @@ import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.game.logic.social.ChatManager;
+import org.virtue.game.logic.social.OnlineStatus;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
@@ -33,6 +34,8 @@ import org.virtue.utility.DisplayMode;
 public class Player extends Entity {
 	
 	private EnumMap<PlayerOption, EntityOptionMessage> playerOptions = new EnumMap<PlayerOption, EntityOptionMessage>(PlayerOption.class);
+	
+	public enum PlayerStatus {LOGGED_OUT, WORLD, LOBBY, SWITCHING_WORLD}
 	
 	/**
 	 * Represents this player's account.
@@ -80,7 +83,7 @@ public class Player extends Entity {
 	
 	private boolean exists = true;
 	
-	private boolean inWorld = false;
+	private PlayerStatus status = PlayerStatus.SWITCHING_WORLD;
 	
 	/**
 	 * Represents the player's current run energy level
@@ -123,10 +126,22 @@ public class Player extends Entity {
 		skillManager = new SkillManager(this);
 		chatManager = new ChatManager(this);
 	}
+	
+	public void setSwitching () {
+		status = PlayerStatus.SWITCHING_WORLD;
+	}
 
 	@Override
-	public void start() {
-		inWorld = true;
+	public void start() {		
+		status = PlayerStatus.WORLD;
+		
+		if (IOHub.getAccountIo().exists(account.getUsername().getAccountName())) {
+			skillManager.deserialise(account.getCharFile().get("skills").getAsJsonArray());
+			inventory.deserialise(account.getCharFile().get("inventory").getAsJsonArray());
+			equipment.deserialise(account.getCharFile().get("equipment").getAsJsonArray());
+			chatManager.deserialiseData(account.getCharFile().get("chatData").getAsJsonObject());
+		}
+		
 		this.clientVarps[463] = resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0;
 		getUpdateArchive().getAppearance().packBlock();
 		//System.out.println("Sending game information to player...");
@@ -148,9 +163,6 @@ public class Player extends Entity {
 		}
 		inventory.load();
 		equipment.load();
-		
-		if ((IOHub.getAccountIo().exists(this.getAccount().getUsername().getAccountName())) == true)
-			skillManager.deserialise(this);
 			
 		skillManager.sendAllSkills();
 		packetDispatcher.dispatchRunEnergy(runEnergy);//Sends the current run energy level to the player
@@ -174,8 +186,11 @@ public class Player extends Entity {
 	}
 	
 	public void startLobby() {
-		//started = true;
+		status = PlayerStatus.LOBBY;
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
+		if (IOHub.getAccountIo().exists(account.getUsername().getAccountName())) {
+			chatManager.deserialiseData(account.getCharFile().get("chatData").getAsJsonObject());
+		}
 		chatManager.init(true);
 	}
 
@@ -185,11 +200,12 @@ public class Player extends Entity {
 			return;
 		}
 		exists = false;
-		chatManager.disconnect();
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this);
 			IOHub.getAccountIo().save(this);
 		}		
+		chatManager.disconnect();
+		status = PlayerStatus.LOGGED_OUT;
 	}
 
 	@Override
@@ -230,7 +246,7 @@ public class Player extends Entity {
 	
 	@Override
 	public void update() {
-		if (inWorld) {
+		if (status.equals(PlayerStatus.WORLD)) {
 			account.getSession().getTransmitter().send(PlayerEncoder.class, this);//Send player updates
 			account.getSession().getTransmitter().send(NPCEncoder.class, this);//Send NPC updates
 		}
@@ -248,7 +264,7 @@ public class Player extends Entity {
 	}
 	
 	public boolean isInWorld () {
-		return inWorld;
+		return status.equals(PlayerStatus.WORLD);
 	}
 	
 	public int getRunEnergy () {

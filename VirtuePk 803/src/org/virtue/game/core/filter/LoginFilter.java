@@ -44,10 +44,11 @@ public class LoginFilter extends LogicEvent {
 		LoginType type = account.getFlag("login_type", LoginType.WORLD_PART_2);
 		System.out.println("Processing login request for: "+account.getUsername().getAccountName()+" of type: "+type.toString().replace("_", " "));
 
-		final Player player;
+		Player player;
 		switch (type) {
 		case LOBBY:
 			player = new Player(account);
+			((WorldSession) session).setPlayer(player);
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			System.out.println("Adding player "+account.getUsername().getAccountName()+" to the lobby...");
 			Lobby.addPlayer(player);
@@ -66,19 +67,22 @@ public class LoginFilter extends LogicEvent {
 			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ClientScreen());
 			return;
 		case WORLD_PART_2:
-                        //System.out.println("Sending login response data...");
-			account.getSession().getTransmitter().send(LoginEncoder.class, account);
-			/*if (Lobby.contains(account.getUsername().getAccountName())) {//FIXME: Something is causing deadlock in this section...
-				player = Lobby.getPlayer(account.getUsername().getAccountName());
-				Lobby.removePlayer(account.getUsername().getAccountName());
-				World.getWorld().addPlayer(player);
-			} else*/ if (World.getWorld().contains(account.getUsername().getAccountName())) {
-				player = World.getWorld().getPlayer(account.getUsername().getAccountName());
+			System.out.println("Sending login response data...");
+			if (Lobby.contains(account.getUsername().getAccountNameAsProtocol())) {
+				player = Lobby.getPlayer(account.getUsername().getAccountNameAsProtocol());
+				player.destroy();
+				Lobby.removePlayer(account.getUsername().getAccountNameAsProtocol());
+			}
+			if (World.getWorld().contains(account.getUsername().getAccountNameAsProtocol())) {
+				player = World.getWorld().getPlayer(account.getUsername().getAccountNameAsProtocol());
+				System.out.println("Found world player.");
 			} else {
+				System.out.println("Creating new player.");
 				player = new Player(account);
 				World.getWorld().addPlayer(player);
 			}
-                        //System.out.println("Found player.");
+			account.putFlag("playerIndex", player.getIndex());
+			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			player.getViewport().loadViewport();
 			session.getTransmitter().send(MapSceneEncoder.class, player.getViewport());
 			player.start();

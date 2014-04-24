@@ -120,7 +120,11 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.add("skills", p.getSkillManager().serialise());
 		
-		obj.addProperty("onlinestatus", p.getChatManager().getOnlineStatus().getStatusCode());
+		obj.add("inventory", p.getInventory().serialise());
+		
+		obj.add("equipment", p.getEquipment().serialise());
+		
+		obj.add("chatData", p.getChatManager().serialiseData());
 		
 		System.out.println("Saving player...");
 		

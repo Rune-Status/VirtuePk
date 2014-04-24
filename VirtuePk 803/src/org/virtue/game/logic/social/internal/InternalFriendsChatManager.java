@@ -95,31 +95,31 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 		FriendsChannel channel = friendsChannelCache.get(protocolOwner);
 		if (channel == null) {
 			player.getPacketDispatcher().dispatchMessage("The channel you tried to join does not exist.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
-			player.getChatManager().setCurrentChannel(null);
+			player.getChatManager().setCurrentChannelOwner(null);
 			return;
 		}
 		String protocolPlayer = player.getAccount().getUsername().getAccountNameAsProtocol();
 		if (channel.isBanned(protocolPlayer)) {
 			player.getPacketDispatcher().dispatchMessage("You are not allowed to join this user's friends chat channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
-			player.getChatManager().setCurrentChannel(null);
+			player.getChatManager().setCurrentChannelOwner(null);
 			return;
 		}
 		if (!channel.canJoin(channel.getPlayerRank(protocolPlayer))) {
 			player.getPacketDispatcher().dispatchMessage("You do not have a high enough rank to join this friends chat channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
-			player.getChatManager().setCurrentChannel(null);
+			player.getChatManager().setCurrentChannelOwner(null);
 			return;
 		}//TODO: Check for temporary bans and full channels
 		channel.join(new SocialUser(player, protocolPlayer));
-		player.getChatManager().setCurrentChannel(channel.getOwner());
+		player.getChatManager().setCurrentChannelOwner(channel.getOwner());
 		player.getPacketDispatcher().dispatchMessage("Now talking in friends chat channel "+channel.getName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
 	}
 
 	@Override
-	public void leaveChannel(Player player) {
-		String owner = StringUtils.format(player.getChatManager().getCurrentChannel(), FormatType.PROTOCOL);
+	public void leaveChannel(Player player) {		
+		String owner = StringUtils.format(player.getChatManager().getCurrentChannelOwner(), FormatType.PROTOCOL);
 		if (owner == null) {
 			player.getPacketDispatcher().dispatchMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
-			player.getChatManager().setCurrentChannel(null);
+			player.getChatManager().setCurrentChannelOwner(null);
 			return;
 		}
 		if (friendsChannelCache.containsKey(owner)) {
@@ -127,7 +127,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 				friendsChannelCache.remove(owner);
 			}
 		}		
-		player.getChatManager().setCurrentChannel(null);
+		player.getChatManager().setCurrentChannelOwner(null);
 		player.getPacketDispatcher().dispatchMessage("You have left the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 	}
 	

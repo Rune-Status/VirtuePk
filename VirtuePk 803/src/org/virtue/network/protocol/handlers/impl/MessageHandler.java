@@ -19,10 +19,18 @@ public class MessageHandler extends PacketHandler<WorldSession> {
 				return;//No recipient specified; don't bother handling it
 			}
 			session.getPlayer().getChatManager().getFriendManager().sendPrivateMessage(recipient, message);
-		} else {
+		} else {			
 			int colourEffect = getFlag("colourEffect", 0);
 			int moveEffect = getFlag("moveEffect", 0);
-			session.getPlayer().getChatManager().handlePublicMessage(message, colourEffect, moveEffect);			
+			switch (session.getPlayer().getChatManager().getChatType()) {
+			case PUBLIC:
+				session.getPlayer().getChatManager().handlePublicMessage(message, colourEffect, moveEffect);
+				break;
+			default:
+				System.out.println("Unhandled message: message="+message+", type="+session.getPlayer().getChatManager().getChatType());
+				break;	
+			}
+						
 		}
 		
 	}

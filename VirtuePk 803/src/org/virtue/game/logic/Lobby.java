@@ -79,6 +79,7 @@ public class Lobby {
 	 * @return The player.
 	 */
 	public static Player getPlayer(String username) {
+		//System.out.println(players.size()+" player(s) in lobby.");
 		for (Player player : players) {
 			if (player == null) {
 				continue;
@@ -95,10 +96,12 @@ public class Lobby {
 	 * @param username The username.
 	 */
 	public static void removePlayer(String username) {
+		int index = 0;
 		for (Player player : players) {
 			if (player.getAccount().getUsername().getAccountName().equalsIgnoreCase(username)) {
-				removePlayer(player);
+				players.remove(index);
 			}
+			index++;
 		}
 	}
 

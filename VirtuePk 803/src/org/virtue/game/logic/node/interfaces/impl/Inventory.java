@@ -1,5 +1,7 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
+import org.virtue.game.logic.content.skills.Skill;
+import org.virtue.game.logic.content.skills.SkillData;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
@@ -9,6 +11,10 @@ import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.RSInterface;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * @author Taylor
@@ -56,20 +62,25 @@ public class Inventory extends AbstractInterface {
 	/**
 	 * Adds an item to the inventory.
 	 * @param item The item to add.
+	 * @return whether the item was successfully added
 	 */
-	public void add(Item item, boolean refresh) {
-		items.add(item);
-		if (refresh)
+	public boolean add(Item item, boolean refresh) {
+		boolean success = items.add(item);
+		if (refresh) {
 			refresh();
+		}
+		return success;
 	}
 	
 	/**
 	 * Adds an item to the inventory.
 	 * @param item The item to add.
+	 * @return whether the item was successfully added
 	 */
-	public void add(Item item) {
-		items.add(item);
+	public boolean add(Item item) {
+		boolean success = items.add(item);
 		refresh();
+		return success;
 	}
 	
 	/**
@@ -96,11 +107,13 @@ public class Inventory extends AbstractInterface {
 	 * @return The item.
 	 */
 	public Item getItem(int id) {
-		for (Item item : items.toArray())
-			if (item.getId() == id)
+		for (Item item : items.toArray()) {
+			if (item.getId() == id) {
 				return item;
-			else
+			} else {
 				continue;
+			}
+		}
 		return null;
 	}
 
@@ -110,11 +123,13 @@ public class Inventory extends AbstractInterface {
 	 * @return The slot.
 	 */
 	public int getSlot(int id) {
-		for (int slot = 0; slot < items.getSize(); slot++)
-			if (items.get(slot).getId() == id)
+		for (int slot = 0; slot < items.getSize(); slot++) {
+			if (items.get(slot).getId() == id) {
 				return slot;
-			else
+			} else {
 				continue;
+			}
+		}
 		return -1;
 	}
 	
@@ -124,6 +139,15 @@ public class Inventory extends AbstractInterface {
 	public void refresh() {
 		getPlayer().getPacketDispatcher().dispatchItems(93, items);
 //		player.getStack().sendItemSet(93, items.toArray());
+	}
+	
+	public void switchItem (int fromSlot, int toSlot) {
+		if (fromSlot == toSlot || fromSlot == -1 || toSlot == -1) {
+			return;//No change took place
+		}
+		Item item = items.get(fromSlot);
+		items.set(fromSlot, null);
+		items.set(toSlot, item);
 	}
 
 	/**
@@ -141,6 +165,47 @@ public class Inventory extends AbstractInterface {
 				continue;
 		}
 		return false;
+	}
+	
+	/**
+	 * Serialises the current inventory data into a {@link com.google.gson.JsonArray}
+	 * @return	A JsonArray containing the inventory data
+	 */
+	public JsonArray serialise () {
+		JsonArray inventory = new JsonArray();
+		int slotID = 0;
+		for (Item i : items.getItems()) {
+			if (i == null) {
+				slotID++;
+				continue;
+			}
+			JsonObject item = new JsonObject();
+			item.addProperty("slot", slotID);
+			item.addProperty("item", i.getId());
+			item.addProperty("amount", i.getAmount());
+			inventory.add(item);
+			slotID++;
+		}
+		return inventory;
+	}
+	
+	/**
+	 * Deserialises the inventory data from the specified JSON array
+	 * @param inventory The {@link com.google.gson.JsonArray} containing the inventory data
+	 */
+	public void deserialise (JsonArray inventory) {
+		items.reset();
+		for (JsonElement itemData : inventory) {
+			JsonObject data = (JsonObject) itemData;
+			int slotID = data.get("slot").getAsInt();
+			int itemID = data.get("item").getAsInt();
+			int amount = data.get("amount").getAsInt();
+			Item item = new Item(itemID, amount);
+			if (item.getDefinition() == null) {
+				continue;//Item does not exist
+			}
+			items.set(slotID, item);
+		}
 	}
 	
 	/**

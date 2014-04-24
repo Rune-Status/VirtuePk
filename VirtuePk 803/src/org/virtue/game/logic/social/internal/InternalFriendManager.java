@@ -107,10 +107,10 @@ public class InternalFriendManager implements FriendManager {
 	
 	@Override
 	public void init () {
-		friends.put("test222", new Friend("test222", false, ChannelRank.FRIEND, "Hi!"));
-		friends.put("test_3", new Friend("test_3", true));//TODO: Remove this (it's only for testing purposes)
-		ignores.put("test4", new Ignore("test4"));
-		ignores.put("test_5", new Ignore("test_5", "This is a note."));
+		//friends.put("test222", new Friend("test222", false, ChannelRank.FRIEND, "Hi!"));
+		//friends.put("test_3", new Friend("test_3", true));//TODO: Remove this (it's only for testing purposes)
+		//ignores.put("test4", new Ignore("test4"));
+		//ignores.put("test_5", new Ignore("test_5", "This is a note."));
 		//player.getActionSender().sendOnlineStatus(onlineStatus);
 		//player.getActionSender().sendUnlockFriendsList();
 		currentWorld = World.getWorld();//player.getWorld().getData();
@@ -241,6 +241,7 @@ public class InternalFriendManager implements FriendManager {
 					Friend f = new Friend(name, isReferred, fcRank, note);
 					friends.put(name, f);
 				}
+				ignores.clear();
 				int ignoreListSize = input.readUnsignedShort();
 				for (int i=0;i<ignoreListSize;i++) {
 					name = StringUtils.format(RS2Utils.readString(input), FormatType.PROTOCOL);
