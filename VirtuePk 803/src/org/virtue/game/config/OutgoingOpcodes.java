@@ -74,7 +74,7 @@ public class OutgoingOpcodes {
 	public static final int PUBLIC_MESSAGE_PACKET = 158;//803
 	public static final int INCOMMING_PRIVATE_MESSAGE_PACKET = 116;//803
 	public static final int OUTGOING_PRIVATE_MESSAGE_PACKET = 38;//803
-	public static final int FRIENDS_CHAT_MESSAGE_PACKET = 111;
+	public static final int FRIENDS_CHAT_MESSAGE_PACKET = 85;//803
 	
 	//Chat-related
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803

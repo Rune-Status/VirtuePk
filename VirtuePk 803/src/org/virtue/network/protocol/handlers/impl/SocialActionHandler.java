@@ -1,7 +1,6 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
-import org.virtue.game.logic.social.ChatManager;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;

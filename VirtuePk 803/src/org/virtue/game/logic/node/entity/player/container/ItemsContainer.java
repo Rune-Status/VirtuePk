@@ -66,18 +66,17 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	public boolean add(T item) {
-//		if (alwaysStackable || item.getDefinitions().isStackable()
-//				|| item.getDefinitions().isNoted()) {
-//			for (int i = 0; i < data.length; i++) {
-//				if (data[i] != null) {
-//					if (data[i].getId() == item.getId()) {
-//						data[i] = new SendItem(data[i].getId(), data[i].getAmount()
-//								+ item.getAmount());
-//						return true;
-//					}
-//				}
-//			}
-//		} else {
+		if (alwaysStackable || item.getDefinition().isStackable()
+				|| item.getDefinition().isNoted()) {
+			for (int i = 0; i < data.length; i++) {
+				if (data[i] != null) {
+					if (data[i].getId() == item.getId()) {
+						data[i] = new Item(data[i].getId(), data[i].getAmount() + item.getAmount());
+						return true;
+					}
+				}
+			}
+		} else {
 			if (item.getAmount() > 1) {
 				if (freeSlots() >= item.getAmount()) {
 					for (int i = 0; i < item.getAmount(); i++) {
@@ -88,7 +87,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 				} else {
 					return false;
 				}
-//			}
+			}
 		}
 		int index = freeSlot();
 		if (index == -1) {

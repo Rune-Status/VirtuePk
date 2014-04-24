@@ -7,7 +7,7 @@ package org.virtue.game.logic.social;
 public enum ChatType {
 	
 	PUBLIC(0),
-	FRIENDS(1),
+	FRIENDS_CHAT(1),
 	CLAN(2),
 	GUEST_CLAN(3),
 	PRIVATE(4);

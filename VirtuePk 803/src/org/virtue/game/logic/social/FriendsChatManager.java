@@ -13,12 +13,14 @@ public interface FriendsChatManager {
 	 * @param player	The player wishing to join the channel
 	 * @param owner		The name of the owner who's channel the player wishes to join
 	 */
-	public void joinChannel (Player player, String owner);
+	public void joinChannel(Player player, String owner);
 	
 	/**
 	 * Sends a request for the specified player to leave their current channel
 	 * @param player	The player who wishes to leave the channel
 	 */
-	public void leaveChannel (Player player);
+	public void leaveChannel(Player player);
+	
+	public void sendMessage(Player player, String message);
 	
 }

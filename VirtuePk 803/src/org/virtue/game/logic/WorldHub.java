@@ -241,7 +241,7 @@ public class WorldHub {
 	}
 
 	/**
-	 * @return the rEGION_MANAGER
+	 * @return the REGION_MANAGER
 	 */
 	public RegionManager getRegionManager() {
 		return REGION_MANAGER;
@@ -301,7 +301,7 @@ public class WorldHub {
 	}
 
 	/**
-	 * @param flag the flag to set
+	 * @param flags the flags to set
 	 */
 	public void setFlags(int flags) {
 		this.flags = flags;

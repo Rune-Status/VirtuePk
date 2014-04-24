@@ -24,6 +24,7 @@ package org.virtue.game.config;
  */
 public class IncommingOpcodes {
 	public final static int SCREEN_PACKET = 70;//803
+	public final static int PACKET_RECEIVE_COUNT = 87;//803
 	public final static int PING_PACKET = 92;//803
 	public final static int WORLD_LIST_UPDATE = 56;//803
 	public final static int COMMANDS_PACKET = 73;//803
@@ -34,7 +35,7 @@ public class IncommingOpcodes {
 	public final static int CAMERA_MOVEMENT_PACKET = 7;//803
 	public final static int WINDOW_FOCUS_PACKET = 105;//803
 	public final static int CLICK_PACKET = 34;//803
-	public final static int CLIENT_SPECS_PACKET = 83;//803
+	public final static int CLIENT_SPECS_PACKET = 83;//803	
 	
 	//Movement-related
 	public final static int WALKING_PACKET = 95;//803
@@ -97,7 +98,9 @@ public class IncommingOpcodes {
 	public final static int MESSAGE_PACKET = 99;//803
 	public final static int PRIVATE_MESSAGE_PACKET = 44;//803
 	
+	//Interface management
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
+	public final static int INTERFACE_INFORMATION_PACKET = 11;//803
 	public final static int ITEM_ON_ITEM_PACKET = 82;//803
 	
 	private static final int[] SIZES_803 = new int[120];

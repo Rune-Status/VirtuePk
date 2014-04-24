@@ -8,6 +8,7 @@ import java.util.Queue;
 import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.FriendsChatManager;
+import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -129,6 +130,26 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 		}		
 		player.getChatManager().setCurrentChannelOwner(null);
 		player.getPacketDispatcher().dispatchMessage("You have left the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+	}
+
+	@Override
+	public void sendMessage(Player player, String message) {
+		SocialUser user = new SocialUser(player);
+		String owner = StringUtils.format(player.getChatManager().getCurrentChannelOwner(), FormatType.PROTOCOL);
+		if (owner == null || !friendsChannelCache.containsKey(owner)) {
+			user.sendGameMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			user.sendLeaveFriendsChat();
+			player.getChatManager().setCurrentChannelOwner(null);
+			return;
+		}
+		FriendsChannel channel = friendsChannelCache.get(owner);
+		if (!channel.canTalk(channel.getPlayerRank(user.getProtocolName()))) {
+			user.sendGameMessage("You are not allowed to talk in this friends chat channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			return;
+		}
+		FriendsChatMessage messageObject = new FriendsChatMessage(message, user.getDisplayName(), 
+				user.getDisplayName(), user.getRank(), channel.getName());
+		channel.sendMessage(messageObject);
 	}
 	
 }

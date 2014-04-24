@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.internal.InternalFriendManager.FcPermission;
+import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
@@ -68,6 +69,10 @@ public class FriendsChannel {
 	
 	public ChannelRank getTalkReq () {
 		return requirements.get(FcPermission.TALK);
+	}
+	
+	public boolean canTalk (ChannelRank rank) {
+		return getTalkReq().getID() <= rank.getID();
 	}
 	
 	public ChannelRank getPlayerRank (String name) {
@@ -151,6 +156,17 @@ public class FriendsChannel {
 		}
 		player.sendLeaveFriendsChat();
 		return users.isEmpty();
+	}
+	
+	public void sendMessage(FriendsChatMessage message) {
+		synchronized (users) {
+			for (SocialUser u : users.values()) {
+				if (u == null) {
+					continue;
+				}
+				u.sendFriendsChatMessage(message);
+			}
+		}
 	}
 	
 	private void sendPacket (FriendsChatPacket packet) {		

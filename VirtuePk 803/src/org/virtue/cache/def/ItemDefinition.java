@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
+import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
@@ -689,6 +690,17 @@ public class ItemDefinition {
 			return 6;
 		}
 		return (int) paramaters.get(14);
+	}
+
+	public int getRenderAnimId() {
+		if (paramaters == null) {
+			return Appearance.DEFAULT_RENDER_EMOTE;
+		}
+		Object animId = paramaters.get(644);
+		if (animId != null && animId instanceof Integer) {
+			return (Integer) animId;
+		}
+		return Appearance.DEFAULT_RENDER_EMOTE;
 	}
 	
 	public void printFields() throws IllegalArgumentException, IllegalAccessException, IOException {

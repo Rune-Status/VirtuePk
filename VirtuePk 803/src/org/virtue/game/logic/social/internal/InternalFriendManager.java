@@ -92,7 +92,7 @@ public class InternalFriendManager implements FriendManager {
 	public InternalFriendManager (SocialUser player) {
 		this.player = player;
 		fcPermissions.put(FcPermission.JOIN, ChannelRank.GUEST);
-		fcPermissions.put(FcPermission.TALK, ChannelRank.FRIEND);
+		fcPermissions.put(FcPermission.TALK, ChannelRank.GUEST);
 		fcPermissions.put(FcPermission.KICK, ChannelRank.OWNER);
 	}
 	

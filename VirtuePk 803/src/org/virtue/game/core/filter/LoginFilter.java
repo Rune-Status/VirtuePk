@@ -47,7 +47,13 @@ public class LoginFilter extends LogicEvent {
 		Player player;
 		switch (type) {
 		case LOBBY:
-			player = new Player(account);
+			try {
+				player = new Player(account);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return;
+			}
+			System.out.println("Created player.");
 			((WorldSession) session).setPlayer(player);
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			System.out.println("Adding player "+account.getUsername().getAccountName()+" to the lobby...");

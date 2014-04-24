@@ -12,7 +12,6 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
-import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.packet.encoder.impl.EmptyPacketEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.OnlineStatusEncoder;
@@ -20,7 +19,6 @@ import org.virtue.network.protocol.packet.encoder.impl.chat.PublicMessageEncoder
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
@@ -73,7 +71,6 @@ public class ChatManager {
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
 	 * @param player	The player
-	 * @throws FileNotFoundException 
 	 */
 	public ChatManager (Player player) {
 		this.player = player;
@@ -204,6 +201,11 @@ public class ChatManager {
 		if (channelStage.equals(ChannelStage.JOINED)) {
 			friendsChatManager.leaveChannel(player);
 		}
+	}
+	
+	public void handleFriendsChatMessage (String message) {
+		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
+		friendsChatManager.sendMessage(player, formattedMessage);
 	}
 	
 	/**

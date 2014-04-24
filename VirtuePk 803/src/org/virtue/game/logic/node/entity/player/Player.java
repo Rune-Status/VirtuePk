@@ -116,15 +116,20 @@ public class Player extends Entity {
 		tile = new Tile(account.getTile());
 		lastTile = new Tile(getTile());
 		lastLoadedRegion = new Tile(lastTile);
+		//System.out.println("Stage 2");
 		viewport = new Viewport(this);
 		interfaceManager = new InterfaceManager(this);
 		inventory = new Inventory(this);
+		//System.out.println("Stage 3");
 		equipment = new Equipment(this);
 		abilityBook = new AbilityBook(this);
 		actionBar = new ActionBar(this);
+		//System.out.println("Stage 4");
 		packetDispatcher = new PacketDispatcher(this);
 		skillManager = new SkillManager(this);
+		//System.out.println("Stage 5");
 		chatManager = new ChatManager(this);
+		//System.out.println("Stage 6");
 	}
 	
 	public void setSwitching () {

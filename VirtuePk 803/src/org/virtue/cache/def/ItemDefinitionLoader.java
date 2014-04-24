@@ -80,7 +80,7 @@ public class ItemDefinitionLoader {
 				continue;
 			}
 			String itemName = itemDef.getName().toLowerCase();
-			if (name.toLowerCase().equalsIgnoreCase(itemName)) {
+			if (name.equalsIgnoreCase(itemName)) {
 				return itemDef;
 			}
 		}

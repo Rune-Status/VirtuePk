@@ -1,5 +1,7 @@
 package org.virtue.game.logic.node.object;
 
+import org.virtue.cache.def.ObjectDefinition;
+import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.logic.node.Node;
 import org.virtue.game.logic.region.Tile;
 
@@ -29,8 +31,10 @@ public class RS3Object extends Node {
 	 */
 	private Tile tile;
 	
+	private ObjectDefinition definition;
+	
 	/**
-	 * Constructs a new {@code RS2Object.java}.
+	 * Constructs a new {@code RS3Object.java}.
 	 * @param id The id.
 	 * @param rotation The rotation.
 	 * @param type The type.
@@ -40,6 +44,7 @@ public class RS3Object extends Node {
 		this.rotation = rotation;
 		this.type = type;
 		this.tile = tile;
+		this.definition = ObjectDefinitionLoader.forId(id);
 	}
 
 	/**
@@ -96,6 +101,10 @@ public class RS3Object extends Node {
 	 */
 	public void setTile(Tile tile) {
 		this.tile = tile;
+	}
+	
+	public ObjectDefinition getDefinition () {
+		return definition;
 	}
 
 }

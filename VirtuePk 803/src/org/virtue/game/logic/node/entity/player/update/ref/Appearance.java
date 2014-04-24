@@ -233,7 +233,7 @@ public class Appearance {
 		buffer.putShort(getRenderEmote());
 		//System.out.println("Name: "+player.getAccount().getUsername().getName());
 		buffer.putString(player.getAccount().getUsername().getName());
-		buffer.put(138);
+		buffer.put(138);//Combat level
 		buffer.put(138);
 		buffer.put(-1);
 		buffer.put(0);
@@ -269,8 +269,7 @@ public class Appearance {
 		}
 		Item weapon = player.getEquipment().getItems().get(Equipment.SLOT_MAINHAND);
 		if (weapon != null) {
-//			return weapon.getDefinitions().getRenderAnimId();
-			//return -1;
+			return weapon.getDefinition().getRenderAnimId();
 		}
 		return DEFAULT_RENDER_EMOTE;
 	}
