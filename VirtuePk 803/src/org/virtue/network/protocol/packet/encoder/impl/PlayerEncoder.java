@@ -124,6 +124,9 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @return True if so; false otherwise.
 	 */
 	private boolean needsRemove(Player player) {
+		if (!player.exists() || !this.player.getTile().withinDistance(player.getTile(), 14)) {
+			return true;
+		}
 		return false;
 	}
 

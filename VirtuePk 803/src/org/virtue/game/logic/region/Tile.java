@@ -178,7 +178,7 @@ public class Tile {
 	 * Returns the ID of the {@link Region} that this {@link Tile} is located on.
 	 * @return The {@link Region} ID of this {@link Tile}.
 	 */
-	public int getRegionId() {
+	public int getRegionID() {
 		return ((getRegionX() << 8) + getRegionY());
 	}
 
@@ -442,7 +442,7 @@ public class Tile {
 	 */
 	@Override
 	public String toString() {
-		return "X: " + x + ", Y: " + y + ", Z: " + plane + " (REGION: " + getRegionId() + ")";
+		return "X: " + x + ", Y: " + y + ", Z: " + plane + " (REGION: " + getRegionID() + ")";
 	}
 
 	/**

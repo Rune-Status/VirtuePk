@@ -172,6 +172,7 @@ public class Player extends Entity {
 		packetDispatcher.dispatchRunEnergy(runEnergy);//Sends the current run energy level to the player
 		//sendRunButtonConfig();
 		chatManager.init(false);
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().add(this);
 		//getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
@@ -206,6 +207,7 @@ public class Player extends Entity {
 		exists = false;
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this);
+			World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().remove(this);
 			IOHub.getAccountIo().save(this);
 		}		
 		chatManager.disconnect();

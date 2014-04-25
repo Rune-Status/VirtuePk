@@ -116,9 +116,12 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 	}
 
 	@Override
-	public void leaveChannel(Player player) {		
+	public void leaveChannel(Player player, boolean isLoggedOut) {		
 		String owner = StringUtils.format(player.getChatManager().getCurrentChannelOwner(), FormatType.PROTOCOL);
 		if (owner == null) {
+			if (isLoggedOut) {
+				return;
+			}
 			player.getPacketDispatcher().dispatchMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 			player.getChatManager().setCurrentChannelOwner(null);
 			return;
@@ -128,6 +131,9 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 				friendsChannelCache.remove(owner);
 			}
 		}		
+		if (isLoggedOut) {
+			return;
+		}
 		player.getChatManager().setCurrentChannelOwner(null);
 		player.getPacketDispatcher().dispatchMessage("You have left the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 	}

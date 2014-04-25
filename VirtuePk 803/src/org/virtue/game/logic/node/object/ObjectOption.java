@@ -34,9 +34,9 @@ public enum ObjectOption {
 	}
 	
 	/**
-	 * Gets the NPC option associated with the specified opcode
+	 * Gets the object option associated with the specified opcode
 	 * @param opcode	The opcode.
-	 * @return			The NPC Option
+	 * @return			The Object Option
 	 */
 	public static ObjectOption getFromOpcode (int opcode) {
 		for (ObjectOption button : ObjectOption.values()) {

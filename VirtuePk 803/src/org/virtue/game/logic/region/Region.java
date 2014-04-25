@@ -1,9 +1,13 @@
 package org.virtue.game.logic.region;
 
+import java.util.ArrayList;
+
 import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.utility.EntityList;
 
 /**
@@ -36,6 +40,11 @@ public class Region extends AttributeSet implements SubRegion {
 	 * Represents the NPCs in this region.
 	 */
 	private EntityList<NPC> npcs;
+	
+	/**
+	 * Represents the {@link List} of items.
+	 */
+	private ArrayList<GroundItem> items = new ArrayList<>();
 	
 	/**
 	 * Constructs a new {@code Region.java}.
@@ -87,6 +96,42 @@ public class Region extends AttributeSet implements SubRegion {
 	 */
 	public void setNpcs(EntityList<NPC> npcs) {
 		this.npcs = npcs;
+	}
+	
+	/**
+	 * Places an item on the ground
+	 * @param item	The {@link GroundItem} to add
+	 */
+	public void addItem (GroundItem item) {
+		if (!items.contains(item)) {
+			items.add(item);
+			for (Player p : players) {
+				p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.CREATE);
+			}
+		}
+	}
+	
+	/**
+	 * Removes an item which was previously on the ground
+	 * @param item	The item to remove
+	 */
+	public void removeItem (GroundItem item) {
+		if (!items.contains(item)) {
+			return;
+		}
+		items.remove(item);
+		for (Player p : players) {
+			p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.DESTROY);
+		}
+	}
+	
+	public GroundItem getItem (int id) {
+		for (GroundItem item : items) {
+			if (item.getId() == id) {
+				return item;
+			}
+		}
+		return null;
 	}
 
 	/**

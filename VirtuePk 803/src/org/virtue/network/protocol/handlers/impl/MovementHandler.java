@@ -37,8 +37,8 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		Tile target = new Tile(targetX, targetY, 0);
 		Tile flagPos = null;
 		if (targetX - currentX != 0 || targetY - currentY != 0) {
-			flagPos = new Tile(target.getLocalX(session.getPlayer().getLastLoadedRegion()),
-					target.getLocalY(session.getPlayer().getLastLoadedRegion()), 0);
+			flagPos = new Tile(target.getLocalX(session.getPlayer().getViewport().getLastLoadedTile()),
+					target.getLocalY(session.getPlayer().getViewport().getLastLoadedTile()), 0);
 			//target = Tile.edit(target, session.getPlayer().getLastTile(), yOff, 0)
 		}//Change the minimap flag if the destination is not reachable
 		session.getTransmitter().send(MinimapFlagEncoder.class, flagPos);

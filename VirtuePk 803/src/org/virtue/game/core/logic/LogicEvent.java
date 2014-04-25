@@ -1,10 +1,14 @@
 package org.virtue.game.core.logic;
 
+import java.util.concurrent.ScheduledFuture;
+
 /**
  * @author Taylor Moon
  * @since Jan 23, 2014
  */
 public abstract class LogicEvent implements Runnable {
+	
+	protected ScheduledFuture<?> future;
 
 	/**
 	 * Returns the delay between successful cycles.
@@ -23,4 +27,8 @@ public abstract class LogicEvent implements Runnable {
 	 * @return True if so; false otherwise.
 	 */
 	public abstract boolean singleShotEvent();
+	
+	public void registerFuture (ScheduledFuture<?> future) {
+		this.future = future;
+	}
 }

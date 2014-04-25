@@ -1,8 +1,13 @@
 package org.virtue.game.logic;
 
+import org.virtue.Launcher;
+import org.virtue.game.core.logic.LogicEvent;
+import org.virtue.game.core.logic.impl.SystemUpdateEvent;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.region.RegionManager;
+import org.virtue.network.protocol.packet.encoder.impl.SystemUpdateEncoder;
 import org.virtue.utility.EntityList;
 
 /**
@@ -77,6 +82,8 @@ public class WorldHub {
 	 * Represents if this worldframe should appear online.
 	 */
 	protected boolean online = true;
+	
+	private long systemUpdateAt = -1;
 	
 	private String name;
 	
@@ -239,14 +246,40 @@ public class WorldHub {
 	public void setOnline(boolean online) {
 		this.online = online;
 	}
+	
+	public void queueSystemUpdate (int delay) {
+		systemUpdateAt = System.currentTimeMillis() + (delay*1000);
+		int delayTicks = (int) ((int) delay / 0.6);
+		for (Player p : PLAYERS) {
+			p.getAccount().getSession().getTransmitter().send(SystemUpdateEncoder.class, delayTicks);
+		}
+		Launcher.getEngine().getLogicProcessor().registerEvent(new SystemUpdateEvent(delay*1000));
+	}
+	
+	public boolean hasSystemUpdate () {
+		if (systemUpdateAt == -1) {
+			return false;
+		}
+		return true;
+	}
+	
+	public int getSystemUpdateDelay () {
+		if (systemUpdateAt == -1) {
+			return -1;
+		}
+		return (int) ((int) systemUpdateAt - System.currentTimeMillis())/1000;
+	}
 
 	/**
-	 * @return the REGION_MANAGER
+	 * @return the region manager
 	 */
 	public RegionManager getRegionManager() {
 		return REGION_MANAGER;
 	}
 	
+	/**
+	 * @return the name of the world
+	 */
 	public String getName () {
 		return name;
 	}

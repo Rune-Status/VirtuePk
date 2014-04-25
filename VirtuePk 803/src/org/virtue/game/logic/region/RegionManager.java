@@ -26,7 +26,7 @@ public class RegionManager {
 	 * @param region The new region.
 	 * @return The previous region.
 	 */
-	public Region replaceRegionById(int id, Region region) {
+	public Region replaceRegionByID(int id, Region region) {
 		synchronized (regions) {
 			return replaceRegionByIndex(getRegionIndex(regions.get(id)), region);
 		}
@@ -73,7 +73,7 @@ public class RegionManager {
 	 * @return The region that was removed.
 	 */
 	public Region removeById(int id) {
-		Region region = getRegionById(id);
+		Region region = getRegionByID(id);
 		if (region == null) {
 			return null;
 		}
@@ -141,7 +141,7 @@ public class RegionManager {
 	 * @param id The id of the region to get.
 	 * @return The region.
 	 */
-	public Region getRegionById(int id) {
+	public Region getRegionByID(int id) {
 		synchronized (regions) {
 			for (Region region : regions) {
 				if (region.getId() == id) {
@@ -159,7 +159,7 @@ public class RegionManager {
 	 */
 	public boolean containsRegion(int id) {
 		synchronized (regions) {
-			return regions.contains(getRegionById(id));
+			return regions.contains(getRegionByID(id));
 		}
 	}
 

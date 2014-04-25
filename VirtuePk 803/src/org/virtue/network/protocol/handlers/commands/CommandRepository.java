@@ -27,6 +27,7 @@ public class CommandRepository {
 		commands.add(new ReloadAppearance());
 		commands.add(new SpawnNpc());
 		commands.add(new AddExperience());
+		commands.add(new SystemUpdate());
 		
 	}
 	

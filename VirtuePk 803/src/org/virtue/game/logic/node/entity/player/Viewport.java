@@ -7,6 +7,7 @@ import java.util.List;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.region.LandscapeRepository;
+import org.virtue.game.logic.region.Region;
 import org.virtue.game.logic.region.RegionUpdateEvent;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
@@ -138,15 +139,19 @@ public class Viewport {
 		int minRegionY = (chunkY - mapHash) / 8;
 		for (int xCalc = minRegionX < 0 ? 0 : minRegionX; xCalc <= ((chunkX + mapHash) / 8); xCalc++) {
 			for (int yCalc = minRegionY < 0 ? 0 : minRegionY; yCalc <= ((chunkY + mapHash) / 8); yCalc++) {
-				final int region = yCalc + (xCalc << 8);
-				World.getWorld().getRegionManager().registerRegionUpdate(new RegionUpdateEvent(World.getWorld().getRegionManager().getRegionById(region), new Runnable() {
-
+				final int regionID = yCalc + (xCalc << 8);
+				Region region = World.getWorld().getRegionManager().getRegionByID(regionID);
+				if (region == null) {
+					region = new Region(regionID);
+					World.getWorld().getRegionManager().addRegion(region);
+				}
+				World.getWorld().getRegionManager().registerRegionUpdate(new RegionUpdateEvent(region, new Runnable() {
 					@Override
 					public void run() {
-						World.getWorld().getRegionManager().getRegionById(region).refresh();
+						World.getWorld().getRegionManager().getRegionByID(regionID).refresh();
 					}
 				}));
-				REGIONS.add(region);
+				REGIONS.add(regionID);
 			}
 		}
 		lastLoadedTile = new Tile(getPlayer().getTile());

@@ -27,7 +27,7 @@ public class GroovyManager {
 
 	private static final Map<String, Class<?>> scripts = new HashMap<>();
 	
-	public static void Init() {
+	public static void init() {
 		try {
 			engine = new GroovyScriptEngine(new String("data/scripts"));
 			ImportCustomizer imports = new ImportCustomizer();
@@ -36,8 +36,8 @@ public class GroovyManager {
 			File importsFile = new File("data/imports.txt");
 			if (Constants.DEVELOPER_MODE) {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(importsFile));
-				generateImports(new File("bin/" + "org.virtue/game/"), imports, writer);
-				generateImports(new File("bin/" + "org.virtue/network/"), imports, writer);
+				generateImports(new File("bin/" + "org/virtue/game/"), imports, writer);
+				generateImports(new File("bin/" + "org/virtue/network/"), imports, writer);
 				writer.close();
 			} else {
 				loadImports(importsFile, imports);

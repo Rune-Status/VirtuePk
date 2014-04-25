@@ -3,6 +3,7 @@ package org.virtue.game.core.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 import org.virtue.Launcher;
 import org.virtue.game.core.gametick.Tick;
@@ -32,6 +33,7 @@ public class LogicProcessor extends Tick {
 						Launcher.getEngine().registerLogicEvent(event);
 					} else {
 						Launcher.getEngine().registerLogicEvent(event, event.getInitialDelay(), event.getIntervalDelay());
+						//event.registerFuture(future);
 					}
 				}
 				events.clear();

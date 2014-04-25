@@ -122,7 +122,7 @@ public class ChatManager {
 				player.getPacketDispatcher().dispatchMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);				
 			} else if (channelStage.equals(ChannelStage.JOINED)) {
 				channelStage = ChannelStage.LEAVING;
-				friendsChatManager.leaveChannel(player);				
+				friendsChatManager.leaveChannel(player, false);				
 			}
 		} else {
 			if (channelStage.equals(ChannelStage.LEAVING) || channelStage.equals(ChannelStage.JOINED)) {
@@ -199,7 +199,7 @@ public class ChatManager {
 		IOHub.getFriendsIO().save(player.getAccount().getUsername().getAccountNameAsProtocol(), friendManager);
 		friendManager.shutdown();
 		if (channelStage.equals(ChannelStage.JOINED)) {
-			friendsChatManager.leaveChannel(player);
+			friendsChatManager.leaveChannel(player, true);
 		}
 	}
 	

@@ -6,6 +6,7 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.region.Region;
 import org.virtue.game.logic.region.Tile;
 
 /**
@@ -302,9 +303,9 @@ public class Movement {
 			entity.getLastTile().copy(entity.getTile());
 			Tile next = Tile.edit(entity.getTile(), MovementUtils.DIRECTION_DELTA_X[nextWalkDirection], MovementUtils.DIRECTION_DELTA_Y[nextWalkDirection], 0);
 			if (!(entity instanceof NPC)) {
-				if (next.getRegionId() != entity.getTile().getRegionId()) {
-//					World.getWorld().getRegion(entity.getTile().getRegionId()).removePlayer((Player) entity);
-//					World.getWorld().getRegion(next.getRegionId()).addPlayer((Player) entity);
+				if (next.getRegionID() != entity.getTile().getRegionID()) {
+					World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
+					World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).getPlayers().add((Player) entity);
 				}
 			}
 			//System.out.println("Current: x="+entity.getLastTile().getX()+", y="+entity.getLastTile().getY());
@@ -318,17 +319,17 @@ public class Movement {
 				Tile next = Tile.edit(entity.getTile(), MovementUtils.DIRECTION_DELTA_X[nextRunDirection], MovementUtils.DIRECTION_DELTA_Y[nextRunDirection], 0);
 				if (entity instanceof Player) {
 					((Player) entity).drainRunEnergy();
-//					if (next.getRegionId() != entity.getTile().getRegionId()) {
-//						World.getWorld().getRegion(entity.getTile().getRegionId()).removePlayer((Player) entity);
-//						World.getWorld().getRegion(next.getRegionId()).addPlayer((Player) entity);
-//					}
+					if (next.getRegionID() != entity.getTile().getRegionID()) {
+						World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
+						World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).getPlayers().add((Player) entity);
+					}
 				}				
 				entity.getTile().copy(next);
 			}
 		}
 		if (!(entity instanceof NPC)) {
-			if (((Player) entity).needsMapUpdate()) {
-//				((Player) entity).getSceneGraph().loadViewport();
+			if (((Player) entity).getViewport().needsMapUpdate()) {
+				((Player) entity).getViewport().loadViewport();
 				((Player) entity).loadMapRegion();
 			}
 		}
@@ -352,7 +353,8 @@ public class Movement {
 		int movementType = 0;
 		if (getNextWalkDirection() != -1) {
 			movementType = 1;
-		} else if (running) {
+		}
+		if (getNextRunDirection() != -1) {
 			movementType = 2;
 		}
 		return movementType;

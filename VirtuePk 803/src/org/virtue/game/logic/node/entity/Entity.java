@@ -139,14 +139,14 @@ public abstract class Entity extends Node {
 	 * Represents if a map update is required.
 	 * @return True if so; false otherwise.
 	 */
-	public boolean needsMapUpdate () {
+	/*public boolean needsMapUpdate () {
 		int lastRegionX = lastLoadedRegion.getChunkX(); 
 		int lastRegionY = lastLoadedRegion.getChunkY();
 		int regionX = getTile().getChunkX();
 		int regionY = getTile().getChunkY();
 		int size = ((LandscapeRepository.REGION_SIZES[0] >> 3) / 2) - 1;		
 		return Math.abs(lastRegionX - regionX) >= size || Math.abs(lastRegionY - regionY) >= size;
-	}
+	}*/
 	
 	public Tile getLastLoadedRegion () {
 		return lastLoadedRegion;

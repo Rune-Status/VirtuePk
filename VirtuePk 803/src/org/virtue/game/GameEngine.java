@@ -3,6 +3,7 @@ package org.virtue.game;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.virtue.game.core.filter.Js5Filter;
@@ -114,7 +115,11 @@ public class GameEngine implements Runnable {
 				long currentTime = System.currentTimeMillis();
 				TICK_MANAGER.processAllTicks();
 				long elapsedTime = (System.currentTimeMillis() - currentTime);
-				Thread.sleep(GameClock.ONE_TICK - elapsedTime);
+				if (GameClock.ONE_TICK - elapsedTime > 0) {
+					Thread.sleep(GameClock.ONE_TICK - elapsedTime);					
+				} else {
+					System.err.println("Warning - Missed one tick at cycle "+cycleCount);
+				}
 				cycleCount++;
 			} catch (Exception e) {
 				handleException(e);
@@ -198,6 +203,7 @@ public class GameEngine implements Runnable {
 	 */
 	public void shutdown() {
 		running = false;
+		LOGIC_SERVICE.shutdown();
 	}
 
 	/**

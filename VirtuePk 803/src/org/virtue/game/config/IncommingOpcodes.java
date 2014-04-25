@@ -40,6 +40,7 @@ public class IncommingOpcodes {
 	//Movement-related
 	public final static int WALKING_PACKET = 95;//803
 	public final static int MINI_WALKING_PACKET = 66;//803
+	public final static int REGION_LOADING_COMPLETED_PACKET = 21;//803
 	
 	//Action buttons
 	public final static int ACTION_BUTTON_1_PACKET = 112;//803
@@ -80,6 +81,14 @@ public class IncommingOpcodes {
 	public final static int OBJECT_OPTION_4_PACKET = 117;//803
 	public final static int OBJECT_OPTION_5_PACKET = 102;//803
 	public final static int OBJECT_EXAMINE_PACKET = 50;//803
+	
+	//Ground item options
+	public final static int GROUND_ITEM_OPTION_1_PACKET = 35;//803
+	public final static int GROUND_ITEM_OPTION_2_PACKET = 18;//803
+	public final static int GROUND_ITEM_OPTION_3_PACKET = 5;//803
+	public final static int GROUND_ITEM_OPTION_4_PACKET = 110;//803
+	public final static int GROUND_ITEM_OPTION_5_PACKET = 55;//803
+	public final static int GROUND_ITEM_EXAMINE_PACKET = 91;//803
 	
 	//Friends/Ignores management
 	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803

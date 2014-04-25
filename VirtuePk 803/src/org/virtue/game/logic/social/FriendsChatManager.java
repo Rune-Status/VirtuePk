@@ -19,7 +19,7 @@ public interface FriendsChatManager {
 	 * Sends a request for the specified player to leave their current channel
 	 * @param player	The player who wishes to leave the channel
 	 */
-	public void leaveChannel(Player player);
+	public void leaveChannel(Player player, boolean isLoggedOut);
 	
 	public void sendMessage(Player player, String message);
 	
