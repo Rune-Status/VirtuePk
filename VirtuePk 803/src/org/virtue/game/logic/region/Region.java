@@ -76,6 +76,10 @@ public class Region extends AttributeSet implements SubRegion {
 	public EntityList<Player> getPlayers() {
 		return players;
 	}
+	
+	public void addPlayer (Player player) {
+		players.add(player);
+	}
 
 	/**
 	 * @param players the players to set
@@ -105,8 +109,10 @@ public class Region extends AttributeSet implements SubRegion {
 	public void addItem (GroundItem item) {
 		if (!items.contains(item)) {
 			items.add(item);
-			for (Player p : players) {
-				p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.CREATE);
+			for (Player p : World.getWorld().getPlayers()) {
+				if (p.getViewport().getRegions().contains(id)) {
+					p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.CREATE);
+				}
 			}
 		}
 	}
@@ -120,9 +126,15 @@ public class Region extends AttributeSet implements SubRegion {
 			return;
 		}
 		items.remove(item);
-		for (Player p : players) {
-			p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.DESTROY);
+		for (Player p : World.getWorld().getPlayers()) {
+			if (p.getViewport().getRegions().contains(id)) {
+				p.getPacketDispatcher().dispatchGroundItem(item, GroundItemType.DESTROY);
+			}
 		}
+	}
+	
+	public boolean containsItem (GroundItem item) {
+		return items.contains(item);
 	}
 	
 	public GroundItem getItem (int id) {
@@ -132,6 +144,19 @@ public class Region extends AttributeSet implements SubRegion {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Updates the region nodes.
+	 * @param player The player updating.
+	 */
+	public void updateGroundItems(Player player, GroundItemType type) {
+		for (GroundItem item : items) {
+			if (item == null) {
+				continue;
+			}
+			player.getPacketDispatcher().dispatchGroundItem(item, type);
+		}
 	}
 
 	/**

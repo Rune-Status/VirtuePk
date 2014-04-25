@@ -19,6 +19,7 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		int sizeX = getFlag("sizeX", 0);
 		int sizeY = getFlag("sizeY", 0);
 		
+		session.getPlayer().setCoordinateEvent(null);
 		//System.out.println("Movement request: x="+baseX+", y="+baseY+", forceRun="+forceRun);
 		Movement movement = session.getPlayer().getUpdateArchive().getMovement();
 		movement.resetWalkSteps();

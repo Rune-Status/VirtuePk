@@ -3,6 +3,7 @@ package org.virtue.game.core.logic.impl;
 import org.virtue.game.core.logic.LogicEvent;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.utility.GameClock;
 
 public class SystemUpdateEvent extends LogicEvent {
 	
@@ -34,7 +35,7 @@ public class SystemUpdateEvent extends LogicEvent {
 
 	@Override
 	public long getIntervalDelay() {
-		return 600;
+		return GameClock.ONE_TICK;
 	}
 
 	@Override

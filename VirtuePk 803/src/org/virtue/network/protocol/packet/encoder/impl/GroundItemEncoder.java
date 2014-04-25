@@ -17,7 +17,7 @@ public class GroundItemEncoder implements PacketEncoder<GroundItemMessage> {
 		buffer.putByteA(node.getItem().getTile().getPlane());
 		buffer.putByteA(localY >> 3);
 		int offsetX = localX % 8;
-		int offsetY = localY % 8;//node.getItem().getTile().getYInRegion() - (localY << 3);
+		int offsetY = localY % 8;
 		//System.out.println("offsetX="+offsetX+", offsetY="+offsetY+", localX="+localX+", localY="+localY);
 		//System.out.println("regionX="+(node.getItem().getTile().getRegionX() << 6)+", regionY="+(node.getItem().getTile().getRegionY() << 6));
 		switch (node.getType()) {
@@ -25,14 +25,14 @@ public class GroundItemEncoder implements PacketEncoder<GroundItemMessage> {
 			buffer.putPacket(OutgoingOpcodes.ADD_GROUND_ITEM);
 			buffer.putLEShort(node.getItem().getId());
 			buffer.putShortA(node.getItem().getAmount());			
-			buffer.put((offsetX & 0x7) << 4 | offsetY & 0x7);//Try with zero, since it seems like the offset is calculated at zero anyways
+			buffer.put((offsetX & 0x7) << 4 | offsetY & 0x7);
+			//System.out.println("Adding item "+node.getItem().getId()+" at position x="+node.getItem().getTile().getX()+", y="+node.getItem().getTile().getY());
 			break;
 		case DESTROY:
 			buffer.putPacket(OutgoingOpcodes.REMOVE_GROUND_ITEM_PACKET);
 			buffer.putLEShortA(node.getItem().getId());
-			//int x = node.getItem().getTile().getX() - (node.getItem().getTile().getLocalX() << 3);
-			//int y = node.getItem().getTile().getY() - (node.getItem().getTile().getLocalY() << 3);
 			buffer.putByteS((offsetX & 0x7) << 4 | offsetY & 0x7);
+			//System.out.println("Removing item "+node.getItem().getId()+" at position x="+node.getItem().getTile().getX()+", y="+node.getItem().getTile().getY());
 			break;
 		}
 		return buffer;

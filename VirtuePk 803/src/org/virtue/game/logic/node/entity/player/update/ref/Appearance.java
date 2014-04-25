@@ -269,7 +269,7 @@ public class Appearance {
 		}
 		Item weapon = player.getEquipment().getItems().get(Equipment.SLOT_MAINHAND);
 		if (weapon != null) {
-			return weapon.getDefinition().getRenderAnimId();
+			return weapon.getDefinition().getRenderAnimID();
 		}
 		return DEFAULT_RENDER_EMOTE;
 	}

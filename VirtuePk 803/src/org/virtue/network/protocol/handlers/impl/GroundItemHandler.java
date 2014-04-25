@@ -1,6 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.events.impl.ItemTakeEvent;
 import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.item.GroundItemOption;
 import org.virtue.game.logic.region.Region;
@@ -30,6 +31,12 @@ public class GroundItemHandler extends MovementHandler {
 		if (!option.equals(GroundItemOption.EXAMINE)) {
 			super.handle(session);//Handle the movement aspect
 		}
-		System.out.println("Clicked ground item: itemID="+itemID+", xCoord="+xCoord+", yCoord="+yCoord+", optionID="+option.getID());
+		String optString = item.getDefinition().getOption(true, option.getID());
+		if (option.equals(GroundItemOption.THREE) && optString.equalsIgnoreCase("take")) {
+			//System.out.println("Handle item take...");
+			session.getPlayer().setCoordinateEvent(new ItemTakeEvent(item));
+			return;
+		}
+		System.out.println("Clicked ground item: itemID="+itemID+", xCoord="+xCoord+", yCoord="+yCoord+", option="+optString+" ("+option.getID()+")");
 	}
 }

@@ -65,6 +65,10 @@ public class Item {
 	    return EquipSlot.forID(definition.getEquiptSlotID());
 	}
 	
+	/**
+	 * Gets the cache definition for the item
+	 * @return	The definition
+	 */
 	public ItemDefinition getDefinition () {
 		return definition;
 	}

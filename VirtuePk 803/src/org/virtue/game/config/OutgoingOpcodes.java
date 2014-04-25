@@ -51,6 +51,7 @@ public class OutgoingOpcodes {
 	public static final int REMOVE_GROUND_ITEM_PACKET = 110;//803
 	public static final int PROJECTILE_PACKET = 90;//803
 	public static final int WORLD_TILE_PACKET = 122;//803
+	public static final int UPDATE_WORLD_TILE_PACKET = 107;//803 - Basically an all-in-one world tile update packet.
 	public static final int TILE_MESSAGE_PACKET = 45;//803
 	public static final int SPAWN_OBJECT_PACKET = 111;//803
 	public static final int DESTROY_OBJECT_PACKET = 114;//803

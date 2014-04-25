@@ -1,7 +1,9 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
+import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.content.skills.SkillData;
+import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
@@ -11,6 +13,7 @@ import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.region.Tile;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -229,11 +232,23 @@ public class Inventory extends AbstractInterface {
                     if (item == null) {
                         return;//Invalid item
                     }
-                    String option = item.getDefinition().getOption(false, button.getID());
+                    int optionID = button.getID();
+                    if (optionID > 3) {
+                    	optionID -= 3;
+                    }
+                    String option = item.getDefinition().getOption(false, optionID);
 					
                     if (button.equals(ActionButton.TWO) && item.getDefinition().isWearItem(
 							getPlayer().getUpdateArchive().getAppearance().getGender() == Gender.MALE)) {
-                        handleEquip(item, slotID, option);
+                        if (handleEquip(item, slotID, option)) {
+                    		refresh();
+                        	return;
+                        }
+                    } else if (button.equals(ActionButton.EIGHT)) {
+                    	if (handleDrop(item, slotID, option)) {
+                    		refresh();
+                    		return;
+                    	}
                     }
                     System.out.println("Inventory item pressed: slot="+slotID+", itemID="+itemID+", option="+option+" ("+button.getID()+")");
                     return;
@@ -250,9 +265,20 @@ public class Inventory extends AbstractInterface {
 		Item oldItem = getPlayer().getEquipment().swapItem(targetSlot, item);
 		//System.out.println("Swapping item "+oldItem.getDefinition().getName()+" with "+item.getDefinition().getName());
 		items.set(slotID, oldItem);
-		refresh();
 		getPlayer().getUpdateArchive().getAppearance().packBlock();
 		return true;
+	}
+	
+	public boolean handleDrop (Item item, int slotID, String option) {
+		if (option.equalsIgnoreCase("drop")) {
+			GroundItem groundItem = new GroundItem(item.getId(), item.getAmount(), new Tile(getPlayer().getTile()));
+			World.getWorld().getRegionManager().getRegionByID(getPlayer().getTile().getRegionID()).addItem(groundItem);
+			items.remove(item);
+			return true;
+		} else if (option.equalsIgnoreCase("Destroy")) {
+			
+		}
+		return false;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.virtue.game.logic.region.LandscapeRepository;
 import org.virtue.game.logic.region.Region;
 import org.virtue.game.logic.region.RegionUpdateEvent;
 import org.virtue.game.logic.region.Tile;
+import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
@@ -131,6 +132,7 @@ public class Viewport {
 	 * Loads the {@code Player's} viewport map scene
 	 */
 	public void loadViewport() {
+		List<Integer> oldRegions = new ArrayList<Integer>(REGIONS);
 		REGIONS.clear();
 		int chunkX = getPlayer().getTile().getChunkX();
 		int chunkY = getPlayer().getTile().getChunkY();
@@ -151,6 +153,9 @@ public class Viewport {
 						World.getWorld().getRegionManager().getRegionByID(regionID).refresh();
 					}
 				}));
+				if (!oldRegions.contains(regionID)) {
+					region.updateGroundItems(player, GroundItemType.CREATE);
+				}
 				REGIONS.add(regionID);
 			}
 		}

@@ -305,7 +305,7 @@ public class Movement {
 			if (!(entity instanceof NPC)) {
 				if (next.getRegionID() != entity.getTile().getRegionID()) {
 					World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
-					World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).getPlayers().add((Player) entity);
+					World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).addPlayer((Player) entity);
 				}
 			}
 			//System.out.println("Current: x="+entity.getLastTile().getX()+", y="+entity.getLastTile().getY());
@@ -321,7 +321,7 @@ public class Movement {
 					((Player) entity).drainRunEnergy();
 					if (next.getRegionID() != entity.getTile().getRegionID()) {
 						World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
-						World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).getPlayers().add((Player) entity);
+						World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).addPlayer((Player) entity);
 					}
 				}				
 				entity.getTile().copy(next);

@@ -433,14 +433,6 @@ public class ItemDefinition {
 		equipSlotID = realItem.equipSlotID;
 		lent = true;
 	}
-
-	/*public int getArchiveId() {
-		return itemID >>> 8;
-	}
-
-	public int getFileId() {
-		return 0xFF & itemID;
-	}*/
 	
 	public String getName () {
 		return name;
@@ -449,17 +441,17 @@ public class ItemDefinition {
 	public int getID () {
 		return itemID;
 	}
-        
-        public String getOption (boolean ground, int id) {
-            if (id <= 0 || id > 5) {
-                return null;
-            }
-            if (ground) {
-                return groundOptions[id-1];
-            } else {
-                return inventoryOptions[id-1];
-            }
-        }
+	
+	public String getOption (boolean ground, int id) {
+		if (id <= 0 || id > 5) {
+			return null;
+		}
+		if (ground) {
+			return groundOptions[id-1];
+		} else {
+			return inventoryOptions[id-1];
+		}
+	}
 
 	public boolean hasOption(String option) {
 		if (inventoryOptions == null) {
@@ -472,6 +464,20 @@ public class ItemDefinition {
 			}
 
 			if (opt.toLowerCase().equalsIgnoreCase(option.toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isDestroyItem() {
+		if (inventoryOptions == null)
+			return false;
+		for (String option : inventoryOptions) {
+			if (option == null) {
+				continue;
+			}
+			if (option.equalsIgnoreCase("destroy")) {
 				return true;
 			}
 		}
@@ -692,7 +698,7 @@ public class ItemDefinition {
 		return (int) paramaters.get(14);
 	}
 
-	public int getRenderAnimId() {
+	public int getRenderAnimID() {
 		if (paramaters == null) {
 			return Appearance.DEFAULT_RENDER_EMOTE;
 		}

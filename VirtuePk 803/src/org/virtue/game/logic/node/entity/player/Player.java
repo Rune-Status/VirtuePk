@@ -8,6 +8,7 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.combat.ability.AbilityBook;
 import org.virtue.game.logic.content.combat.ability.ActionBar;
 import org.virtue.game.logic.content.skills.SkillManager;
+import org.virtue.game.logic.events.CoordinateEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
@@ -80,6 +81,14 @@ public class Player extends Entity {
 	
 	private boolean largeSceneView = false;
 	
+	/**
+	 * Represents the event to run when the player reaches a specific location
+	 */
+	private CoordinateEvent coordinateEvent;
+	
+	/**
+	 * Represents whether the player exists or not (ie whether they are logged in)
+	 */
 	private boolean exists = true;
 	
 	private PlayerStatus status = PlayerStatus.SWITCHING_WORLD;
@@ -172,7 +181,7 @@ public class Player extends Entity {
 		packetDispatcher.dispatchRunEnergy(runEnergy);//Sends the current run energy level to the player
 		//sendRunButtonConfig();
 		chatManager.init(false);
-		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().add(this);
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).addPlayer(this);
 		//getPacketDispatcher().dispatchInterface(new InterfaceMessage(1252, 65, 1477, true));//Treasure hunter pop-up thing
 	}
 	
@@ -222,6 +231,9 @@ public class Player extends Entity {
 		}
 		getUpdateArchive().getMovement().process();
 		restoreRunEnergy();
+		if (coordinateEvent != null && coordinateEvent.processEvent(this)) {
+			coordinateEvent = null;
+		}
 		//System.out.println("Run direction: "+getUpdateArchive().getMovement().getNextRunDirection());
 	}
 	
@@ -234,6 +246,10 @@ public class Player extends Entity {
 	public void sendLogout (boolean toLobby) {
 		packetDispatcher.dispatchLogout(toLobby);
 		destroy();
+	}
+
+	public void setCoordinateEvent(CoordinateEvent coordinateEvent) {
+		this.coordinateEvent = coordinateEvent;
 	}
 	
 	/**
