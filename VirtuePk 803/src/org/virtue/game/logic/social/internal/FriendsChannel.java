@@ -9,6 +9,7 @@ import org.virtue.game.logic.social.internal.InternalFriendManager.FcPermission;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
+import org.virtue.utility.GameClock;
 
 /**
  *
@@ -34,6 +35,8 @@ public class FriendsChannel {
 	
 	private HashMap<String, SocialUser> users = new HashMap<String, SocialUser>();
 	
+	private HashMap<String, Long> tempBans = new HashMap<String, Long>();
+	
 	public FriendsChannel(String ownerName, String channelName) {
 		this.ownerName = ownerName;
 		this.channelName = channelName;		
@@ -54,6 +57,14 @@ public class FriendsChannel {
 		return requirements.get(FcPermission.KICK);
 	}
 	
+	public boolean canKick (ChannelRank rank) {
+		return getKickReq().getID() <= rank.getID();
+	}
+	
+	/**
+	 * Returns the minimum rank needed to join the channel
+	 * @return	The minimum join rank
+	 */
 	public ChannelRank getJoinReq () {
 		return requirements.get(FcPermission.JOIN);
 	}
@@ -67,10 +78,19 @@ public class FriendsChannel {
 		return getJoinReq().getID() <= rank.getID();
 	}
 	
+	/**
+	 * Returns the minimum rank needed to talk in the channel
+	 * @return	The minimum talk rank
+	 */
 	public ChannelRank getTalkReq () {
 		return requirements.get(FcPermission.TALK);
 	}
 	
+	/**
+	 * Returns whether or not the specified rank can talk in the channel
+	 * @param rank	The rank to check
+	 * @return		True if the rank can talk in the channel, false otherwise
+	 */
 	public boolean canTalk (ChannelRank rank) {
 		return getTalkReq().getID() <= rank.getID();
 	}
@@ -124,19 +144,78 @@ public class FriendsChannel {
 		}
 	}
 	
+	/**
+	 * Returns whether the specified user is permanently banned from the channel
+	 * @param protocolName	The username of the user to check
+	 * @return				True if the user is banned, false otherwise
+	 */
 	public boolean isBanned (String protocolName) {
 		return bans.contains(protocolName);
 	}
 	
-	public void join (SocialUser player) {
+	/**
+	 * Returns whether the specified user is temporarily banned from the channel. Removes their temporary ban if it has expired.
+	 * @param protocolName	The username of the user to check
+	 * @return				True if the user is temporarily bannend, false otherwise
+	 */
+	public boolean isTempBanned (String protocolName) {
+		if (!tempBans.containsKey(protocolName)) {
+			return false;
+		} else {
+			long banExpires = tempBans.get(protocolName);
+			if (banExpires < System.currentTimeMillis()) {
+				tempBans.remove(protocolName);
+				return false;
+			}
+			return true;
+		}
+	}
+	
+	/**
+	 * Returns the number of users currently in the channel
+	 * @return	The number of users in the channel
+	 */
+	public int getSize () {
+		return users.size();
+	}
+	
+	public boolean join (SocialUser player) {
 		synchronized (users) {
 			if (!users.containsKey(player.getProtocolName())) {
+				if (users.size() >= 100) {
+					if (!tryBump(getPlayerRank(player.getProtocolName()))) {
+						return false;
+					}
+				}
 				FriendsChatPacket.User packet = makeUpdatePacket(player);
 				sendPacket(new FriendsChatPacket(packet));
 				users.put(player.getProtocolName(), player);
 			}
 		}
 		player.sendFriendsChatPacket(makeFullPacket());
+		return true;
+	}
+	
+	/**
+	 * Attempts to bump a lower-ranking user from the channel, in order to allow a higher-ranking one to join a full channel
+	 * @param playerRank	The rank of the player wishing to join
+	 * @return				True if a user was successfully bumpped, false otherwise
+	 */
+	private boolean tryBump (ChannelRank playerRank) {
+		for (ChannelRank rank : ChannelRank.values()) {
+			if (playerRank.equals(rank)) {
+				return false;
+			}
+			for (String name : users.keySet()) {
+				if (getPlayerRank(name).equals(rank)) {
+					removeUser(users.get(name));
+					users.get(name).sendLeaveFriendsChat();
+					users.get(name).sendGameMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
@@ -148,14 +227,31 @@ public class FriendsChannel {
 		String name = player.getProtocolName();
 		synchronized (users) {
 			if (users.containsKey(name)) {
-				String displayName = users.get(name).getDisplayName();
-				users.remove(name);
-				FriendsChatPacket.User packet = new FriendsChatPacket.User(displayName, null, null, player.getWorldID(), null);
-				sendPacket(new FriendsChatPacket(packet));
+				removeUser(users.get(name));
 			}
 		}
 		player.sendLeaveFriendsChat();
 		return users.isEmpty();
+	}
+	
+	private void removeUser (SocialUser user) {
+		String displayName = users.get(user.getProtocolName()).getDisplayName();
+		users.remove(user.getProtocolName());
+		FriendsChatPacket.User packet = new FriendsChatPacket.User(displayName, null, null, user.getWorldID(), null);
+		sendPacket(new FriendsChatPacket(packet));
+	}
+	
+	public void kickBanUser (String name) {
+		synchronized (users) {
+			if (users.containsKey(name)) {
+				SocialUser u = users.get(name);
+				removeUser(u);
+				u.sendGameMessage("You have been kicked from the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				u.sendLeaveFriendsChat();
+			}
+		}
+		long banExpires = System.currentTimeMillis() + GameClock.ONE_HOUR*GameClock.ONE_TICK;
+		tempBans.put(name, banExpires);
 	}
 	
 	public void sendMessage(FriendsChatMessage message) {

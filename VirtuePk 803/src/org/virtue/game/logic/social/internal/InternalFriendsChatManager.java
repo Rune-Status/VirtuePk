@@ -109,10 +109,19 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 			player.getPacketDispatcher().dispatchMessage("You do not have a high enough rank to join this friends chat channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 			player.getChatManager().setCurrentChannelOwner(null);
 			return;
-		}//TODO: Check for temporary bans and full channels
-		channel.join(new SocialUser(player, protocolPlayer));
-		player.getChatManager().setCurrentChannelOwner(channel.getOwner());
-		player.getPacketDispatcher().dispatchMessage("Now talking in friends chat channel "+channel.getName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		}
+		if (channel.isTempBanned(protocolPlayer)) {
+			player.getPacketDispatcher().dispatchMessage("You are temporarily banned from this friends chat channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			player.getChatManager().setCurrentChannelOwner(null);
+			return;
+		}
+		if (channel.join(new SocialUser(player, protocolPlayer))) {
+			player.getChatManager().setCurrentChannelOwner(channel.getOwner());
+			player.getPacketDispatcher().dispatchMessage("Now talking in friends chat channel "+channel.getName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		} else {
+			player.getChatManager().setCurrentChannelOwner(null);
+			player.getPacketDispatcher().dispatchMessage("The channel you tried to join is currently full.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		}
 	}
 
 	@Override
@@ -156,6 +165,38 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 		FriendsChatMessage messageObject = new FriendsChatMessage(message, user.getDisplayName(), 
 				user.getDisplayName(), user.getRank(), channel.getName());
 		channel.sendMessage(messageObject);
+	}
+
+	@Override
+	public void kickBanUser(Player player, String username) {
+		SocialUser user = new SocialUser(player);
+		String owner = StringUtils.format(player.getChatManager().getCurrentChannelOwner(), FormatType.PROTOCOL);
+		if (owner == null || !friendsChannelCache.containsKey(owner)) {
+			user.sendGameMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			user.sendLeaveFriendsChat();
+			player.getChatManager().setCurrentChannelOwner(null);
+			return;
+		}
+		FriendsChannel channel = friendsChannelCache.get(owner);
+		String protocolBanName = StringUtils.format(username, FormatType.PROTOCOL);
+		if (!channel.canKick(channel.getPlayerRank(user.getProtocolName()))) {
+			user.sendGameMessage("You do not have permission to kick users in this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			return;
+		}
+		if (user.getProtocolName().equalsIgnoreCase(protocolBanName)) {
+			return;//Cannot kick self
+		}
+		if (channel.getPlayerRank(user.getProtocolName()).getID() <= channel.getPlayerRank(protocolBanName).getID()) {
+			user.sendGameMessage("You do not have permission to kick this user.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			return;
+		}
+		if (channel.isTempBanned(protocolBanName)) {
+			channel.kickBanUser(protocolBanName);
+			user.sendGameMessage("Your request to refresh this user's temporary ban was successful.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		} else {
+			channel.kickBanUser(protocolBanName);
+			user.sendGameMessage("Your request to kick/ban this user was successful.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+		}
 	}
 	
 }

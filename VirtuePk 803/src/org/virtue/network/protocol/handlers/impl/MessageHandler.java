@@ -28,6 +28,7 @@ public class MessageHandler extends PacketHandler<WorldSession> {
 				break;
 			case FRIENDS_CHAT:
 				session.getPlayer().getChatManager().handleFriendsChatMessage(message);
+				break;
 			default:
 				System.out.println("Unhandled message: message="+message+", type="+session.getPlayer().getChatManager().getChatType());
 				break;	

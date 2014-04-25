@@ -29,7 +29,7 @@ public class SocialActionDecoder implements PacketDecoder<SocialActionHandler> {
 		return new int[] { IncommingOpcodes.ADD_FRIEND_PACKET, IncommingOpcodes.REMOVE_FRIEND_PACKET,
 				IncommingOpcodes.ADD_IGNORE_PACKET, IncommingOpcodes.REMOVE_IGNORE_PACKET,
 				IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET, IncommingOpcodes.IGNORE_NOTE_PACKET,
-				IncommingOpcodes.FRIEND_NOTE_PACKET };
+				IncommingOpcodes.FRIEND_NOTE_PACKET, IncommingOpcodes.FRIENDS_CHAT_KICK_PACKET };
 	}
 
 }

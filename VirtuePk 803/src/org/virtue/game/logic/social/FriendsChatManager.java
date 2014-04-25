@@ -21,6 +21,18 @@ public interface FriendsChatManager {
 	 */
 	public void leaveChannel(Player player, boolean isLoggedOut);
 	
+	/**
+	 * Sends a normal message within the friends chat channel
+	 * @param player	The player sending the message
+	 * @param message	The message being sent
+	 */
 	public void sendMessage(Player player, String message);
+	
+	/**
+	 * Sends a request to kick/ban a user from the channel
+	 * @param player	The player sending the request
+	 * @param user		The name of the user being kicked/banned.
+	 */
+	public void kickBanUser (Player player, String user);
 	
 }

@@ -78,6 +78,7 @@ public class SocialUser {
 	}
 	
 	public void sendLeaveFriendsChat () {
+		player.getChatManager().setCurrentChannelOwner(null);
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_CHANNEL_PACKET);
 		buffer.endPacketVarShort();

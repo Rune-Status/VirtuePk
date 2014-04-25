@@ -27,6 +27,9 @@ public class SocialActionHandler extends PacketHandler<WorldSession> {
 		case IncommingOpcodes.JOIN_FRIEND_CHAT_PACKET:
 			session.getPlayer().getChatManager().handleFriendsChatJoin(name);
 			break;
+		case IncommingOpcodes.FRIENDS_CHAT_KICK_PACKET:
+			session.getPlayer().getChatManager().handleFriendsChatKick(name);
+			break;
 		case IncommingOpcodes.IGNORE_NOTE_PACKET:
 			friendManager.setNote(name, getFlag("note", ""), false);
 			break;

@@ -208,6 +208,10 @@ public class ChatManager {
 		friendsChatManager.sendMessage(player, formattedMessage);
 	}
 	
+	public void handleFriendsChatKick (String name) {		
+		friendsChatManager.kickBanUser(player, name);
+	}
+	
 	/**
 	 * Handles the specified public chat message
 	 * @param message		The message
