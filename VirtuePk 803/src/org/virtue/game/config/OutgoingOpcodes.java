@@ -68,6 +68,7 @@ public class OutgoingOpcodes {
 	public static final int INTERFACE_SETTINGS_PACKET = 134;//803
 	public static final int WINDOW_PANE_PACKET = 76;//803
 	public static final int RUN_CS2_PACKET = 167;//803
+	public static final int RESET_INTERFACE_INFORMATION = 35;//803
 	
 	//Messages
 	public static final int GAME_MESSAGE_PACKET = 137;//803

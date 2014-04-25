@@ -14,6 +14,7 @@ import org.virtue.cache.Cache;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.player.identity.Password;
 import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.LoginResponse;
 import org.virtue.utility.Base37Utils;
@@ -189,13 +190,15 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 				}*/
 			}
 		}
+		
 		if ((IOHub.getAccountIo().exists(username.trim())) == false) {
-			account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, displayMode, clientSessionKey, serverSessionKey);
+			account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, new ClientScreen(), clientSessionKey, serverSessionKey);
+			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 		} else {
 			System.out.println("Loading player data for "+username);
 			account = IOHub.getAccountIo().load(username.trim());
 			account.setChannel(channel);
-			account.setDisplayMode(displayMode);
+			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 			account.setClientSessionKey(clientSessionKey);
 			account.setServerSessionKey(serverSessionKey);
 		}

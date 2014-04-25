@@ -10,7 +10,7 @@ public class ClientScreenHandler extends PacketHandler<WorldSession> {
 	@Override
 	public void handle(WorldSession session) {
 		ClientScreen screen = session.getPlayer().getInterfaces().getScreen();
-		DisplayMode displayMode = DisplayMode.forId(getFlag("width", 0));
+		DisplayMode displayMode = DisplayMode.forId(getFlag("display_mode", 0));
 		int width = getFlag("width", 0);
 		int height = getFlag("height", 0);
 		

@@ -15,7 +15,7 @@ import org.virtue.network.protocol.codec.login.LoginType;
 import org.virtue.network.protocol.messages.VarpMessage;
 import org.virtue.network.protocol.packet.encoder.impl.LoginEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.ScreenConfigEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.InterfaceLayoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.impl.WorldSession;
@@ -70,7 +70,7 @@ public class LoginFilter extends LogicEvent {
 			break;
 		case WORLD_PART_1:
 			player = null;
-			account.getSession().getTransmitter().send(ScreenConfigEncoder.class, new ClientScreen());
+			account.getSession().getTransmitter().send(InterfaceLayoutEncoder.class, account.getClientScreen());
 			return;
 		case WORLD_PART_2:
 			System.out.println("Sending login response data...");

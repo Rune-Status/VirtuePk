@@ -14,6 +14,7 @@ import org.virtue.game.logic.node.entity.player.identity.Email;
 import org.virtue.game.logic.node.entity.player.identity.Password;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.io.IOParser;
 
@@ -85,12 +86,18 @@ public class AccountParser implements IOParser<Account> {
 			 y = coords.get("y").getAsInt();
 			 z = coords.get("z").getAsInt();
 		}
+		ClientScreen screen = new ClientScreen();
+		JsonElement layout = obj.get("interfaceLayout");
+		if (layout == null || layout.isJsonNull()) {
+			screen.initLayout(null);
+		} else {
+			screen.initLayout(layout.getAsJsonArray());
+		}
 		
 		//Player player = new Player(new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z)));
-		
+		Account account = new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z), screen, obj);
 		//player.getSkillManager().deserialise(obj.get("skills").getAsJsonArray());
-		
-		return new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z), obj);
+		return account;
 	}
 
 	/**
@@ -125,6 +132,8 @@ public class AccountParser implements IOParser<Account> {
 		obj.add("equipment", p.getEquipment().serialise());
 		
 		obj.add("chatData", p.getChatManager().serialiseData());
+		
+		obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());
 		
 		System.out.println("Saving player...");
 		

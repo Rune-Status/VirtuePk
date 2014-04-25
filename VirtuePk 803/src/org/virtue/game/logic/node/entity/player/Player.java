@@ -15,7 +15,6 @@ import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.game.logic.social.ChatManager;
-import org.virtue.game.logic.social.OnlineStatus;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
@@ -118,7 +117,7 @@ public class Player extends Entity {
 		lastLoadedRegion = new Tile(lastTile);
 		//System.out.println("Stage 2");
 		viewport = new Viewport(this);
-		interfaceManager = new InterfaceManager(this);
+		interfaceManager = new InterfaceManager(this, account.getClientScreen());
 		inventory = new Inventory(this);
 		//System.out.println("Stage 3");
 		equipment = new Equipment(this);

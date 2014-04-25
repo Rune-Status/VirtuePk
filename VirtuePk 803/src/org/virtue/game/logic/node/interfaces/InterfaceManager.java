@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.interfaces;
 
 import java.util.HashMap;
 
+import org.virtue.Constants;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatInfo;
@@ -32,8 +33,9 @@ public class InterfaceManager {
 	 * Constructs a new {@code InterfaceManager.java}.
 	 * @param player The player.
 	 */
-	public InterfaceManager(Player player) {
+	public InterfaceManager(Player player, ClientScreen screen) {
 		this.player = player;
+		this.screenInfo = screen;
 	}
 	
 	public static final int GAME_WINDOW_PANE = 1477;
@@ -41,7 +43,7 @@ public class InterfaceManager {
 	/**
 	 * Represents if the screen is resizable.
 	 */
-	private ClientScreen screenInfo = new ClientScreen();
+	private ClientScreen screenInfo;
 	
 	public ClientScreen getScreen () {
 		return screenInfo;
@@ -51,7 +53,7 @@ public class InterfaceManager {
 	 * Sends the game screen.
 	 */
 	public void sendScreen() {
-		player.getAccount().getSession().getTransmitter().send(GameScreenEncoder.class, player.getAccount().getDisplayMode());
+		player.getAccount().getSession().getTransmitter().send(GameScreenEncoder.class, screenInfo.getDisplayMode());
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
 		
 		setInterface(player.getSkillManager(), 313, true);

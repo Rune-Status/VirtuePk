@@ -3,6 +3,7 @@ package org.virtue.game.logic.node.entity.player.identity;
 import org.jboss.netty.channel.Channel;
 import org.virtue.Constants;
 import org.virtue.game.core.AttributeSet;
+import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.session.Session;
 import org.virtue.utility.DisplayMode;
@@ -43,7 +44,7 @@ public class Account extends AttributeSet {
 	/**
 	 * Represents the display mode.
 	 */
-	private DisplayMode displayMode;
+	private ClientScreen screen;
 	
 	/**
 	 * Represents the key for the ongoing client session.
@@ -73,11 +74,12 @@ public class Account extends AttributeSet {
 	 * @param username The username.
 	 * @param password The password.
 	 */
-	public Account(Username username, Password password, Channel channel, DisplayMode displayMode, long clientSessionKey, long serverSessionKey) {
+	public Account(Username username, Password password, Channel channel, ClientScreen screen, long clientSessionKey, long serverSessionKey) {
+		System.out.println("Creating new account for user: "+username.getName());
 		this.username = username;
 		this.password = password;
 		this.channel = channel;
-		this.displayMode = displayMode;
+		this.screen = screen;
 		this.clientSessionKey = clientSessionKey;
 		this.serverSessionKey = serverSessionKey;
 	}
@@ -89,7 +91,8 @@ public class Account extends AttributeSet {
 	 * @param obj 
 	 * @param dateOfBirth2 
 	 */
-	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, JsonObject charFile) {
+	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, ClientScreen screen, JsonObject charFile) {
+		System.out.println("Creating new account for user: "+username.getName());
 		this.username = username;
 		this.password = password;
 		this.rank = rank;
@@ -98,7 +101,7 @@ public class Account extends AttributeSet {
 		this.dateofbirth = dateofbirth;
 		this.tile = tile;
 		this.channel = null;
-		this.displayMode = null;
+		this.screen = screen;
 		this.clientSessionKey = 0L;
 		this.serverSessionKey = 0L;
 		this.charFile = charFile;
@@ -132,16 +135,16 @@ public class Account extends AttributeSet {
 	/**
 	 * @return the displayMode
 	 */
-	public DisplayMode getDisplayMode() {
-		return displayMode;
+	public ClientScreen getClientScreen() {
+		return screen;
 	}
 
 	/**
 	 * @param displayMode the displayMode to set
 	 */
-	public void setDisplayMode(DisplayMode displayMode) {
-		this.displayMode = displayMode;
-	}
+	/*public void setScreenConfig(ClientScreen screen) {
+		this.screen = screen;
+	}*/
 
 	/**
 	 * @return the clientSessionKey

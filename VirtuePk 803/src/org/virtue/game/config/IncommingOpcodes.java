@@ -100,7 +100,7 @@ public class IncommingOpcodes {
 	
 	//Interface management
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
-	public final static int INTERFACE_INFORMATION_PACKET = 11;//803
+	public final static int INTERFACE_LAYOUT_PACKET = 20;//803
 	public final static int ITEM_ON_ITEM_PACKET = 82;//803
 	
 	private static final int[] SIZES_803 = new int[120];
