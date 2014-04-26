@@ -28,6 +28,7 @@ public class CommandRepository {
 		commands.add(new SpawnNpc());
 		commands.add(new AddExperience());
 		commands.add(new SystemUpdate());
+		commands.add(new SendInterface());
 		
 	}
 	

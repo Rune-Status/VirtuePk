@@ -92,7 +92,7 @@ public class Account extends AttributeSet {
 	 * @param dateOfBirth2 
 	 */
 	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, ClientScreen screen, JsonObject charFile) {
-		System.out.println("Creating new account for user: "+username.getName());
+		//System.out.println("Creating new account for user: "+username.getName());
 		this.username = username;
 		this.password = password;
 		this.rank = rank;

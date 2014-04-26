@@ -10,11 +10,30 @@ public class InterfaceSettingsEncoder implements PacketEncoder<InterfaceSettings
 	@Override
 	public RS3PacketBuilder buildPacket(InterfaceSettingsMessage node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacket(OutgoingOpcodes.INTERFACE_SETTINGS_PACKET);
-		buffer.putIntV1(node.getInterface());//Interface Component Hash
-		buffer.putShortA(node.getToSlot());//The end slot
-		buffer.putShortA(node.getFromSlot());//The start slot
-		buffer.putIntV2(node.getSettings());//The settings hash
+		switch (node.getType()) {
+		case SLOT:
+			buffer.putPacket(OutgoingOpcodes.INTERFACE_SETTINGS_PACKET);
+			buffer.putIntV1(node.getInterface());//Interface Component Hash
+			buffer.putShortA(node.getToSlot());//The end slot
+			buffer.putShortA(node.getFromSlot());//The start slot
+			buffer.putIntV2(node.getSettings());//The settings hash
+			break;
+		case CLOSE:
+			buffer.putPacket(OutgoingOpcodes.CLOSE_INTERFACE_PACKET);
+			buffer.putIntV1(node.getInterface());//Parent component hash
+			break;
+		case STRING:
+			buffer.putPacketVarShort(OutgoingOpcodes.COMPONENT_TEXT_PACKET);
+			buffer.putIntV2(node.getInterface());
+			buffer.putString(node.getComponentText());
+			buffer.endPacketVarShort();
+			break;
+		case HIDECOMP:
+			buffer.putPacket(OutgoingOpcodes.HIDE_COMPONENT_PACKET);
+			buffer.putInt(node.getInterface());
+			buffer.putByteC(node.getSettings());
+			break;
+		}		
 		return buffer;
 	}
 

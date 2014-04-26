@@ -1,5 +1,6 @@
 package org.virtue.network.protocol.handlers.impl;
 
+import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
@@ -11,7 +12,12 @@ public class InputHandler extends PacketHandler<WorldSession> {
 	
 	@Override
 	public void handle(WorldSession session) {
-		session.getPlayer().getAccount().putFlag("recent_" + getFlag("type", "null") + "_input", true);
-		session.getPlayer().getAccount().putFlag("input", getFlag("input", null));
+		switch (getFlag("opcode", -1)) {
+		case IncommingOpcodes.NAME_INPUT_PACKET:
+			if (session.getPlayer().getInputEvent() != null) {
+				session.getPlayer().getInputEvent().onInputEntered(getFlag("input", ""));
+			}
+			break;
+		}
 	}
 }

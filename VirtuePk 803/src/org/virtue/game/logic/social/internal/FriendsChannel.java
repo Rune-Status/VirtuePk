@@ -5,7 +5,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 import org.virtue.game.logic.social.ChannelRank;
-import org.virtue.game.logic.social.internal.InternalFriendManager.FcPermission;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -21,7 +20,7 @@ public class FriendsChannel {
 	
 	private String channelName;
 	
-	private final EnumMap<FcPermission, ChannelRank> requirements = new EnumMap<FcPermission, ChannelRank>(InternalFriendManager.FcPermission.class);
+	private final EnumMap<ChannelPermission, ChannelRank> requirements = new EnumMap<ChannelPermission, ChannelRank>(ChannelPermission.class);
 	
 	/*private ChannelRank kickRequirement = ChannelRank.OWNER;
 	
@@ -40,9 +39,9 @@ public class FriendsChannel {
 	public FriendsChannel(String ownerName, String channelName) {
 		this.ownerName = ownerName;
 		this.channelName = channelName;		
-		requirements.put(FcPermission.JOIN, ChannelRank.GUEST);
-		requirements.put(FcPermission.TALK, ChannelRank.FRIEND);
-		requirements.put(FcPermission.KICK, ChannelRank.OWNER);
+		requirements.put(ChannelPermission.JOIN, ChannelRank.GUEST);
+		requirements.put(ChannelPermission.TALK, ChannelRank.FRIEND);
+		requirements.put(ChannelPermission.KICK, ChannelRank.OWNER);
 	}
 	
 	public String getName () {
@@ -54,7 +53,7 @@ public class FriendsChannel {
 	}
 	
 	public ChannelRank getKickReq () {
-		return requirements.get(FcPermission.KICK);
+		return requirements.get(ChannelPermission.KICK);
 	}
 	
 	public boolean canKick (ChannelRank rank) {
@@ -66,7 +65,7 @@ public class FriendsChannel {
 	 * @return	The minimum join rank
 	 */
 	public ChannelRank getJoinReq () {
-		return requirements.get(FcPermission.JOIN);
+		return requirements.get(ChannelPermission.JOIN);
 	}
 	
 	/**
@@ -83,7 +82,7 @@ public class FriendsChannel {
 	 * @return	The minimum talk rank
 	 */
 	public ChannelRank getTalkReq () {
-		return requirements.get(FcPermission.TALK);
+		return requirements.get(ChannelPermission.TALK);
 	}
 	
 	/**
@@ -107,13 +106,27 @@ public class FriendsChannel {
 	}
 	
 	public void refreshSettings (InternalFriendManager data) {
+		data.resetFcUpdateFlag();
+		if (!data.hasFriendsChat()) {
+			synchronized (users) {
+				for (SocialUser u : users.values()) {
+					u.sendGameMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+					u.sendLeaveFriendsChat();
+				}
+			}
+			return;
+		}
 		boolean needsFullRefresh = false;
 		bans = data.getChannelBans();
 		if (!ownerName.equals(data.getDisplayName())) {
 			ownerName = data.getDisplayName();
 			needsFullRefresh = true;
 		}
-		for (FcPermission req : requirements.keySet()) {
+		if (!channelName.equals(data.getChannelName())) {
+			channelName = data.getChannelName();
+			needsFullRefresh = true;
+		}
+		for (ChannelPermission req : requirements.keySet()) {
 			if (!requirements.get(req).equals(data.getPermission(req))) {
 				requirements.put(req, data.getPermission(req));
 				needsFullRefresh = true;

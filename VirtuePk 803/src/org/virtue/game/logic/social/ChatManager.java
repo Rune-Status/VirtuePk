@@ -9,6 +9,7 @@ import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
@@ -67,6 +68,8 @@ public class ChatManager {
 	 * Represents the current friends chat status of the player
 	 */
 	private ChannelStage channelStage = ChannelStage.NONE;
+	
+	private FriendsChatSettings friendsChatSettings = null;
 	
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
@@ -182,6 +185,14 @@ public class ChatManager {
 	 */
 	public ChatType getChatType () {
 		return chatType;
+	}
+	
+	public FriendsChatSettings getFriendsChatSettings () {
+		return friendsChatSettings;
+	}
+	
+	public void setFriendsChatSettings (FriendsChatSettings friendsChatSettings) {
+		this.friendsChatSettings = friendsChatSettings;
 	}
 	
 	public void init (boolean lobby) {//autoJoinFriendsChat

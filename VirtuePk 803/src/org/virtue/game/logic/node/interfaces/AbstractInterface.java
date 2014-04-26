@@ -16,6 +16,8 @@ public abstract class AbstractInterface {
 	
 	private final int interfaceID;
 	
+	private int parentComponent;
+	
 	/**
 	 * Represents the player.
 	 */
@@ -49,9 +51,14 @@ public abstract class AbstractInterface {
 	 * @param clipped			Whether or not the interface is "walkable" (ie the player can move with the interface open)
 	 */
 	public void send (int parentID, int parentComponent, boolean clipped) {
+		this.parentComponent = parentComponent;
 		player.getPacketDispatcher().dispatchInterface(new InterfaceMessage(interfaceID, parentComponent, parentID, clipped));
 		postSend();
 		setLock(false);
+	}
+	
+	public void close () {
+		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(parentComponent));
 	}
 	
 	/**
@@ -69,6 +76,9 @@ public abstract class AbstractInterface {
 	public abstract void handleActionButton (int component, int slot1, int slot2, ActionButton button);
 	
 	public void setLock (boolean isLocked) {
+		if (getTabID() == -1) {
+			return;
+		}
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(UNLOCK_SCRIPT, (isLocked ? 0 : 1), getTabID()));
 	}
 	
@@ -82,5 +92,13 @@ public abstract class AbstractInterface {
 
 	public void sendInterfaceSettings(int component, int fromSlot, int toSlot, int settings) {
 		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, fromSlot, toSlot, settings));
+	}
+	
+	public void setComponentText (int component, String text) {
+		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, text));
+	}
+	
+	public void setComponentHidden (int component, boolean hidden) {
+		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, hidden));
 	}
 }

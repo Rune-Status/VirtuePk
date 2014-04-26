@@ -22,10 +22,13 @@ public class FriendsChatInfo extends AbstractInterface {
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
 		switch (component) {
 		case 29://Lootshare
-			
+			//TODO: Handle lootshare
 			break;
 		case 31://Kick/ban
-			
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
+			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(2688));			
 			break;
 		case 33://Join friends chat
 			if (getPlayer().getChatManager().getCurrentChannelOwner() != null) {
@@ -39,7 +42,9 @@ public class FriendsChatInfo extends AbstractInterface {
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));
 			break;
 		case 35://Friends chat settings
-			System.out.println("Unhandled request to open friends chat settings.");
+			getPlayer().getInterfaces().setTopInterface(new FriendsChatSettings(getPlayer()));
+			//getPlayer().getPacketDispatcher().dispatchInterface(new InterfaceMessage(RSInterface.FRIENDS_CHAT_SETTINGS, 236, RSInterface.GAME_SCREEN, false));
+			//System.out.println("Unhandled request to open friends chat settings.");
 			break;
 		default:
 			System.out.println("Unhandled Friends chat info button: component="+component+", button="+button+", slot1="+slot1+", slot2="+slot2);

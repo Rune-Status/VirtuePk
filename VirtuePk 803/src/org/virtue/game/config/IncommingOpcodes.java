@@ -101,6 +101,10 @@ public class IncommingOpcodes {
 	public final static int FRIEND_OPTION_PACKET = 2;//803
 	public final static int FRIEND_NOTE_PACKET = 108;//803
 	public final static int IGNORE_NOTE_PACKET = 77;//803
+	public final static int CHANGE_FRIEND_RANK_PACKET = 74;//803
+	
+	//Inputs
+	public final static int NAME_INPUT_PACKET = 49;//803
 	
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803
@@ -111,6 +115,7 @@ public class IncommingOpcodes {
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
 	public final static int INTERFACE_LAYOUT_PACKET = 20;//803
 	public final static int ITEM_ON_ITEM_PACKET = 82;//803
+	public final static int CLOSE_INTERFACE_PACKET = 26;//803
 	
 	private static final int[] SIZES_803 = new int[120];
 	static {

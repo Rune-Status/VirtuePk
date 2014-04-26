@@ -9,6 +9,7 @@ import org.virtue.game.logic.content.combat.ability.AbilityBook;
 import org.virtue.game.logic.content.combat.ability.ActionBar;
 import org.virtue.game.logic.content.skills.SkillManager;
 import org.virtue.game.logic.events.CoordinateEvent;
+import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
@@ -85,6 +86,11 @@ public class Player extends Entity {
 	 * Represents the event to run when the player reaches a specific location
 	 */
 	private CoordinateEvent coordinateEvent;
+	
+	/**
+	 * Represents the event to run when the player fills in an input form
+	 */
+	private InputEnteredEvent inputEvent;
 	
 	/**
 	 * Represents whether the player exists or not (ie whether they are logged in)
@@ -250,6 +256,14 @@ public class Player extends Entity {
 
 	public void setCoordinateEvent(CoordinateEvent coordinateEvent) {
 		this.coordinateEvent = coordinateEvent;
+	}
+	
+	public void setInputEvent (InputEnteredEvent event) {
+		this.inputEvent = event;
+	}
+	
+	public InputEnteredEvent getInputEvent () {
+		return inputEvent;
 	}
 	
 	/**

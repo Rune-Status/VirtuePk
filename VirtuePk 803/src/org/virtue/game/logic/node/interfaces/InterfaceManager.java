@@ -2,12 +2,12 @@ package org.virtue.game.logic.node.interfaces;
 
 import java.util.HashMap;
 
-import org.virtue.Constants;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatInfo;
 import org.virtue.game.logic.node.interfaces.impl.FriendsList;
 import org.virtue.game.logic.node.interfaces.impl.MinimapInterface;
+import org.virtue.game.logic.node.interfaces.impl.RibbonInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.InterfaceSettingsMessage;
@@ -28,6 +28,8 @@ public class InterfaceManager {
 	 * Represents all interfaces currently in use for the player
 	 */
 	private HashMap<Integer, AbstractInterface> tabInterfaces = new HashMap<Integer, AbstractInterface>();
+	
+	private AbstractInterface topLevelInterface = null;
 	
 	/**
 	 * Constructs a new {@code InterfaceManager.java}.
@@ -137,7 +139,9 @@ public class InterfaceManager {
 		//sendCs2(new ClientScriptVar(8862, 11, 1));//Runscript: [8862, 11, 1]
 		//sendCs2(new ClientScriptVar(8862, 12, 0));//Runscript: [8862, 12, 0]
 		
-		sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174] (Launcher bar (links to settings, social, powers, etc))
+		setInterface(new RibbonInterface(player), 174, true);
+		
+		//sendInterface(true, 1477, 174, 1431);//Interface: id=1431, clipped=1, parent=[1477, 174] (Launcher bar (links to settings, social, powers, etc))
 		sendInterface(true, 1477, 835, 568);//Interface: id=568, clipped=1, parent=[1477, 835]
 		sendInterfaceSettings(1477, 175, 1, 1, 2);//IfaceSettings: 96796847, 1, 1, 2
 		
@@ -427,66 +431,8 @@ public class InterfaceManager {
 		sendInterfaceSettings(1477, 833, 1, 2, 9175040);//IfaceSettings: 96797505, 2, 1, 9175040
 		sendInterfaceSettings(1477, 833, 0, 0, 9175040);//IfaceSettings: 96797505, 0, 0, 9175040
 		sendInterfaceSettings(1477, 833, 3, 4, 9175040);//IfaceSettings: 96797505, 4, 3, 9175040
-		/*if (player.getAccount().getDisplayMode().equals(DisplayMode.FIXED)) {
-			sendTab(161, 752);
-			sendTab(37, 751);
-			sendTab(23, 745);
-			sendTab(25, 754);
-			sendTab(155, 747); 
-			sendTab(151, 748);
-			sendTab(152, 749);
-			sendTab(153, 750);
-			sendInterface(true, 752, 9, 137);
-			sendMagicBook();
-			sendPrayerBook();
-			sendEquipment();
-			sendInventory();
-			sendTab(174, 190);//quest
-			sendTab(181, 1109);// 551 ignore now friendchat
-			sendTab(182, 1110);// 589 old clan chat now new clan chat
-			sendTab(180, 550);// friend list
-			sendTab(185, 187);// music
-			sendTab(186, 34); // notes
-			sendTab(189, 182);
-			sendSkills();
-			sendEmotes();
-			sendSettings();
-			sendTaskSystem();
-			sendCombatStyles();
-		} else {
-			sendTab(21, 752);
-			sendTab(22, 751);
-			sendTab(15, 745);
-			sendTab(25, 754);
-			sendTab(195, 748); 
-			sendTab(196, 749);
-			sendTab(197, 750);
-			sendTab(198, 747); 
-			sendInterface(true, 752, 9, 137);
-			sendCombatStyles();
-			sendTaskSystem();
-			sendSkills();
-			sendTab(114, 190);
-			sendInventory();
-			sendEquipment();
-			sendPrayerBook();
-			sendMagicBook();
-			sendTab(120, 550); // friend list
-			sendTab(121, 1109); // 551 ignore now friendchat
-			sendTab(122, 1110); // 589 old clan chat now new clan chat
-			sendSettings();
-			sendEmotes();
-			sendTab(125, 187); // music
-			sendTab(126, 34); // notes
-			sendTab(129, 182); // logout*//*
-		}*/
 		//player.getAccount().getSession().getTransmitter().send(VarpEncoder.class, new VarpMessage(823, 1, true));
 	}
-	
-	/*public void sendTab(int tabId, int interfaceId) {
-		DisplayMode mode = player.getAccount().getDisplayMode();
-		sendInterface(true, mode.equals(DisplayMode.FIXED) ? 548 : 746, tabId, interfaceId);
-	}*/
 	
 	public void sendMeleePowersTab() {
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(3708));
@@ -559,11 +505,26 @@ public class InterfaceManager {
 		
 	}
 	
-	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
-		sendInterface(tab, windowLocation, clipped, GAME_WINDOW_PANE);
+	public void setTopInterface (AbstractInterface iFace) {
+		if (topLevelInterface != null) {
+			topLevelInterface.close();
+		}
+		this.topLevelInterface = iFace;
+		setInterface(iFace, 236, false);
 	}
 	
-	public void sendInterface(AbstractInterface tab, int windowLocation, boolean clipped, int windowID) {
+	public void closeTopInterface () {
+		if (topLevelInterface != null) {
+			topLevelInterface.close();
+		}
+		this.topLevelInterface = null;
+	}
+	
+	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
+		setInterface(tab, windowLocation, clipped, GAME_WINDOW_PANE);
+	}
+	
+	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped, int windowID) {
 		tab.send(windowID, windowLocation, clipped);
 		tabInterfaces.put(tab.getID(), tab);
 	}
@@ -611,10 +572,6 @@ public class InterfaceManager {
 	
 	public void sendEquipment() {
 		//sendTab(resizableScreen ? 116 : 176, 387);
-	}
-
-	public void sendInventory() {
-		//sendTab(resizableScreen ? 115 : 175, 679);
 	}
 	
 	public void sendCombatStyles() {

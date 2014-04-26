@@ -5,18 +5,24 @@ package org.virtue.game.logic.social;
  * @author Virtue Development Team 2014 (c).
  */
 public enum ChannelRank {
-	GUEST(-1), FRIEND(0), RECRUIT(1), CORPORAL(2), 
-	SERGEANT(3), LIEUTENANT(4), CAPTAIN(5), GENERAL(6),
-	OWNER(7), JMOD(127);
+	GUEST(-1, "Guest"), FRIEND(0, "Friend"), RECRUIT(1, "Recruit"), CORPORAL(2, "Corporal"), 
+	SERGEANT(3, "Sergeant"), LIEUTENANT(4, "Lieutenant"), CAPTAIN(5, "Captain"), 
+	GENERAL(6, "General"), OWNER(7, "Channel Owner"), JMOD(127, "Jagex Moderator");
 	
 	private final int id;
+	private final String name;
 	
-	ChannelRank(int id) {
+	ChannelRank(int id, String name) {
 		this.id = id;
+		this.name = name;
 	}
 	
 	public int getID () {
 		return id;
+	}
+	
+	public String getName () {
+		return name;
 	}
 	
 	public static ChannelRank forID (int id) {

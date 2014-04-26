@@ -1,5 +1,6 @@
 package org.virtue.network.protocol.packet.decoder.impl;
 
+import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.impl.InputHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
@@ -14,16 +15,15 @@ public class InputDecoder implements PacketDecoder<InputHandler> {
 	@Override
 	public InputHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		InputHandler handler = new InputHandler();
-		/*
-		 * The incoming input from the client that the player has entered.
-		 */
-		handler.putFlag("input", opcode == 29 ? packet.getString() : packet.getInt());
-		handler.putFlag("type", opcode == 29 ? "string" : "integer");
+		if (opcode == IncommingOpcodes.NAME_INPUT_PACKET) {
+			handler.putFlag("input", packet.getString());
+		}
+		handler.putFlag("opcode", opcode);
 		return handler;
 	}
 
 	@Override
 	public int[] getPossiblePackets() {
-		return new int[] { 29, 81 };
+		return new int[] { IncommingOpcodes.NAME_INPUT_PACKET };
 	}
 }

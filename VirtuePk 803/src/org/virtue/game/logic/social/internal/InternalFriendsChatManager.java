@@ -1,7 +1,6 @@
 package org.virtue.game.logic.social.internal;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Queue;
 
@@ -10,7 +9,6 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.FriendsChatManager;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.network.io.IOHub;
-import org.virtue.network.protocol.messages.GameMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
@@ -33,7 +31,9 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 							InternalFriendManager owner = InternalFriendManager.getPlayer(channelOwner);
 							if (owner.fcUpdateFlagged()) {
 								friendsChannelCache.get(channelOwner).refreshSettings(owner);
-								owner.resetFcUpdateFlag();
+								if (!owner.hasFriendsChat()) {
+									friendsChannelCache.remove(owner.getProtocolName());
+								}
 							}
 						}
 					}
@@ -50,7 +50,10 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 					}
 					for (InternalFriendManager change = queue.poll(); !queue.isEmpty(); change = queue.poll()) {						
 						if (friendsChannelCache.containsKey(change.getProtocolName())) {
-							friendsChannelCache.get(change.getProtocolName()).refreshSettings(change);							
+							friendsChannelCache.get(change.getProtocolName()).refreshSettings(change);
+							if (!change.hasFriendsChat()) {
+								friendsChannelCache.remove(change.getProtocolName());
+							}							
 						}
 					}
 				}
@@ -64,7 +67,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 		}
 		if (InternalFriendManager.isOnline(ownerName)) {
 			InternalFriendManager owner = InternalFriendManager.getPlayer(ownerName);
-			if (owner.getChannelName() == null) {
+			if (!owner.hasFriendsChat()) {
 				return;
 			}
 			FriendsChannel channel = new FriendsChannel(owner.getDisplayName(), owner.getChannelName());
@@ -78,7 +81,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 				e.printStackTrace();
 				return;
 			}
-			if (owner.getChannelName() == null) {
+			if (!owner.hasFriendsChat()) {
 				return;
 			}
 			FriendsChannel channel = new FriendsChannel(StringUtils.format(ownerName, FormatType.NAME), owner.getChannelName());

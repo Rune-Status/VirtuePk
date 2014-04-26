@@ -1,5 +1,7 @@
 package org.virtue.game.logic.social;
 
+import org.virtue.game.logic.social.internal.ChannelPermission;
+
 public interface FriendManager {
 
 	public void init ();
@@ -27,5 +29,13 @@ public interface FriendManager {
 	public void sendPrivateMessage (String recipient, String message);
 	
 	public void setNote (String displayName, String note, boolean isFriendNote);
+	
+	public void setFriendRank (String displayName, ChannelRank rank);
+	
+	public void setFriendsChatPermission (ChannelPermission permission, ChannelRank rank);
+	
+	public void setFriendsChatPrefix (String prefix);
+	
+	public void sendFriendsChatSettings ();
 	
 }

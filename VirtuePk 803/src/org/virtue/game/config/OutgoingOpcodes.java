@@ -29,6 +29,8 @@ public class OutgoingOpcodes {
 	public static final int SMALL_VARP_PACKET = 96;//803
 	public static final int LARGE_CS2_VARP_PACKET = 154;//803
 	public static final int SMALL_CS2_VARP_PACKET = 7;//803
+	public static final int LARGE_GLOBAL_STRING_PACKET = 0;//803
+	public static final int SMALL_GLOBAL_STRING_PACKET = 41;//803
 	
 	//Item containers
 	public static final int ITEMS_PACKET = 130;//803
@@ -45,6 +47,11 @@ public class OutgoingOpcodes {
 	public static final int PLAYER_UPDATE_PACKET = 44;//803
 	public static final int NPC_UPDATE_PACKET = 27;//803
 	public static final int LARGE_NPC_UPDATE_PACKET = 150;//803
+	public static final int HINT_ICON_PACKET = 160;//803
+	
+	//Animations and graphics
+	public static final int OBJECT_ANIMATION_PACKET = 19;//803
+	public static final int GRAPHICS_PACKET = 125;//803
 	
 	//World tile related
 	public static final int ADD_GROUND_ITEM = 149;//803
@@ -63,13 +70,19 @@ public class OutgoingOpcodes {
 	public static final int KEEP_ALIVE_PACKET = 155;//803
 	public static final int WORLD_LIST_PACKET = 98;//803
 	public static final int SYSTEM_UPDATE_PACKET = 89;//803
+	public static final int RUN_COMMAND_PACKET = 47;//803
+	public static final int OPEN_URL_PACKET = 40;//803
+	public static final int SET_CAMERA_POS_PACKET = 20;//803
 	
 	//Interface-related
 	public static final int INTERFACE_PACKET = 49;//803
 	public static final int INTERFACE_SETTINGS_PACKET = 134;//803
+	public static final int COMPONENT_TEXT_PACKET = 30;//803
 	public static final int WINDOW_PANE_PACKET = 76;//803
 	public static final int RUN_CS2_PACKET = 167;//803
-	public static final int RESET_INTERFACE_INFORMATION = 35;//803
+	public static final int RESET_LAYOUT_INFORMATION = 35;//803
+	public static final int CLOSE_INTERFACE_PACKET = 15;//803
+	public static final int HIDE_COMPONENT_PACKET = 9;//803
 	
 	//Messages
 	public static final int GAME_MESSAGE_PACKET = 137;//803

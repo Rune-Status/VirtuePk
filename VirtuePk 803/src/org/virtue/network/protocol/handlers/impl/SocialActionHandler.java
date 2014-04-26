@@ -1,6 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
+import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
@@ -35,6 +36,9 @@ public class SocialActionHandler extends PacketHandler<WorldSession> {
 			break;
 		case IncommingOpcodes.FRIEND_NOTE_PACKET:
 			friendManager.setNote(name, getFlag("note", ""), true);
+			break;
+		case IncommingOpcodes.CHANGE_FRIEND_RANK_PACKET:
+			friendManager.setFriendRank(name, ChannelRank.forID(getFlag("rank", -1)));
 			break;
 		}
 	}

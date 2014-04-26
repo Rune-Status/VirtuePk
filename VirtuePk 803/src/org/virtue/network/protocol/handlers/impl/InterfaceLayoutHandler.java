@@ -11,7 +11,7 @@ public class InterfaceLayoutHandler extends PacketHandler<WorldSession> {
 	public void handle(WorldSession session) {
 		if (getFlag("isFinished", true)) {
 			RS3PacketBuilder buffer = new RS3PacketBuilder();
-			buffer.putPacket(OutgoingOpcodes.RESET_INTERFACE_INFORMATION);
+			buffer.putPacket(OutgoingOpcodes.RESET_LAYOUT_INFORMATION);
 			session.getTransmitter().send(buffer);
 		}
 	}

@@ -68,15 +68,11 @@ public class InternalFriendManager implements FriendManager {
 	private static final int FRIENDS_LIST_MAX = 400;
 	private static final int IGNORE_LIST_MAX = 400;
 	
-	private static final int FILE_VERSION = 2;
+	private static final int FILE_VERSION = 3;
 	
-	public enum FcPermission {
-		JOIN, TALK, KICK
-	}
+	private final EnumMap<ChannelPermission, ChannelRank> fcPermissions = new EnumMap<ChannelPermission, ChannelRank>(ChannelPermission.class);
 	
-	private final EnumMap<FcPermission, ChannelRank> fcPermissions = new EnumMap<FcPermission, ChannelRank>(FcPermission.class);
-	
-	private String channelName = "Test";//TODO: Replace this with "null" when done
+	private String channelName = null;
 	
 	private boolean fcUpdateFlagged = false;
 	
@@ -91,9 +87,10 @@ public class InternalFriendManager implements FriendManager {
 	
 	public InternalFriendManager (SocialUser player) {
 		this.player = player;
-		fcPermissions.put(FcPermission.JOIN, ChannelRank.GUEST);
-		fcPermissions.put(FcPermission.TALK, ChannelRank.GUEST);
-		fcPermissions.put(FcPermission.KICK, ChannelRank.OWNER);
+		fcPermissions.put(ChannelPermission.JOIN, ChannelRank.FRIEND);
+		fcPermissions.put(ChannelPermission.TALK, ChannelRank.GUEST);
+		fcPermissions.put(ChannelPermission.KICK, ChannelRank.OWNER);
+		fcPermissions.put(ChannelPermission.LOOTSHARE, ChannelRank.OWNER);
 	}
 	
 	
@@ -107,12 +104,6 @@ public class InternalFriendManager implements FriendManager {
 	
 	@Override
 	public void init () {
-		//friends.put("test222", new Friend("test222", false, ChannelRank.FRIEND, "Hi!"));
-		//friends.put("test_3", new Friend("test_3", true));//TODO: Remove this (it's only for testing purposes)
-		//ignores.put("test4", new Ignore("test4"));
-		//ignores.put("test_5", new Ignore("test_5", "This is a note."));
-		//player.getActionSender().sendOnlineStatus(onlineStatus);
-		//player.getActionSender().sendUnlockFriendsList();
 		currentWorld = World.getWorld();//player.getWorld().getData();
 		isLobby = !player.getPlayer().isInWorld();
 		for (Friend f : friends.values()) {
@@ -192,12 +183,66 @@ public class InternalFriendManager implements FriendManager {
 		return bans;
 	}
 	
-	protected ChannelRank getPermission (FcPermission p) {
+	protected ChannelRank getPermission (ChannelPermission p) {
 		return fcPermissions.get(p);
 	}
 	
 	protected String getChannelName () {
 		return channelName;
+	}
+	
+	public boolean hasFriendsChat () {
+		return (channelName != null && !channelName.isEmpty());
+	}
+
+	@Override
+	public void sendFriendsChatSettings() {
+		player.sendChannelPrefix(channelName);
+		for (ChannelPermission p : fcPermissions.keySet()) {
+			player.sendPermissionUpdate(p, fcPermissions.get(p));
+		}
+	}
+
+	@Override
+	public void setFriendsChatPrefix(String prefix) {
+		String oldPrefix = channelName;
+		if (prefix == null){
+			prefix = "";
+		}
+		if (prefix.length() > 12) {
+			prefix = prefix.substring(0, 12);
+		}
+		boolean isDisabled = false;
+		if (prefix.isEmpty()) {
+			channelName = null;
+			isDisabled = true;
+		} else {
+			channelName = prefix;
+		}
+		boolean wasDisabled = (oldPrefix == null || oldPrefix.isEmpty());
+		player.sendChannelPrefix(prefix);
+		if (isDisabled != wasDisabled) {
+			if (!hasFriendsChat()) {
+				queueChannelUpdate();
+				player.sendGameMessage("Your friends chat channel has now been disabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			} else {
+				player.sendGameMessage("Your friends chat channel has now been enabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				player.sendGameMessage("Join your channel by clicking 'Join Chat' and typing: "+player.getDisplayName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			}
+		} else {
+			queueChannelUpdate();
+		}
+	}
+
+	@Override
+	public void setFriendsChatPermission(ChannelPermission permission, ChannelRank rank) {
+		if (rank.getID() < permission.getMinRank() || rank.getID() > ChannelRank.OWNER.getID()) {
+			return;//Invalid permission specified
+		}
+		fcPermissions.remove(permission);
+		fcPermissions.put(permission, rank);
+		queueChannelUpdate();
+		player.sendPermissionUpdate(permission, rank);
 	}
 	
 	public void serialise (DataOutputStream output) throws IOException {
@@ -215,6 +260,11 @@ public class InternalFriendManager implements FriendManager {
 				RS2Utils.writeString(output, i.username);
 				RS2Utils.writeString(output, i.getNote());
 			}
+			RS2Utils.writeString(output, (channelName == null ? "" : channelName));
+			output.writeByte(fcPermissions.get(ChannelPermission.JOIN).getID());
+			output.writeByte(fcPermissions.get(ChannelPermission.TALK).getID());
+			output.writeByte(fcPermissions.get(ChannelPermission.KICK).getID());
+			output.writeByte(fcPermissions.get(ChannelPermission.LOOTSHARE).getID());
 		}
 	}
 	
@@ -251,6 +301,28 @@ public class InternalFriendManager implements FriendManager {
 					}
 					Ignore ig = new Ignore(name, note);
 					ignores.put(name, ig);
+				}
+				if (version >= 3) {
+					channelName = RS2Utils.readString(input);
+					if (channelName.isEmpty()) {
+						channelName = null;
+					}
+					ChannelRank rank = ChannelRank.forID(input.readByte());
+					if (rank.getID() >= ChannelPermission.JOIN.getMinRank() && rank.getID() <= ChannelRank.OWNER.getID()) {
+						fcPermissions.put(ChannelPermission.JOIN, rank);
+					}
+					rank = ChannelRank.forID(input.readByte());
+					if (rank.getID() >= ChannelPermission.TALK.getMinRank() && rank.getID() <= ChannelRank.OWNER.getID()) {
+						fcPermissions.put(ChannelPermission.TALK, rank);
+					}
+					rank = ChannelRank.forID(input.readByte());
+					if (rank.getID() >= ChannelPermission.KICK.getMinRank() && rank.getID() <= ChannelRank.OWNER.getID()) {
+						fcPermissions.put(ChannelPermission.KICK, rank);
+					}
+					rank = ChannelRank.forID(input.readByte());
+					if (rank.getID() >= ChannelPermission.LOOTSHARE.getMinRank() && rank.getID() <= ChannelRank.OWNER.getID()) {
+						fcPermissions.put(ChannelPermission.LOOTSHARE, rank);
+					}
 				}
 			}
 		}
@@ -497,6 +569,22 @@ public class InternalFriendManager implements FriendManager {
 			i.setNote(note);
 			player.sendIgnoreUpdate(i, false);
 		}
+	}
+
+	@Override
+	public void setFriendRank(String displayName, ChannelRank rank) {
+		String protocolName = StringUtils.format(displayName, FormatType.PROTOCOL);
+		Friend friend = friends.get(protocolName);
+		if (friend == null){
+			return;//If the friend does not exist, no need to continue
+		}
+		if (rank.getID() < 0 || rank.getID() > 6) {
+			player.sendFriendUpdate(friend, false);//If an invalid rank was specified, re-send the old rank and break.
+			return;
+		}
+		friend.setFcRank(rank);//Change the rank
+		player.sendFriendUpdate(friend, false);//Send the updated rank
+		queueChannelUpdate();//Queue changes to the player's friends chat channel
 	}
 	
 }

@@ -7,10 +7,14 @@ import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.impl.WorldSession;
 
-public class InterfaceLayoutDecoder implements PacketDecoder<InterfaceLayoutHandler> {
+public class InterfaceInformationDecoder implements PacketDecoder<InterfaceLayoutHandler> {
 
 	@Override
 	public InterfaceLayoutHandler decodePacket(RS3PacketReader packet, Session session, int opcode) { 
+		if (opcode == IncommingOpcodes.CLOSE_INTERFACE_PACKET) {
+			((WorldSession) session).getPlayer().getInterfaces().closeTopInterface();
+			return null;
+		}
 		InterfaceLayoutHandler handler = new InterfaceLayoutHandler();
 		handler.putFlag("isFinished", packet.get() == 1);		
 		while (packet.remaining() > 0) {
@@ -24,7 +28,7 @@ public class InterfaceLayoutDecoder implements PacketDecoder<InterfaceLayoutHand
 
 	@Override
 	public int[] getPossiblePackets() {
-		return new int[] { IncommingOpcodes.INTERFACE_LAYOUT_PACKET };
+		return new int[] { IncommingOpcodes.INTERFACE_LAYOUT_PACKET, IncommingOpcodes.CLOSE_INTERFACE_PACKET };
 	}
 
 }

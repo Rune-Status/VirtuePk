@@ -3,6 +3,8 @@ package org.virtue.game.logic.social.internal;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
+import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
+import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.game.logic.social.messages.FriendsPacket;
@@ -103,5 +105,21 @@ public class SocialUser {
 	
 	public void sendIgnoreUpdate (Ignore ignore, boolean isNameChange) {
 		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignore, false));
+	}
+	
+	public void sendPermissionUpdate (ChannelPermission permission, ChannelRank rank) {
+		FriendsChatSettings settings = player.getChatManager().getFriendsChatSettings();
+		if (settings == null) {
+			return;
+		}
+		settings.sendPermission(permission, rank);
+	}
+	
+	public void sendChannelPrefix (String prefix) {
+		FriendsChatSettings settings = player.getChatManager().getFriendsChatSettings();
+		if (settings == null) {
+			return;
+		}
+		settings.sendPrefix(prefix);
 	}
 }

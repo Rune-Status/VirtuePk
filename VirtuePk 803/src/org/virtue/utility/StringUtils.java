@@ -70,23 +70,29 @@ public class StringUtils {
 	}
 
 	/**
-	 * Formats a string for display
-	 * @param string The string to format
+	 * Formats a name for display
+	 * @param string The name to format
 	 * @return The formatted string
 	 */
 	@Deprecated
 	public static String formatName(String string) {
 		boolean afterSpace = false;
-		string = string.replaceAll("_", " ");
+		string = string.replaceAll("_", " ").toLowerCase();
 		StringBuilder b = new StringBuilder(string.length());
 		for (int i = 0; i < string.length(); i++) {
+			char c = string.charAt(i);
+			if (!isValidCharacter(c)) {
+				c = ' ';
+			}
 			if (i == 0 || afterSpace) {
-				b.append(Character.toUpperCase(string.charAt(i)));
+				b.append(Character.toUpperCase(c));
 				afterSpace = false;
-			} else
-				b.append(string.charAt(i));
-			if (string.charAt(i) == ' ')
+			} else {
+				b.append(c);
+			}
+			if (c == ' ') {
 				afterSpace = true;
+			}
 		}
 		return b.toString();
 	}
@@ -120,7 +126,25 @@ public class StringUtils {
 	 */
 	@Deprecated
 	public static String formatProtocol(String string) {
-		return string.replaceAll(" ", "_").toLowerCase();
+		string = string.toLowerCase();
+		StringBuilder b = new StringBuilder(string.length());
+		for (int i=0;i<string.length();i++) {
+			char c = string.charAt(i);
+			if (!isValidCharacter(c)) {
+				c = '_';
+			}
+			b.append(c);
+		}
+		return b.toString();//string.replaceAll(" ", "_").toLowerCase();
+	}
+	
+	public static boolean isValidCharacter(char character) {
+		for (char c : VALID_CHARS) {
+			if (c == character) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
