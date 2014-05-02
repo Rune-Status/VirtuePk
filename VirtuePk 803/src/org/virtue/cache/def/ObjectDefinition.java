@@ -40,7 +40,7 @@ public class ObjectDefinition {
     public boolean aBool6842;
     byte aByte6843;
     byte aByte6844 = 0;
-    public int anInt6848 = 1338633203;
+    public int anInt6848 = -1;
     byte aByte6849 = 0;
     int anInt6850 = 1785892085;
     public int anInt6851;
@@ -72,6 +72,7 @@ public class ObjectDefinition {
     int anInt6878;
     public boolean aBool6879;
     boolean clippingFlag;//aBool6880
+	public boolean projectileClipped = true;
     public int anInt6881;
     public int anInt6883;
     byte aByte6884;
@@ -101,6 +102,7 @@ public class ObjectDefinition {
 		this.objectID = id;
 		try {
 			read(new RS3PacketReader(data));
+			postDecodeEvent();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -137,8 +139,10 @@ public class ObjectDefinition {
 		    sizeY = buffer.getUnsignedByte();
 		} else if (opcode == 17) {
 		    clipType = 0;
-		} else if (opcode != 18) {
-		    if (19 == opcode) {//Unknown
+			projectileClipped = false;
+		} else if (opcode == 18) {
+			projectileClipped = false;			
+		} else if (19 == opcode) {//Unknown
 		    	anInt6848 = buffer.getUnsignedByte();
 		    } else if (opcode == 21) {//Unknown
 		    	aByte6849 = (byte) 1;
@@ -398,7 +402,28 @@ public class ObjectDefinition {
 						}
 				    }
 				}
+		}
+    }
+    
+    void postDecodeEvent() {
+		if (-1 == anInt6848) {
+		    anInt6848 = 0;
+		    if (aByteArray6831 != null && aByteArray6831.length == 1
+		    		/*&& (-2030829961 * Class527.aClass527_6928.anInt6931 == aByteArray6831[0])*/) {
+		    	anInt6848 = 1;
 		    }
+		    for (int index = 0; index < 5; index++) {
+				if (null != options[index]) {
+				    anInt6848 = 1;
+				    break;
+				}
+		    }
+		}
+		if (-1 == anInt6881) {
+		    anInt6881 = (0 != clipType ? 1 : 0);
+		}
+		if (null != anIntArray6862 || aBool6898 || toObjectIDs != null) {
+		    aBool6870 = true;
 		}
     }
 	
@@ -416,6 +441,24 @@ public class ObjectDefinition {
 	
 	public boolean isMembers () {
 		return membersObject;
+	}
+
+	/**
+	 * @return the clipType.
+	 */
+	public int getClipType() {
+		return clipType;
+	}
+	
+	public boolean isClipped () {
+		return clipType == 1 || aBool6879 /*|| anInt6848 != 0*/;
+	}
+
+	/**
+	 * @return the projectileClipped
+	 */
+	public boolean isProjectileClipped() {
+		return projectileClipped;//projectileClipped
 	}
 
 	public boolean containsOption(String option) {

@@ -4,7 +4,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
-import org.virtue.game.logic.node.interfaces.toplevel.Community;
+import org.virtue.game.logic.node.interfaces.toplevel.Polls;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.VarpMessage;
 
@@ -30,7 +30,7 @@ public class RibbonInterface extends AbstractInterface {
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8194, 4, 1));//Runscript: [8194, 4, 1]			
 			getPlayer().getInterfaces().sendInterfaceSettings(1477, 75, 24, 0, 2);//IfaceSettings: hash:96796747, to:0, from:24, settings:2 ifaceID=1477, compID=75
 			getPlayer().getInterfaces().sendInterfaceSettings(1477, 77, 1, 1, 2);//IfaceSettings: hash:96796749, to:1, from:1, settings:2 ifaceID=1477, compID=77
-			Community socialInterface = new Community(getPlayer());
+			Polls socialInterface = new Polls(getPlayer());
 			getPlayer().getInterfaces().setInterface(socialInterface, 3, true, 1448);
 			//socialInterface.postSend();
 			break;

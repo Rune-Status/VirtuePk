@@ -83,13 +83,28 @@ public class Account extends AttributeSet {
 		this.clientSessionKey = clientSessionKey;
 		this.serverSessionKey = serverSessionKey;
 	}
+
+	/**
+	 * Constructs a new {@code Account.java}.
+	 * @param username The username.
+	 * @param password The password.
+	 * @param dateOfBirth
+	 */
+	public Account(Username username, Password password, Email email, Age age, DateOfBirth dateofbirth) {
+		//System.out.println("Creating new account for user: "+username.getName());
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.age = age;
+		this.dateofbirth = dateofbirth;
+	}
 	
 	/**
 	 * Constructs a new {@code Account.java}.
 	 * @param username The username.
 	 * @param password The password.
 	 * @param obj 
-	 * @param dateOfBirth2 
+	 * @param dateOfBirth
 	 */
 	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth, Tile tile, ClientScreen screen, JsonObject charFile) {
 		//System.out.println("Creating new account for user: "+username.getName());

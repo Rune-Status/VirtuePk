@@ -22,6 +22,7 @@ public class NpcOptionHandler extends MovementHandler {
 		int baseY = npc.getTile().getY();		
 		if (!option.equals(NPCOption.EXAMINE)) {
 			session.getPlayer().getUpdateArchive().queueFaceEntity(npc);
+			putFlag("facing", true);
 			putFlag("baseX", baseX);
 			putFlag("baseY", baseY);
 			putFlag("sizeX", npc.getDefinition().getSize());

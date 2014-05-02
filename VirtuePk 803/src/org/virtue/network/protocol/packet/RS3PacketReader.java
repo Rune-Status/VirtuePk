@@ -243,23 +243,26 @@ public final class RS3PacketReader extends RS3HeapBuffer {
 		} else {
 			return this.getUnsignedShort() - 32768;
 		}
-	}       
-    
-        public int getSmart2() {
-		int var2 = peek() & 0xff;
-		if (var2 < 128) {
-		    return getUnsignedByte() - 1;
+	}
+	
+	public int getSmart2() {
+		int offset = 0;
+		int value = getUnsignedSmart();
+		while (value == 32767) {
+			value = getUnsignedSmart();
+			offset += 32767;
 		}
-		return getUnsignedShort() - 32769;
-        }
-    
-        public int getSmart3() {
+		offset += value;
+		return offset;
+	}
+	
+	public int getSmart3() {
 		int var2 = peek() & 0xff;
 		if (var2 < 128) {
 		    return getUnsignedByte() - 64;
 		}
 		return getUnsignedShort() - 49152;
-        }
+	}
         
 	public int getLargeSmart() {
 		if (this.buffer[pos] < 0) {

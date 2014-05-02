@@ -1,18 +1,24 @@
 package org.virtue.game.logic.node.entity.player.identity;
 
+import java.util.GregorianCalendar;
+
 public class DateOfBirth {
 	
-	public String dateofbirth;
+	public GregorianCalendar dateofbirth;
 	
-	public DateOfBirth(String dateofbirth) {
-		this.dateofbirth = dateofbirth;
+	/**
+	 * Constructs a new {@code DateOfBirth.java}.
+	 * @param gregorianCalendar
+	 */
+	public DateOfBirth(GregorianCalendar birth) {
+		this.dateofbirth = birth;
 	}
-	
-	public String getDateOfBirth() {
+
+	public GregorianCalendar getDateOfBirth() {
 		return dateofbirth;
 	}
 	
-	public void setDateOfBirth(String dateofbirth) {
+	public void setDateOfBirth(GregorianCalendar dateofbirth) {
 		this.dateofbirth = dateofbirth;
 	}
 	

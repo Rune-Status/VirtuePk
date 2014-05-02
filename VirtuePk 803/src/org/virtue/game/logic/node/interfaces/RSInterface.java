@@ -16,7 +16,7 @@ public class RSInterface {
         
         public static final int RIBBON = 1431;
         
-        public static final int COMMUNITY = 1029;
+        public static final int POLLS = 1029;
         
         public static final int FRIENDS_CHAT_SETTINGS = 1108;
         

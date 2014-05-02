@@ -304,8 +304,7 @@ public class ReferenceTable {
 		/* read the child sizes */
 		int[][] members = new int[size][];
 		for (int id : ids) {
-			members[id] = new int[table.format >= 7 ? ByteBufferUtils
-					.getSmartInt(buffer) : buffer.getShort() & 0xFFFF];
+			members[id] = new int[table.format >= 7 ? ByteBufferUtils.getSmartInt(buffer) : buffer.getShort() & 0xFFFF];
 		}
 
 		/* read the child ids */
@@ -316,8 +315,7 @@ public class ReferenceTable {
 
 			/* loop through the array of ids */
 			for (int i = 0; i < members[id].length; i++) {
-				int delta = table.format >= 7 ? ByteBufferUtils
-						.getSmartInt(buffer) : buffer.getShort() & 0xFFFF;
+				int delta = table.format >= 7 ? ByteBufferUtils.getSmartInt(buffer) : buffer.getShort() & 0xFFFF;
 				members[id][i] = accumulator += delta;
 				if (members[id][i] > size) {
 					size = members[id][i];
@@ -335,8 +333,7 @@ public class ReferenceTable {
 		if ((table.flags & FLAG_IDENTIFIERS) != 0) {
 			for (int id : ids) {
 				for (int child : members[id]) {
-					table.entries.get(id).entries.get(child).identifier = buffer
-							.getInt();
+					table.entries.get(id).entries.get(child).identifier = buffer.getInt();
 				}
 			}
 		}

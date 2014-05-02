@@ -6,7 +6,7 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.region.Region;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.region.Tile;
 
 /**
@@ -297,12 +297,14 @@ public class Movement {
 
 	public void process() {
 		nextWalkDirection = nextRunDirection = -1;
-		nextWalkDirection = getNextWalkStep();		
+		nextWalkDirection = getNextWalkStep();	
+		Player p = null;	
 		if (nextWalkDirection != -1) {
 			//entity.setLastTile(entity.getTile());
 			entity.getLastTile().copy(entity.getTile());
 			Tile next = Tile.edit(entity.getTile(), MovementUtils.DIRECTION_DELTA_X[nextWalkDirection], MovementUtils.DIRECTION_DELTA_Y[nextWalkDirection], 0);
 			if (!(entity instanceof NPC)) {
+				p = (Player) entity;
 				if (next.getRegionID() != entity.getTile().getRegionID()) {
 					World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
 					World.getWorld().getRegionManager().getRegionByID(next.getRegionID()).addPlayer((Player) entity);
@@ -310,6 +312,13 @@ public class Movement {
 			}
 			//System.out.println("Current: x="+entity.getLastTile().getX()+", y="+entity.getLastTile().getY());
 			entity.getTile().copy(next);
+			boolean clipped = World.getWorld().getRegionManager().isClipped(entity.getTile());
+			if (clipped && p != null) {
+				System.out.println("Clipped: clipped="+clipped+", tile="+entity.getTile());
+				if (p.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+					p.getPacketDispatcher().dispatchMessage("Tile clipped: "+p.getTile());
+				}
+			}
 			//System.out.println("New: x="+entity.getTile().getX()+", y="+entity.getTile().getY());
 		}
 		if (running) {
@@ -325,6 +334,13 @@ public class Movement {
 					}
 				}				
 				entity.getTile().copy(next);
+				boolean clipped = World.getWorld().getRegionManager().isClipped(entity.getTile());
+				if (clipped && p != null) {
+					/*System.out.println("Clipped: clipped="+clipped+", tile="+entity.getTile());
+					if (p.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+						p.getPacketDispatcher().dispatchMessage("Tile clipped: "+p.getTile());
+					}*/
+				}
 			}
 		}
 		if (!(entity instanceof NPC)) {

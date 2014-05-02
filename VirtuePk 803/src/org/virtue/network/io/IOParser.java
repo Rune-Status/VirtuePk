@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
  */
 public interface IOParser<T extends Object> {
 
+	//private File SAVE_PATH;
+
 	/**
 	 * Called when the file should be parsed.
 	 * @param buffer The buffer used to parse the file data

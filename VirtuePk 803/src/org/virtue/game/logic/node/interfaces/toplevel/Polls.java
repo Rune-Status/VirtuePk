@@ -6,10 +6,10 @@ import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 
-public class Community extends AbstractInterface {
+public class Polls extends AbstractInterface {
 
-	public Community(Player p) {
-		super(RSInterface.COMMUNITY, p);
+	public Polls(Player p) {
+		super(RSInterface.POLLS, p);
 	}
 
 	@Override

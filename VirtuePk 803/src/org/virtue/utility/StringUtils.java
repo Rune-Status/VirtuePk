@@ -167,4 +167,15 @@ public class StringUtils {
 	public static String getFormattedNumber(int amount) {
 		return new DecimalFormat("#,###,##0").format(amount).toString();
 	}
+	
+	public static boolean isValidPassword(String password) {
+		password = password.toLowerCase();
+		for (int i=0;i<password.length();i++) {
+			char c = password.charAt(i);
+			if (!isValidCharacter(c)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

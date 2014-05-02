@@ -179,7 +179,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			buffer.putBits(1, 0);
 		} else {
 			buffer.putBits(1, 1);
-			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
+			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash, localPlayer);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
 		player.getViewport().removeLocalPlayer(playerIndex);
@@ -335,7 +335,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			buffer.putBits(1, 0);
 		} else {
 			buffer.putBits(1, 1);
-			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
+			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash, outsidePlayer);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		}
 		buffer.putBits(6, outsidePlayer.getTile().getXInRegion());
@@ -359,7 +359,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		int hash = outsidePlayer == null ? player.getViewport().getRegionHashes()[playerIndex] : outsidePlayer.getTile().getRegionHash();
 		if (outsidePlayer != null && hash != player.getViewport().getRegionHashes()[playerIndex]) {
 			buffer.putBits(1, 1);
-			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash);
+			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash, outsidePlayer);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
 		} else {
 			buffer.putBits(1, 0);
@@ -452,7 +452,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 	 * @param lastRegionHash The last region hash.
 	 * @param currentRegionHash The current region hash.
 	 */
-	private void updateRegionHash(RS3PacketBuilder buffer, int lastRegionHash, int currentRegionHash) {
+	private void updateRegionHash(RS3PacketBuilder buffer, int lastRegionHash, int currentRegionHash, Player p) {
 		int lastRegionX = lastRegionHash >> 8;
 		int lastRegionY = 0xff & lastRegionHash;
 		int lastPlane = lastRegionHash >> 16;
@@ -488,7 +488,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		} else {
 			int xOffset = currentRegionX - lastRegionX;
 			int yOffset = currentRegionY - lastRegionY;
-			int movementType = 0;//TODO: Find out what this is...
+			int movementType = (p.getUpdateArchive().getMovement().isRunning() ? 3 : 2);
 			buffer.putBits(2, 3);//type=3
 			buffer.putBits(20, (yOffset & 0xff) + ((xOffset & 0xff) << 8) + (planeOffset << 16) + (movementType << 18));
 		}

@@ -20,6 +20,11 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		int sizeY = getFlag("sizeY", 0);
 		
 		session.getPlayer().setCoordinateEvent(null);
+		if (!getFlag("facing", false)) {
+			if (((WorldSession) session).getPlayer().getUpdateArchive().getFaceEntity() != null) {
+				((WorldSession) session).getPlayer().getUpdateArchive().queueFaceEntity(null);
+			}
+		}
 		//System.out.println("Movement request: x="+baseX+", y="+baseY+", forceRun="+forceRun);
 		Movement movement = session.getPlayer().getUpdateArchive().getMovement();
 		movement.resetWalkSteps();

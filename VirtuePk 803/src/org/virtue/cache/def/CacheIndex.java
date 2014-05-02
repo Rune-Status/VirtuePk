@@ -2,6 +2,8 @@ package org.virtue.cache.def;
 
 public class CacheIndex {
 
+	public static final int LANDSCAPES = 5;
+	
 	public static final int HUFFMAN_ENCODING = 10;
 	
     public static final int OBJECT_DEFINITIONS = 16;

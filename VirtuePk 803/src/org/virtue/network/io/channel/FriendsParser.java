@@ -15,7 +15,11 @@ import org.virtue.network.io.IOParser;
 
 public class FriendsParser implements IOParser<InternalFriendManager> {
 
-	public static final File SAVE_PATH = new File("data/friends/");
+	/**
+	 * (non-Javadoc)
+	 * @see org.virtue.network.io.IOParser#SAVE_PATH
+	 */
+	private File SAVE_PATH = new File("data/friends/");
 	
 	@Override
 	public InternalFriendManager load(Object... params) throws FileNotFoundException {

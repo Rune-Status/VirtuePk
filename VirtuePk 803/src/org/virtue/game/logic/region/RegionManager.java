@@ -21,6 +21,11 @@ public class RegionManager {
 	private final RegionUpdateManager UPDATER = new RegionUpdateManager();
 	
 	/**
+	 * Represents the region update manager.
+	 */
+	public static final RegionLoader LOADER = new RegionLoader();
+	
+	/**
 	 * Replaces a region by it's id.
 	 * @param id The id of the region to replace.
 	 * @param region The new region.
@@ -180,6 +185,18 @@ public class RegionManager {
 	 */
 	public void registerRegionUpdate(RegionUpdateEvent event) {
 		UPDATER.getPendingRegions().add(event);
+	}
+	
+	public boolean isClipped (Tile tile) {
+		int regionID = tile.getRegionID();
+		Region region = getRegionByID(regionID);
+		if (region == null) {
+			region = new Region(regionID);
+			region.update();
+			//return false;
+		}
+		//System.out.println("Checking x="+tile.getXInRegion()+", y="+tile.getYInRegion()+", clipType="+region.getClippedRegionMap().getMasks()[tile.getPlane()][tile.getXInRegion()][tile.getYInRegion()]);
+		return region.getClippedRegionMap().getMasks()[tile.getPlane()][tile.getXInRegion()][tile.getYInRegion()] != 0;
 	}
 
 	/**

@@ -207,7 +207,7 @@ public class NPCDefinition {
 			    aShortArray5833[i_25_] = (short) -1;
 			} else {
 			    anIntArray5869[i_25_] = buffer.getBigSmart();
-			    aShortArray5833[i_25_] = (short) buffer.getSmart2();
+			    aShortArray5833[i_25_] = (short) buffer.getSmart3();
 			}
 		    }
 		} else if (opcode == 103) {

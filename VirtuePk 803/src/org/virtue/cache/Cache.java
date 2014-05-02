@@ -298,7 +298,7 @@ public final class Cache implements Closeable {
 		}
 
 		/* extract the entry from the archive */
-		Archive archive = Archive.decode(container.getData(), entry.capacity());
+		Archive archive = Archive.decode(container.getData(), entry.size());
 		return archive.getEntry(member);
 	}
 	

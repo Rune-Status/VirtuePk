@@ -36,7 +36,7 @@ public class SkillManager extends AbstractInterface {
 		return skills[s.getID()];
 	}*/
 	
-	public void addExperience (Skill s, float amountToAdd) {
+	public void addExperience (Skill s, double amountToAdd) {
 		SkillData skill = skills[s.getID()];
 		int levelBefore = skill.getBaseLevel();
 		skill.addExperienceFloat(amountToAdd);

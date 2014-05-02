@@ -2,11 +2,14 @@ package org.virtue.game.logic.region;
 
 import java.util.ArrayList;
 
+import org.virtue.cache.def.ObjectDefinition;
+import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.utility.EntityList;
 
@@ -47,6 +50,26 @@ public class Region extends AttributeSet implements SubRegion {
 	private ArrayList<GroundItem> items = new ArrayList<>();
 	
 	/**
+	 * Represents an array of world objects in this region.
+	 */
+	private RS3Object[][][][] objects;
+	
+	/**
+	 * Represents the skeleton map.
+	 */
+	private RegionSkeleton map;
+
+	/**
+	 * Represents the skeleton clipping map.
+	 */
+	private RegionSkeleton clipedOnlyMap;
+	
+	/**
+	 * Represents the current loading stage for this {@link Region}.
+	 */
+	private RegionLoadingStage loadingStage = RegionLoadingStage.PREPARE_MAP;
+	
+	/**
 	 * Constructs a new {@code Region.java}.
 	 * @param id The ID.
 	 */
@@ -54,6 +77,20 @@ public class Region extends AttributeSet implements SubRegion {
 		this.id = id;
 		players = new EntityList<Player>(PLAYER_CAP);
 		npcs = new EntityList<NPC>(NPC_CAP);
+	}
+
+	/**
+	 * @return The loadingStage
+	 */
+	public RegionLoadingStage getLoadingStage() {
+		return loadingStage;
+	}
+
+	/**
+	 * @param loadingStage The loadingStage to set
+	 */
+	public void setLoadingStage(RegionLoadingStage loadingStage) {
+		this.loadingStage = loadingStage;
 	}
 	
 	/**
@@ -79,6 +116,7 @@ public class Region extends AttributeSet implements SubRegion {
 	
 	public void addPlayer (Player player) {
 		players.add(player);
+		update();//TODO: Find the proper place to put region initialisation
 	}
 
 	/**
@@ -158,6 +196,105 @@ public class Region extends AttributeSet implements SubRegion {
 			player.getPacketDispatcher().dispatchGroundItem(item, type);
 		}
 	}
+	
+	/**
+	 * Returns the clipped map skeleton.
+	 * @return The clipped skeleton.
+	 */
+	public RegionSkeleton getClippedRegionMap() {
+		if (clipedOnlyMap == null) {
+			clipedOnlyMap = new RegionSkeleton(id, true);
+		}
+		return clipedOnlyMap;
+	}
+
+	/**
+	 * Adds a object into the region.
+	 * @param object The object to add.
+	 * @param plane The plane to add.
+	 * @param localX The x coordinate to add.
+	 * @param localY The y coordinate to add.
+	 */
+	public void addObject(RS3Object object, int plane, int localX, int localY) {
+		addMapObject(object, localX, localY);
+		if (objects == null) {
+			objects = new RS3Object[4][64][64][];
+		}
+		RS3Object[] tileObjects = objects[plane][localX][localY];
+		if (tileObjects == null) {
+			objects[plane][localX][localY] = new RS3Object[] { object };
+		} else {
+			RS3Object[] newTileObjects = new RS3Object[tileObjects.length + 1];
+			newTileObjects[tileObjects.length] = object;
+			System.arraycopy(tileObjects, 0, newTileObjects, 0, tileObjects.length);
+			objects[plane][localX][localY] = newTileObjects;
+		}
+	}
+
+	/**
+	 * Adds object data to the map.
+	 * @param object The object to add.
+	 * @param localX The local x coord.
+	 * @param localY The local y coord.
+	 */
+	private void addMapObject(RS3Object object, int x, int y) {
+		if (map == null) {
+			map = new RegionSkeleton(id, false);
+		}
+		if (clipedOnlyMap == null) {
+			clipedOnlyMap = new RegionSkeleton(id, true);
+		}
+		int plane = object.getTile().getPlane();
+		int type = object.getType();
+		int rotation = object.getRotation();
+		if (x < 0 || y < 0 || x >= map.getMasks()[plane].length || y >= map.getMasks()[plane][x].length) {
+			return;
+		}
+		ObjectDefinition objectDef = ObjectDefinitionLoader.forId(object.getId());
+		if (type == 22 ? objectDef.clipType != 0 : objectDef.clipType == 0) {
+			return;
+		}
+		if (type >= 0 && type <= 3) {
+			map.addWall(plane, x, y, type, rotation, objectDef.isProjectileClipped(), true);
+			if (objectDef.projectileClipped) {
+				clipedOnlyMap.addWall(plane, x, y, type, rotation, objectDef.isProjectileClipped(), true);
+			}
+		} else if (type >= 9 && type <= 21) {
+			int sizeX;
+			int sizeY;
+			if (rotation != 1 && rotation != 3) {
+				sizeX = objectDef.getSize()[0];
+				sizeY = objectDef.getSize()[1];
+			} else {
+				sizeX = objectDef.getSize()[1];
+				sizeY = objectDef.getSize()[0];
+			}
+			map.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
+			if (objectDef.projectileClipped) {
+				clipedOnlyMap.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
+			}
+		}
+		/*if (type >= 0 && type <= 3) {
+			map.addWall(plane, x, y, type, rotation, objectDef.isProjectileClipped(), true);
+			if (objectDef.isProjectileClipped()) {//objectDef.isProjectileClipped()
+				//clipedOnlyMap.addWall(plane, x, y, type, rotation, objectDef.isProjectileClipped(), true);
+				//System.out.println(clipedOnlyMap.getMasks()[plane][x][y]+"................................");	
+			}
+		} else if (type >= 9 && type <= 21) {
+			int sizeX, sizeY;
+			if (rotation != 1 && rotation != 3) {
+				sizeX = objectDef.getSize()[0];
+				sizeY = objectDef.getSize()[1];
+			} else {
+				sizeX = objectDef.getSize()[1];
+				sizeY = objectDef.getSize()[0];
+			}
+			map.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
+			if (objectDef.isProjectileClipped()) {//objectDef.isProjectileClipped()
+				//clipedOnlyMap.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
+			}
+		}*/
+	}
 
 	/**
 	 * @return the id
@@ -182,7 +319,9 @@ public class Region extends AttributeSet implements SubRegion {
 
 	@Override
 	public void update() {
-		//render region update.
+		System.out.println("Loading region...");
+		RegionManager.LOADER.loadRegion(this);
+		//System.out.println(Arrays.toString(getClippedRegionMap().getMasks()));
 	}
 
 	@Override
@@ -195,5 +334,25 @@ public class Region extends AttributeSet implements SubRegion {
 	@Override
 	public void refresh() {
 		flags.clear();
+	}
+	
+	/**
+	 * Returns the far X coordinate of this region.
+	 * @return The X coordinate.
+	 */
+	public int getRegionX() {
+		return (id >> 8) * 64;
+	}
+	
+	/**
+	 * Returns the near Y coordinate of this region.
+	 * @return The Y coordinate.
+	 */
+	public int getRegionY() {
+		return (id & 0xFF) * 64;
+	}
+	
+	public int getArchiveKey () {
+		return ((getRegionX() >> 3) / 8) | (((getRegionY() >> 3) / 8) << 7);
 	}
 }

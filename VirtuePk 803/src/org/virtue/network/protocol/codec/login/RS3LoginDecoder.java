@@ -198,6 +198,11 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 		} else {
 			System.out.println("Loading player data for "+username);
 			account = IOHub.getAccountIo().load(username.trim());
+			
+			Password loginPass = new Password(password.toLowerCase().trim(), true);
+			if (!account.getPassword().getPassword().equals(loginPass.getPassword())) {
+				return new LoginResponse(LoginResponse.INVALID_UN_PWD);
+			}			
 			account.setChannel(channel);
 			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 			account.setClientSessionKey(clientSessionKey);

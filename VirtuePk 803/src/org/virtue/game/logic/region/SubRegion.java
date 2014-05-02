@@ -13,7 +13,7 @@ public interface SubRegion {
 	void preUpdate();
 	
 	/**
-	 * Called during the update process immediatley after {@link #preUpdate()}
+	 * Called during the update process immediately after {@link #preUpdate()}
 	 * is called. Used to re apply and dispatch new region information and data.
 	 */
 	void update();
@@ -22,7 +22,7 @@ public interface SubRegion {
 	 * Called to wrap up after an update process. The stages
 	 * {@link #preUpdate()} and {@link #update()} will have been called by now,
 	 * rendering this region fully updated. A post update cleans the region
-	 * update sequnce of useless information.
+	 * update sequence of useless information.
 	 */
 	void postUpdate();
 	

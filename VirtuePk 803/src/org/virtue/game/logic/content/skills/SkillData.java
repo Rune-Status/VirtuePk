@@ -67,7 +67,7 @@ public class SkillData {
 	 * As experience is stored as an integer, this will multiply the amount by ten and remove any decimals
 	 * @param xpToAdd	The amount of xp to add, represented as a float.
 	 */
-	public void addExperienceFloat (float xpToAdd) {
+	public void addExperienceFloat (double xpToAdd) {
 		addExperience((int) xpToAdd*10);
 	}
 	

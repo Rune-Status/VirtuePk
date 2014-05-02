@@ -15,7 +15,11 @@ import org.virtue.network.io.IOParser;
  */
 public class NPCSpawnParser implements IOParser<List<NPC>> {
 
-	public static final File SAVE_PATH = new File("data/landscape/NPCSpawns.txt");
+	/**
+	 * (non-Javadoc)
+	 * @see org.virtue.network.io.IOParser#SAVE_PATH
+	 */
+	private File SAVE_PATH = new File("data/landscape/NPCSpawns.txt");
 	
 	/**
 	 * (non-Javadoc)

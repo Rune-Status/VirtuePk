@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * An {@link Archive} is a file within the cache that can have multiple member
@@ -55,7 +56,12 @@ public class Archive {
 
 		/* allocate the buffers for the child entries */
 		for (int id = 0; id < size; id++) {
-			archive.entries[id] = ByteBuffer.allocate(sizes[id]);
+			try {
+				archive.entries[id] = ByteBuffer.allocate(sizes[id]);
+			} catch (Exception ex) {
+				System.out.println("id="+id+", size="+size+", sizes="+Arrays.toString(sizes));
+				throw ex;
+			}
 		}
 
 		/* read the data into the buffers */

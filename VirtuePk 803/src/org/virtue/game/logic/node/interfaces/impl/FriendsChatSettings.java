@@ -40,6 +40,9 @@ public class FriendsChatSettings extends AbstractInterface {
 		case JMOD:
 			return;//This should never occur. If it does, there must be an error
 		}
+		if (name.isEmpty()) {
+			return;
+		}
 		//System.out.println("Setting permission for "+permission+" to "+name);
 		setComponentText(permission.getSettingsID(), name);
 	}

@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Account;
@@ -37,7 +39,11 @@ public class AccountParser implements IOParser<Account> {
 			System.out.println("Could not save player");
 	}*/
 	
-	public static final File SAVE_PATH = new File("data/characters/");
+	/**
+	 * (non-Javadoc)
+	 * @see org.virtue.network.io.IOParser#SAVE_PATH
+	 */
+	private File SAVE_PATH = new File("data/characters/");
 	
 	/**
 	 * (non-Javadoc)
@@ -49,7 +55,7 @@ public class AccountParser implements IOParser<Account> {
 	@Override
 	public Account load(Object... params) throws FileNotFoundException {
 		File character = new File(getPath(), params[0]+".json");
-
+		
 		JsonParser parser = new JsonParser();
 		Object parsed = parser.parse(new FileReader(character));
 		
@@ -59,24 +65,25 @@ public class AccountParser implements IOParser<Account> {
 		String password = obj.get("password").getAsString();
 		String email = obj.get("email").getAsString();
 		int age = obj.get("age").getAsInt();
-		String dateofbirth = obj.get("dateofbirth").getAsString();
+		
+		JsonElement bdElement = obj.get("dateofbirth");
+		int year=0, month=0, day=0;
+		if (bdElement.isJsonArray()) {
+			JsonArray birthDate = bdElement.getAsJsonArray();
+			for (JsonElement e : birthDate) {
+				JsonObject date = e.getAsJsonObject();
+				year = date.get("year").getAsInt();
+				month = date.get("month").getAsInt();
+				day = date.get("day").getAsInt();
+			}
+		}
+		
 		int rankID = obj.get("rank").getAsInt();
 		
 		Rank rank = Rank.forID(rankID);
 		if (rank == null) {
 			rank = Rank.PLAYER;
 		}
-		/*switch (permission.toUpperCase()) {
-		case "ADMINISTRATOR":
-			rank = Rank.ADMINISTRATOR;
-			break;
-		case "MODERATOR":
-			rank = Rank.MODERATOR;
-			break;
-		case "PLAYER":
-			rank = Rank.PLAYER;
-			break;
-		}*/
 		
 		JsonArray loc = obj.get("location").getAsJsonArray();
 		int x=0, y=0, z=0;
@@ -94,10 +101,7 @@ public class AccountParser implements IOParser<Account> {
 			screen.initLayout(layout.getAsJsonArray());
 		}
 		
-		//Player player = new Player(new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z)));
-		Account account = new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(dateofbirth), new Tile(x, y, z), screen, obj);
-		//player.getSkillManager().deserialise(obj.get("skills").getAsJsonArray());
-		return account;
+		return new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(new GregorianCalendar(year, month, day)), new Tile(x, y, z), screen, obj);
 	}
 
 	/**
@@ -114,7 +118,15 @@ public class AccountParser implements IOParser<Account> {
 		obj.addProperty("password", p.getAccount().getPassword().getPassword());
 		obj.addProperty("email", (p.getAccount().getEmail() == null ? "null" : p.getAccount().getEmail().getEmail()));
 		obj.addProperty("age", (p.getAccount().getAge() == null ? -1 : p.getAccount().getAge().getAge()));
-		obj.addProperty("dateofbirth", (p.getAccount().getDateOfBirth() == null ? "null" : p.getAccount().getDateOfBirth().getDateOfBirth()));
+		
+		JsonArray birthDate = new JsonArray();
+		JsonObject date = new JsonObject();
+		date.addProperty("year", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.YEAR));
+		date.addProperty("month", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.MONTH));
+		date.addProperty("day", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.DAY_OF_MONTH));
+		birthDate.add(date);
+		obj.add("dateofbirth", birthDate);
+		
 		obj.addProperty("rank", p.getAccount().getRank().getID());
 		
 		JsonArray location = new JsonArray();
