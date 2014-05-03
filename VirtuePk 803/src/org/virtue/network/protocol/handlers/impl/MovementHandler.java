@@ -27,7 +27,7 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		}
 		//System.out.println("Movement request: x="+baseX+", y="+baseY+", forceRun="+forceRun);
 		Movement movement = session.getPlayer().getUpdateArchive().getMovement();
-		movement.resetWalkSteps();
+		movement.reset();
 		if (forceRun) {
 			if (!movement.isForceRun()) {
 				movement.swapRunning(true);
@@ -37,7 +37,8 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		}
 		movement.setNeedsTypeUpdate(true);
 		//movement.setRunning(true);
-		movement.addWalkStepsInteract(baseX, baseY, Constants.MAX_WALK_STEPS, sizeX, sizeY, true);
+		movement.calculateWalkStepsInteract(new Tile(baseX, baseY, session.getPlayer().getTile().getPlane()), Constants.MAX_WALK_STEPS, sizeX, sizeY);
+		//movement.addWalkStepsInteract(baseX, baseY, Constants.MAX_WALK_STEPS, sizeX, sizeY, true);
 		int targetX = movement.getLastWalkTile()[0];
 		int targetY = movement.getLastWalkTile()[1];
 		Tile target = new Tile(targetX, targetY, 0);

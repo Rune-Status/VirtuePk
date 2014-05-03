@@ -1,5 +1,6 @@
 package org.virtue.game.logic.node.entity.player.update.movement;
 
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.virtue.game.logic.World;
@@ -61,6 +62,11 @@ public class Movement {
 	private boolean isFirstStep;
 	
 	/**
+	 * Represents whether the entity is able to avoid map clipping
+	 */
+	private boolean noclipped;
+	
+	/**
 	 * @return The nextWalkDirection
 	 */
 	public int getNextWalkDirection() {
@@ -105,12 +111,38 @@ public class Movement {
 		this.walkSteps = walkSteps;
 	}
 	
-	public void resetWalkSteps() {
+	/**
+	 * Resets the walk queue.
+	 */
+	public void reset() {
 		walkSteps.clear();
 	}
 
 	public boolean addWalkStepsInteract(int destX, int destY, int maxStepsCount, int size, boolean calculate) {
 		return addWalkStepsInteract(destX, destY, maxStepsCount, size, size, calculate);
+	}
+	
+	public boolean calculateWalkStepsInteract (Tile target,
+			int maxStepsCount, int sizeX, int sizeY) {
+		if (noclipped) {
+			return addWalkStepsInteract(target.getX(), target.getY(), maxStepsCount, sizeX, sizeY, true);
+		}
+		RouteFinder finder = new RouteFinder(new Tile(getLastWalkTile()[0], getLastWalkTile()[1], entity.getTile().getPlane()));
+		finder.setTarget(target, sizeX, sizeY);
+		int stepCount = finder.calculateRoute(entity.getSize(), true);
+		if (stepCount == -1) {
+			return false;
+		}		
+		int[][] steps = finder.getSteps();
+		//System.out.println("Steps: "+stepCount);
+		int[] lastStep = getLastWalkTile();
+		for (int i=stepCount-1;i>=0;i--) {
+			int[] step = steps[i];
+			int dir = MovementUtils.getMoveDirection(step[0] - lastStep[0], step[1] - lastStep[1]);
+			walkSteps.add(new int[] { dir, step[0], step[1] });
+			lastStep = step;
+		}
+		return true;
 	}
 	
 	public boolean addWalkStepsInteract(final int destX, final int destY,
@@ -144,7 +176,8 @@ public class Movement {
 				int[] myT = calculatedStep(myRealX, myRealY, destX, destY,
 						lastTile[0], lastTile[1], sizeX, sizeY);
 				if (myT == null) {
-					return false;
+					//System.out.println("Failed to calculate steps.......");
+					return false;//Cannot reach tile
 				}
 				myX = myT[0];
 				myY = myT[1];
@@ -167,35 +200,39 @@ public class Movement {
 
 	public int[] calculatedStep(int myX, int myY, int destX, int destY,
 			int lastX, int lastY, int sizeX, int sizeY) {
+		//System.out.println("Attempting to calculate next step: myX="+myX+", myY="+myY+", destX="+destX+", destY="+destY+", lastX="+lastX+", lastY="+lastY);
 		if (myX < destX) {
 			myX++;
-			if (!addWalkStep(myX, myY, lastX, lastY, true))
+			if (!addWalkStep(myX, myY, lastX, lastY, true)) {
 				myX--;
-			else if (!(myX - destX > sizeX || myX - destX < -1
+			} else if (!(myX - destX > sizeX || myX - destX < -1
 					|| myY - destY > sizeY || myY - destY < -1)) {
-				if (myX == lastX || myY == lastY)
+				if (myX == lastX || myY == lastY) {
 					return null;
+				}
 				return new int[] { myX, myY };
 			}
 		} else if (myX > destX) {
 			myX--;
-			if (!addWalkStep(myX, myY, lastX, lastY, true))
+			if (!addWalkStep(myX, myY, lastX, lastY, true)) {
 				myX++;
-			else if (!(myX - destX > sizeX || myX - destX < -1
+			} else if (!(myX - destX > sizeX || myX - destX < -1
 					|| myY - destY > sizeY || myY - destY < -1)) {
-				if (myX == lastX || myY == lastY)
+				if (myX == lastX || myY == lastY) {
 					return null;
+				}
 				return new int[] { myX, myY };
 			}
 		}
 		if (myY < destY) {
 			myY++;
-			if (!addWalkStep(myX, myY, lastX, lastY, true))
+			if (!addWalkStep(myX, myY, lastX, lastY, true)) {
 				myY--;
-			else if (!(myX - destX > sizeX || myX - destX < -1
+			} else if (!(myX - destX > sizeX || myX - destX < -1
 					|| myY - destY > sizeY || myY - destY < -1)) {
-				if (myX == lastX || myY == lastY)
+				if (myX == lastX || myY == lastY) {
 					return null;
+				}
 				return new int[] { myX, myY };
 			}
 		} else if (myY > destY) {
@@ -209,13 +246,13 @@ public class Movement {
 				return new int[] { myX, myY };
 			}
 		}
-		if (myX == lastX || myY == lastY)
+		if (myX == lastX || myY == lastY) {
 			return null;
+		}
 		return new int[] { myX, myY };
 	}
 
-	public boolean addWalkSteps(final int destX, final int destY,
-			int maxStepsCount) {
+	public boolean addWalkSteps(final int destX, final int destY, int maxStepsCount) {
 		return addWalkSteps(destX, destY, -1, true);
 	}
 
@@ -262,8 +299,9 @@ public class Movement {
 
 	public boolean checkWalkStep(int nextX, int nextY, int lastX, int lastY, boolean check) {
 		int dir = MovementUtils.getMoveDirection(nextX - lastX, nextY - lastY);
-		if (dir == -1)
+		if (dir == -1) {
 			return false;
+		}
 		return true;
 	}
 	
@@ -272,10 +310,11 @@ public class Movement {
 		if (dir == -1) {
 			return false;
 		}
-//		if (check) {
-//			if (!World.getWorld().checkWalkStep(entity.getTile().getPlane(), lastX, lastY, dir, entity.getUpdateArchive().getAppearance().getSize()))
-//				return false;
-//		}
+		if (check && !noclipped) {
+			if (!World.getWorld().getRegionManager().checkWalkStep(entity.getTile().getPlane(), lastX, lastY, dir, entity.getUpdateArchive().getAppearance().getSize())) {
+				return false;
+			}
+		}
 		//System.out.println("Adding walk step: dir="+dir+", x="+nextX+", y="+nextY);
 		walkSteps.add(new int[] { dir, nextX, nextY });
 		return true;
@@ -399,6 +438,14 @@ public class Movement {
 	}
 	
 	/**
+	 * Sets whether map clipping is enabled or disabled for the player
+	 * @param noClip	True for clipping disabled, false otherwise
+	 */
+	public void setNoClip (boolean noClip) {
+		this.noclipped = noClip;
+	}
+	
+	/**
 	 * @param running The running to set
 	 */
 	public void setRunning(boolean running) {
@@ -406,10 +453,17 @@ public class Movement {
 		setNeedsTypeUpdate(true);
 	}
 	
+	/**
+	 * Swaps the running boolean.
+	 */
 	public void swapRunning() {
 		swapRunning(false);
 	}
 	
+	/**
+	 * Swaps the running boolean
+	 * @param isForced	Whether the run swap is temporary (forced)
+	 */
 	public void swapRunning(boolean isForced) {
 		running = !running;
 		setNeedsTypeUpdate(true);

@@ -29,6 +29,7 @@ public class CommandRepository {
 		commands.add(new AddExperience());
 		commands.add(new SystemUpdate());
 		commands.add(new SendInterface());
+		commands.add(new SetNoClip());
 		
 	}
 	

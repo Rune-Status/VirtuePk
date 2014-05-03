@@ -86,4 +86,9 @@ public class NPC extends Entity {
 	@Override
 	public void update() {
 	}
+
+	@Override
+	public int getSize() {
+		return definition.getSize();
+	}
 }

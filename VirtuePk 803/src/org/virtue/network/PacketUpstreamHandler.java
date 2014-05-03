@@ -7,6 +7,7 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.virtue.network.protocol.codec.handshake.HandshakeType;
 import org.virtue.network.session.Session;
+import org.virtue.network.session.impl.AccoutCreationSession;
 import org.virtue.network.session.impl.JS5Session;
 import org.virtue.network.session.impl.LoginSession;
 
@@ -26,8 +27,10 @@ public class PacketUpstreamHandler extends SimpleChannelUpstreamHandler {
 			HandshakeType handshakeType = (HandshakeType) e.getMessage();
 			switch (handshakeType.getType()) {
 			case HANDSHAKE_LOGIN:
-			case HANSHAKE_CREATION:
 				ctx.setAttachment(new LoginSession(ctx));
+				break;
+			case HANSHAKE_CREATION:
+				ctx.setAttachment(new AccoutCreationSession(ctx));
 				break;
 			case HANDSHAKE_ONDEMAND:
 				ctx.setAttachment(new JS5Session(ctx));

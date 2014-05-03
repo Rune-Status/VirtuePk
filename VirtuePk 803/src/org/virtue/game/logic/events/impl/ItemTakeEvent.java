@@ -20,7 +20,7 @@ public class ItemTakeEvent extends CoordinateEvent {
 		//System.out.println("Processing item take event...");
 		Region region = World.getWorld().getRegionManager().getRegionByID(tile.getRegionID());
 		if (region == null || !region.containsItem(item)) {
-			player.getUpdateArchive().getMovement().resetWalkSteps();
+			player.getUpdateArchive().getMovement().reset();
 			return true;
 		}
 		return super.processEvent(player);

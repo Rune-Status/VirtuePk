@@ -173,4 +173,6 @@ public abstract class Entity extends Node {
 	public int getMaxHitpoints() {
 		return maxHitpoints;
 	}
+	
+	public abstract int getSize();
 }

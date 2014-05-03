@@ -67,7 +67,7 @@ public class Region extends AttributeSet implements SubRegion {
 	/**
 	 * Represents the current loading stage for this {@link Region}.
 	 */
-	private RegionLoadingStage loadingStage = RegionLoadingStage.PREPARE_MAP;
+	private RegionLoadingStage loadingStage = RegionLoadingStage.NONE;
 	
 	/**
 	 * Constructs a new {@code Region.java}.
@@ -196,6 +196,16 @@ public class Region extends AttributeSet implements SubRegion {
 			player.getPacketDispatcher().dispatchGroundItem(item, type);
 		}
 	}
+
+	/**
+	 * Returns the region skeleton.
+	 * @return The skeleton.
+	 */
+	public RegionSkeleton getRegionMap() {
+		if (map == null)
+			map = new RegionSkeleton(id, false);
+		return map;
+	}
 	
 	/**
 	 * Returns the clipped map skeleton.
@@ -206,6 +216,37 @@ public class Region extends AttributeSet implements SubRegion {
 			clipedOnlyMap = new RegionSkeleton(id, true);
 		}
 		return clipedOnlyMap;
+	}
+	
+	/**
+	 * Gets the mask for a region.
+	 * @param plane The region plane.
+	 * @param localX The local x.
+	 * @param localY The local y.
+	 * @return The masks.
+	 */
+	public int getMask(int plane, int localX, int localY) {
+		if (map == null || !loadingStage.equals(RegionLoadingStage.DONE_LOADING))
+			return -1;
+		if (localX >= 64 || localY >= 64 || localX < 0 || localY < 0) {
+			Tile tile = new Tile(map.getRegionX() + localX, map.getRegionY() + localY, plane);
+			int regionId = tile.getRegionID();
+			int newRegionX = (regionId >> 8) * 64;
+			int newRegionY = (regionId & 0xff) * 64;
+			return World.getWorld().getRegionManager().getRegionByID(tile.getRegionID(), true).getMask(plane, tile.getX() - newRegionX, tile.getY() - newRegionY);
+		}
+		return map.getMasks()[plane][localX][localY];
+	}
+
+	/**
+	 * Gets the default rotation of a tile.
+	 * @param plane The plane.
+	 * @param baseLocalX The local X.
+	 * @param baseLocalY The local Y.
+	 * @return The rotation
+	 */
+	public int getRotation(int plane, int baseLocalX, int baseLocalY) {
+		return 0;
 	}
 
 	/**
@@ -319,7 +360,7 @@ public class Region extends AttributeSet implements SubRegion {
 
 	@Override
 	public void update() {
-		System.out.println("Loading region...");
+		//System.out.println("Loading region...");
 		RegionManager.LOADER.loadRegion(this);
 		//System.out.println(Arrays.toString(getClippedRegionMap().getMasks()));
 	}

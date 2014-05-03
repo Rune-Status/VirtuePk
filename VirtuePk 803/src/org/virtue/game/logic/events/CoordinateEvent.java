@@ -35,7 +35,7 @@ public abstract class CoordinateEvent {
 			return cantReach(player);
 		}
 		if (player.getUpdateArchive().getMovement().hasWalkSteps()) {
-			player.getUpdateArchive().getMovement().resetWalkSteps();
+			player.getUpdateArchive().getMovement().reset();
 		}
 		run(player);
 		return true;

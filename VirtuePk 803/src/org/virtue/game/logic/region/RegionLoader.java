@@ -19,9 +19,10 @@ public class RegionLoader {
 	 * @param region The region to load.
 	 */
 	public void loadRegion(final Region region) {
-		if (region.getLoadingStage().equals(RegionLoadingStage.DONE_LOADING)) {
+		if (!region.getLoadingStage().equals(RegionLoadingStage.NONE)) {
 			return;
 		}
+		region.setLoadingStage(RegionLoadingStage.PREPARE_MAP);
 		Launcher.getEngine().getAsycnhronousPool().execute(new Runnable() {
 
 			@Override
@@ -96,7 +97,7 @@ public class RegionLoader {
 											z--;
 										}
 										if (z >= 0 && z <= 3) {
-											region.getClippedRegionMap().clipTile(z, x, y);
+											region.getRegionMap().clipTile(z, x, y);
 										}
 									}
 								}
@@ -125,7 +126,7 @@ public class RegionLoader {
 				case PARSE_NODE_DATA:
 					if (virtualNodeData != null) {
 						RS3PacketReader landStream = new RS3PacketReader(virtualNodeData.array());
-						int objectId = -1;
+						/*int objectId = -1;
 						int incr;
 						while (landStream.getRemaining() > 0 && (incr = landStream.getSmart2()) != 0) {
 							objectId += incr;
@@ -151,8 +152,8 @@ public class RegionLoader {
 								}
 								region.addObject(new RS3Object(objectId, type, rotation, new Tile(localX + region.getRegionX(), localY + region.getRegionY(), objectPlane)), objectPlane, localX, localY);
 							}
-						}
-						/*int objectID = -1;
+						}*/
+						int objectID = -1;
 						int modifier;
 						while (landStream.getRemaining() > 0 && (modifier = landStream.getUnsignedSmart()) != 0) {
 							objectID += modifier;
@@ -177,16 +178,11 @@ public class RegionLoader {
 									region.addObject(new RS3Object(objectID, type, direction, new Tile(x, y, z)), z, x, y);
 								}
 							}
-						}*/
+						}
 					}
 					region.setLoadingStage(RegionLoadingStage.DONE_LOADING);
-					System.out.println("Region loaded successfully!");
+					System.out.println("Region "+region.getId()+" loaded successfully!");
 					//System.out.println(Arrays.deepToString(region.getClippedRegionMap().getMasks()));
-					/*for (int[][] i : region.getClippedRegionMap().getMasks()) {
-						for (int[] b : i) {
-							System.out.println(Arrays.toString(b));
-						}
-					}*/
 				default:
 					break;
 				}

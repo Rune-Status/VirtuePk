@@ -481,4 +481,9 @@ public class Player extends Entity {
 //	}
 		return -1;
   }
+
+	@Override
+	public int getSize() {
+		return 1;
+	}
 }

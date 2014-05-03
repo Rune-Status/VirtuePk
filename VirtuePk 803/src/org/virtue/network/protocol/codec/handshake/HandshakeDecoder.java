@@ -45,7 +45,7 @@ public class HandshakeDecoder extends FrameDecoder {
 			break;
 		case HANSHAKE_CREATION:
 			channel.getPipeline().addFirst("encoder", new AccountCreationEncoder());
-			channel.getPipeline().addBefore("upHandler", "decoder", new AccountCreationDecoder());
+			channel.getPipeline().addBefore("upHandler", "accountDecoder", new AccountCreationDecoder());
 		default:
 			break;
 		}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.virtue.game.logic.node.entity.player.update.movement.MovementUtils;
+
 /**
  * @author Taylor Moon
  * @since Jan 25, 2014
@@ -158,6 +160,29 @@ public class RegionManager {
 	}
 	
 	/**
+	 * Returns a region corresponding to the specified id.
+	 * @param id The id of the region to get.
+	 * @param load Whether to load the region or not
+	 * @return The region.
+	 */
+	public Region getRegionByID(int id, boolean load) {
+		Region region = getRegionByID(id);
+		if (region != null) {
+			if (load && !region.getLoadingStage().equals(RegionLoadingStage.DONE_LOADING)) {
+				LOADER.loadRegion(region);
+			}
+			return region;
+		} else {
+			region = new Region(id);
+			addRegion(region);
+			if (load) {
+				LOADER.loadRegion(region);
+			}
+			return region;
+		}
+	}
+	
+	/**
 	 * Checks if the region list contains a specified region.
 	 * @param id The ID of the region to check.
 	 * @return True if so; false otherwise.
@@ -186,17 +211,179 @@ public class RegionManager {
 	public void registerRegionUpdate(RegionUpdateEvent event) {
 		UPDATER.getPendingRegions().add(event);
 	}
+
+	/**
+	 * Gets the masks of a region.
+	 * @param plane The plane.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The masks.
+	 */
+	public int getMask(int plane, int x, int y) {
+		return getMask(new Tile(x, y, plane));
+	}
+	
+	public int getMask(Tile tile) {
+		int regionId = tile.getRegionID();
+		Region region = getRegionByID(regionId, true);
+		if (region == null) {
+			return 0;
+		}
+		//int baseLocalX = tile.getX() - ((regionId >> 8) * 64);
+		//int baseLocalY = tile.getY() - ((regionId & 0xFF) * 64);
+		//System.out.println("Retreiving mask for tile: "+tile.getX()+", "+tile.getY()+", mask="+region.getMask(tile.getPlane(), tile.getXInRegion(), tile.getYInRegion()));
+		return region.getMask(tile.getPlane(), tile.getXInRegion(), tile.getYInRegion());
+	}
 	
 	public boolean isClipped (Tile tile) {
 		int regionID = tile.getRegionID();
-		Region region = getRegionByID(regionID);
+		Region region = getRegionByID(regionID, true);
 		if (region == null) {
-			region = new Region(regionID);
-			region.update();
-			//return false;
+			return false;
 		}
 		//System.out.println("Checking x="+tile.getXInRegion()+", y="+tile.getYInRegion()+", clipType="+region.getClippedRegionMap().getMasks()[tile.getPlane()][tile.getXInRegion()][tile.getYInRegion()]);
 		return region.getClippedRegionMap().getMasks()[tile.getPlane()][tile.getXInRegion()][tile.getYInRegion()] != 0;
+	}
+
+	/**
+	 * Gets the rotation of a tile.
+	 * @param plane The plane.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @return The rotation.
+	 */
+	public int getRotation(int plane, int x, int y) {
+		Tile tile = new Tile(x, y, plane);
+		int regionId = tile.getRegionID();
+		Region region = getRegionByID(regionId, true);
+		if (region == null) {
+			return 0;
+		}
+		int baseLocalX = x - ((regionId >> 8) * 64);
+		int baseLocalY = y - ((regionId & 0xff) * 64);
+		return region.getRotation(tile.getPlane(), baseLocalX, baseLocalY);
+	}
+	
+	/**
+	 * Checks the walk steps for a region.
+	 * @param plane The plane to check.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param dir The direction.
+	 * @param size The size.
+	 * @return If we can step.
+	 */
+	public final boolean checkWalkStep(int plane, int x, int y, int dir, int size) {
+		int xOffset = MovementUtils.DIRECTION_DELTA_X[dir];
+		int yOffset = MovementUtils.DIRECTION_DELTA_Y[dir];
+		int rotation = getRotation(plane, x + xOffset, y + yOffset);
+		if (rotation != 0) {
+			for (int rotate = 0; rotate < (4 - rotation); rotate++) {
+				int fakeChunckX = xOffset;
+				int fakeChunckY = yOffset;
+				xOffset = fakeChunckY;
+				yOffset = 0 - fakeChunckX;
+			}
+		}
+
+		if (size == 1) {
+			int mask = getMask(plane, x + MovementUtils.DIRECTION_DELTA_X[dir], y + MovementUtils.DIRECTION_DELTA_Y[dir]);
+			if (xOffset == -1 && yOffset == 0) {
+				return (mask & 0x42240000) == 0;
+			}
+			if (xOffset == 1 && yOffset == 0) {
+				return (mask & 0x60240000) == 0;
+			}
+			if (xOffset == 0 && yOffset == -1) {
+				return (mask & 0x40a40000) == 0;
+			}
+			if (xOffset == 0 && yOffset == 1) {
+				return (mask & 0x48240000) == 0;
+			}
+			if (xOffset == -1 && yOffset == -1) {
+				return (mask & 0x43a40000) == 0 && (getMask(plane, x - 1, y) & 0x42240000) == 0 && (getMask(plane, x, y - 1) & 0x40a40000) == 0;
+			}
+			if (xOffset == 1 && yOffset == -1) {
+				return (mask & 0x60e40000) == 0 && (getMask(plane, x + 1, y) & 0x60240000) == 0 && (getMask(plane, x, y - 1) & 0x40a40000) == 0;
+			}
+			if (xOffset == -1 && yOffset == 1) {
+				return (mask & 0x4e240000) == 0 && (getMask(plane, x - 1, y) & 0x42240000) == 0 && (getMask(plane, x, y + 1) & 0x48240000) == 0;
+			}
+			if (xOffset == 1 && yOffset == 1) {
+				return (mask & 0x78240000) == 0 && (getMask(plane, x + 1, y) & 0x60240000) == 0 && (getMask(plane, x, y + 1) & 0x48240000) == 0;
+			}
+		} else if (size == 2) {
+			if (xOffset == -1 && yOffset == 0) {
+				return (getMask(plane, x - 1, y) & 0x43a40000) == 0 && (getMask(plane, x - 1, y + 1) & 0x4e240000) == 0;
+			}
+			if (xOffset == 1 && yOffset == 0) {
+				return (getMask(plane, x + 2, y) & 0x60e40000) == 0 && (getMask(plane, x + 2, y + 1) & 0x78240000) == 0;
+			}
+			if (xOffset == 0 && yOffset == -1) {
+				return (getMask(plane, x, y - 1) & 0x43a40000) == 0 && (getMask(plane, x + 1, y - 1) & 0x60e40000) == 0;
+			}
+			if (xOffset == 0 && yOffset == 1)
+				return (getMask(plane, x, y + 2) & 0x4e240000) == 0 && (getMask(plane, x + 1, y + 2) & 0x78240000) == 0;
+			if (xOffset == -1 && yOffset == -1)
+				return (getMask(plane, x - 1, y) & 0x4fa40000) == 0 && (getMask(plane, x - 1, y - 1) & 0x43a40000) == 0 && (getMask(plane, x, y - 1) & 0x63e40000) == 0;
+			if (xOffset == 1 && yOffset == -1)
+				return (getMask(plane, x + 1, y - 1) & 0x63e40000) == 0 && (getMask(plane, x + 2, y - 1) & 0x60e40000) == 0 && (getMask(plane, x + 2, y) & 0x78e40000) == 0;
+			if (xOffset == -1 && yOffset == 1)
+				return (getMask(plane, x - 1, y + 1) & 0x4fa40000) == 0 && (getMask(plane, x - 1, y + 1) & 0x4e240000) == 0 && (getMask(plane, x, y + 2) & 0x7e240000) == 0;
+			if (xOffset == 1 && yOffset == 1)
+				return (getMask(plane, x + 1, y + 2) & 0x7e240000) == 0 && (getMask(plane, x + 2, y + 2) & 0x78240000) == 0 && (getMask(plane, x + 1, y + 1) & 0x78e40000) == 0;
+		} else {
+			if (xOffset == -1 && yOffset == 0) {
+				if ((getMask(plane, x - 1, y) & 0x43a40000) != 0 || (getMask(plane, x - 1, -1 + (y + size)) & 0x4e240000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size - 1; sizeOffset++)
+					if ((getMask(plane, x - 1, y + sizeOffset) & 0x4fa40000) != 0)
+						return false;
+			} else if (xOffset == 1 && yOffset == 0) {
+				if ((getMask(plane, x + size, y) & 0x60e40000) != 0 || (getMask(plane, x + size, y - (-size + 1)) & 0x78240000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size - 1; sizeOffset++)
+					if ((getMask(plane, x + size, y + sizeOffset) & 0x78e40000) != 0)
+						return false;
+			} else if (xOffset == 0 && yOffset == -1) {
+				if ((getMask(plane, x, y - 1) & 0x43a40000) != 0 || (getMask(plane, x + size - 1, y - 1) & 0x60e40000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size - 1; sizeOffset++)
+					if ((getMask(plane, x + sizeOffset, y - 1) & 0x63e40000) != 0)
+						return false;
+			} else if (xOffset == 0 && yOffset == 1) {
+				if ((getMask(plane, x, y + size) & 0x4e240000) != 0 || (getMask(plane, x + (size - 1), y + size) & 0x78240000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size - 1; sizeOffset++)
+					if ((getMask(plane, x + sizeOffset, y + size) & 0x7e240000) != 0)
+						return false;
+			} else if (xOffset == -1 && yOffset == -1) {
+				if ((getMask(plane, x - 1, y - 1) & 0x43a40000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size; sizeOffset++)
+					if ((getMask(plane, x - 1, y + (-1 + sizeOffset)) & 0x4fa40000) != 0 || (getMask(plane, sizeOffset - 1 + x, y - 1) & 0x63e40000) != 0)
+						return false;
+			} else if (xOffset == 1 && yOffset == -1) {
+				if ((getMask(plane, x + size, y - 1) & 0x60e40000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size; sizeOffset++)
+					if ((getMask(plane, x + size, sizeOffset + (-1 + y)) & 0x78e40000) != 0 || (getMask(plane, x + sizeOffset, y - 1) & 0x63e40000) != 0)
+						return false;
+			} else if (xOffset == -1 && yOffset == 1) {
+				if ((getMask(plane, x - 1, y + size) & 0x4e240000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size; sizeOffset++)
+					if ((getMask(plane, x - 1, y + sizeOffset) & 0x4fa40000) != 0 || (getMask(plane, -1 + (x + sizeOffset), y + size) & 0x7e240000) != 0)
+						return false;
+			} else if (xOffset == 1 && yOffset == 1) {
+				if ((getMask(plane, x + size, y + size) & 0x78240000) != 0)
+					return false;
+				for (int sizeOffset = 1; sizeOffset < size; sizeOffset++)
+					if ((getMask(plane, x + sizeOffset, y + size) & 0x7e240000) != 0 || (getMask(plane, x + size, y + sizeOffset) & 0x78e40000) != 0)
+						return false;
+			}
+		}
+		return true;
 	}
 
 	/**
