@@ -1,6 +1,5 @@
 package org.virtue.game.logic.node.entity.player.update.movement;
 
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.virtue.game.logic.World;
@@ -64,7 +63,7 @@ public class Movement {
 	/**
 	 * Represents whether the entity is able to avoid map clipping
 	 */
-	private boolean noclipped;
+	private boolean noclipped = true;
 	
 	/**
 	 * @return The nextWalkDirection
@@ -353,9 +352,9 @@ public class Movement {
 			entity.getTile().copy(next);
 			boolean clipped = World.getWorld().getRegionManager().isClipped(entity.getTile());
 			if (clipped && p != null) {
-				System.out.println("Clipped: clipped="+clipped+", tile="+entity.getTile());
+				System.out.println("Clipped: mask="+World.getWorld().getRegionManager().getMask(entity.getTile())+", tile="+entity.getTile());
 				if (p.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
-					p.getPacketDispatcher().dispatchMessage("Tile clipped: "+p.getTile());
+					p.getPacketDispatcher().dispatchMessage("Tile clipped: mask="+World.getWorld().getRegionManager().getMask(entity.getTile())+", tile="+p.getTile());
 				}
 			}
 			//System.out.println("New: x="+entity.getTile().getX()+", y="+entity.getTile().getY());

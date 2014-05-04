@@ -29,12 +29,6 @@ public class Inventory extends AbstractInterface {
 	 * Represents the items in the inventory.
 	 */
 	private ItemsContainer<Item> items = new ItemsContainer<>(28, false);
-
-	/**
-	 * Represents the oplayer.
-	 */
-	//private Player player;
-
 	
 	/**
 	 * Constructs a new {@code inventory.java}.
@@ -92,16 +86,17 @@ public class Inventory extends AbstractInterface {
 	 */
 	public void remove(int slot) {
 		items.remove(items.get(slot));
-		refresh();
+		refresh(slot);
 	}
 	
 	/**
 	 * Removes an item.
 	 * @param item The item to remove.
 	 */
-	public void remove(Item item) {
-		items.remove(item);
+	public int remove(Item item) {
+		int removed = items.remove(item);
 		refresh();
+		return removed;
 	}
 	
 	/**
@@ -119,13 +114,21 @@ public class Inventory extends AbstractInterface {
 		}
 		return null;
 	}
+	
+	public Item getItemAtSlot (int slotID) {
+		return items.get(slotID);
+	}
+	
+	public int getFreeSlots () {
+		return items.freeSlots();
+	}
 
 	/**
 	 * Returns a slot.
 	 * @param id The id.
 	 * @return The slot.
 	 */
-	public int getSlot(int id) {
+	public int getSlotForItem(int id) {
 		for (int slot = 0; slot < items.getSize(); slot++) {
 			if (items.get(slot).getId() == id) {
 				return slot;
@@ -139,18 +142,26 @@ public class Inventory extends AbstractInterface {
 	/**
 	 * Refreshes this inventory.
 	 */
-	public void refresh() {
-		getPlayer().getPacketDispatcher().dispatchItems(93, items);
+	public void refresh(int... slots) {
+		getPlayer().getPacketDispatcher().dispatchItems(93, items, slots);
 //		player.getStack().sendItemSet(93, items.toArray());
 	}
 	
 	public void switchItem (int fromSlot, int toSlot) {
+		switchItem(fromSlot, toSlot, true);
+	}
+	
+	public void switchItem (int fromSlot, int toSlot, boolean refresh) {
 		if (fromSlot == toSlot || fromSlot == -1 || toSlot == -1) {
 			return;//No change took place
 		}
 		Item item = items.get(fromSlot);
-		items.set(fromSlot, null);
+		Item item2 = items.get(toSlot);
+		items.set(fromSlot, item2);
 		items.set(toSlot, item);
+		if (refresh) {
+			refresh(fromSlot, toSlot);
+		}
 	}
 
 	/**
@@ -241,12 +252,12 @@ public class Inventory extends AbstractInterface {
                     if (button.equals(ActionButton.TWO) && item.getDefinition().isWearItem(
 							getPlayer().getUpdateArchive().getAppearance().getGender() == Gender.MALE)) {
                         if (handleEquip(item, slotID, option)) {
-                    		refresh();
+                    		refresh(slotID);
                         	return;
                         }
                     } else if (button.equals(ActionButton.EIGHT)) {
                     	if (handleDrop(item, slotID, option)) {
-                    		refresh();
+                    		refresh(slotID);
                     		return;
                     	}
                     }

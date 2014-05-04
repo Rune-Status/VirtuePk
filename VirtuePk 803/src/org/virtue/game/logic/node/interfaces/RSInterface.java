@@ -32,4 +32,6 @@ public class RSInterface {
         
         public static final int GAME_SCREEN = 1477;
         
+        public static final int BANK = 762;
+        
 }

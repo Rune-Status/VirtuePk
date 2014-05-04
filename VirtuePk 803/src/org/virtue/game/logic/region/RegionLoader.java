@@ -67,10 +67,10 @@ public class RegionLoader {
 							for (int deltaX = 0; deltaX < 64; deltaX++) {
 								for (int deltaY = 0; deltaY < 64; deltaY++) {
 									int bitMask = mapStream.getUnsignedByte();
-									if ((bitMask & 0x1) != 0) {
+									/*if ((bitMask & 0x1) != 0) {
 										mapStream.get();
 										mapStream.getUnsignedSmart();
-									}
+									}*/
 									if ((bitMask & 0x2) != 0) {
 										//System.out.println("Clipped tile at x="+deltaX+", y="+deltaY+", z="+plane);
 										mapSettings[plane][deltaX][deltaY] = (byte) mapStream.get();
@@ -181,7 +181,7 @@ public class RegionLoader {
 						}
 					}
 					region.setLoadingStage(RegionLoadingStage.DONE_LOADING);
-					System.out.println("Region "+region.getId()+" loaded successfully!");
+					//System.out.println("Region "+region.getId()+" loaded successfully!");
 					//System.out.println(Arrays.deepToString(region.getClippedRegionMap().getMasks()));
 				default:
 					break;

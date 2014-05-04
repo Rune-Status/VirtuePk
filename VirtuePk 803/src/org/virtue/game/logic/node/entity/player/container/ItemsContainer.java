@@ -16,6 +16,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 
 	private Item[] data;
 	private boolean alwaysStackable = false;
+	private int[] lastUpdatedSlots;
 
 	public ItemsContainer(int size, boolean alwaysStackable) {
 		data = new Item[size];
@@ -106,7 +107,16 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 		}
 		return j;
 	}
+	
+	public int[] getUpdatedSlots () {
+		return lastUpdatedSlots;
+	}
 
+	/**
+	 * Removes the specified item (and the specified amount of the item) from this container
+	 * @param item	The item (and amount) to remove
+	 * @return	The amount removed
+	 */
 	public int remove(T item) {
 		int removed = 0, toRemove = item.getAmount();
 		for (int i = 0; i < data.length; i++) {
@@ -117,7 +127,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 						removed += toRemove;
 						amt -= toRemove;
 						toRemove = 0;
-						data[i] = new Item(data[i].getId(), amt);
+						data[i].setAmount(amt);// = new Item(data[i].getId(), amt);
 						return removed;
 					} else {
 						removed += amt;

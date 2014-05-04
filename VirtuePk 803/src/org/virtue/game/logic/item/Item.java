@@ -19,8 +19,11 @@ public class Item {
 	 * Represents the amount.
 	 */
 	private int amount;
-        
-        private ItemDefinition definition;
+	
+	/**
+	 * The cache definition for the item
+	 */
+	private ItemDefinition definition;
 	
 	/**
 	 * Constructs a new {@code SendItem.java}.
@@ -30,7 +33,13 @@ public class Item {
 	public Item(int id, int amount) {
 		this.id = id;
 		this.amount = amount;
-                this.definition = ItemDefinitionLoader.forId(id);
+		this.definition = ItemDefinitionLoader.forId(id);
+	}
+	
+	public Item (Item item) {
+		this.id = item.id;
+		this.amount = item.amount;
+		this.definition = item.definition;
 	}
 
 	/**
@@ -59,6 +68,10 @@ public class Item {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public boolean isStackable () {
+		return (definition.isNoted() || definition.isStackable());
 	}
 	
 	public EquipSlot getEquipSlot () {

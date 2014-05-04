@@ -63,9 +63,9 @@ public class PacketDispatcher {
 	 * @param key		The interface key
 	 * @param items		The items
 	 */
-	public void dispatchItems (int key, ItemsContainer<Item> items) {
+	public void dispatchItems (int key, ItemsContainer<Item> items, int... slots) {
 		Item[] itemsClone = items.getItemsCopy();
-		player.getAccount().getSession().getTransmitter().send(ItemsEncoder.class, new ItemsMessage(key, itemsClone));
+		player.getAccount().getSession().getTransmitter().send(ItemsEncoder.class, new ItemsMessage(key, itemsClone, slots));
 	}
 	
 	public void dispatchGroundItem (GroundItem item, GroundItemType type) {

@@ -551,11 +551,15 @@ public class InterfaceManager {
 	
 	public void sendCs2 (ClientScriptVar scriptData) {
 		player.getPacketDispatcher().dispatchClientScriptVar(scriptData);
-	}
-	
+	}	
 	
 	public void sendInterfaceSettings(int interfaceID, int component, int fromSlot, int toSlot, int settings) {
 		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, fromSlot, toSlot, settings));
+	}
+	
+
+	public void sendHideIcomponent(int interfaceID, int component, boolean hidden) {
+		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, hidden));
 	}
 	
 	public void sendXPPopup() {

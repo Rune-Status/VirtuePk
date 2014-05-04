@@ -30,6 +30,7 @@ public class CommandRepository {
 		commands.add(new SystemUpdate());
 		commands.add(new SendInterface());
 		commands.add(new SetNoClip());
+		commands.add(new ShowBank());
 		
 	}
 	

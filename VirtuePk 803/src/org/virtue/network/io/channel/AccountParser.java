@@ -143,6 +143,8 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.add("equipment", p.getEquipment().serialise());
 		
+		obj.add("bank", p.getBank().serialise());
+		
 		obj.add("chatData", p.getChatManager().serialiseData());
 		
 		obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());

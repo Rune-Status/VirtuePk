@@ -17,6 +17,9 @@ public class SwitchInterfaceHandler extends PacketHandler<WorldSession> {
 		if (oldHash == newHash && oldInterfaceID == RSInterface.INVENTORY) {
 			session.getPlayer().getInventory().switchItem(fromSlot, toSlot);
 			return;
+		} else if (oldHash == newHash && oldInterfaceID == RSInterface.BANK) {
+			session.getPlayer().getBank().switchItems(fromSlot, oldHash & 0xffff, toSlot, newHash & 0xffff);
+			return;
 		}
 		
 		System.out.println("Switched interfaces: fromSlot="+fromSlot+" oldID: "+oldInterfaceID+", oldComp: "+(oldHash & 0xffff)

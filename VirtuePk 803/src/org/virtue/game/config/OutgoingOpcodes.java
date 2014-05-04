@@ -34,7 +34,7 @@ public class OutgoingOpcodes {
 	
 	//Item containers
 	public static final int ITEMS_PACKET = 130;//803
-	public static final int UPDATE_ITEMS_PACKET = 5;//803
+	public static final int ITEMS_UPDATE_PACKET = 5;//803
 	
 	//Logout
 	public static final int LOBBY_LOGOUT_PACKET = 69;//803

@@ -13,6 +13,7 @@ import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
+import org.virtue.game.logic.node.interfaces.impl.Bank;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
 import org.virtue.game.logic.node.interfaces.impl.Inventory;
 import org.virtue.game.logic.region.Tile;
@@ -120,6 +121,11 @@ public class Player extends Entity {
 	public ActionBar actionBar;
 	
 	/**
+	 * The player's bank
+	 */
+	private Bank bank;
+	
+	/**
 	 * Constructs a new {@code Player.java}.
 	 * @param account The account
 	 */
@@ -136,6 +142,7 @@ public class Player extends Entity {
 		inventory = new Inventory(this);
 		//System.out.println("Stage 3");
 		equipment = new Equipment(this);
+		bank = new Bank(this);
 		abilityBook = new AbilityBook(this);
 		actionBar = new ActionBar(this);
 		//System.out.println("Stage 4");
@@ -159,6 +166,9 @@ public class Player extends Entity {
 			inventory.deserialise(account.getCharFile().get("inventory").getAsJsonArray());
 			equipment.deserialise(account.getCharFile().get("equipment").getAsJsonArray());
 			chatManager.deserialiseData(account.getCharFile().get("chatData").getAsJsonObject());
+			if (account.getCharFile().get("bank") != null) {
+				bank.deserialise(account.getCharFile().get("bank").getAsJsonArray());
+			}
 		}
 		
 		this.clientVarps[463] = resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0;
@@ -389,6 +399,13 @@ public class Player extends Entity {
 	 */
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
+	}
+	
+	/**
+	 * @return the bank
+	 */
+	public Bank getBank () {
+		return bank;
 	}
 
 	/**

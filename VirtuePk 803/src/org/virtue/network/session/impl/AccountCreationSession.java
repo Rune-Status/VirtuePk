@@ -17,13 +17,13 @@ import org.virtue.utility.StringUtils;
  * @author Virtue Development Team 2014 (c).
  * @since Apr 14, 2014
  */
-public class AccoutCreationSession extends Session {
+public class AccountCreationSession extends Session {
 
 	/**
-	 * Constructs a new {@code AccoutCreationSession.java}.
+	 * Constructs a new {@code AccountCreationSession.java}.
 	 * @param context
 	 */
-	public AccoutCreationSession(ChannelHandlerContext context) {
+	public AccountCreationSession(ChannelHandlerContext context) {
 		super(context);
 	}
 

@@ -133,17 +133,13 @@ public class RouteFinder {
 		int traceX = endX;
 		int traceY = endY;
 		int direction = directions[traceX - graphBaseX][traceY - graphBaseY];
-		int lastwritten = direction;
 		routeFinderArray[steps][0] = traceX;
 		routeFinderArray[steps++][1] = traceY;
 		//System.out.println("EndX="+endX+", endY="+endY+", startX="+srcX+", startY="+srcY);
 		//System.out.print("Directions: ");
 		while (traceX != srcX || traceY != srcY) {
-			//if (lastwritten != direction) {
-				routeFinderArray[steps][0] = traceX;
-				routeFinderArray[steps++][1] = traceY;
-				lastwritten = direction;
-			//}
+			routeFinderArray[steps][0] = traceX;
+			routeFinderArray[steps++][1] = traceY;
 
 			if ((direction & DIR_EAST) != 0) {
 				traceX++;

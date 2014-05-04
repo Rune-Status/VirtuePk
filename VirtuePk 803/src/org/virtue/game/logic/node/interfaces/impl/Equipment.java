@@ -63,8 +63,9 @@ public class Equipment extends AbstractInterface {
 	 */
 	public void add(Item item, boolean refresh) {
 		items.add(item);
-		if (refresh)
+		if (refresh) {
 			refresh();
+		}
 	}
 	
 	/**
@@ -83,12 +84,12 @@ public class Equipment extends AbstractInterface {
 	 */
 	public void add(int slot, Item item) {
 		items.set(slot, item);
-		refresh();
+		refresh(slot);
 	}
 	
 	public void add(EquipSlot slot, Item item) {
 		items.set(slot.getSlotID(), item);
-		refresh();
+		refresh(slot.getSlotID());
 	}
 	
 	/**
@@ -110,7 +111,7 @@ public class Equipment extends AbstractInterface {
 	 */
 	public void remove(int slot) {
 		items.remove(items.get(slot));
-		refresh();
+		refresh(slot);
 	}
 	
 	/**
@@ -156,12 +157,16 @@ public class Equipment extends AbstractInterface {
 	}
 	
 	/**
-	 * Refreshes this inventory.
+	 * Refreshes the equipment.
 	 */
 	public void refresh() {
 		getPlayer().getPacketDispatcher().dispatchItems(94, items);
 //		player.getStack().sendItemSet(94, items.toArray());
 //		player.getUpdateArchive().getAppearance().load();
+	}
+	
+	public void refresh (int... slots) {
+		getPlayer().getPacketDispatcher().dispatchItems(94, items, slots);
 	}
 	
 	/**
