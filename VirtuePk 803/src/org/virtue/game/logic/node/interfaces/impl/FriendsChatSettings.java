@@ -73,8 +73,8 @@ public class FriendsChatSettings extends AbstractInterface {
 		switch (component) {
 		case 1:
 			if (button.equals(ActionButton.ONE)) {//Set channel prefix
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(110, "Enter chat prefix:"));
 				getPlayer().setInputEvent(onPrefixChange);
 			} else if (button.equals(ActionButton.TWO)) {//Disable channel

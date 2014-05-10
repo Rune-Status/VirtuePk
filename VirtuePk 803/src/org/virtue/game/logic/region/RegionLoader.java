@@ -175,7 +175,7 @@ public class RegionLoader {
 								}
 								if (z >= 0 && z <= 3) {
 									//System.out.println("Object "+objectID+" found at x="+x+", y="+y+", z="+z);
-									region.addObject(new RS3Object(objectID, type, direction, new Tile(x, y, z)), z, x, y);
+									region.addObject(new RS3Object(objectID, type, direction, new Tile(x, y, z, region.getId())), z, x, y);
 								}
 							}
 						}

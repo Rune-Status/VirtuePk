@@ -513,6 +513,14 @@ public class InterfaceManager {
 		setInterface(iFace, 236, false);
 	}
 	
+	public void openBank () {
+		if (topLevelInterface != null) {
+			topLevelInterface.close();
+		}
+		this.topLevelInterface = player.getBank();
+		setInterface(player.getBank(), 13, false);
+	}
+	
 	public void closeTopInterface () {
 		if (topLevelInterface != null) {
 			topLevelInterface.close();

@@ -42,6 +42,19 @@ public class Tile {
 		this.y = (short) y;
 		this.plane = (byte) plane;
 	}
+	
+	/**
+	 * Constructs a new {@code Tile.java} based on local coordinates and a region ID.
+	 * @param localX	The local X coordinate inside the region
+	 * @param localY	The local Y coordinate inside the region
+	 * @param plane		The height of the coordinates {@link #x} and {@link #y}.
+	 * @param regionID	The ID of the region
+	 */
+	public Tile(int localX, int localY, int plane, int regionID) {
+		this.x = (short) (localX + (((regionID >> 8) & 0xff) << 6));
+		this.y = (short) (localY + ((regionID & 0xff) << 6));
+		this.plane = (byte) plane;
+	}
 
 	/**
 	 * Constructs a new {@code Tile.java}.

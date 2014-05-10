@@ -5,7 +5,7 @@ import org.virtue.game.logic.region.Tile;
 
 public abstract class CoordinateEvent {
 	
-	protected final Tile tile;
+	protected Tile tile;
 	
 	private int sizeX;
 	
@@ -30,8 +30,7 @@ public abstract class CoordinateEvent {
 		}
 		int distanceX = player.getTile().getX() - tile.getX();
 		int distanceY = player.getTile().getY() - tile.getY();
-		if (distanceX > sizeX || distanceX < -1 || distanceY > sizeY
-				|| distanceY < -1) {
+		if (distanceX > sizeX || distanceX < -1 || distanceY > sizeY || distanceY < -1) {
 			return cantReach(player);
 		}
 		if (player.getUpdateArchive().getMovement().hasWalkSteps()) {
@@ -45,6 +44,7 @@ public abstract class CoordinateEvent {
 
 	public boolean cantReach(Player player) {
 		if (!player.getUpdateArchive().getMovement().hasWalkSteps() && player.getUpdateArchive().getMovement().getNextWalkDirection() == -1) {
+			//System.out.println("ExpectedTile= "+tile+", playerTile="+player.getTile()+", sizeX="+sizeX+", sizeY="+sizeY);
 			player.getPacketDispatcher().dispatchMessage("You can't reach that.");
 			return true;
 		}

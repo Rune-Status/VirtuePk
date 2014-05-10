@@ -22,8 +22,6 @@ public class CommandRepository {
 		commands.add(new AddPlayer());
 		commands.add(new SetClientVarp());
 		commands.add(new SendItem());
-		commands.add(new SendWalk());
-		commands.add(new WearItem());
 		commands.add(new ReloadAppearance());
 		commands.add(new SpawnNpc());
 		commands.add(new AddExperience());
@@ -31,6 +29,8 @@ public class CommandRepository {
 		commands.add(new SendInterface());
 		commands.add(new SetNoClip());
 		commands.add(new ShowBank());
+		commands.add(new ShowGraphics());	
+		commands.add(new ShowAnimation());		
 		
 	}
 	

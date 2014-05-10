@@ -106,7 +106,8 @@ public class IncommingOpcodes {
 	public final static int CHANGE_FRIEND_RANK_PACKET = 74;//803
 	
 	//Inputs
-	public final static int NAME_INPUT_PACKET = 49;//803
+	public final static int TEXT_INPUT_PACKET = 49;//803
+	public final static int INT_INPUT_PACKET = 85;//803
 	
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803

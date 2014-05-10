@@ -16,7 +16,7 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
 public class GraphicsDefinition {
 
 	int anInt6261;
-    private int graphicsID;
+    private final int graphicsID;
     int defaultModel;//anInt6264
     short[] aShortArray6265;
     short[] aShortArray6266;

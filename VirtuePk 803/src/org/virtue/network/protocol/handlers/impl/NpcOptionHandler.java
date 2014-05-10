@@ -1,6 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.events.impl.NPCInteractEvent;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.npc.NPCOption;
 import org.virtue.network.session.impl.WorldSession;
@@ -20,7 +21,7 @@ public class NpcOptionHandler extends MovementHandler {
 		NPC npc = World.getWorld().getNpcs().get(npcIndex);
 		int baseX = npc.getTile().getX();
 		int baseY = npc.getTile().getY();		
-		if (!option.equals(NPCOption.EXAMINE)) {
+		if (npc.isInteractOption(option)) {
 			session.getPlayer().getUpdateArchive().queueFaceEntity(npc);
 			putFlag("facing", true);
 			putFlag("baseX", baseX);
@@ -28,7 +29,10 @@ public class NpcOptionHandler extends MovementHandler {
 			putFlag("sizeX", npc.getDefinition().getSize());
 			putFlag("sizeY", npc.getDefinition().getSize());
 			super.handle(session);//Handle the movement aspect. TODO: Track the NPC if they move
+			session.getPlayer().setCoordinateEvent(new NPCInteractEvent(npc, option));
+		} else {
+			npc.handleDistanceOption(session.getPlayer(), option);
 		}
-		System.out.println("Clicked NPC: npcIndex="+npcIndex+", id="+npc.getId()+", xCoord="+baseX+", yCoord="+baseY+", optionID="+option.getID());
+		//System.out.println("Clicked NPC: npcIndex="+npcIndex+", id="+npc.getId()+", xCoord="+baseX+", yCoord="+baseY+", optionID="+option.getID());
 	}
 }

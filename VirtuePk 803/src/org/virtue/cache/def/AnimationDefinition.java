@@ -21,7 +21,7 @@ public class AnimationDefinition {
     //AnimationDefinitionLoader loader;//aClass556_7067
     public int[][] handledSounds;//anIntArrayArray7068
     public int[] anIntArray7069;
-    private int animationID;//anInt7070
+    private final int animationID;//anInt7070
     public int[] anIntArray7071;
     public int duration = 0;//anInt7072
     //public AnimationConfig config;//aClass543_7073

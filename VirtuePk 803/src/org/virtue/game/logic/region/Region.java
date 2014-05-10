@@ -257,6 +257,7 @@ public class Region extends AttributeSet implements SubRegion {
 	 * @param localY The y coordinate to add.
 	 */
 	public void addObject(RS3Object object, int plane, int localX, int localY) {
+		//System.out.println("Adding object at plane="+plane+", localX="+localX+", localY="+localY);
 		addMapObject(object, localX, localY);
 		if (objects == null) {
 			objects = new RS3Object[4][64][64][];
@@ -291,7 +292,7 @@ public class Region extends AttributeSet implements SubRegion {
 		if (x < 0 || y < 0 || x >= map.getMasks()[plane].length || y >= map.getMasks()[plane][x].length) {
 			return;
 		}
-		ObjectDefinition objectDef = ObjectDefinitionLoader.forId(object.getId());
+		ObjectDefinition objectDef = object.getDefinition();//ObjectDefinitionLoader.forId(object.getId());
 		if (type == 22 ? objectDef.clipType != 0 : objectDef.clipType == 0) {
 			return;
 		}
@@ -335,6 +336,20 @@ public class Region extends AttributeSet implements SubRegion {
 				//clipedOnlyMap.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
 			}
 		}*/
+	}
+	
+	public RS3Object getObject (int id, Tile location) {
+		//System.out.println("Searching for object at plane="+location.getPlane()+", localX="+location.getXInRegion()+", localY="+location.getYInRegion());
+		RS3Object[] tileObjects = objects[location.getPlane()][location.getXInRegion()][location.getYInRegion()];
+		if (tileObjects == null) {
+			return null;
+		}
+		for (RS3Object object : tileObjects) {
+			if (object.getId() == id) {
+				return object;
+			}
+		}
+		return null;
 	}
 
 	/**

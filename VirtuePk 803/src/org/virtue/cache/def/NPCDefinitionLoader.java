@@ -1,5 +1,8 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.virtue.cache.Archive;
@@ -74,15 +77,23 @@ public class NPCDefinitionLoader {
 
 	public static void dumpNpc() throws IllegalArgumentException, IllegalAccessException, IOException {
 		load(CacheLoader.getCache());
+		File directory = new File("./dumps/npcs/");
+		directory.mkdirs();
+		File file = new File(directory, "key.txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		for (NPCDefinition def : npcDefinitions) {
 			if (def == null) {
 				continue;
 			}	
 			  // if (!def.getName().contains("Kalphite"))
 			   // continue;
-			System.out.println("===== Name: " + def.getName() + " =====");
+			writer.write(def.getID() + "->" + def.getName());
+			writer.newLine();
+			writer.flush();
+			//System.out.println("===== Name: " + def.getName() + " =====");
 			def.printFields();
 			//System.out.println("=======================================\n");
 		}
+		writer.close();
 	}
 }

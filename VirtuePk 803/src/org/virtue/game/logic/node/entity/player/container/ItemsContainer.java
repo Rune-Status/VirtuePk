@@ -312,8 +312,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 					toRemove = 0;
 					// data[preferredSlot] = new
 					// SendItem(data[preferredSlot].getDefinition().getId(), amt);
-					set2(preferredSlot, new Item(data[preferredSlot].getId(),
-							amt));
+					set2(preferredSlot, new Item(data[preferredSlot].getId(), amt));
 					return removed;
 				} else {
 					removed += amt;
@@ -379,20 +378,20 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 	}
 
 	private boolean hasSpaceForItem(T item) {
-//		if (alwaysStackable || item.getDefinitions().isStackable()
-//				|| item.getDefinitions().isNoted()) {
-//			for (SendItem aData : data) {
-//				if (aData != null) {
-//					if (aData.getId() == item.getId()) {
-//						return true;
-//					}
-//				}
-//			}
-//		} else {
+		if (alwaysStackable || item.getDefinition().isStackable()
+				|| item.getDefinition().isNoted()) {
+			for (Item aData : data) {
+				if (aData != null) {
+					if (aData.getId() == item.getId()) {
+						return true;
+					}
+				}
+			}
+		} else {
 			if (item.getAmount() > 1) {
 				return freeSlots() >= item.getAmount();
 			}
-//		}
+		}
 		int index = freeSlot();
 		return index != -1;
 	}

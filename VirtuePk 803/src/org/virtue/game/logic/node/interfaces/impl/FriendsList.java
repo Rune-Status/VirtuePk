@@ -32,26 +32,26 @@ public class FriendsList extends AbstractInterface {
 			}
 			break;
 		case 42://Show "add friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(103));
 			break;
 		case 44://Show "remove friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(104));
 			break;
 		case 71://Show "add ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(105));			
 			break;
 		case 54://Show "remove ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1419));			
 			break;

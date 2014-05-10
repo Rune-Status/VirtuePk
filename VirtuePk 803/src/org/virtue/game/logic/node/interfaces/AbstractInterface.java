@@ -21,7 +21,7 @@ public abstract class AbstractInterface {
 	/**
 	 * Represents the player.
 	 */
-	private final Player player;
+	protected final Player player;
 	
 	public AbstractInterface (int id, Player p) {
 		this.interfaceID = id;

@@ -13,9 +13,14 @@ public class InputHandler extends PacketHandler<WorldSession> {
 	@Override
 	public void handle(WorldSession session) {
 		switch (getFlag("opcode", -1)) {
-		case IncommingOpcodes.NAME_INPUT_PACKET:
+		case IncommingOpcodes.TEXT_INPUT_PACKET:
 			if (session.getPlayer().getInputEvent() != null) {
 				session.getPlayer().getInputEvent().onInputEntered(getFlag("input", ""));
+			}
+			break;
+		case IncommingOpcodes.INT_INPUT_PACKET:
+			if (session.getPlayer().getInputEvent() != null) {
+				session.getPlayer().getInputEvent().onInputEntered(new Integer(getFlag("input", -1)));
 			}
 			break;
 		}

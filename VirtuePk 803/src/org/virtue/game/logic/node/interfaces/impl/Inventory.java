@@ -1,14 +1,11 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
 import org.virtue.game.logic.World;
-import org.virtue.game.logic.content.skills.Skill;
-import org.virtue.game.logic.content.skills.SkillData;
 import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
-import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
 import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
@@ -24,11 +21,13 @@ import com.google.gson.JsonObject;
  * @version 1.0
  */
 public class Inventory extends AbstractInterface {
+	
+	public static final int INVENTORY_SIZE = 28;
 
 	/**
 	 * Represents the items in the inventory.
 	 */
-	private ItemsContainer<Item> items = new ItemsContainer<>(28, false);
+	private ItemsContainer<Item> items = new ItemsContainer<>(INVENTORY_SIZE, false);
 	
 	/**
 	 * Constructs a new {@code inventory.java}.
@@ -59,6 +58,7 @@ public class Inventory extends AbstractInterface {
 	/**
 	 * Adds an item to the inventory.
 	 * @param item The item to add.
+	 * @param refresh Whether to refresh the inventory after adding the item.
 	 * @return whether the item was successfully added
 	 */
 	public boolean add(Item item, boolean refresh) {
@@ -92,6 +92,7 @@ public class Inventory extends AbstractInterface {
 	/**
 	 * Removes an item.
 	 * @param item The item to remove.
+	 * @return The number of items removed
 	 */
 	public int remove(Item item) {
 		int removed = items.remove(item);
@@ -141,6 +142,7 @@ public class Inventory extends AbstractInterface {
 	
 	/**
 	 * Refreshes this inventory.
+	 * @param slots The ids of the slots to refresh (refreshes all slots if none are provided)
 	 */
 	public void refresh(int... slots) {
 		getPlayer().getPacketDispatcher().dispatchItems(93, items, slots);
@@ -252,7 +254,6 @@ public class Inventory extends AbstractInterface {
                     if (button.equals(ActionButton.TWO) && item.getDefinition().isWearItem(
 							getPlayer().getUpdateArchive().getAppearance().getGender() == Gender.MALE)) {
                         if (handleEquip(item, slotID, option)) {
-                    		refresh(slotID);
                         	return;
                         }
                     } else if (button.equals(ActionButton.EIGHT)) {
@@ -277,6 +278,7 @@ public class Inventory extends AbstractInterface {
 		//System.out.println("Swapping item "+oldItem.getDefinition().getName()+" with "+item.getDefinition().getName());
 		items.set(slotID, oldItem);
 		getPlayer().getUpdateArchive().getAppearance().packBlock();
+		refresh(slotID);
 		return true;
 	}
 	

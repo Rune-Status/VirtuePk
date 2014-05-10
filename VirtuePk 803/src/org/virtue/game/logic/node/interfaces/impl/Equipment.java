@@ -22,7 +22,7 @@ public class Equipment extends AbstractInterface {
 	 * Represents the slots.
 	 */
 	public static final byte SLOT_HAT = 0, SLOT_CAPE = 1, SLOT_AMULET = 2, SLOT_MAINHAND = 3, SLOT_CHEST = 4, SLOT_OFFHAND = 5, SLOT_LEGS = 7, SLOT_HANDS = 9, SLOT_FEET = 10, SLOT_RING = 12, SLOT_ARROWS = 13, SLOT_AURA = 14, SLOT_POCKET = 15;
-	private static final int EQUIP_SIZE = 16;
+	public static final int EQUIP_SIZE = 16;
 	/**
 	 * Represents the items in the inventory.
 	 */
@@ -101,7 +101,7 @@ public class Equipment extends AbstractInterface {
 	public Item swapItem (EquipSlot slot, Item item) {
 		Item oldItem = items.get(slot.getSlotID());
 		items.set(slot.getSlotID(), item);
-		refresh();
+		refresh(slot.getSlotID());
 		return oldItem;
 	}
 	

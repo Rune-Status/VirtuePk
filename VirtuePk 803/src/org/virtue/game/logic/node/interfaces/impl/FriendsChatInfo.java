@@ -25,8 +25,8 @@ public class FriendsChatInfo extends AbstractInterface {
 			//TODO: Handle lootshare
 			break;
 		case 31://Kick/ban
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(2688));			
 			break;
@@ -35,8 +35,8 @@ public class FriendsChatInfo extends AbstractInterface {
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));
 				return;
 			}		
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.dialog);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.input);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8537));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));

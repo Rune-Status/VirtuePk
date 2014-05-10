@@ -15,8 +15,10 @@ public class InputDecoder implements PacketDecoder<InputHandler> {
 	@Override
 	public InputHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
 		InputHandler handler = new InputHandler();
-		if (opcode == IncommingOpcodes.NAME_INPUT_PACKET) {
+		if (opcode == IncommingOpcodes.TEXT_INPUT_PACKET) {
 			handler.putFlag("input", packet.getString());
+		} else if (opcode == IncommingOpcodes.INT_INPUT_PACKET) {
+			handler.putFlag("input", packet.getInt());
 		}
 		handler.putFlag("opcode", opcode);
 		return handler;
@@ -24,6 +26,6 @@ public class InputDecoder implements PacketDecoder<InputHandler> {
 
 	@Override
 	public int[] getPossiblePackets() {
-		return new int[] { IncommingOpcodes.NAME_INPUT_PACKET };
+		return new int[] { IncommingOpcodes.TEXT_INPUT_PACKET, IncommingOpcodes.INT_INPUT_PACKET };
 	}
 }

@@ -30,8 +30,8 @@ public class CacheEditor {
 			i++;
 		}*/
 		//ItemDefinitionLoader.dumpItems();
-		//NPCDefinitionLoader.dumpNpc();
-		ObjectDefinitionLoader.dumpObjects();
+		NPCDefinitionLoader.dumpNpc();
+		//ObjectDefinitionLoader.dumpObjects();
 		//AnimationDefinitionLoader.dumpAnimations();
 		//GraphicsDefinitionLoader.dumpGfx();
 		System.out.println("done");

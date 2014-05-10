@@ -1,5 +1,8 @@
 package org.virtue.cache.def;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.virtue.cache.Archive;
@@ -75,15 +78,23 @@ public class ObjectDefinitionLoader {
 	
 	public static void dumpObjects () throws IOException, IllegalArgumentException, IllegalAccessException {
 		load(CacheLoader.getCache());
+		File directory = new File("./dumps/objects/");
+		directory.mkdirs();
+		File file = new File(directory, "key.txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		for (ObjectDefinition def : objectDefinitions) {
 			if (def == null) {
 				continue;
 			}	
-			  // if (!def.getName().contains("Kalphite"))
-			   // continue;
-			System.out.println("===== ID: " + def.getID() + " =====");
+			// if (!def.getName().contains("Kalphite"))
+			// continue;
+			writer.write(def.getID() + "->" + def.getName());
+			writer.newLine();
+			writer.flush();
+			//System.out.println("===== ID: " + def.getID() + " =====");
 			def.printFields();
 			//System.out.println("=======================================\n");
 		}
+		writer.close();
 	}
 }

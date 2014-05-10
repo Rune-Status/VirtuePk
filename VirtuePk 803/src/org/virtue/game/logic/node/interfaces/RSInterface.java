@@ -8,9 +8,11 @@ import org.virtue.network.protocol.messages.InterfaceMessage;
  */
 public class RSInterface {	
 
-		public static InterfaceMessage dialog = new InterfaceMessage(1418, 233, RSInterface.GAME_SCREEN, true);
+		public static final InterfaceMessage DIALOG_BOX = new InterfaceMessage(1418, 233, RSInterface.GAME_SCREEN, true);
 		
-		public static InterfaceMessage input = new InterfaceMessage(1469, 0, 1418, true);
+		public static final InterfaceMessage INPUT_DIALOG = new InterfaceMessage(1469, 0, 1418, true);
+		
+		public static final int INT_INPUT_SCRIPT = 108;
 	
         public static final int FRIENDS_LIST = 550;   
         

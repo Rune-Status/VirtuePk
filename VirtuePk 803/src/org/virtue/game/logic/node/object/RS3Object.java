@@ -3,6 +3,9 @@ package org.virtue.game.logic.node.object;
 import org.virtue.cache.def.ObjectDefinition;
 import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.logic.node.Node;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
+import org.virtue.game.logic.node.interfaces.impl.Bank;
 import org.virtue.game.logic.region.Tile;
 
 /**
@@ -103,8 +106,45 @@ public class RS3Object extends Node {
 		this.tile = tile;
 	}
 	
+	public int getSizeX() {
+		return (rotation != 1 && rotation != 3) ? definition.getSize()[0] : definition.getSize()[1];
+	}
+	
+	public int getSizeY() {
+		return (rotation != 1 && rotation != 3) ? definition.getSize()[1] : definition.getSize()[0];
+	}
+	
+	/**
+	 * @return	The cache definition for the object
+	 */
 	public ObjectDefinition getDefinition () {
 		return definition;
+	}
+	
+	/**
+	 * Returns whether the given option can be handled at a distance
+	 * @param option	The option to check
+	 * @return			True if the option can be handled at a distance, false if the player must be adjacent first
+	 */
+	public boolean isDistanceOption (ObjectOption option) {
+		return option.equals(ObjectOption.EXAMINE);
+	}
+	
+	/**
+	 * Handles the player interaction with this object
+	 * @param player	The player interacting with the object
+	 * @param option	The selected interaction option
+	 */
+	public void interact (Player player, ObjectOption option) {
+		if (Bank.isBankBooth(this) && option.equals(ObjectOption.TWO)) {
+			player.getInterfaces().openBank();
+			return;
+		}
+		String message = "Clicked object: objectID="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", optionID="+option.getID();
+		System.out.println(message);
+		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			player.getPacketDispatcher().dispatchMessage(message);
+		}
 	}
 
 }

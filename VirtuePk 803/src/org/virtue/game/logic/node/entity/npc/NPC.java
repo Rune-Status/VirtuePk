@@ -3,6 +3,8 @@ package org.virtue.game.logic.node.entity.npc;
 import org.virtue.cache.def.NPCDefinition;
 import org.virtue.cache.def.NPCDefinitionLoader;
 import org.virtue.game.logic.node.entity.Entity;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.interfaces.impl.Bank;
 import org.virtue.game.logic.region.Tile;
 
 /**
@@ -90,5 +92,26 @@ public class NPC extends Entity {
 	@Override
 	public int getSize() {
 		return definition.getSize();
+	}
+	
+	public boolean isInteractOption (NPCOption option) {
+		return !option.equals(NPCOption.EXAMINE);
+	}
+	
+	/**
+	 * Handles the player interaction with this NPC
+	 * @param player	The player interacting with the NPC
+	 * @param option	The selected interaction option
+	 */
+	public void interact (Player player, NPCOption option) {
+		if (Bank.isBankNpc(this) && option.equals(NPCOption.ONE)) {
+			player.getInterfaces().openBank();
+			return;
+		}
+		System.out.println("Clicked NPC: npcIndex="+getIndex()+", id="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", optionID="+option.getID());
+	}
+	
+	public void handleDistanceOption (Player player, NPCOption option) {
+		System.out.println("Clicked NPC: npcIndex="+getIndex()+", id="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", optionID="+option.getID());
 	}
 }
