@@ -10,6 +10,7 @@ import org.virtue.game.logic.content.combat.ability.ActionBar;
 import org.virtue.game.logic.content.skills.SkillManager;
 import org.virtue.game.logic.events.CoordinateEvent;
 import org.virtue.game.logic.events.InputEnteredEvent;
+import org.virtue.game.logic.events.PlayerActionEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
@@ -125,6 +126,8 @@ public class Player extends Entity {
 	 */
 	private Bank bank;
 	
+	private PlayerActionEvent currentAction;
+	
 	/**
 	 * Constructs a new {@code Player.java}.
 	 * @param account The account
@@ -232,7 +235,9 @@ public class Player extends Entity {
 		exists = false;
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this);
-			World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().remove(this);
+			if (!viewport.isSendGPI()) {
+				World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().remove(this);
+			}
 			IOHub.getAccountIo().save(this);
 		}		
 		chatManager.disconnect();
@@ -245,10 +250,15 @@ public class Player extends Entity {
 			getUpdateArchive().getMovement().setRunning(false);
 			sendRunButtonConfig();
 		}
-		getUpdateArchive().getMovement().process();
+		if (!viewport.isSendGPI()) {
+			getUpdateArchive().getMovement().process();
+		}		
 		restoreRunEnergy();
 		if (coordinateEvent != null && coordinateEvent.processEvent(this)) {
 			coordinateEvent = null;
+		}
+		if (currentAction != null && currentAction.process(this)) {
+			clearActionEvent();
 		}
 		//System.out.println("Run direction: "+getUpdateArchive().getMovement().getNextRunDirection());
 	}
@@ -274,6 +284,25 @@ public class Player extends Entity {
 	
 	public InputEnteredEvent getInputEvent () {
 		return inputEvent;
+	}
+	
+	public void setActionEvent (PlayerActionEvent event) {
+		this.currentAction = event;
+		currentAction.start(this);
+	}
+	
+	public void clearActionEvent () {
+		if (currentAction == null) {
+			return;
+		}
+		currentAction.stop(this);
+		this.currentAction = null;
+	}
+	
+	public void stopAll () {
+		clearActionEvent();
+		interfaceManager.closeTopInterface();
+		coordinateEvent = null;
 	}
 	
 	/**

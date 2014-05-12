@@ -1,5 +1,7 @@
 package org.virtue.game.logic.content.skills;
 
+import java.util.EnumMap;
+
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
@@ -13,8 +15,8 @@ import com.google.gson.JsonObject;
 public class SkillManager extends AbstractInterface {
 
 	private Player player;
-	
-	private SkillData[] skills = new SkillData[Skill.values().length];
+	private EnumMap<Skill, SkillData> skills = new EnumMap<Skill, SkillData>(Skill.class);
+	//private SkillData[] skills = new SkillData[Skill.values().length];
 
 	//Varp IDs used:
 	private static final int XP_COUNTER_1_VALUE = 91;
@@ -37,7 +39,7 @@ public class SkillManager extends AbstractInterface {
 	}*/
 	
 	public void addExperience (Skill s, double amountToAdd) {
-		SkillData skill = skills[s.getID()];
+		SkillData skill = skills.get(s);
 		int levelBefore = skill.getBaseLevel();
 		skill.addExperienceFloat(amountToAdd);
 		int levelAfter = skill.getBaseLevel();
@@ -46,6 +48,10 @@ public class SkillManager extends AbstractInterface {
 			handleAdvancement(skill, (levelAfter - levelBefore));
 		}
 		player.getPacketDispatcher().dispatchSkill(skill);
+	}
+	
+	public int getLevel (Skill skill) {
+		return skills.get(skill).getCurrentLevel();
 	}
 	
 	private void handleAdvancement (SkillData skill, int advancement) {
@@ -63,15 +69,15 @@ public class SkillManager extends AbstractInterface {
 	private void init () {
 		for (Skill s : Skill.values()) {
 			if (s.equals(Skill.CONSTITUTION)) {
-				skills[s.getID()] = new SkillData(s, 11840, 10);
+				skills.put(s, new SkillData(s, 11840, 10));
 			} else {
-				skills[s.getID()] = new SkillData(s);
+				skills.put(s, new SkillData(s));
 			}
 		}
 	}
 	
 	public void sendAllSkills () {
-		for (SkillData skill : skills) {
+		for (SkillData skill : skills.values()) {
 			player.getPacketDispatcher().dispatchSkill(skill);
 		}
 		//player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(6504, 1, 0, 0, 0, 4420));
@@ -83,7 +89,7 @@ public class SkillManager extends AbstractInterface {
 	 */
 	public JsonArray serialise () {
 		JsonArray skillsData = new JsonArray();
-		for (SkillData s : skills) {
+		for (SkillData s : skills.values()) {
 			JsonObject skill = new JsonObject();
 			skill.addProperty("id", s.getSkill().getID());
 			skill.addProperty("xp", s.getExperience());
@@ -103,7 +109,7 @@ public class SkillManager extends AbstractInterface {
 			Skill s = Skill.getSkill(data.get("id").getAsInt());
 			int xp = data.get("xp").getAsInt();
 			int level = data.get("level").getAsInt();
-			skills[s.getID()] = new SkillData(s, xp, level);
+			skills.put(s, new SkillData(s, xp, level));
 		}
 	}
 

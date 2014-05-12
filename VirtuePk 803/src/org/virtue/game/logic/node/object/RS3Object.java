@@ -60,8 +60,9 @@ public class RS3Object extends Node {
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	protected void setId(int id) {
 		this.id = id;
+		this.definition = ObjectDefinitionLoader.forId(id);
 	}
 
 	/**
@@ -106,10 +107,16 @@ public class RS3Object extends Node {
 		this.tile = tile;
 	}
 	
+	/**
+	 * @return the x-axis size of the object
+	 */
 	public int getSizeX() {
 		return (rotation != 1 && rotation != 3) ? definition.getSize()[0] : definition.getSize()[1];
 	}
 	
+	/**
+	 * @return the y-axis size of the object
+	 */
 	public int getSizeY() {
 		return (rotation != 1 && rotation != 3) ? definition.getSize()[1] : definition.getSize()[0];
 	}
@@ -140,7 +147,7 @@ public class RS3Object extends Node {
 			player.getInterfaces().openBank();
 			return;
 		}
-		String message = "Clicked object: objectID="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", optionID="+option.getID();
+		String message = "Clicked object: objectID="+id+", type="+type+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", optionID="+option.getID();
 		System.out.println(message);
 		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
 			player.getPacketDispatcher().dispatchMessage(message);

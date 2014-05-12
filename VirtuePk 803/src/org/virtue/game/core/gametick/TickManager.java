@@ -17,7 +17,7 @@ public class TickManager {
 	/**
 	 * Represents the ticks to be added.
 	 */
-	private Queue<Tick> awaitingTicks = new ArrayDeque<>();
+	private final Queue<Tick> awaitingTicks = new ArrayDeque<>();
 	
 	/**
 	 * Represents a list of ticks in the repository to be updated and processed.
@@ -33,16 +33,18 @@ public class TickManager {
 	
 	/**
 	 * Called when the ticks in the collection should be executed and updated.
-	 * Any ticks that should be destroyed or repressed are moved to seperate
+	 * Any ticks that should be destroyed or repressed are moved to separate
 	 * lists that are flagged as such category.
 	 */
 	public void processAllTicks() {
-		synchronized (ticks) {
+		//synchronized (ticks) { (Do not attempt to synchronise an already synchronised list...
 			try {
 				if (!awaitingTicks.isEmpty()) {
 					ticks.addAll(awaitingTicks);
 				}
+				//System.out.println(ticks.size()+" total tasks.");
 				for (Tick tick : ticks) {
+					//System.out.println("Task: "+tick.getClass().getName());
 					if (tick == null) {
 						continue;
 					}
@@ -66,7 +68,7 @@ public class TickManager {
 			} catch (Exception e) {
 				Launcher.getEngine().handleException(e);
 			}
-		}
+		//}
 	}
 	
 	/**
@@ -78,9 +80,7 @@ public class TickManager {
 		if (ticks.contains(tick) || awaitingTicks.contains(tick)) {
 			return false;
 		}
-		synchronized (ticks) {
-			awaitingTicks.add(tick);
-			return true;
-		}
+		awaitingTicks.add(tick);
+		return true;
 	}
 }

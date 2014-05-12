@@ -141,6 +141,10 @@ public class Equipment extends AbstractInterface {
 		}
 		return null;
 	}
+	
+	public Item getAtSlot (EquipSlot slot) {
+		return items.get(slot.getSlotID());
+	}
 
 	/**
 	 * Returns a slot.

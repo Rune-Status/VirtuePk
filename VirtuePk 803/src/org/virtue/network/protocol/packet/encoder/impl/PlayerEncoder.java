@@ -426,7 +426,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			}
 			int length = block.appendToUpdateBlock(data, p);
 			player.getViewport().incrementTotalRenderDataSentLength(length);//.setTotalRenderDataSentLength(p.getViewport().getTotalRenderDataSentLength() + length);
-			System.out.println("Appending update block...");
+			//System.out.println("Appending update block...");
 		}
 		if (needAppearenceUpdate) {
 			player.getViewport().getCachedAppearencesHashes()[p.getIndex()] = p.getUpdateArchive().getAppearance().getMD5Hash();

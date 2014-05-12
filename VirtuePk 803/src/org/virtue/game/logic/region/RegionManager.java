@@ -211,6 +211,14 @@ public class RegionManager {
 	public void registerRegionUpdate(RegionUpdateEvent event) {
 		UPDATER.getPendingRegions().add(event);
 	}
+	
+	public void runRegionTick () {//TODO: Find out how this is actually supposed to be handled...
+		synchronized (regions) {
+			for (Region r : regions) {
+				r.checkTempObjects();
+			}
+		}
+	}
 
 	/**
 	 * Gets the masks of a region.

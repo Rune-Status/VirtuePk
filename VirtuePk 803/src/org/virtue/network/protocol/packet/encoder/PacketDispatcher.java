@@ -7,6 +7,7 @@ import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.Viewport;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
+import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.messages.GameMessage;
@@ -15,6 +16,8 @@ import org.virtue.network.protocol.messages.GroundItemMessage;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.ItemsMessage;
+import org.virtue.network.protocol.messages.ObjectMessage;
+import org.virtue.network.protocol.messages.ObjectMessage.ObjectType;
 import org.virtue.network.protocol.messages.VarpMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
@@ -24,6 +27,7 @@ import org.virtue.network.protocol.packet.encoder.impl.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ItemsEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.ObjectUpdateEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.SkillEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
@@ -70,6 +74,10 @@ public class PacketDispatcher {
 	
 	public void dispatchGroundItem (GroundItem item, GroundItemType type) {
 		player.getAccount().getSession().getTransmitter().send(GroundItemEncoder.class, new GroundItemMessage(type, item, player.getViewport().getLastLoadedTile()));
+	}
+	
+	public void dispatchObjectUpdate (RS3Object object, ObjectType type) {
+		player.getAccount().getSession().getTransmitter().send(ObjectUpdateEncoder.class, new ObjectMessage(type, object, player.getViewport().getLastLoadedTile()));
 	}
 	
 	/**

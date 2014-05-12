@@ -18,7 +18,7 @@ public class LogicProcessor extends Tick {
 	/**
 	 * Represents a list of pending event.
 	 */
-	private List<LogicEvent> events = Collections.synchronizedList(new ArrayList<LogicEvent>());
+	private final List<LogicEvent> events = Collections.synchronizedList(new ArrayList<LogicEvent>());
 
 	@Override
 	public TickState onTick() {

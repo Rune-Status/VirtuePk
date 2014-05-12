@@ -83,13 +83,14 @@ public class LoginFilter extends LogicEvent {
 				player = World.getWorld().getPlayer(account.getUsername().getAccountNameAsProtocol());
 				System.out.println("Found world player.");
 			} else {
-				System.out.println("Creating new player.");
+				System.out.println("Creating new player object.");
 				player = new Player(account);
 				World.getWorld().addPlayer(player);
 			}
 			account.putFlag("playerIndex", player.getIndex());
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			player.getViewport().loadViewport();
+			System.out.println("Sending map scene to player.");
 			session.getTransmitter().send(MapSceneEncoder.class, player.getViewport());
 			player.start();
 			break;

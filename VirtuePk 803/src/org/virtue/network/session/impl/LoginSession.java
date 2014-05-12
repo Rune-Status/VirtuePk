@@ -47,12 +47,12 @@ public class LoginSession extends Session {
 		Account account = (Account) message;
 		LoginType type = account.getFlag("login_type", LoginType.WORLD_PART_2);
 		LoginSessions.getPendingRequests().add(account);
-		/*Player player;
+		Player player;
 		if (Lobby.getPlayers().contains(account.getUsername().getAccountName())) {
 			player = Lobby.getPlayer(account.getUsername().getAccountName());
 		} else {
 			player = new Player(account);
-		}*/
+		}
 		if (Constants.LOGIN_SERVER) {
 			DataServer.getConnection().send(LoginRequestEncoder.class, account);
 		} else {
@@ -67,7 +67,7 @@ public class LoginSession extends Session {
 		WorldSession gameSession = new WorldSession(getContext(), type.equals(LoginType.LOBBY));
 		getContext().setAttachment(gameSession);
 		account.setSession(gameSession);
-		//gameSession.setPlayer(player);
+		gameSession.setPlayer(player);
 	}
 
 	@Override

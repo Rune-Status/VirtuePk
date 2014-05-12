@@ -19,8 +19,8 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 		int sizeX = getFlag("sizeX", 0);
 		int sizeY = getFlag("sizeY", 0);
 		
-		session.getPlayer().setCoordinateEvent(null);
-		session.getPlayer().getInterfaces().closeTopInterface();
+		session.getPlayer().stopAll();
+		//session.getPlayer().getInterfaces().closeTopInterface();
 		if (!getFlag("facing", false)) {
 			if (((WorldSession) session).getPlayer().getUpdateArchive().getFaceEntity() != null) {
 				((WorldSession) session).getPlayer().getUpdateArchive().queueFaceEntity(null);

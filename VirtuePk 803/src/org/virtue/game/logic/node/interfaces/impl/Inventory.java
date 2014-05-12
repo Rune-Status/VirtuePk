@@ -107,7 +107,7 @@ public class Inventory extends AbstractInterface {
 	 */
 	public Item getItem(int id) {
 		for (Item item : items.toArray()) {
-			if (item.getId() == id) {
+			if (item != null && item.getId() == id) {
 				return item;
 			} else {
 				continue;

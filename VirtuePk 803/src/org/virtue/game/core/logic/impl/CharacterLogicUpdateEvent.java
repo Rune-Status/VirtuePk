@@ -29,6 +29,7 @@ public class CharacterLogicUpdateEvent extends LogicEvent {
 				npc.update();
 				npc.refreshOnDemand();
 			}
+			World.getWorld().getRegionManager().runRegionTick();//TODO: Find out where this is supposed to be handled
 		} catch (Exception e) {
 			Launcher.getEngine().handleException(e);
 		}

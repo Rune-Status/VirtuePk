@@ -110,15 +110,17 @@ public class GameEngine implements Runnable {
 	
 	@Override
 	public void run() {
-		while (running) {
+		while (running) {		
 			try {
 				long currentTime = System.currentTimeMillis();
+					//System.out.print("Running again. "+cycleCount);
 				TICK_MANAGER.processAllTicks();
 				long elapsedTime = (System.currentTimeMillis() - currentTime);
 				if (GameClock.ONE_TICK - elapsedTime > 0) {
+					//System.out.println("Waiting "+(GameClock.ONE_TICK - elapsedTime)+" milliseconds");
 					Thread.sleep(GameClock.ONE_TICK - elapsedTime);					
 				} else {
-					System.err.println("Warning - Missed one tick at cycle "+cycleCount);
+					//System.err.println("Warning - Missed one tick at cycle "+cycleCount);
 				}
 				cycleCount++;
 			} catch (Exception e) {
@@ -130,8 +132,10 @@ public class GameEngine implements Runnable {
 	/**
 	 * Registers a logic event.
 	 * @param event The event to register.
+	 * @param delay
+	 * @param intervalDelay
 	 */
-	public void registerLogicEvent(final Runnable event, long delay, long intervalDelay) {
+	public void registerLogicEvent(final Runnable event, long delay, long intervalDelay) {						
 		try {
 			LOGIC_SERVICE.scheduleAtFixedRate(event, delay, intervalDelay, TimeUnit.MILLISECONDS);
 		} catch (Exception e) {

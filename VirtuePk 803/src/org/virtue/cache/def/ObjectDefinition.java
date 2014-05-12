@@ -28,7 +28,7 @@ public class ObjectDefinition {
 	public int[] toObjectIDs;//anIntArray6827
     public static short[] aShortArray6828 = new short[256];
     byte[] aByteArray6831;
-    int[][] modelIDs;//anIntArrayArray6832
+    public int[][] modelIDs;//anIntArrayArray6832
     public int[] anIntArray6833;
     short[] originalColors;//aShortArray6834
     short[] modifiedColors;//aShortArray6835

@@ -1,16 +1,20 @@
 package org.virtue.game.logic.region;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import org.virtue.Launcher;
 
 import org.virtue.cache.def.ObjectDefinition;
-import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.RS3Object;
+import org.virtue.game.logic.node.object.TemporaryObject;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
+import org.virtue.network.protocol.messages.ObjectMessage.ObjectType;
 import org.virtue.utility.EntityList;
 
 /**
@@ -55,6 +59,11 @@ public class Region extends AttributeSet implements SubRegion {
 	private RS3Object[][][][] objects;
 	
 	/**
+	 * Represents the tempory objects located within the region
+	 */
+	private final CopyOnWriteArrayList<TemporaryObject> tempObjects = new CopyOnWriteArrayList<TemporaryObject>();
+	
+	/**
 	 * Represents the skeleton map.
 	 */
 	private RegionSkeleton map;
@@ -73,10 +82,12 @@ public class Region extends AttributeSet implements SubRegion {
 	 * Constructs a new {@code Region.java}.
 	 * @param id The ID.
 	 */
-	public Region(int id) {
+	public Region(final int id) {
 		this.id = id;
 		players = new EntityList<Player>(PLAYER_CAP);
 		npcs = new EntityList<NPC>(NPC_CAP);
+		RegionManager.LOADER.loadRegion(this);//TODO: Find the proper place to put region initialisation
+		Launcher.getEngine().getTickManager().register(new TempObjectUpdate(id));
 	}
 
 	/**
@@ -115,8 +126,7 @@ public class Region extends AttributeSet implements SubRegion {
 	}
 	
 	public void addPlayer (Player player) {
-		players.add(player);
-		update();//TODO: Find the proper place to put region initialisation
+		players.add(player);		
 	}
 
 	/**
@@ -138,6 +148,13 @@ public class Region extends AttributeSet implements SubRegion {
 	 */
 	public void setNpcs(EntityList<NPC> npcs) {
 		this.npcs = npcs;
+	}
+	
+	/**
+	 * @return	The tempery objects
+	 */
+	public List<TemporaryObject> getTemporyObjects () {
+		return tempObjects;
 	}
 	
 	/**
@@ -247,6 +264,50 @@ public class Region extends AttributeSet implements SubRegion {
 	 */
 	public int getRotation(int plane, int baseLocalX, int baseLocalY) {
 		return 0;
+	}
+	
+	public void updateObject (TemporaryObject object) {
+		updateObject(object, false);
+	}
+	
+	public void updateObject (TemporaryObject object, boolean remove) {
+		if (!tempObjects.contains(object) && !remove) {
+			tempObjects.add(object);
+		}
+		for (Player p : World.getWorld().getPlayers()) {
+			if (p.getViewport().getRegions().contains(id)) {
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.CREATE);
+			}
+		}
+		if (remove) {
+			tempObjects.remove(object);
+		}
+	}
+	
+	public void spawnObject (TemporaryObject object) {
+		addObject(object, object.getTile().getPlane(), object.getTile().getXInRegion(), object.getTile().getYInRegion());
+		synchronized (tempObjects) {
+			tempObjects.add(object);
+		}
+		for (Player p : World.getWorld().getPlayers()) {
+			if (p.getViewport().getRegions().contains(id)) {
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.CREATE);
+			}
+		}
+	}
+	
+	public void removeTemporyObject (TemporaryObject object) {
+		synchronized (tempObjects) {
+			tempObjects.remove(object);
+		}
+	}
+	
+	public void destroyObject (RS3Object object) {
+		for (Player p : World.getWorld().getPlayers()) {
+			if (p.getViewport().getRegions().contains(id)) {
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.DESTROY);
+			}
+		}
 	}
 
 	/**
@@ -375,9 +436,7 @@ public class Region extends AttributeSet implements SubRegion {
 
 	@Override
 	public void update() {
-		//System.out.println("Loading region...");
-		RegionManager.LOADER.loadRegion(this);
-		//System.out.println(Arrays.toString(getClippedRegionMap().getMasks()));
+		//Really have no idea what this is supposed to do...
 	}
 
 	@Override
@@ -390,6 +449,16 @@ public class Region extends AttributeSet implements SubRegion {
 	@Override
 	public void refresh() {
 		flags.clear();
+	}
+	
+	public void checkTempObjects () {
+		//System.out.println("Checking temporary objects in region "+id);
+		for (TemporaryObject object : tempObjects) {
+			if (object.checkRespawn()) {
+				object.respawn();
+				tempObjects.remove(object);
+			}
+		}
 	}
 	
 	/**
