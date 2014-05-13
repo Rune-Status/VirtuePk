@@ -58,8 +58,16 @@ public enum Ore {
 		return respawnDelay;
 	}
 	
-	public int getMineTime () {
+	/**
+	 * Gets the maximum number of ticks needed in order to mine the ore
+	 * @return	The maximum number of ticks
+	 */
+	public int getMineMaxTime () {
 		return baseTime;
+	}
+	
+	public int getRandomTime () {
+		return randomTime;
 	}
 
 }

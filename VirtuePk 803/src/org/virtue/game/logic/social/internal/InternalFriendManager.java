@@ -76,6 +76,8 @@ public class InternalFriendManager implements FriendManager {
 	
 	private boolean fcUpdateFlagged = false;
 	
+	private boolean started = false;
+	
 	private final HashMap<String, Friend> friends = new HashMap<String, Friend>(FRIENDS_LIST_MAX);
 	private final HashMap<String, Ignore> ignores = new HashMap<String, Ignore>(IGNORE_LIST_MAX);
 	
@@ -94,6 +96,10 @@ public class InternalFriendManager implements FriendManager {
 	}
 	
 	
+	public boolean hasStarted () {
+		return started;
+	}
+	
 	public String getProtocolName () {
 		return player.getProtocolName();
 	}
@@ -104,6 +110,13 @@ public class InternalFriendManager implements FriendManager {
 	
 	@Override
 	public void init () {
+		if (started) {
+			return;
+		}
+		/*if (onlinePlayers.containsKey(player.getProtocolName())) {
+			player.sendIgnoreList(ignores.values().toArray(new Ignore[ignores.size()]));
+			return;//Only send the ignore data if the player is already logged in.
+		}*/
 		currentWorld = World.getWorld();//player.getWorld().getData();
 		isLobby = !player.getPlayer().isInWorld();
 		for (Friend f : friends.values()) {
@@ -133,6 +146,7 @@ public class InternalFriendManager implements FriendManager {
 		player.sendIgnoreList(ignores.values().toArray(new Ignore[ignores.size()]));//.getPlayer().getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(ignores.values().toArray(new Ignore[ignores.size()])));
 		onlinePlayers.put(player.getProtocolName(), this);
 		sendStatusUpdate(this, false);
+		started = true;
 		System.out.println("Registered "+player.getDisplayName()+" on friend server.");
 	}
 	

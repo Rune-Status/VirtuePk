@@ -11,6 +11,7 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.virtue.Constants;
 import org.virtue.cache.Cache;
+import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.player.identity.Password;
 import org.virtue.game.logic.node.entity.player.identity.Username;
@@ -207,6 +208,9 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 			account.setClientSessionKey(clientSessionKey);
 			account.setServerSessionKey(serverSessionKey);
+		}
+		if (World.getWorld().contains(username.trim())) {
+			return new LoginResponse(LoginResponse.NOT_LOGGED_OUT);
 		}
 		account.putFlag("login_type", type);
 		return account;

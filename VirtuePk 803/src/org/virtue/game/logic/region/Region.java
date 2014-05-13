@@ -14,7 +14,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.node.object.TemporaryObject;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
-import org.virtue.network.protocol.messages.ObjectMessage.ObjectType;
+import org.virtue.network.protocol.messages.ObjectMessage.ObjectUpdateType;
 import org.virtue.utility.EntityList;
 
 /**
@@ -213,6 +213,15 @@ public class Region extends AttributeSet implements SubRegion {
 			player.getPacketDispatcher().dispatchGroundItem(item, type);
 		}
 	}
+	
+	public void updateTempObjects (Player player) {
+		for (TemporaryObject object : tempObjects) {
+			if (object == null) {
+				continue;
+			}
+			player.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.CREATE);
+		}
+	}
 
 	/**
 	 * Returns the region skeleton.
@@ -276,7 +285,8 @@ public class Region extends AttributeSet implements SubRegion {
 		}
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
-				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.CREATE);
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.CREATE);
+				//System.out.println("Updating object "+object.getDefinition().getName());
 			}
 		}
 		if (remove) {
@@ -291,7 +301,7 @@ public class Region extends AttributeSet implements SubRegion {
 		}
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
-				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.CREATE);
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.CREATE);
 			}
 		}
 	}
@@ -305,7 +315,7 @@ public class Region extends AttributeSet implements SubRegion {
 	public void destroyObject (RS3Object object) {
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
-				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectType.DESTROY);
+				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.DESTROY);
 			}
 		}
 	}

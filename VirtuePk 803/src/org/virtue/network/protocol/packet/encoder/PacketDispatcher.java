@@ -17,7 +17,7 @@ import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.ItemsMessage;
 import org.virtue.network.protocol.messages.ObjectMessage;
-import org.virtue.network.protocol.messages.ObjectMessage.ObjectType;
+import org.virtue.network.protocol.messages.ObjectMessage.ObjectUpdateType;
 import org.virtue.network.protocol.messages.VarpMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
@@ -76,7 +76,7 @@ public class PacketDispatcher {
 		player.getAccount().getSession().getTransmitter().send(GroundItemEncoder.class, new GroundItemMessage(type, item, player.getViewport().getLastLoadedTile()));
 	}
 	
-	public void dispatchObjectUpdate (RS3Object object, ObjectType type) {
+	public void dispatchObjectUpdate (RS3Object object, ObjectUpdateType type) {
 		player.getAccount().getSession().getTransmitter().send(ObjectUpdateEncoder.class, new ObjectMessage(type, object, player.getViewport().getLastLoadedTile()));
 	}
 	

@@ -9,6 +9,7 @@ public class ObjectUpdateEncoder implements PacketEncoder<ObjectMessage> {
 
 	@Override
 	public RS3PacketBuilder buildPacket(ObjectMessage node) {
+		//System.out.println("Encoding object update for "+node.getObject().getId());
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacket(OutgoingOpcodes.WORLD_TILE_PACKET);
 		int localX = (node.getObject().getTile().getLocalX(node.getLastRegionTile()));

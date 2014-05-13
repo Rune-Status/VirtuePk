@@ -151,6 +151,11 @@ public class Movement {
 		int myY = lastTile[1];
 		//System.out.println("Current tile: x="+myX+", y="+myY+", dest tile: x="+destX+", y="+destY);
 		int stepCount = 0;
+		int distanceX = myX - destX;
+		int distanceY = myY - destY;
+		if (!(distanceX > sizeX || distanceX < -1 && distanceY > sizeY || distanceY < -1)) {
+			return true;//Reached an adjacent tile
+		}
 		while (true) {
 			stepCount++;
 			int myRealX = myX;
@@ -181,8 +186,8 @@ public class Movement {
 				myX = myT[0];
 				myY = myT[1];
 			}
-			int distanceX = myX - destX;
-			int distanceY = myY - destY;
+			distanceX = myX - destX;
+			distanceY = myY - destY;
 			if (!(distanceX > sizeX || distanceX < -1 || distanceY > sizeY || distanceY < -1)) {
 				return true;//Reached an adjacent tile
 			}

@@ -11,8 +11,8 @@ import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 public class MiningAction extends PlayerActionEvent {
 	
 	private int emoteID;
-	private MiningRock rock;
-	private Pickaxe pickaxe = Pickaxe.RUNE;
+	private final MiningRock rock;
+	private Pickaxe pickaxe = Pickaxe.BRONZE;
 	private int calculatedTime;
 	private int ticks = 0;
 	
@@ -22,28 +22,51 @@ public class MiningAction extends PlayerActionEvent {
 
 	@Override
 	public boolean start(Player player) {
+		pickaxe = getPickaxe(player);
+		if (pickaxe == null) {
+			player.getPacketDispatcher().dispatchMessage("You need a pickaxe to mine this rock.", MessageOpcode.CHAT_BOX);
+			return false;
+		} else if (player.getSkillManager().getLevel(Skill.MINING) < pickaxe.getLevel()) {
+			player.getPacketDispatcher().dispatchMessage("You dont have the required level to use this pickaxe.", MessageOpcode.CHAT_BOX);
+			return false;
+		} else if (player.getSkillManager().getLevel(Skill.MINING) < rock.getOre().getLevel()) {
+			player.getPacketDispatcher().dispatchMessage("You require a mining level of "+rock.getOre().getLevel()+" to mine this rock.", MessageOpcode.CHAT_BOX);
+			return false;
+		} else if (player.getInventory().getItems().getFreeSlots() < 1) {
+			player.getPacketDispatcher().dispatchMessage("Not enough space in your inventory.", MessageOpcode.CHAT_BOX);
+			return false;
+		}
 		player.getPacketDispatcher().dispatchMessage("You swing your pickaxe at the rock.", MessageOpcode.CHAT_BOX_FILTER);
 		calculatedTime = calculateDelay(player);
 		System.out.println("Calculated time: "+calculatedTime);
-		emoteID = 628;
+		emoteID = pickaxe.getEmote();
 		return true;
 	}
 	
 	public int calculateDelay (Player player) {
-		return rock.getOre().getMineTime() - player.getSkillManager().getLevel(Skill.MINING) - Launcher.getRandom().nextInt(pickaxe.getTimeDiscount());
+		int delay = rock.getOre().getMineMaxTime() - player.getSkillManager().getLevel(Skill.MINING) - Launcher.getRandom().nextInt(pickaxe.getTimeDiscount());
+		if (delay < 1 + rock.getOre().getRandomTime()) {
+			delay = 1 + Launcher.getRandom().nextInt(rock.getOre().getRandomTime());
+		}
+		return delay;
 	}
 	
 	public Pickaxe getPickaxe (Player player) {
-		Pickaxe pickaxe = Pickaxe.forItemID(player.getEquipment().getAtSlot(EquipSlot.MAINHAND).getId());
-		if (pickaxe == null) {
+		Item mainSlotItem = player.getEquipment().getAtSlot(EquipSlot.MAINHAND);
+		Pickaxe pick = null;
+		if (mainSlotItem != null) {
+			pick = Pickaxe.forItemID(mainSlotItem.getId());
+		}
+		if (pick == null) {
 			for (Pickaxe p : Pickaxe.values()) {
-				if (player.getInventory().getItem(p.getItemID()) != null) {
-					pickaxe = p;
-					break;//TODO: Finish implementing this.
+				if (player.getInventory().getItem(p.getItemID()) != null 
+						&& player.getSkillManager().getLevel(Skill.MINING) >= p.getLevel()
+						&& (pick == null || p.getTimeDiscount() > pick.getTimeDiscount())) {
+					pick = p;
 				}
 			}
 		}
-		return pickaxe;		
+		return pick;		
 	}
 
 	@Override
@@ -59,9 +82,13 @@ public class MiningAction extends PlayerActionEvent {
 	
 	private void success (Player player) {
 		Item ore = new Item(rock.getOre().getOreID(), 1);
-		System.out.println("You mine some " + ore.getDefinition().getName() + ".");
-		player.getPacketDispatcher().dispatchMessage("You mine some " + ore.getDefinition().getName() + ".", MessageOpcode.CHAT_BOX_FILTER);
-		rock.deplete();
+		//System.out.println("You mine some " + ore.getDefinition().getName() + ".");
+		player.getPacketDispatcher().dispatchMessage("You mine some " + ore.getDefinition().getName() + ".", MessageOpcode.CHAT_BOX_FILTER);		
+		rock.deplete();		
+		player.getInventory().add(ore);
+		player.getSkillManager().addExperience(Skill.MINING, rock.getOre().getExperience(), 0, true);
+		//System.out.println("Completed mining action.");
+		
 	}
 
 	@Override

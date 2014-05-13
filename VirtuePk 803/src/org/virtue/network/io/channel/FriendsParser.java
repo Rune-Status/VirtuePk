@@ -37,9 +37,13 @@ public class FriendsParser implements IOParser<InternalFriendManager> {
 
 	@Override
 	public boolean save(Object... params) {
-		System.out.println("Saving friends");
 		File friendData = new File(getPath(), params[0]+".bin");
 		InternalFriendManager friendManager = (InternalFriendManager) params[1];
+		if (!friendManager.hasStarted()) {
+			System.err.println("Could not save friend data - Friend manager not loaded.");
+			return false;
+		}
+		System.out.println("Saving friends");
 		
 		try (DataOutputStream output = new DataOutputStream(new FileOutputStream(friendData))) {
 			friendManager.serialise(output);

@@ -9,7 +9,7 @@ import org.virtue.game.logic.region.Region;
 import org.virtue.network.protocol.messages.GroundItemMessage;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.network.protocol.messages.ObjectMessage;
-import org.virtue.network.protocol.messages.ObjectMessage.ObjectType;
+import org.virtue.network.protocol.messages.ObjectMessage.ObjectUpdateType;
 import org.virtue.network.protocol.packet.encoder.impl.GroundItemEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ObjectUpdateEncoder;
 
@@ -34,7 +34,7 @@ public class TestCommand implements Command {
 		Region region = World.getWorld().getRegionManager().getRegionByID(player.getTile().getRegionID());
 		region.addObject(object, player.getTile().getPlane(), player.getTile().getXInRegion(), player.getTile().getYInRegion());
 		//region.getObject(id, location);
-		player.getAccount().getSession().getTransmitter().send(ObjectUpdateEncoder.class, new ObjectMessage(ObjectType.CREATE, object, player.getViewport().getLastLoadedTile()));
+		player.getAccount().getSession().getTransmitter().send(ObjectUpdateEncoder.class, new ObjectMessage(ObjectUpdateType.CREATE, object, player.getViewport().getLastLoadedTile()));
 //		player.getUpdateArchive().queueAnimation(918);
 //		String text = player.requestInput("Enter Amount:");
 //		player.getPacketDispatcher().dispatchMessage(text);

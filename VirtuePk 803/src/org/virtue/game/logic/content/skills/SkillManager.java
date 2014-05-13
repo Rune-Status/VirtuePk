@@ -14,14 +14,9 @@ import com.google.gson.JsonObject;
 
 public class SkillManager extends AbstractInterface {
 
-	private Player player;
-	private EnumMap<Skill, SkillData> skills = new EnumMap<Skill, SkillData>(Skill.class);
+	private final Player player;
+	private final EnumMap<Skill, SkillData> skills = new EnumMap<Skill, SkillData>(Skill.class);
 	//private SkillData[] skills = new SkillData[Skill.values().length];
-
-	//Varp IDs used:
-	private static final int XP_COUNTER_1_VALUE = 91;
-	private static final int XP_COUNTER_2_VALUE = 92;
-	private static final int XP_COUNTER_3_VALUE = 93;
 	
 	public SkillManager (Player player) {
 		super(RSInterface.SKILLS, player);
@@ -38,16 +33,31 @@ public class SkillManager extends AbstractInterface {
 		return skills[s.getID()];
 	}*/
 	
-	public void addExperience (Skill s, double amountToAdd) {
-		SkillData skill = skills.get(s);
-		int levelBefore = skill.getBaseLevel();
-		skill.addExperienceFloat(amountToAdd);
-		int levelAfter = skill.getBaseLevel();
+	public void addExperience (Skill s, double totalXpToAdd) {
+		addExperience(s, totalXpToAdd, 0, false);
+	}
+	
+	public void addExperience (Skill s, double totalXpToAdd, int bonusExperience) {
+		addExperience(s, totalXpToAdd, bonusExperience, false);
+	}
+	
+	/**
+	 * Adds experience to the specified skill
+	 * @param skill				The skill to add experience to
+	 * @param totalXpToAdd		The the amount of experience to add
+	 * @param bonusExperience	The bonus experience component
+	 * @param canHaveBonus		Whether global (or skill-specific) bonuses can be applied
+	 */
+	public void addExperience (Skill skill, double totalXpToAdd, int bonusExperience, boolean canHaveBonus) {
+		SkillData skillData = skills.get(skill);
+		int levelBefore = skillData.getBaseLevel();
+		skillData.addExperienceFloat(totalXpToAdd);//TODO: Handle bonus experience
+		int levelAfter = skillData.getBaseLevel();
 		//System.out.println("Level before: "+levelBefore+", level after: "+levelAfter);
 		if (levelAfter > levelBefore) {//Player has advanced in level
-			handleAdvancement(skill, (levelAfter - levelBefore));
+			handleAdvancement(skillData, (levelAfter - levelBefore));
 		}
-		player.getPacketDispatcher().dispatchSkill(skill);
+		player.getPacketDispatcher().dispatchSkill(skillData);
 	}
 	
 	public int getLevel (Skill skill) {

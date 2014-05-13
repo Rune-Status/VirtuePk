@@ -286,9 +286,12 @@ public class Player extends Entity {
 		return inputEvent;
 	}
 	
-	public void setActionEvent (PlayerActionEvent event) {
+	public boolean setActionEvent (PlayerActionEvent event) {
+		if (!event.start(this)) {
+			return false;
+		}
 		this.currentAction = event;
-		currentAction.start(this);
+		return true;
 	}
 	
 	public void clearActionEvent () {

@@ -24,6 +24,10 @@ package org.virtue.game.config;
  */
 public class ClientVarps {
 	
+	public static final int XP_COUNTER_1_VALUE = 91;
+	public static final int XP_COUNTER_2_VALUE = 92;
+	public static final int XP_COUNTER_3_VALUE = 93;
+	
 	private static final int[] LOBBY_VARPS_803 = new int[4500];
 	private static final int[] GAME_VARPS_803 = new int[4500];
 	private static final int[] GAME_VARPS_2_803 = new int[4500];

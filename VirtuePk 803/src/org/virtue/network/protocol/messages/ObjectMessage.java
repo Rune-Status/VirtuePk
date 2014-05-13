@@ -5,12 +5,12 @@ import org.virtue.game.logic.region.Tile;
 
 public class ObjectMessage {
 
-	public enum ObjectType { CREATE, DESTROY }
+	public enum ObjectUpdateType { CREATE, DESTROY }
 	
 	/**
 	 * Represents the type.
 	 */
-	private ObjectType type;
+	private ObjectUpdateType type;
 	
 	/**
 	 * Represents the object.
@@ -20,7 +20,7 @@ public class ObjectMessage {
 
 	private Tile lastRegionTile;
 	
-	public ObjectMessage (ObjectType type, RS3Object object, Tile regionTile) {
+	public ObjectMessage (ObjectUpdateType type, RS3Object object, Tile regionTile) {
 		this.type = type;
 		this.object = object;
 		this.lastRegionTile = regionTile;
@@ -29,7 +29,7 @@ public class ObjectMessage {
 	/**
 	 * @return The type
 	 */
-	public ObjectType getType() {
+	public ObjectUpdateType getType() {
 		return type;
 	}
 	

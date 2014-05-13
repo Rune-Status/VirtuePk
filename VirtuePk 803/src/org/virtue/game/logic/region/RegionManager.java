@@ -15,7 +15,7 @@ public class RegionManager {
 	/**
 	 * Represents the regions in this region manager.
 	 */
-	private List<Region> regions = Collections.synchronizedList(new ArrayList<Region>());
+	private final List<Region> regions = Collections.synchronizedList(new ArrayList<Region>());
 	
 	/**
 	 * Represents the region update manager.

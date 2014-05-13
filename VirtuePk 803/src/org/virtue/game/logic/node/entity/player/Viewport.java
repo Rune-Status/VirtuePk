@@ -155,6 +155,7 @@ public class Viewport {
 				}));
 				if (!oldRegions.contains(regionID)) {
 					region.updateGroundItems(player, GroundItemType.CREATE);
+					region.updateTempObjects(player);
 				}
 				REGIONS.add(regionID);
 			}

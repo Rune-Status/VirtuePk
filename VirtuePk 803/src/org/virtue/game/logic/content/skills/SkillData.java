@@ -3,6 +3,7 @@ package org.virtue.game.logic.content.skills;
 public class SkillData {
 
 	private int experience = 0;
+	private int bonusExperience = 0;
 	private int currentLevel = 0;
 	private int baseLevel = 1;
 	private final Skill skill;
@@ -60,6 +61,14 @@ public class SkillData {
 	 */
 	public int getBaseLevel () {
 		return baseLevel;
+	}
+	
+	/**
+	 * Gets the bonus experience available for this skill
+	 * @return	The bonus experience
+	 */
+	public int getBonusExperience () {
+		return bonusExperience;
 	}
 	
 	/**

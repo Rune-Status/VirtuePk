@@ -11,6 +11,7 @@ public class TemporaryObject extends RS3Object {
 	private final int originalID;
 	private final int respawnDelay;
 	private int respawnTime = 0;
+	private boolean defaultDepleted = false;
 
 	public TemporaryObject(int id, int rotation, int type, Tile tile, int replacement, int respawnDelay) {
 		super(id, rotation, type, tile);
@@ -22,14 +23,13 @@ public class TemporaryObject extends RS3Object {
 	public void deplete () {
 		super.setId(replacementID);
 		super.setType(10);
-		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this);
-		Launcher.getEngine().getAsynchronousExecutor();
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this, defaultDepleted);
 	}
 	
 	public void respawn () {
 		super.setId(originalID);
 		respawnTime = 0;
-		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this);
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this, !defaultDepleted);
 	}
 	
 	public boolean checkRespawn () {

@@ -11,6 +11,7 @@ import org.virtue.game.core.filter.LoginFilter;
 import org.virtue.game.core.gametick.TickManager;
 import org.virtue.game.core.logic.LogicProcessor;
 import org.virtue.game.core.logic.impl.CharacterLogicUpdateEvent;
+import org.virtue.game.core.logic.impl.RegionUpdateEvent;
 import org.virtue.game.core.synchronization.AsynchronousExecutorService;
 import org.virtue.game.core.synchronization.SynchronousExecutorService;
 import org.virtue.game.core.threads.AsynchronousThreadFactory;
@@ -104,6 +105,7 @@ public class GameEngine implements Runnable {
 //		ASYNCHRONOUS_POOL.execute(ASYNCHRONOUS_EXECUTOR);
 //		SYNCHRONOUS_POOL.execute(SYNCHRONOUS_EXECUTOR);
 		LOGIC_PROCESSOR.registerEvent(new CharacterLogicUpdateEvent());
+		LOGIC_PROCESSOR.registerEvent(new RegionUpdateEvent());
 		LOGIC_PROCESSOR.registerEvent(new RegionUpdateManager());
 		//GroovyManager.Init();//XXX TODO fix this
 	}
