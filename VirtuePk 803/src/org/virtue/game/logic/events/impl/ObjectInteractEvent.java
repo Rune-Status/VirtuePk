@@ -20,6 +20,7 @@ public class ObjectInteractEvent extends CoordinateEvent {
 
 	@Override
 	public void run(Player player) {
+		player.getUpdateArchive().queueFaceDirection(object.getTile());
 		object.interact(player, option);
 	}
 

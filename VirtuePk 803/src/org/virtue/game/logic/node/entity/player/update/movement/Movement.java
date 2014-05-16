@@ -63,7 +63,7 @@ public class Movement {
 	/**
 	 * Represents whether the entity is able to avoid map clipping
 	 */
-	private boolean noclipped = true;
+	private boolean noclipped = false;
 	
 	/**
 	 * @return The nextWalkDirection

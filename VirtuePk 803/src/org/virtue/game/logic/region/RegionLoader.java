@@ -34,7 +34,15 @@ public class RegionLoader {
 				switch (region.getLoadingStage()) {
 				case PREPARE_MAP:
 					virtualMapData = getVirtualMapData(region.getArchiveKey());
+					if (virtualMapData == null) {
+						region.setLoadingStage(RegionLoadingStage.ERROR_LOADING);
+						return;
+					}
 					virtualNodeData = getVirtualNodeData(region.getArchiveKey());
+					if (virtualNodeData == null) {
+						region.setLoadingStage(RegionLoadingStage.ERROR_LOADING);
+						return;
+					}
 					/*heightmapData = region.getHeightMapData();
 					if (heightmapData == null) {
 						heightmapData = new byte[4][64][64];
@@ -198,7 +206,7 @@ public class RegionLoader {
 		try {
 			return Launcher.getCache().read(CacheIndex.LANDSCAPES, key, 3);
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}
@@ -207,7 +215,7 @@ public class RegionLoader {
 		try {
 			return Launcher.getCache().read(CacheIndex.LANDSCAPES, key, 0);
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 	}

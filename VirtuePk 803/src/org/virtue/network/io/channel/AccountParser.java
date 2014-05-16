@@ -96,9 +96,9 @@ public class AccountParser implements IOParser<Account> {
 		ClientScreen screen = new ClientScreen();
 		JsonElement layout = obj.get("interfaceLayout");
 		if (layout == null || layout.isJsonNull()) {
-			screen.initLayout(null);
+			screen.deserialiseLayout(null);
 		} else {
-			screen.initLayout(layout.getAsJsonArray());
+			screen.deserialiseLayout(layout.getAsJsonArray());
 		}
 		
 		return new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(new GregorianCalendar(year, month, day)), new Tile(x, y, z), screen, obj);
@@ -137,7 +137,7 @@ public class AccountParser implements IOParser<Account> {
 		location.add(coords);
 		obj.add("location", location);
 		
-		obj.add("skills", p.getSkillManager().serialise());
+		obj.add("skills", p.getSkills().serialise());
 		
 		obj.add("inventory", p.getInventory().serialise());
 		
@@ -148,6 +148,9 @@ public class AccountParser implements IOParser<Account> {
 		obj.add("chatData", p.getChatManager().serialiseData());
 		
 		obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());
+		
+		obj.addProperty("runEnergy", p.getRunEnergy());
+		obj.addProperty("isRunning", (p.getUpdateArchive().getMovement().isRunning() && !p.getUpdateArchive().getMovement().isForceRun()));
 		
 		System.out.println("Saving player...");
 		

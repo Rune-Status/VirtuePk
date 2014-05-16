@@ -126,7 +126,12 @@ public class Player extends Entity {
 	 */
 	private Bank bank;
 	
+	/**
+	 * The current action the player is peforming
+	 */
 	private PlayerActionEvent currentAction;
+	
+	private int lockedFor = 0;
 	
 	/**
 	 * Constructs a new {@code Player.java}.
@@ -171,6 +176,10 @@ public class Player extends Entity {
 			chatManager.deserialiseData(account.getCharFile().get("chatData").getAsJsonObject());
 			if (account.getCharFile().get("bank") != null) {
 				bank.deserialise(account.getCharFile().get("bank").getAsJsonArray());
+			}
+			if (account.getCharFile().get("runEnergy") != null) {
+				setRunEnergy(account.getCharFile().get("runEnergy").getAsInt());
+				getUpdateArchive().getMovement().setRunning(account.getCharFile().get("isRunning").getAsBoolean());
 			}
 		}
 		
@@ -260,6 +269,9 @@ public class Player extends Entity {
 		if (currentAction != null && currentAction.process(this)) {
 			clearActionEvent();
 		}
+		if (lockedFor > 0) {
+			lockedFor--;
+		}
 		//System.out.println("Run direction: "+getUpdateArchive().getMovement().getNextRunDirection());
 	}
 	
@@ -334,6 +346,7 @@ public class Player extends Entity {
 	public void refreshOnDemand() {
 		getUpdateArchive().reset();//Refresh update flags
 		getUpdateArchive().getMovement().setNeedsTypeUpdate(false);
+		getUpdateArchive().getMovement().setTeleported(false);
 	}
 
 	@Override
@@ -461,12 +474,16 @@ public class Player extends Entity {
 		return chatManager;
 	}
 	
-	public SkillManager getSkillManager () {
+	public SkillManager getSkills () {
 		return skillManager;
 	}
 	
 	public ActionBar getActionBar () {
 		return actionBar;
+	}
+	
+	public void lock (int ticks) {
+		lockedFor = ticks;
 	}
 	
 	/**

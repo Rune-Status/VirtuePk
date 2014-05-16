@@ -139,6 +139,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
+						getPlayer().getPacketDispatcher().dispatchVarp(new VarpMessage(111, lastDepositAmount));
 						withdrawItem(itemID, slotID, amount);
 					}
 					@Override
@@ -186,6 +187,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
+						getPlayer().getPacketDispatcher().dispatchVarp(new VarpMessage(111, lastDepositAmount));
 						depositInventoryItem(itemID, slotID, amount);
 					}
 					@Override

@@ -58,7 +58,7 @@ public class InterfaceManager {
 		player.getAccount().getSession().getTransmitter().send(GameScreenEncoder.class, screenInfo.getDisplayMode());
 		sendInterface(true, 1477, 87, 1482);//Interface: id=1482, clipped=1, parent=[1477, 87] (Game scene)
 		
-		setInterface(player.getSkillManager(), 313, true);
+		setInterface(player.getSkills(), 313, true);
 		
 		/*sendInterface(true, 1477, 313, 1466);//Interface: id=1466, clipped=1, parent=[1477, 313] (Skills)
 		sendInterfaceSettings(1466, 10, 0, 26, 30);//IfaceSettings: 96075786, 26, 0, 30

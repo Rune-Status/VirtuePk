@@ -30,10 +30,10 @@ public class WoodcuttingAction extends PlayerActionEvent {
 		if (axe == null) {
 			player.getPacketDispatcher().dispatchMessage("You need a hatchet to chop this tree.", GameMessage.MessageOpcode.CHAT_BOX);
 			return false;
-		} else if (player.getSkillManager().getLevel(Skill.WOODCUTTING) < axe.getLevel()) {
+		} else if (player.getSkills().getCurrentLevel(Skill.WOODCUTTING) < axe.getLevel()) {
 			player.getPacketDispatcher().dispatchMessage("You dont have the required level to use this hatchet.", GameMessage.MessageOpcode.CHAT_BOX);
 			return false;
-		} else if (player.getSkillManager().getLevel(Skill.WOODCUTTING) < tree.getLog().getLevel()) {
+		} else if (player.getSkills().getCurrentLevel(Skill.WOODCUTTING) < tree.getLog().getLevel()) {
 			player.getPacketDispatcher().dispatchMessage("You require a woodcutting level of "+tree.getLog().getLevel()+" to chop down this tree.", GameMessage.MessageOpcode.CHAT_BOX);
 			return false;
 		} else if (player.getInventory().getItems().getFreeSlots() < 1) {
@@ -48,7 +48,7 @@ public class WoodcuttingAction extends PlayerActionEvent {
 	}
 	
 	public int calculateDelay (Player player) {
-		int delay = tree.getLog().getChopMaxTime() - player.getSkillManager().getLevel(Skill.WOODCUTTING) - Launcher.getRandom().nextInt(axe.getTimeDiscount());
+		int delay = tree.getLog().getChopMaxTime() - player.getSkills().getCurrentLevel(Skill.WOODCUTTING) - Launcher.getRandom().nextInt(axe.getTimeDiscount());
 		if (delay < 1 + tree.getLog().getRandomTime()) {
 			delay = 1 + Launcher.getRandom().nextInt(tree.getLog().getRandomTime());
 		}
@@ -64,7 +64,7 @@ public class WoodcuttingAction extends PlayerActionEvent {
 		if (axe == null) {
 			for (Hatchet p : Hatchet.values()) {
 				if (player.getInventory().getItem(p.getItemID()) != null 
-						&& player.getSkillManager().getLevel(Skill.WOODCUTTING) >= p.getLevel()
+						&& player.getSkills().getCurrentLevel(Skill.WOODCUTTING) >= p.getLevel()
 						&& (axe == null || p.getTimeDiscount() > axe.getTimeDiscount())) {
 					axe = p;
 				}
@@ -98,7 +98,7 @@ public class WoodcuttingAction extends PlayerActionEvent {
 		player.getPacketDispatcher().dispatchMessage("You get some " + log.getDefinition().getName() + ".", GameMessage.MessageOpcode.CHAT_BOX_FILTER);		
 		tree.deplete();
 		player.getInventory().add(log);
-		player.getSkillManager().addExperience(Skill.WOODCUTTING, tree.getLog().getExperience(), 0, true);
+		player.getSkills().addExperience(Skill.WOODCUTTING, tree.getLog().getExperience(), 0, true);
 	}
 
 	@Override

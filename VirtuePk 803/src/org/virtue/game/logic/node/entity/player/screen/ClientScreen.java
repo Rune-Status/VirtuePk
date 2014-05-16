@@ -100,7 +100,7 @@ public class ClientScreen {
 		}
 	}
 	
-	public void initLayout (JsonArray data) {
+	public void deserialiseLayout (JsonArray data) {
 		setDefaultLayout();
 		if (data != null) {
 			for (JsonElement setting : data) {

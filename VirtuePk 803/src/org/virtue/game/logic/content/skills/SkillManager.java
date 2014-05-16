@@ -60,8 +60,12 @@ public class SkillManager extends AbstractInterface {
 		player.getPacketDispatcher().dispatchSkill(skillData);
 	}
 	
-	public int getLevel (Skill skill) {
+	public int getCurrentLevel (Skill skill) {
 		return skills.get(skill).getCurrentLevel();
+	}
+	
+	public int getBaseLevel (Skill skill) {
+		return skills.get(skill).getBaseLevel();
 	}
 	
 	private void handleAdvancement (SkillData skill, int advancement) {

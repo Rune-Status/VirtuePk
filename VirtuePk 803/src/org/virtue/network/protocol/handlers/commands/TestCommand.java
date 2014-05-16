@@ -1,11 +1,13 @@
 package org.virtue.network.protocol.handlers.commands;
 
+import org.virtue.Constants;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.region.Region;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.messages.GroundItemMessage;
 import org.virtue.network.protocol.messages.GroundItemMessage.GroundItemType;
 import org.virtue.network.protocol.messages.ObjectMessage;
@@ -21,20 +23,11 @@ public class TestCommand implements Command {
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {
-		int objectID = 19001;
-		if (args.length > 0) {
-			try {
-				objectID = Integer.parseInt(args[0]);
-			} catch (NumberFormatException ex) {
-				//Do nothing, as we will just use the default value
-			}
-		}
-		RS3Object object = new RS3Object(objectID, 0, 10, player.getTile());
-		System.out.println("Spawning object: "+object.getDefinition().getName()+" at x="+object.getTile().getX()+", y="+object.getTile().getY());
-		Region region = World.getWorld().getRegionManager().getRegionByID(player.getTile().getRegionID());
-		region.addObject(object, player.getTile().getPlane(), player.getTile().getXInRegion(), player.getTile().getYInRegion());
-		//region.getObject(id, location);
-		player.getAccount().getSession().getTransmitter().send(ObjectUpdateEncoder.class, new ObjectMessage(ObjectUpdateType.CREATE, object, player.getViewport().getLastLoadedTile()));
+		Tile target = Constants.DEFAULT_LOCATION;
+		player.getUpdateArchive().getMovement().reset();
+		player.getUpdateArchive().getMovement().teleport(target);
+		System.out.println("Teleporting to region: "+target.getRegionID());
+		//player.loadMapRegion();
 //		player.getUpdateArchive().queueAnimation(918);
 //		String text = player.requestInput("Enter Amount:");
 //		player.getPacketDispatcher().dispatchMessage(text);

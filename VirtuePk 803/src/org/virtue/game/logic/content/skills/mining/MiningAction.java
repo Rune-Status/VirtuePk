@@ -26,10 +26,10 @@ public class MiningAction extends PlayerActionEvent {
 		if (pickaxe == null) {
 			player.getPacketDispatcher().dispatchMessage("You need a pickaxe to mine this rock.", MessageOpcode.CHAT_BOX);
 			return false;
-		} else if (player.getSkillManager().getLevel(Skill.MINING) < pickaxe.getLevel()) {
+		} else if (player.getSkills().getCurrentLevel(Skill.MINING) < pickaxe.getLevel()) {
 			player.getPacketDispatcher().dispatchMessage("You dont have the required level to use this pickaxe.", MessageOpcode.CHAT_BOX);
 			return false;
-		} else if (player.getSkillManager().getLevel(Skill.MINING) < rock.getOre().getLevel()) {
+		} else if (player.getSkills().getCurrentLevel(Skill.MINING) < rock.getOre().getLevel()) {
 			player.getPacketDispatcher().dispatchMessage("You require a mining level of "+rock.getOre().getLevel()+" to mine this rock.", MessageOpcode.CHAT_BOX);
 			return false;
 		} else if (player.getInventory().getItems().getFreeSlots() < 1) {
@@ -44,7 +44,7 @@ public class MiningAction extends PlayerActionEvent {
 	}
 	
 	public int calculateDelay (Player player) {
-		int delay = rock.getOre().getMineMaxTime() - player.getSkillManager().getLevel(Skill.MINING) - Launcher.getRandom().nextInt(pickaxe.getTimeDiscount());
+		int delay = rock.getOre().getMineMaxTime() - player.getSkills().getCurrentLevel(Skill.MINING) - Launcher.getRandom().nextInt(pickaxe.getTimeDiscount());
 		if (delay < 1 + rock.getOre().getRandomTime()) {
 			delay = 1 + Launcher.getRandom().nextInt(rock.getOre().getRandomTime());
 		}
@@ -60,7 +60,7 @@ public class MiningAction extends PlayerActionEvent {
 		if (pick == null) {
 			for (Pickaxe p : Pickaxe.values()) {
 				if (player.getInventory().getItem(p.getItemID()) != null 
-						&& player.getSkillManager().getLevel(Skill.MINING) >= p.getLevel()
+						&& player.getSkills().getCurrentLevel(Skill.MINING) >= p.getLevel()
 						&& (pick == null || p.getTimeDiscount() > pick.getTimeDiscount())) {
 					pick = p;
 				}
@@ -86,7 +86,7 @@ public class MiningAction extends PlayerActionEvent {
 		player.getPacketDispatcher().dispatchMessage("You mine some " + ore.getDefinition().getName() + ".", MessageOpcode.CHAT_BOX_FILTER);		
 		rock.deplete();		
 		player.getInventory().add(ore);
-		player.getSkillManager().addExperience(Skill.MINING, rock.getOre().getExperience(), 0, true);
+		player.getSkills().addExperience(Skill.MINING, rock.getOre().getExperience(), 0, true);
 		//System.out.println("Completed mining action.");
 		
 	}

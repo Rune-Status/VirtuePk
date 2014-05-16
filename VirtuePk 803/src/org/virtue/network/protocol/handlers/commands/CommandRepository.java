@@ -32,6 +32,8 @@ public class CommandRepository {
 		commands.add(new ShowGraphics());	
 		commands.add(new ShowAnimation());
 		commands.add(new CheckPassword());
+		commands.add(new SpawnObject());
+		commands.add(new Teleport());
 		
 	}
 	

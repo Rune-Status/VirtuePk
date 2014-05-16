@@ -25,7 +25,7 @@ public class AddExperience implements Command {
 			player.getPacketDispatcher().dispatchMessage("Invalid skill - Must be between 0 and 25", MessageOpcode.CONSOLE);
 			return false;
 		}
-		player.getSkillManager().addExperience(skill, xp);
+		player.getSkills().addExperience(skill, xp);
 		return true;
 	}
 

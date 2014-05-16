@@ -26,11 +26,9 @@ public class ObjectOptionHandler extends MovementHandler {
 		
 		RS3Object object = World.getWorld().getRegionManager().getRegionByID(location.getRegionID()).getObject(objectID, location);
 		
-		//ObjectDefinition object = ObjectDefinitionLoader.forId(objectID);
 		if (object == null) {
 			System.err.println("Object "+objectID+" clicked at x="+xCoord+", y="+yCoord+" does not exist!");
 			return;
-			//throw new RuntimeException("Invalid Object ID: "+objectID);
 		}
 		
 		if (object.isDistanceOption(option)) {
@@ -41,7 +39,6 @@ public class ObjectOptionHandler extends MovementHandler {
 			super.handle(session);//Handle the movement aspect
 			session.getPlayer().setCoordinateEvent(new ObjectInteractEvent(object, option));
 		}
-		//TODO: Implement checks to make sure the object actually exists at the expected location on the map.
 		
 		//System.out.println("Clicked object: objectID="+objectID+", xCoord="+xCoord+", yCoord="+yCoord+", optionID="+option.getID());
 	}

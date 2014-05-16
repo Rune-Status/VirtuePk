@@ -68,6 +68,7 @@ public class Item {
 	 */
 	public void setId(int id) {
 		this.id = id;
+		this.definition = ItemDefinitionLoader.forId(id);
 	}
 	
 	public boolean isStackable () {
