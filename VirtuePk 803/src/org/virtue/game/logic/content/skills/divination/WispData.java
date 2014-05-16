@@ -8,12 +8,23 @@ package org.virtue.game.logic.content.skills.divination;
 public enum WispData {
 	
 
-	PALE(18150, 1), FLICKERING(18151, 10), BRIGHT(18153, 20), GLOWING(18155, 30), SPARKLING(18157, 40), GLEAMING(18159, 50), VIBRANT(18161, 60), LUSTROUS(18163, 70), BRILLIANT(18165, 80), RADIANT(18167, 85), LUMINOUS(18169, 90), INCANDESCENT(18171, 95);
+	PALE(18150, 1, 0), 
+	FLICKERING(18151, 10, 0), 
+	BRIGHT(18153, 20, 0), 
+	GLOWING(18155, 30, 0), 
+	SPARKLING(18157, 40, 0), 
+	GLEAMING(18159, 50, 0), 
+	VIBRANT(18161, 60, 0), 
+	LUSTROUS(18163, 70, 0), 
+	BRILLIANT(18165, 80, 0), 
+	RADIANT(18167, 85, 0), 
+	LUMINOUS(18169, 90, 0), 
+	INCANDESCENT(18171, 95, 0);
 
 	private int npcId;
 	private int level;
 
-	private WispData(int npcId, int level) {
+	private WispData(int npcId, int level, int experience) {
 		this.npcId = npcId;
 		this.level = level;
 	}

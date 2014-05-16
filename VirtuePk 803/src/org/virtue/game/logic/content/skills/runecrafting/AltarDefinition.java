@@ -5,7 +5,20 @@ package org.virtue.game.logic.content.skills.runecrafting;
  * @since Apr 13, 2014
  */
 public enum AltarDefinition {
-	AIR_ALTAR(1, 5, 556, 2478), MIND_ALTAR(2, 5.5, 558, 2479), WATER_ALTAR(5, 6, 555, 2480), EARTH_ALTAR(9, 6.5, 557, 2481), FIRE_ALTAR(14, 7, 554, 2482), BODY_ALTAR(20, 7.5, 559, 2483), COSMIC_ALTAR(27, 8, 564, 2484), CHAOS_ALTAR(35, 8.5, 562, 2487), ASTRAL_ALTAR(40, 8.7, 9075, 17010), NATURE_ALTAR(44, 9, 561, 2486), LAW_ALTAR(54, 9.5, 563, 2485), DEATH_ALTAR(65, 10, 560, 2488), BLOOD_ALTAR(77, 10.5, 565, 30624), OURANIA_ALTAR(1, 1, 1, 1); // TODO
+	AIR_ALTAR(1, 5, 556, 2478), 
+	MIND_ALTAR(2, 5.5, 558, 2479), 
+	WATER_ALTAR(5, 6, 555, 2480), 
+	EARTH_ALTAR(9, 6.5, 557, 2481), 
+	FIRE_ALTAR(14, 7, 554, 2482), 
+	BODY_ALTAR(20, 7.5, 559, 2483), 
+	COSMIC_ALTAR(27, 8, 564, 2484), 
+	CHAOS_ALTAR(35, 8.5, 562, 2487), 
+	ASTRAL_ALTAR(40, 8.7, 9075, 17010), 
+	NATURE_ALTAR(44, 9, 561, 2486), 
+	LAW_ALTAR(54, 9.5, 563, 2485), 
+	DEATH_ALTAR(65, 10, 560, 2488), 
+	BLOOD_ALTAR(77, 10.5, 565, 30624), 
+	OURANIA_ALTAR(1, 1, 1, 1); //TODO: Find information for this
 
 	/**
 	 * Represents the required level in order to craft runes.

@@ -36,8 +36,7 @@ public class LoginSession extends Session {
 			System.out.println("Sending login response: "+response.getReturnCode());
 			RS3PacketBuilder buffer = new RS3PacketBuilder();
 			buffer.put(response.getReturnCode());
-			//getContext().getChannel().write(buffer);
-                        getTransmitter().send(buffer);
+			getTransmitter().send(buffer);
 			return;
 		}
 		if (!(message instanceof Account)) {

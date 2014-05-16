@@ -82,6 +82,7 @@ public class Account extends AttributeSet {
 		this.screen = screen;
 		this.clientSessionKey = clientSessionKey;
 		this.serverSessionKey = serverSessionKey;
+		this.dateofbirth = new DateOfBirth();
 	}
 
 	/**
@@ -90,11 +91,12 @@ public class Account extends AttributeSet {
 	 * @param password The password.
 	 * @param dateOfBirth
 	 */
-	public Account(Username username, Password password, Email email, Age age, DateOfBirth dateofbirth) {
+	public Account(Username username, Password password, Rank rank, Email email, Age age, DateOfBirth dateofbirth) {
 		//System.out.println("Creating new account for user: "+username.getName());
 		this.username = username;
 		this.password = password;
 		this.email = email;
+		this.rank = rank;
 		this.age = age;
 		this.dateofbirth = dateofbirth;
 	}

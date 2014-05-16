@@ -40,14 +40,4 @@ public class TemporaryObject extends RS3Object {
 	public boolean isDepleted () {
 		return super.getId() != originalID;
 	}
-	
-	@Override
-	public boolean isDistanceOption (ObjectOption option) {
-		return super.isDistanceOption(option);
-	}
-	
-	@Override
-	public void interact (Player player, ObjectOption option) {
-		super.interact(player, option);
-	}
 }

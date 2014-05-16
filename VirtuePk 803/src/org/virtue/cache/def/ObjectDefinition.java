@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.virtue.game.logic.node.object.ObjectOption;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 public class ObjectDefinition {
@@ -441,6 +442,34 @@ public class ObjectDefinition {
 	
 	public boolean isMembers () {
 		return membersObject;
+	}
+	
+	public String getOption(ObjectOption option) {
+		if (option.getID() > 0 && option.getID() < 6) {
+			return options[option.getID()-1];
+		} else if (option.equals(ObjectOption.EXAMINE)) {
+			return options[5];
+		} else {
+			return null;
+		}
+		
+	}
+
+	public boolean hasOption(String option) {
+		if (options == null) {
+			return false;
+		}
+
+		for (String opt : options) {
+			if (opt == null || opt.equalsIgnoreCase("null")) {
+				continue;
+			}
+
+			if (opt.toLowerCase().equalsIgnoreCase(option.toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

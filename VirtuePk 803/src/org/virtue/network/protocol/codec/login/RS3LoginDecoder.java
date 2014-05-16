@@ -192,8 +192,12 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			}
 		}
 		
+		System.out.println(username);
+		System.out.println(username.trim());
+		System.out.println(password);
+		System.out.println(password.toLowerCase().trim());
 		if ((IOHub.getAccountIo().exists(username.trim())) == false) {
-			account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), true), channel, new ClientScreen(), clientSessionKey, serverSessionKey);
+			account = new Account(new Username(StringUtils.format(username.trim(), FormatType.PROTOCOL)), new Password(password.toLowerCase().trim(), false), channel, new ClientScreen(), clientSessionKey, serverSessionKey);
 			account.setChannel(channel);
 			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 		} else {

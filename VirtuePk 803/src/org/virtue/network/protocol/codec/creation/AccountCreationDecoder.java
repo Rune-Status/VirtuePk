@@ -20,6 +20,7 @@ import org.virtue.game.logic.node.entity.player.identity.Age;
 import org.virtue.game.logic.node.entity.player.identity.DateOfBirth;
 import org.virtue.game.logic.node.entity.player.identity.Email;
 import org.virtue.game.logic.node.entity.player.identity.Password;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.entity.player.identity.Username;
 import org.virtue.utility.Base37Utils;
 import org.virtue.utility.BufferUtils;
@@ -46,7 +47,7 @@ public class AccountCreationDecoder extends FrameDecoder implements ChannelHandl
 		Age age = new Age(buffer.readInt());
 		sendCreationEmail(email, username, password);
 		
-		return new Account(username, password, email, age, dob);
+		return new Account(username, password, Rank.PLAYER, email, age, dob);
 	}
 	
 	private void sendCreationEmail(Email email, Username username, Password password) {

@@ -63,7 +63,7 @@ public class AccountParser implements IOParser<Account> {
 		
 		String username = obj.get("username").getAsString();
 		String password = obj.get("password").getAsString();
-		String email = obj.get("email").getAsString();
+		String email = (obj.get("email").getAsString() == "null" ? null : obj.get("email").getAsString());
 		int age = obj.get("age").getAsInt();
 		
 		JsonElement bdElement = obj.get("dateofbirth");
@@ -121,9 +121,9 @@ public class AccountParser implements IOParser<Account> {
 		
 		JsonArray birthDate = new JsonArray();
 		JsonObject date = new JsonObject();
-		date.addProperty("year", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.YEAR));
-		date.addProperty("month", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.MONTH));
-		date.addProperty("day", p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.DAY_OF_MONTH));
+		date.addProperty("year", (p.getAccount().getDateOfBirth().getDateOfBirth() == null ? 1970 : p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.YEAR)));
+		date.addProperty("month", (p.getAccount().getDateOfBirth().getDateOfBirth() == null ? 1 : p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.MONTH)));
+		date.addProperty("day", (p.getAccount().getDateOfBirth().getDateOfBirth() == null ? 1 : p.getAccount().getDateOfBirth().getDateOfBirth().get(Calendar.DAY_OF_MONTH)));
 		birthDate.add(date);
 		obj.add("dateofbirth", birthDate);
 		

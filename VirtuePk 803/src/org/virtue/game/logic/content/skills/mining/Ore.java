@@ -12,7 +12,7 @@ public enum Ore {
 	ADAMANTITE(70, 95, 449, 130, 25, 180), 
 	RUNITE(85, 125, 451, 150, 30, 360);
 	
-	private int levelRequired;
+	private final int levelRequired;
 	private final int itemID;
 	private final double experience;
 	private final int baseTime, randomTime, respawnDelay;

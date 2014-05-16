@@ -43,12 +43,14 @@ public class MiningRock extends TemporaryObject {
 	
 	@Override
 	public void interact (Player player, ObjectOption option) {
-		String message = "Clicked mining rock: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", optionID="+option.getID();
+		String message = "Clicked mining rock: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", option="+getDefinition().getOption(option)+" ("+option.getID()+")";
 		System.out.println(message);
-		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+		if (option.equals(ObjectOption.ONE)) {
 			player.setActionEvent(new MiningAction(this));
-			/*player.getInventory().add(new Item(ore.getOreID(), 1), true);
+		}
+		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
 			player.getPacketDispatcher().dispatchMessage(message);
+			/*player.getInventory().add(new Item(ore.getOreID(), 1), true);
 			super.deplete();*/	
 		}
 	}

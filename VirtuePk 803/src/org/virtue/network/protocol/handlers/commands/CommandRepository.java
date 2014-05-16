@@ -30,7 +30,8 @@ public class CommandRepository {
 		commands.add(new SetNoClip());
 		commands.add(new ShowBank());
 		commands.add(new ShowGraphics());	
-		commands.add(new ShowAnimation());		
+		commands.add(new ShowAnimation());
+		commands.add(new CheckPassword());
 		
 	}
 	

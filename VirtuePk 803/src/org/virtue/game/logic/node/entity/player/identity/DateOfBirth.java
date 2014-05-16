@@ -6,10 +6,10 @@ public class DateOfBirth {
 	
 	public GregorianCalendar dateofbirth;
 	
-	/**
-	 * Constructs a new {@code DateOfBirth.java}.
-	 * @param gregorianCalendar
-	 */
+	public DateOfBirth() {
+		this.dateofbirth = new GregorianCalendar();
+	}
+	
 	public DateOfBirth(GregorianCalendar birth) {
 		this.dateofbirth = birth;
 	}

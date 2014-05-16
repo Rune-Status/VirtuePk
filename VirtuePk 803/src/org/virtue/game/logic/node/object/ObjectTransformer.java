@@ -2,6 +2,8 @@ package org.virtue.game.logic.node.object;
 
 import org.virtue.game.logic.content.skills.mining.MiningRock;
 import org.virtue.game.logic.content.skills.mining.Ore;
+import org.virtue.game.logic.content.skills.woodcutting.Log;
+import org.virtue.game.logic.content.skills.woodcutting.WoodcuttingTree;
 
 public class ObjectTransformer {
 
@@ -31,6 +33,21 @@ public class ObjectTransformer {
 			return new MiningRock(object, Ore.ADAMANTITE);
 		case "runite ore rocks":
 			return new MiningRock(object, Ore.RUNITE);
+		case "tree":
+			return new WoodcuttingTree(object, Log.NORMAL);
+		case "oak tree":
+		case "oak":
+			return new WoodcuttingTree(object, Log.OAK);
+		case "willow tree":
+			return new WoodcuttingTree(object, Log.WILLOW);
+		case "maple tree":
+			return new WoodcuttingTree(object, Log.MAPLE);
+		case "yew tree":
+			return new WoodcuttingTree(object, Log.YEW);
+		case "magic tree":
+			return new WoodcuttingTree(object, Log.MAGIC);
+		case "elder tree"://TODO: Add mahogany and teak trees...
+			return new WoodcuttingTree(object, Log.ELDER);
 		}
 		return object;
 	}
