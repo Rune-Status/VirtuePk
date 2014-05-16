@@ -31,7 +31,7 @@ public class ObjectUpdateEncoder implements PacketEncoder<ObjectMessage> {
 			buffer.putPacket(OutgoingOpcodes.DESTROY_OBJECT_PACKET);
 			buffer.put((node.getObject().getType() << 2) + (node.getObject().getRotation() & 0x3));
 			buffer.put((offsetX & 0x7) << 4 | offsetY & 0x7);
-			System.out.println("Removing object "+node.getObject().getId()+" at position x="+node.getObject().getTile().getX()+", y="+node.getObject().getTile().getY());
+			System.out.println("Removing object "+node.getObject().getId()+" of type "+node.getObject().getType()+" at position x="+node.getObject().getTile().getX()+", y="+node.getObject().getTile().getY());
 			break;
 		}
 		return buffer;

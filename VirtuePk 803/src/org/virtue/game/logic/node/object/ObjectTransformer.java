@@ -7,6 +7,11 @@ import org.virtue.game.logic.content.skills.woodcutting.WoodcuttingTree;
 
 public class ObjectTransformer {
 
+	/**
+	 * Transforms a generic object into a specific object (eg tree, rock, etc)
+	 * @param object	The object to transform
+	 * @return			The transformed object
+	 */
 	public static RS3Object transformObject (RS3Object object) {
 		switch (object.getDefinition().getName().toLowerCase()) {
 		case "clay rocks":
@@ -39,14 +44,21 @@ public class ObjectTransformer {
 		case "oak":
 			return new WoodcuttingTree(object, Log.OAK);
 		case "willow tree":
+		case "willow":
 			return new WoodcuttingTree(object, Log.WILLOW);
+		case "teak":
+			return new WoodcuttingTree(object, Log.TEAK);
 		case "maple tree":
+		case "maple":
 			return new WoodcuttingTree(object, Log.MAPLE);
+		case "mahogany":
+			return new WoodcuttingTree(object, Log.MAHOGANY);
 		case "yew tree":
+		case "yew":
 			return new WoodcuttingTree(object, Log.YEW);
 		case "magic tree":
 			return new WoodcuttingTree(object, Log.MAGIC);
-		case "elder tree"://TODO: Add mahogany and teak trees...
+		case "elder tree":
 			return new WoodcuttingTree(object, Log.ELDER);
 		}
 		return object;

@@ -1,8 +1,6 @@
 package org.virtue.game.logic.node.object;
 
-import org.virtue.Launcher;
 import org.virtue.game.logic.World;
-import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.region.Tile;
 
 public class TemporaryObject extends RS3Object {
@@ -22,7 +20,7 @@ public class TemporaryObject extends RS3Object {
 
 	public void deplete () {
 		super.setId(replacementID);
-		super.setType(10);
+		//super.setType(10);
 		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this, defaultDepleted);
 	}
 	

@@ -167,7 +167,7 @@ public class RegionLoader {
 								int z = location >> 12;
 								int objectData = landStream.getUnsignedByte();
 								int type = objectData >> 2;
-								int direction = objectData & 0x3;
+								int rotation = objectData & 0x3;
 								if (x < 0 || x >= 64 || y < 0 || y >= 64) {
 									continue;
 								}
@@ -175,8 +175,10 @@ public class RegionLoader {
 									z--;
 								}
 								if (z >= 0 && z <= 3) {
-									//System.out.println("Object "+objectID+" found at x="+x+", y="+y+", z="+z);
-									RS3Object object = ObjectTransformer.transformObject(new RS3Object(objectID, type, direction, new Tile(x, y, z, region.getId())));
+									if (objectID == 38760) {
+										//System.out.println("Object "+objectID+", rotation="+rotation+", type="+type+" found at x="+x+", y="+y+", z="+z+", region="+region.getId());
+									}
+									RS3Object object = ObjectTransformer.transformObject(new RS3Object(objectID, rotation, type, new Tile(x, y, z, region.getId())));
 									region.addObject(object, z, x, y);
 								}
 							}

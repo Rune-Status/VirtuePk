@@ -294,11 +294,8 @@ public class Region extends AttributeSet implements SubRegion {
 		}
 	}
 	
-	public void spawnObject (TemporaryObject object) {
+	public void spawnObject (RS3Object object) {
 		addObject(object, object.getTile().getPlane(), object.getTile().getXInRegion(), object.getTile().getYInRegion());
-		synchronized (tempObjects) {
-			tempObjects.add(object);
-		}
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
 				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.CREATE);
@@ -306,7 +303,7 @@ public class Region extends AttributeSet implements SubRegion {
 		}
 	}
 	
-	public void removeTemporyObject (TemporaryObject object) {
+	public void removeTemporyObject (RS3Object object) {
 		synchronized (tempObjects) {
 			tempObjects.remove(object);
 		}
@@ -407,6 +404,10 @@ public class Region extends AttributeSet implements SubRegion {
 				//clipedOnlyMap.addObject(plane, x, y, sizeX, sizeY, objectDef.isProjectileClipped(), true);
 			}
 		}*/
+	}
+	
+	public RS3Object[] getObjects (Tile location) {
+		return objects[location.getPlane()][location.getXInRegion()][location.getYInRegion()];
 	}
 	
 	public RS3Object getObject (int id, Tile location) {

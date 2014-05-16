@@ -80,9 +80,10 @@ public class WoodcuttingAction extends PlayerActionEvent {
 			success(player);
 			if (player.getInventory().getItems().getFreeSlots() < 1) {
 				player.getPacketDispatcher().dispatchMessage("Not enough space in your inventory.", GameMessage.MessageOpcode.CHAT_BOX);
-				return false;
+				return true;
 			}
 			calculatedTime = calculateDelay(player);
+			ticks = 0;
 		}
 		ticks++;
 		return tree.isDepleted();
