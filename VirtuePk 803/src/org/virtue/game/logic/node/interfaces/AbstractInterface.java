@@ -1,5 +1,6 @@
 package org.virtue.game.logic.node.interfaces;
 
+import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.InterfaceMessage;
@@ -74,6 +75,10 @@ public abstract class AbstractInterface {
 	 * @param button	The {@link ActionButton} that was clicked
 	 */
 	public abstract void handleActionButton (int component, int slot1, int slot2, ActionButton button);
+	
+	public Item getItem (int component, int itemID, int slotID) {
+		return null;
+	}
 	
 	public void setLock (boolean isLocked) {
 		if (getTabID() == -1) {

@@ -240,7 +240,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 		int xOffset = localPlayer.getTile().getX() - localPlayer.getLastTile().getX();
 		int yOffset = localPlayer.getTile().getY() - localPlayer.getLastTile().getY();
 		int planeOffset = localPlayer.getTile().getPlane() - localPlayer.getLastTile().getPlane();
-		int unknownValue = 4;//TODO: Figure out what this is...
+		int unknownValue = localPlayer.getUpdateArchive().getMovement().isRunning() ? 3 : 2;//TODO: Figure out what this is...
 		if (Math.abs(localPlayer.getTile().getX() - localPlayer.getLastTile().getX()) <= 14 && Math.abs(localPlayer.getTile().getY() - localPlayer.getLastTile().getY()) <= 14) {
 			buffer.putBits(1, 0);
 			if (xOffset < 0) {

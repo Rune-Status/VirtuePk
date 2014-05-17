@@ -93,7 +93,7 @@ public enum AlterDefinition {
 	 * 
 	 * @return the reward
 	 */
-	public int getRewardId() {
+	public int getRuneID() {
 		return itemID;
 	}
 
@@ -102,7 +102,7 @@ public enum AlterDefinition {
 	 * 
 	 * @return the object of the altar.
 	 */
-	public int getObject() {
+	public int getAlterID() {
 		return alterID;
 	}
 	

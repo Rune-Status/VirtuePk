@@ -174,7 +174,7 @@ public class Appearance {
 			
 			//Hat
 			item = player.getEquipment().getItems().get(Equipment.SLOT_HAT);
-			if (item == null) {
+			if (item == null || item.getDefinition().getEquiptTypeID() != 8) {
 				buffer.putShort(0x100 + getBodyStyles()[0]);
 			} else {
 				buffer.put(0);
@@ -200,7 +200,7 @@ public class Appearance {
 			
 			//Beard
 			item = player.getEquipment().getItems().get(gender.equals(Gender.MALE) ? Equipment.SLOT_HAT : Equipment.SLOT_CHEST);
-			if (item == null) {
+			if (item == null || (gender.equals(Gender.MALE) && item.getDefinition().showBeard())) {
 				buffer.putShort(0x100 + getBodyStyles()[1]);
 			} else {
 				buffer.put(0);

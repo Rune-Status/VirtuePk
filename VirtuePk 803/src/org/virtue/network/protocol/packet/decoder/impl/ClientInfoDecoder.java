@@ -30,7 +30,7 @@ public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
         		IncommingOpcodes.KEY_TYPED_PACKET, IncommingOpcodes.CAMERA_MOVEMENT_PACKET,
         		IncommingOpcodes.CLICK_PACKET, IncommingOpcodes.CLIENT_SPECS_PACKET, 
 				IncommingOpcodes.PACKET_RECEIVE_COUNT, IncommingOpcodes.ANOTHER_MOUSE_PACKET,
-				IncommingOpcodes.ANOTHER_CLICK_PACKET };
+				IncommingOpcodes.ANOTHER_CLICK_PACKET, IncommingOpcodes.REGION_LOADING_COMPLETED_PACKET };
     }
     
 }

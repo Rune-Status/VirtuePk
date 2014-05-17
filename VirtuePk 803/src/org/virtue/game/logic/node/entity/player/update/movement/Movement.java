@@ -333,9 +333,22 @@ public class Movement {
 	}
 	
 	public void teleport(Tile tile) {
+		reset();
 		entity.getLastTile().copy(entity.getTile());
-		entity.getTile().copy(tile);
 		setTeleported(true);
+		if (entity instanceof Player) {
+			if (tile.getRegionID() != entity.getTile().getRegionID()) {
+				World.getWorld().getRegionManager().getRegionByID(entity.getTile().getRegionID()).getPlayers().remove((Player) entity);
+				World.getWorld().getRegionManager().getRegionByID(tile.getRegionID(), true).addPlayer((Player) entity);
+			}
+		}
+		entity.getTile().copy(tile);//FIXME: Something is still going wrong with teleporting, where the entity isn't received at the right location on the client side...
+		if (entity instanceof Player) {
+			if (((Player) entity).getViewport().needsMapUpdate()) {
+				((Player) entity).getViewport().loadViewport();
+				((Player) entity).loadMapRegion();
+			}
+		}
 	}
 
 	public void process() {

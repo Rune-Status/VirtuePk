@@ -43,10 +43,10 @@ public class RunecraftingAlter extends RS3Object {
 			player.getPacketDispatcher().dispatchMessage("You need a runecrafting level of "+alterDetails.getLevel()+" to craft this rune.", MessageOpcode.CHAT_BOX);
 			return;
 		}
-		Item runes = new Item(Runecrafting.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.PURE_ESSENCE));
+		Item runes = new Item(Resources.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Resources.PURE_ESSENCE));
 		if (runes.getAmount() == 0) {
 			if (!alterDetails.requiresPureEssence()) {
-				runes = new Item(Runecrafting.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.RUNE_ESSENCE));
+				runes = new Item(Resources.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Resources.RUNE_ESSENCE));
 			}
 			if (runes.getAmount() == 0) {
 				player.getPacketDispatcher().dispatchMessage("You don't have " + (alterDetails.requiresPureEssence() ? "pure" : "rune") + " essence.", MessageOpcode.CHAT_BOX);
@@ -56,7 +56,7 @@ public class RunecraftingAlter extends RS3Object {
 		double totalXP = alterDetails.getExperience() * runes.getAmount();
 		player.getSkills().addExperience(Skill.RUNECRAFTING, totalXP, 0, true);
 		player.getInventory().remove(runes);
-		runes.setId(alterDetails.getRewardId());
+		runes.setId(alterDetails.getRuneID());
 		runes.setAmount(runes.getAmount() * alterDetails.getHighestMultiple(player.getSkills().getCurrentLevel(Skill.RUNECRAFTING)));
 		player.getUpdateArchive().queueGraphic(new Graphics(186));
 		player.getUpdateArchive().queueAnimation(791);

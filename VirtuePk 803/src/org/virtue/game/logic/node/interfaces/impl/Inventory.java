@@ -237,6 +237,21 @@ public class Inventory extends AbstractInterface {
 	public void setItems(ItemsContainer<Item> items) {
 		this.items = items;
 	}
+	
+	@Override
+	public Item getItem (int component, int itemID, int slotID) {
+		if (component == 8) {
+			Item item = items.get(slotID);
+			 if (item == null) {
+                 return null;
+             }
+			 if (item.getId() != itemID) {
+				 return null;
+			 }
+			 return item;
+		}
+		return null;
+	}
 
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {

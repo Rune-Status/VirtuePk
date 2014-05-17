@@ -5,6 +5,8 @@ package org.virtue.game.logic.content.skills.runecrafting;
  * @since Apr 13, 2014
  */
 public class Resources {
+	
+	public static final int RUNE_ESSENCE = 1436, PURE_ESSENCE = 7936;
 
 	public static enum TiaraDefinitions {
 		
@@ -64,19 +66,34 @@ public class Resources {
 		}
 	}
 
-	public enum TalismanDefinitions {
+	public enum Talisman {
 		
-		AIR_TALISMAN(1438, 2452), MIND_TALISMAN(1448, 2453), WATER_TALISMAN(1444, 2454), EARTH_TALISMAN(1440, 2455), FIRE_TALISMAN(1442, 2456), BODY_TALISMAN(1446, 2457), COSMIC_TALISMAN(1454, 2458), CHAOS_TALISMAN(1452, 2461), NATURE_TALISMAN(1462, 2460), LAW_TALISMAN(1458, 2459), DEATH_TALISMAN(1456, -1), BLOOD_TALISMAN(1450, -1);
+		AIR(1438, 5527, 13630, 2452), 
+		MIND(1448, 5529, 13631, 2453), 
+		WATER(1444, 5531, 13632, 2454), 
+		EARTH(1440, 5535, 13633, 2455), 
+		FIRE(1442, 5537, 13634, 2456), 
+		BODY(1446, 5533, 13635, 2457), 
+		COSMIC(1454, 5539, 13636, 2458), 
+		CHAOS(1452, 5543, 13637, 2461), 
+		NATURE(1462, 5541, 13638, 2460), 
+		LAW(1458, 5545, 13639, 2459), 
+		DEATH(1456, 5547, 13640, -1), 
+		BLOOD(1450, 5549, 13641, -1);
 
 		/**
 		 * Represents the item id of the talisman.
 		 */
-		private final int item;
+		private final int talismanID;
+		
+		private final int tiaraID;
+		
+		private final int staffID;
 
 		/**
 		 * Represents the object id of the temple.
 		 */
-		private final int object;
+		private final int alterID;
 
 		/**
 		 * Constructs a new {@code TalismanDefinitions} {@code Object}.
@@ -86,18 +103,36 @@ public class Resources {
 		 * @param object
 		 *            the object of the temple.
 		 */
-		TalismanDefinitions(int item, int object) {
-			this.item = item;
-			this.object = object;
+		Talisman(int talisman, int tiara, int staff, int alter) {
+			this.talismanID = talisman;
+			this.tiaraID = tiara;
+			this.staffID = staff;
+			this.alterID = alter;
 		}
 
 		/**
-		 * Gets the item.
+		 * Gets the talisman item ID.
 		 * 
-		 * @return the item
+		 * @return the talisman item ID
 		 */
-		public int getItem() {
-			return item;
+		public int getTalisman() {
+			return talismanID;
+		}
+		
+		/**
+		 * Gets the tiara item ID
+		 * @return	the tiara item ID
+		 */
+		public int getTiara() {
+			return tiaraID;
+		}
+		
+		/**
+		 * Gets the staff item ID
+		 * @return	the staff item ID
+		 */
+		public int getStaff() {
+			return staffID;
 		}
 
 		/**
@@ -106,13 +141,32 @@ public class Resources {
 		 * @return the object
 		 */
 		public int getObject() {
-			return object;
+			return alterID;
+		}
+	}
+	
+	public enum ReturnPortalDefinition {
+		AIR(-1);
+		
+		ReturnPortalDefinition (int id) {
+			
 		}
 	}
 
 	public enum TalismanStaffDefinitions {
 		
-		AIR_STAFF(13630, 2452), MIND_STAFF(13631, 2453), WATER_STAFF(13632, 2454), EARTH_STAFF(13633, 2455), FIRE_STAFF(13634, 2456), BODY_STAFF(13635, 2457), COSMIC_STAFF(13636, 2458), CHAOS_STAFF(13637, 2461), NATURE_STAFF(13638, 2460), LAW_STAFF(13639, 2459), DEATH_STAFF(13640, -1), BLOOD_STAFF(13641, -1);
+		AIR_STAFF(13630, 2452), 
+		MIND_STAFF(13631, 2453), 
+		WATER_STAFF(13632, 2454), 
+		EARTH_STAFF(13633, 2455), 
+		FIRE_STAFF(13634, 2456), 
+		BODY_STAFF(13635, 2457), 
+		COSMIC_STAFF(13636, 2458), 
+		CHAOS_STAFF(13637, 2461), 
+		NATURE_STAFF(13638, 2460), 
+		LAW_STAFF(13639, 2459), 
+		DEATH_STAFF(13640, -1), 
+		BLOOD_STAFF(13641, -1);
 
 		/**
 		 * Represents the item id of the talisman staff.

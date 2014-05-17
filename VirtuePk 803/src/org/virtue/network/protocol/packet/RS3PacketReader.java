@@ -132,7 +132,7 @@ public final class RS3PacketReader extends RS3HeapBuffer {
 		return i;
 	}
 
-	public int get128ShortLE() {
+	public int getLEShortS() {
 		int i = (128 - get() & 0xff) + (getUnsignedByte() << 8);
 		if (i > 32767) {
 			i -= 0x10000;

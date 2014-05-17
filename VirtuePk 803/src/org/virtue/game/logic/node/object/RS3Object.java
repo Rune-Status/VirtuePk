@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.object;
 
 import org.virtue.cache.def.ObjectDefinition;
 import org.virtue.cache.def.ObjectDefinitionLoader;
+import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.Node;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
@@ -154,4 +155,11 @@ public class RS3Object extends Node {
 		}
 	}
 
+	public void useItem (Player player, Item item) {
+		String message = "Used item on object: objectID="+id+", type="+type+", itemID"+item.getId()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX();
+		System.out.println(message);
+		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			player.getPacketDispatcher().dispatchMessage(message);
+		}
+	}
 }

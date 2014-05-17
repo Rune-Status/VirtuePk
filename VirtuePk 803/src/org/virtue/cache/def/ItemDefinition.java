@@ -44,8 +44,8 @@ public class ItemDefinition {
     HashMap<Integer, Object> paramaters;
     
 	//Wearing model information
-    public int equipID = -1;
-    public int equipSlotID = -1;
+    private int equipTypeID = -1;
+    private int equipSlotID = -1;
     public int maleEquip1 = -1;
     public int maleEquip2 = -1;
     public int femaleEquip1 = -1;
@@ -179,7 +179,7 @@ public class ItemDefinition {
 		} else if (13 == opcode) {
 		    equipSlotID = buffer.getUnsignedByte();
 		} else if (opcode == 14) {
-		    equipID = buffer.getUnsignedByte();
+		    equipTypeID = buffer.getUnsignedByte();
 		} else if (opcode == 16) {
 		    membersOnly = true;
 		} else if (18 == opcode) {//Unknown
@@ -402,7 +402,7 @@ public class ItemDefinition {
 		femaleEquip1 = realItem.femaleEquip1;
 		femaleEquip2 = realItem.femaleEquip2;
 		paramaters = realItem.paramaters;
-		equipID = realItem.equipID;
+		equipTypeID = realItem.equipTypeID;
 		equipSlotID = realItem.equipSlotID;
 		bound = true;
 	}
@@ -429,7 +429,7 @@ public class ItemDefinition {
 		femaleEquip1 = realItem.femaleEquip1;
 		femaleEquip2 = realItem.femaleEquip2;
 		paramaters = realItem.paramaters;
-		equipID = realItem.equipID;
+		equipTypeID = realItem.equipTypeID;
 		equipSlotID = realItem.equipSlotID;
 		lent = true;
 	}
@@ -493,9 +493,17 @@ public class ItemDefinition {
 		}
 		return equipSlotID != -1;
 	}
+	
+	public boolean showBeard () {
+		return equipTypeID != 8 || (name.contains("helm") && !name.contains("full"));
+	}
         
 	public int getEquiptSlotID () {
 		return equipSlotID;
+	}
+    
+	public int getEquiptTypeID () {
+		return equipTypeID;
 	}
 
 	public int getNotedID() {

@@ -259,17 +259,18 @@ public class Player extends Entity {
 			getUpdateArchive().getMovement().setRunning(false);
 			sendRunButtonConfig();
 		}
-		if (!viewport.isSendGPI()) {
-			getUpdateArchive().getMovement().process();
-		}		
-		restoreRunEnergy();
-		if (coordinateEvent != null && coordinateEvent.processEvent(this)) {
-			coordinateEvent = null;
-		}
-		if (currentAction != null && currentAction.process(this)) {
-			clearActionEvent();
-		}
-		if (lockedFor > 0) {
+		if (lockedFor <= 0) {
+			if (!viewport.isSendGPI()) {
+				getUpdateArchive().getMovement().process();
+			}		
+			restoreRunEnergy();
+			if (coordinateEvent != null && coordinateEvent.processEvent(this)) {
+				coordinateEvent = null;
+			}
+			if (currentAction != null && currentAction.process(this)) {
+				clearActionEvent();
+			}
+		} else {
 			lockedFor--;
 		}
 		//System.out.println("Run direction: "+getUpdateArchive().getMovement().getNextRunDirection());
@@ -318,6 +319,10 @@ public class Player extends Entity {
 		clearActionEvent();
 		interfaceManager.closeTopInterface();
 		coordinateEvent = null;
+	}
+	
+	public void teleport (Tile target) {
+		getUpdateArchive().getMovement().teleport(target);
 	}
 	
 	/**

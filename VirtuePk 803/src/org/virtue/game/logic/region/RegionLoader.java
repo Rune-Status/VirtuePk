@@ -179,9 +179,9 @@ public class RegionLoader {
 								if (x < 0 || x >= 64 || y < 0 || y >= 64) {
 									continue;
 								}
-								if ((mapSettings[1][x][y] & 2) == 2) {
+								/*if ((mapSettings[1][x][y] & 2) == 2) {
 									z--;
-								}
+								}*/
 								if (z >= 0 && z <= 3) {
 									if (objectID == 38760) {
 										//System.out.println("Object "+objectID+", rotation="+rotation+", type="+type+" found at x="+x+", y="+y+", z="+z+", region="+region.getId());
@@ -205,7 +205,7 @@ public class RegionLoader {
 	public final ByteBuffer getVirtualMapData (int key) {
 		try {
 			return Launcher.getCache().read(CacheIndex.LANDSCAPES, key, 3);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			//e.printStackTrace();
 			return null;
 		}
@@ -214,7 +214,7 @@ public class RegionLoader {
 	public final ByteBuffer getVirtualNodeData (int key) {
 		try {
 			return Launcher.getCache().read(CacheIndex.LANDSCAPES, key, 0);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			//e.printStackTrace();
 			return null;
 		}

@@ -118,6 +118,7 @@ public class IncommingOpcodes {
 	public final static int INTERFACE_CHANGE_PACKET = 10;//803
 	public final static int INTERFACE_LAYOUT_PACKET = 20;//803
 	public final static int ITEM_ON_ITEM_PACKET = 82;//803
+	public final static int ITEM_ON_OBJECT_PACKET = 51;//803
 	public final static int CLOSE_INTERFACE_PACKET = 26;//803
 	
 	private static final int[] SIZES_803 = new int[120];

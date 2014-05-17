@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.object;
 
 import org.virtue.game.logic.content.skills.mining.MiningRock;
 import org.virtue.game.logic.content.skills.mining.Ore;
+import org.virtue.game.logic.content.skills.runecrafting.MysteriousRunes;
 import org.virtue.game.logic.content.skills.runecrafting.RunecraftingAlter;
 import org.virtue.game.logic.content.skills.runecrafting.AlterDefinition;
 import org.virtue.game.logic.content.skills.woodcutting.Log;
@@ -18,6 +19,13 @@ public class ObjectTransformer {
 		AlterDefinition alter = AlterDefinition.forAlterID(object.getId());
 		if (alter != null) {
 			return new RunecraftingAlter(object, alter);
+		}
+		MysteriousRunes.Definition runes = MysteriousRunes.Definition.forID(object.getId());
+		if (runes != null) {
+			return new MysteriousRunes(object, runes);
+		}
+		if (object.getId() == 30624) {
+			System.out.println("Blood alter at "+object.getTile()+", type="+object.getType()+", rotation="+object.getRotation());
 		}
 		switch (object.getDefinition().getName().toLowerCase()) {
 		case "clay rocks":
