@@ -271,6 +271,7 @@ public class ReferenceTable {
 			}
 		}
 		size++;
+		//table.indices = ids;
 
 		/* and allocate specific entries within that array */
 		for (int id : ids) {			
@@ -361,6 +362,9 @@ public class ReferenceTable {
 	 * The entries in this table.
 	 */
 	private final SortedMap<Integer, Entry> entries = new TreeMap<Integer, Entry>();
+	
+	
+	//private int[] indices;
 
 	/**
 	 * Gets the format of this table.
@@ -492,6 +496,10 @@ public class ReferenceTable {
 
 		return entries.lastKey() + 1;
 	}
+	
+	/*public int getIndex (int pos) {
+		return indices[pos];
+	}*/
 
 	/**
 	 * Encodes this {@link ReferenceTable} into a {@link ByteBuffer}.

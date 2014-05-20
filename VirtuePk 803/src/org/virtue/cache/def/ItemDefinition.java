@@ -39,7 +39,7 @@ public class ItemDefinition {
     public int stackable;
     public int value = 1;
     public boolean membersOnly = false;
-    public boolean unnoted;
+    public boolean stockmarket;
     public int teamID;
     HashMap<Integer, Object> paramaters;
     
@@ -68,7 +68,7 @@ public class ItemDefinition {
     short[] modifiedModelColors;
     short[] modifiedTextureColors;
     short[] originalTextureColors;
-    byte[] aByteArray7928;
+    byte[] recol_d_palette;
     byte[] aByteArray7895;
     public int[] anIntArray7949;
     
@@ -76,10 +76,10 @@ public class ItemDefinition {
     private String[] groundOptions = new String[] { null, null, "take", null, null };
     private String[] inventoryOptions = new String[] { null, null, null, null, "drop" };    
 	
-	int anInt7879;
-    /*public static final int anInt7880 = 1;
-    public static final int anInt7881 = 2;
-    static final int anInt7882 = 6;*/
+	int ambient;
+    public static final int SHOWCOUNT_IFNOT1 = 1;
+    public static final int SHOWCOUNT_ALWAYS = 2;
+    static final int MAX_OP_COUNT = 6;
     byte[] aByteArray7883;
     //public static short[] aShortArray7884 = new short[256];
     //Class618 aClass618_7885;
@@ -87,33 +87,33 @@ public class ItemDefinition {
     int[] stackAmounts;
     int interfaceModelID;
     int[] stackIds;
-    public int anInt7900;
+    public int zan2d;
     String aString7902;
     int[] anIntArray7909;
     public int anInt7910;
-    int anInt7912;
+    int resizeY;
     public int anInt7913;
     int[] anIntArray7914;
-    int anInt7921;
-    int anInt7924;
-    int anInt7925;
-    int anInt7926;
-    int anInt7927;
-    int anInt7929;
-    int anInt7931;
-    int anInt7932;
-    //static final int anInt7933 = 5;
-    public int anInt7936;
-    int anInt7937;
+    int womanWearXoff;
+    int manWearZoff;
+    int womanWearZoff;
+    int manhead;
+    int manhead2;
+    int womanhead2;
+    int resizeX;
+    int womanhead;
+    static final int MAX_IOP_COUNT = 5;
+    public int multistacksize;
+    int manWearYoff;
     public int anInt7939;
-    int anInt7940;
-    int anInt7942;
-    //public static final int anInt7943 = 0;
-    int anInt7944;
-    public int anInt7947;
-    public int anInt7950;
+    int manWearXoff;
+    int resizeZ;
+    public static final int SHOWCOUNT_NEVER = 0;
+    int contrast;
+    public int dummyitem;
+    public int pickSizeShift;
     public boolean aBool7953;
-    int anInt7954;
+    int womanWearYoff;
     public boolean aBool7955;
     
     public boolean noted, lent, bound;
@@ -173,7 +173,7 @@ public class ItemDefinition {
 		    	modelOffset2 -= 65536;
 			}
 		} else if (opcode == 11) {
-		    stackable = 1;
+		    stackable = SHOWCOUNT_IFNOT1;//1
 		} else if (opcode == 12) {
 		    value = buffer.getInt();
 		} else if (13 == opcode) {
@@ -182,8 +182,8 @@ public class ItemDefinition {
 		    equipTypeID = buffer.getUnsignedByte();
 		} else if (opcode == 16) {
 		    membersOnly = true;
-		} else if (18 == opcode) {//Unknown
-		    anInt7936 = buffer.getUnsignedShort();
+		} else if (18 == opcode) {
+		    multistacksize = buffer.getUnsignedShort();
 		} else if (23 == opcode) {
 		    maleEquip1 = buffer.getLargeSmart();
 		} else if (opcode == 24) {
@@ -216,9 +216,9 @@ public class ItemDefinition {
 		    }
 		} else if (opcode == 42) {
 		    int length = buffer.getUnsignedByte();
-		    aByteArray7928 = new byte[length];//Unknown
+		    recol_d_palette = new byte[length];
 		    for (int index = 0; index < length; index++) {
-		    	aByteArray7928[index] = (byte) buffer.get();
+		    	recol_d_palette[index] = (byte) buffer.get();
 		    }
 		} else if (opcode == 43) {//Unknown
 		    anInt7910 = buffer.getInt();
@@ -256,25 +256,25 @@ public class ItemDefinition {
 				}
 		    }
 		} else if (65 == opcode) {
-		    unnoted = true;
+		    stockmarket = true;
 		} else if (78 == opcode) {
 		    colourEquip1 = buffer.getLargeSmart();
 		} else if (79 == opcode) {
 		    colourEquip2 = buffer.getLargeSmart();
-		} else if (opcode == 90) {//Unknown
-		    anInt7926 = buffer.getLargeSmart();
-		} else if (91 == opcode) {//Unknown
-		    anInt7932 = buffer.getLargeSmart();
-		} else if (opcode == 92) {//Unknown
-		    anInt7927 = buffer.getLargeSmart();
-		} else if (opcode == 93) {//Unknown
-		    anInt7929 = buffer.getLargeSmart();
+		} else if (opcode == 90) {
+		    manhead = buffer.getLargeSmart();
+		} else if (91 == opcode) {
+		    womanhead = buffer.getLargeSmart();
+		} else if (opcode == 92) {
+		    manhead2 = buffer.getLargeSmart();
+		} else if (opcode == 93) {
+		    womanhead2 = buffer.getLargeSmart();
 		} else if (opcode == 94) {//Unknown
 		    anInt7887 = buffer.getUnsignedShort();
-		} else if (95 == opcode) {//Unknown
-		    anInt7900 = buffer.getUnsignedShort();
-		} else if (opcode == 96) {//Unknown
-		    anInt7947 = buffer.getUnsignedByte();
+		} else if (95 == opcode) {
+		    zan2d = buffer.getUnsignedShort();
+		} else if (opcode == 96) {
+		    dummyitem = buffer.getUnsignedByte();
 		} else if (97 == opcode) {
 		    noteID = buffer.getUnsignedShort();
 		} else if (98 == opcode) {
@@ -286,30 +286,30 @@ public class ItemDefinition {
 		    }
 		    stackIds[opcode - 100] = buffer.getUnsignedShort();
 		    stackAmounts[opcode - 100] = buffer.getUnsignedShort();
-		} else if (110 == opcode) {//Unknown
-		    anInt7931 = buffer.getUnsignedShort();
-		} else if (111 == opcode) {//Unknown
-		    anInt7912 = buffer.getUnsignedShort();
-		} else if (112 == opcode) {//Unknown
-		    anInt7942 = buffer.getUnsignedShort();
-		} else if (opcode == 113) {//Unknown
-		    anInt7879 = buffer.get();
-		} else if (opcode == 114) {//Unknown
-		    anInt7944 = buffer.get();
+		} else if (110 == opcode) {
+		    resizeX = buffer.getUnsignedShort();
+		} else if (111 == opcode) {
+		    resizeY = buffer.getUnsignedShort();
+		} else if (112 == opcode) {
+		    resizeZ = buffer.getUnsignedShort();
+		} else if (opcode == 113) {
+		    ambient = buffer.get();
+		} else if (opcode == 114) {
+		    contrast = buffer.get();
 		} else if (115 == opcode) {
 		    teamID = buffer.getUnsignedByte();
 		} else if (121 == opcode) {
 		    lendID = buffer.getUnsignedShort();
 		} else if (122 == opcode) {
 		    lendTemplateID = buffer.getUnsignedShort();
-		} else if (125 == opcode) {//Unknown
-		    anInt7940 = (buffer.get() << 2);
-		    anInt7937 = (buffer.get() << 2);
-		    anInt7924 = (buffer.get() << 2);
-		} else if (opcode == 126) {//Unknown
-		    anInt7921 = (buffer.get() << 2);
-		    anInt7954 = (buffer.get() << 2);
-		    anInt7925 = (buffer.get() << 2);
+		} else if (125 == opcode) {
+		    manWearXoff = (buffer.get() << 2);
+		    manWearYoff = (buffer.get() << 2);
+		    manWearZoff = (buffer.get() << 2);
+		} else if (opcode == 126) {
+		    womanWearXoff = (buffer.get() << 2);
+		    womanWearYoff = (buffer.get() << 2);
+		    womanWearZoff = (buffer.get() << 2);
 		} else if (127 == opcode || opcode == 128 || 129 == opcode || 130 == opcode) {//Unknown
 		    buffer.getUnsignedByte();
 		    buffer.getUnsignedShort();
@@ -319,21 +319,21 @@ public class ItemDefinition {
 		    for (int index = 0; index < length; index++) {
 		    	anIntArray7949[index] = buffer.getUnsignedShort();
 		    }
-		} else if (opcode == 134) {//Unknown
-		    anInt7950 = buffer.getUnsignedByte();
+		} else if (opcode == 134) {
+		    pickSizeShift = buffer.getUnsignedByte();
 		} else if (139 == opcode) {
 		    bindID = buffer.getUnsignedShort();
 		} else if (opcode == 140) {
 		    bindTemplateID = buffer.getUnsignedShort();
 		} else if (opcode >= 142 && opcode < 147) {
 		    if (null == anIntArray7909) {
-				anIntArray7909 = new int[6];
+				anIntArray7909 = new int[MAX_OP_COUNT];//6
 				Arrays.fill(anIntArray7909, -1);
 		    }
 		    anIntArray7909[opcode - 142] = buffer.getUnsignedShort();
 		} else if (opcode >= 150 && opcode < 155) {
 		    if (null == anIntArray7914) {
-				anIntArray7914 = new int[5];
+				anIntArray7914 = new int[MAX_IOP_COUNT];//6
 				Arrays.fill(anIntArray7914, -1);
 		    }
 		    anIntArray7914[opcode - 150] = buffer.getUnsignedShort();
@@ -349,7 +349,7 @@ public class ItemDefinition {
 		    } else if (164 == opcode) {
 		    	aString7902 = buffer.getString();
 		    } else if (opcode == 165) {
-		    	stackable = 2;
+		    	stackable = SHOWCOUNT_ALWAYS;//2
 		    } else if (249 == opcode) {
 				int length = buffer.getUnsignedByte();
 				if (paramaters == null) {
@@ -375,7 +375,7 @@ public class ItemDefinition {
 		membersOnly = realItem.membersOnly;
 		value = realItem.value;
 		name = realItem.name;
-		stackable = 1;
+		stackable = SHOWCOUNT_IFNOT1;//1
 		noted = true;
 		paramaters = realItem.paramaters;
 	}
@@ -389,7 +389,7 @@ public class ItemDefinition {
 		value = 0;
 		membersOnly = realItem.membersOnly;
 		name = realItem.name;
-		inventoryOptions = new String[5];
+		inventoryOptions = new String[MAX_IOP_COUNT];//5
 		groundOptions = realItem.groundOptions;
 		if (realItem.inventoryOptions != null) {
 			for (int optionIndex = 0; optionIndex < 4; optionIndex++) {
@@ -416,7 +416,7 @@ public class ItemDefinition {
 		value = 0;
 		membersOnly = realItem.membersOnly;
 		name = realItem.name;
-		inventoryOptions = new String[5];
+		inventoryOptions = new String[MAX_IOP_COUNT];//5
 		groundOptions = realItem.groundOptions;
 		if (realItem.inventoryOptions != null) {
 			for (int optionIndex = 0; optionIndex < 4; optionIndex++) {

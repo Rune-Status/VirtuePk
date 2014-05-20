@@ -82,7 +82,7 @@ public class WoodcuttingTree extends TemporaryObject {
 	
 	@Override
 	public void interact (Player player, ObjectOption option) {
-		String message = "Clicked tree: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", option="+getDefinition().getOption(option)+" ("+option.getID()+")";
+		String message = "Clicked tree: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+getDefinition().getOption(option)+" ("+option.getID()+")";
 		System.out.println(message);
 		if (option.equals(ObjectOption.ONE) && getDefinition().getOption(option).equalsIgnoreCase("Chop down")) {
 			player.setActionEvent(new WoodcuttingAction(this));

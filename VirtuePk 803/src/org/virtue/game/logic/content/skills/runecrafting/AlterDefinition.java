@@ -17,7 +17,7 @@ public enum AlterDefinition {
 	NATURE(44, 9, 561, true, 2486, 91), 
 	LAW(54, 9.5, 563, true, 2485, 110), 
 	DEATH(65, 10, 560, true, 2488), 
-	BLOOD(77, 10.5, 565, true, 30624);
+	BLOOD(77, 10.5, 565, true, 30624);//x=2461, y=4894, z=2
 
 	/**
 	 * Represents the required level in order to craft runes.

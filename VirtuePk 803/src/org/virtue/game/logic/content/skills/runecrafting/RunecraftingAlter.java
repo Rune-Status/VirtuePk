@@ -31,7 +31,7 @@ public class RunecraftingAlter extends RS3Object {
 	
 	@Override
 	public void interact(Player player, ObjectOption option) {
-		String message = "Clicked runecrafting alter: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", option="+getDefinition().getOption(option)+" ("+option.getID()+")";
+		String message = "Clicked runecrafting alter: id="+getId()+", rotation="+getRotation()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+getDefinition().getOption(option)+" ("+option.getID()+")";
 		System.out.println(message);
 		if (option.equals(ObjectOption.ONE)) {
 			craftRunes(player);
@@ -43,10 +43,10 @@ public class RunecraftingAlter extends RS3Object {
 			player.getPacketDispatcher().dispatchMessage("You need a runecrafting level of "+alterDetails.getLevel()+" to craft this rune.", MessageOpcode.CHAT_BOX);
 			return;
 		}
-		Item runes = new Item(Resources.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Resources.PURE_ESSENCE));
+		Item runes = new Item(Runecrafting.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.PURE_ESSENCE));
 		if (runes.getAmount() == 0) {
 			if (!alterDetails.requiresPureEssence()) {
-				runes = new Item(Resources.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Resources.RUNE_ESSENCE));
+				runes = new Item(Runecrafting.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.RUNE_ESSENCE));
 			}
 			if (runes.getAmount() == 0) {
 				player.getPacketDispatcher().dispatchMessage("You don't have " + (alterDetails.requiresPureEssence() ? "pure" : "rune") + " essence.", MessageOpcode.CHAT_BOX);

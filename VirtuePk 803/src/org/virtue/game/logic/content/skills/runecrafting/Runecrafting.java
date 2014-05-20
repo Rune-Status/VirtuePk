@@ -1,12 +1,54 @@
 package org.virtue.game.logic.content.skills.runecrafting;
 
+import org.virtue.game.logic.region.Tile;
+
 /**
  * @author Virtue Development Team 2014 (c).
  * @since Apr 13, 2014
  */
-public class Resources {
+public class Runecrafting {
 	
 	public static final int RUNE_ESSENCE = 1436, PURE_ESSENCE = 7936;
+	
+	public static enum ExitPortal {
+		AIR(2465, new Tile(3129, 3407, 0)),
+		MIND(2466, new Tile(2980, 3515, 0)),
+		WATER(2467, new Tile(3157, 3160, 0)),
+		EARTH(2468, new Tile(3304, 3476, 0)),
+		FIRE(2469, new Tile(3311, 3257, 0)),
+		BODY(2470, new Tile(3055, 3443, 0)),
+		COSMIC(2471, new Tile(2406, 4379, 0)),
+		CHAOS(2474, new Tile(3059, 3588, 0)),
+		NATURE(2473, new Tile(2867, 3017, 0)),
+		LAW(2472, new Tile(2856, 3379, 0)),//TODO: Find this//x=2857, y=3380, z=0
+		DEATH(2475, new Tile(1863, 4637, 0)),
+		BLOOD(-1, null);//TODO: Find this//
+		
+		private final int id;
+		private final Tile destination;
+		
+		ExitPortal (int id, Tile destination) {
+			this.id = id;
+			this.destination = destination;
+		}
+		
+		public int getID () {
+			return this.id;
+		}
+		
+		public Tile getDestination () {
+			return this.destination;
+		}
+		
+		public static ExitPortal forID (int id) {
+			for (ExitPortal portal : ExitPortal.values()) {
+				if (portal.id == id) {
+					return portal;
+				}
+			}
+			return null;
+		}
+	}
 
 	public static enum TiaraDefinitions {
 		

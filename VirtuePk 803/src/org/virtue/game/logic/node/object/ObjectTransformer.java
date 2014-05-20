@@ -3,6 +3,7 @@ package org.virtue.game.logic.node.object;
 import org.virtue.game.logic.content.skills.mining.MiningRock;
 import org.virtue.game.logic.content.skills.mining.Ore;
 import org.virtue.game.logic.content.skills.runecrafting.MysteriousRunes;
+import org.virtue.game.logic.content.skills.runecrafting.Runecrafting;
 import org.virtue.game.logic.content.skills.runecrafting.RunecraftingAlter;
 import org.virtue.game.logic.content.skills.runecrafting.AlterDefinition;
 import org.virtue.game.logic.content.skills.woodcutting.Log;
@@ -23,6 +24,10 @@ public class ObjectTransformer {
 		MysteriousRunes.Definition runes = MysteriousRunes.Definition.forID(object.getId());
 		if (runes != null) {
 			return new MysteriousRunes(object, runes);
+		}
+		Runecrafting.ExitPortal portal = Runecrafting.ExitPortal.forID(object.getId());
+		if (portal != null) {
+			return new Portal(object, portal.getDestination());
 		}
 		if (object.getId() == 30624) {
 			System.out.println("Blood alter at "+object.getTile()+", type="+object.getType()+", rotation="+object.getRotation());

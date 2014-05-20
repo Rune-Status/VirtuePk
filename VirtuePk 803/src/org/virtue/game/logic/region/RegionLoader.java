@@ -106,7 +106,7 @@ public class RegionLoader {
 											z--;
 										}
 										if (z >= 0 && z <= 3) {
-											region.getRegionMap().clipTile(z, x, y);
+											//region.getRegionMap().clipTile(z, x, y);//FIXME: Terrain clipping isn't working for some reason...
 										}
 									}
 								}

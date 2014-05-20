@@ -148,7 +148,7 @@ public class RS3Object extends Node {
 			player.getInterfaces().openBank();
 			return;
 		}
-		String message = "Clicked object: objectID="+id+", type="+type+", xCoord="+getTile().getX()+", yCoord="+getTile().getX()+", optionID="+option.getID();
+		String message = "Clicked object: objectID="+id+", type="+type+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", zCoord="+getTile().getPlane()+", optionID="+option.getID();
 		System.out.println(message);
 		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
 			player.getPacketDispatcher().dispatchMessage(message);
@@ -156,7 +156,7 @@ public class RS3Object extends Node {
 	}
 
 	public void useItem (Player player, Item item) {
-		String message = "Used item on object: objectID="+id+", type="+type+", itemID"+item.getId()+", xCoord="+getTile().getX()+", yCoord="+getTile().getX();
+		String message = "Used item on object: objectID="+id+", type="+type+", itemID"+item.getId()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", zCoord="+getTile().getPlane();
 		System.out.println(message);
 		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
 			player.getPacketDispatcher().dispatchMessage(message);
