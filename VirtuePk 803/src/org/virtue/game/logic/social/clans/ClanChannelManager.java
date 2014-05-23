@@ -27,6 +27,7 @@ import org.virtue.utility.GameClock;
  * Contains the tools necessary for managing clans.
  *
  * @author Sundays211
+ * @since May 22, 2014
  */
 public class ClanChannelManager {
 	
@@ -56,7 +57,7 @@ public class ClanChannelManager {
 	}
 	
 	public void joinChannel(Player player, long clanHash) {
-		System.out.println("Joining channel...");
+		//System.out.println("Joining channel...");
 		if (!clanCache.containsKey(clanHash)) {
 			loadChannel(clanHash);
 		}

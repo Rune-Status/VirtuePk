@@ -20,6 +20,7 @@ import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.loginserver.DataServer;

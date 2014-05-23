@@ -57,9 +57,9 @@ public class AccountParser implements IOParser<Account> {
 		File character = new File(getPath(), params[0]+".json");
 		
 		JsonParser parser = new JsonParser();
-		Object parsed = parser.parse(new FileReader(character));
+		JsonElement parsed = parser.parse(new FileReader(character));
 		
-		JsonObject obj = (JsonObject) parsed;
+		JsonObject obj = parsed.getAsJsonObject();
 		
 		String username = obj.get("username").getAsString();
 		String password = obj.get("password").getAsString();

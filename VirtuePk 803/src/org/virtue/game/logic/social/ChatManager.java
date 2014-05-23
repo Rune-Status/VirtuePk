@@ -1,5 +1,5 @@
 /*
- * This file is part of RS3Emulator.
+ * This file is part of the RS3Emulator social module.
  *
  * RS3Emulator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@ package org.virtue.game.logic.social;
 
 import java.io.FileNotFoundException;
 
+import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
 import org.virtue.game.logic.social.internal.SocialUser;
@@ -36,6 +38,7 @@ import org.virtue.network.protocol.packet.encoder.impl.chat.PublicMessageEncoder
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -49,6 +52,8 @@ public class ChatManager {
 	private enum ChannelStage { NONE, JOINING, JOINED, LEAVING }
 	
 	private static final FriendsChatManager friendsChatManager = new InternalFriendsChatManager();
+	
+	private static final ClanManager clanManager = new ClanManager();
 	
 	/**
 	 * Represents the player.
@@ -70,6 +75,8 @@ public class ChatManager {
 	 */
 	private FriendManager friendManager;
 	
+	//=================================Friends chat data=================================//
+	
 	/**
 	 * Represents the name of the channel the player is currently in, or "null" if the player is not in a channel
 	 */
@@ -80,6 +87,9 @@ public class ChatManager {
 	 */
 	private String lastFriendsChat = "";
 	
+	/**
+	 * Represents whether the player should automatically join the last friends chat they were in when they log into the game.
+	 */
 	private boolean autoJoinFriendsChat = false;
 	
 	/**
@@ -87,7 +97,14 @@ public class ChatManager {
 	 */
 	private ChannelStage channelStage = ChannelStage.NONE;
 	
+	/**
+	 * Represents the friends chat settings interface for the player
+	 */
 	private FriendsChatSettings friendsChatSettings = null;
+	
+	//=================================Clan data=================================//
+	
+	private long myClanHash = 0L;
 	
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
@@ -123,6 +140,28 @@ public class ChatManager {
 		chatType = type;
 	}
 	
+	public void init (boolean lobby) {//autoJoinFriendsChat
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1303, lastFriendsChat, autoJoinFriendsChat ? 1 : 0, lastFriendsChat.length() == 0 ? 0 : 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
+		
+		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
+		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
+		friendManager.init();
+		if (myClanHash != 0L) {
+			clanManager.getChannelManager().joinChannel(player, myClanHash);
+		}
+	}
+	
+	/**
+	 * Handles the disconnection of the player's friends list and friends chat, and saves the player's friend data
+	 */
+	public void disconnect () {
+		IOHub.getFriendsIO().save(player.getAccount().getUsername().getAccountNameAsProtocol(), friendManager);
+		friendManager.shutdown();
+		if (channelStage.equals(ChannelStage.JOINED)) {
+			friendsChatManager.leaveChannel(player, true);
+		}
+	}
+	
 	/**
 	 * Gets the manager for this player's friends and ignores
 	 * @return	The friend manager
@@ -130,6 +169,38 @@ public class ChatManager {
 	public FriendManager getFriendManager () {
 		return friendManager;
 	}
+	
+	public JsonObject serialiseData () {
+		JsonObject chatData = new JsonObject();
+		chatData.addProperty("onlineStatus", onlineStatus.getStatusCode());
+		chatData.addProperty("lastFriendsChat", lastFriendsChat);
+		chatData.addProperty("autoJoinFc", currentFriendsChat != null);
+		chatData.addProperty("clanHash", myClanHash);
+		return chatData;
+	}
+	
+	public void deserialiseData (JsonObject chatData) {
+		onlineStatus = OnlineStatus.forCode(chatData.get("onlineStatus").getAsInt());
+		if (onlineStatus == null) {
+			onlineStatus = OnlineStatus.FRIENDS;
+		}
+		lastFriendsChat = chatData.get("lastFriendsChat").getAsString();
+		autoJoinFriendsChat = chatData.get("autoJoinFc").getAsBoolean();
+		JsonElement clanData = chatData.get("clanHash");
+		if (clanData != null) {
+			myClanHash = clanData.getAsLong();
+		}
+	}
+	
+	/**
+	 * Gets the type for the player's chat messages
+	 * @return
+	 */
+	public ChatType getChatType () {
+		return chatType;
+	}
+	
+	//=================================Friends chat section=================================//
 	
 	/**
 	 * Handles a request to join or leave a friends chat channel
@@ -158,23 +229,6 @@ public class ChatManager {
 		}
 	}
 	
-	public JsonObject serialiseData () {
-		JsonObject chatData = new JsonObject();
-		chatData.addProperty("onlineStatus", onlineStatus.getStatusCode());
-		chatData.addProperty("lastFriendsChat", lastFriendsChat);
-		chatData.addProperty("autoJoinFc", currentFriendsChat != null);
-		return chatData;
-	}
-	
-	public void deserialiseData (JsonObject chatData) {
-		onlineStatus = OnlineStatus.forCode(chatData.get("onlineStatus").getAsInt());
-		if (onlineStatus == null) {
-			onlineStatus = OnlineStatus.FRIENDS;
-		}
-		lastFriendsChat = chatData.get("lastFriendsChat").getAsString();
-		autoJoinFriendsChat = chatData.get("autoJoinFc").getAsBoolean();
-	}
-	
 	public String getCurrentChannelOwner () {
 		return currentFriendsChat;
 	}
@@ -197,39 +251,12 @@ public class ChatManager {
 		this.lastFriendsChat = lastFriendsChat;
 	}
 	
-	/**
-	 * Gets the type for the player's chat messages
-	 * @return
-	 */
-	public ChatType getChatType () {
-		return chatType;
-	}
-	
 	public FriendsChatSettings getFriendsChatSettings () {
 		return friendsChatSettings;
 	}
 	
 	public void setFriendsChatSettings (FriendsChatSettings friendsChatSettings) {
 		this.friendsChatSettings = friendsChatSettings;
-	}
-	
-	public void init (boolean lobby) {//autoJoinFriendsChat
-		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1303, lastFriendsChat, autoJoinFriendsChat ? 1 : 0, lastFriendsChat.length() == 0 ? 0 : 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
-		
-		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
-		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
-		friendManager.init();
-	}
-	
-	/**
-	 * Handles the disconnection of the player's friends list and friends chat, and saves the player's friend data
-	 */
-	public void disconnect () {
-		IOHub.getFriendsIO().save(player.getAccount().getUsername().getAccountNameAsProtocol(), friendManager);
-		friendManager.shutdown();
-		if (channelStage.equals(ChannelStage.JOINED)) {
-			friendsChatManager.leaveChannel(player, true);
-		}
 	}
 	
 	public void handleFriendsChatMessage (String message) {
