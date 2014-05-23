@@ -20,9 +20,9 @@ public class Runecrafting {
 		COSMIC(2471, new Tile(2406, 4379, 0)),
 		CHAOS(2474, new Tile(3059, 3588, 0)),
 		NATURE(2473, new Tile(2867, 3017, 0)),
-		LAW(2472, new Tile(2856, 3379, 0)),//TODO: Find this//x=2857, y=3380, z=0
+		LAW(2472, new Tile(2856, 3379, 0)),
 		DEATH(2475, new Tile(1863, 4637, 0)),
-		BLOOD(-1, null);//TODO: Find this//
+		BLOOD(-1, new Tile(3560, 9779, 0));//TODO: Find this//x=3555, y=9770, z=0
 		
 		private final int id;
 		private final Tile destination;

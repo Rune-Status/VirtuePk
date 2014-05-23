@@ -85,10 +85,10 @@ public class RegionLoader {
 										mapSettings[plane][deltaX][deltaY] = (byte) mapStream.get();
 									}
 									if ((bitMask & 0x4) != 0) {
-										mapStream.getUnsignedSmart();
+										//mapStream.getUnsignedSmart();
 									}
 									if ((bitMask & 0x8) != 0) {
-										mapStream.get();
+										//mapStream.get();
 									}
 								}
 							}

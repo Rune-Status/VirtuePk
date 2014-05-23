@@ -22,7 +22,7 @@ public class MysteriousRunes extends RS3Object {
 		NATURE(2460, Talisman.NATURE, new Tile(2398, 4841, 0)),
 		LAW(2459, Talisman.LAW, new Tile(2464, 4834, 0)),
 		DEATH(2462, Talisman.DEATH, new Tile(2207, 4836, 0)),
-		BLOOD(-1, Talisman.BLOOD, new Tile(2462, 4891, 1));//FIXME: The server isn't recognising this object...
+		BLOOD(2464, Talisman.BLOOD, new Tile(2462, 4891, 1));//FIXME: The server isn't recognising this object...
 		
 		private final int objectID;
 		
@@ -74,10 +74,20 @@ public class MysteriousRunes extends RS3Object {
 		super(object.getId(), object.getRotation(), object.getType(), object.getTile());
 		this.data = type;
 	}
+	
+	@Override
+	public void useItem (Player player, Item item) {
+		if (item.getId() == data.getTalisman().getTalisman()) {
+			player.teleport(data.getDestination());
+		} else {
+			player.getPacketDispatcher().dispatchMessage("Nothing interesting happens.");
+		}
+	}
 
 	@Override
 	public void interact (Player player, ObjectOption option) {
-		if (option.equals(ObjectOption.ONE) && getDefinition().getOption(option).equalsIgnoreCase("enter")) {
+		String optionName = getDefinition().getOption(option);
+		if (option.equals(ObjectOption.ONE) && optionName != null && optionName.equalsIgnoreCase("enter")) {
 			Item hatSlot = player.getEquipment().getAtSlot(EquipSlot.HAT);
 			Item handSlot = player.getEquipment().getAtSlot(EquipSlot.MAINHAND);
 			if ((hatSlot != null && hatSlot.getId() == data.getTalisman().getTiara())

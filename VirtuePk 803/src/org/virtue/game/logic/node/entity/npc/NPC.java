@@ -2,6 +2,7 @@ package org.virtue.game.logic.node.entity.npc;
 
 import org.virtue.cache.def.NPCDefinition;
 import org.virtue.cache.def.NPCDefinitionLoader;
+import org.virtue.game.logic.content.skills.fishing.FishingSpot;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.impl.Bank;
@@ -16,7 +17,7 @@ public class NPC extends Entity {
 	/**
 	 * Represents the tile.
 	 */
-	private Tile tile;
+	//private Tile tile;
 	
 	/**
 	 * Represents the id.
@@ -34,11 +35,21 @@ public class NPC extends Entity {
 	 */
 	public NPC(int id, Tile tile) {
 		super();
+		super.setTile(tile);
 		this.id = id;
-		this.tile = tile;
+		//this.tile = tile;
 		this.definition = NPCDefinitionLoader.forId(id);
 		if (this.definition == null) {
 			throw new RuntimeException("Definition for NPC "+id+" was not found.");
+		}
+	}
+	
+	public static NPC create (int id, Tile tile) {
+		FishingSpot.Type fishingSpot = FishingSpot.Type.forID(id);
+		if (fishingSpot != null) {
+			return new FishingSpot(tile, fishingSpot);
+		} else {
+			return new NPC(id, tile);
 		}
 	}
 	
@@ -64,14 +75,14 @@ public class NPC extends Entity {
 	/**
 	 * @return the tile.
 	 */
-	public Tile getTile() {
+	/*public Tile getTile() {
 		return tile;
-	}
+	}*/
 	
 	/**
 	 * @return the id.
 	 */
-	public int getId() {
+	public int getID() {
 		return id;
 	}
 

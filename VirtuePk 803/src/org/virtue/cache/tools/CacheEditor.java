@@ -46,7 +46,7 @@ public class CacheEditor {
 		//ObjectDefinitionLoader.dumpObjects();
 		//AnimationDefinitionLoader.dumpAnimations();
 		//GraphicsDefinitionLoader.dumpGfx();
-		findObjectCoords(30528, CacheLoader.getCache());
+		findObjectCoords(30548, CacheLoader.getCache());
 		System.out.println("done");
 	}
 	

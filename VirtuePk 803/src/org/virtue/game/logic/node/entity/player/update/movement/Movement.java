@@ -315,7 +315,7 @@ public class Movement {
 			return false;
 		}
 		if (check && !noclipped) {
-			if (!World.getWorld().getRegionManager().checkWalkStep(entity.getTile().getPlane(), lastX, lastY, dir, entity.getUpdateArchive().getAppearance().getSize())) {
+			if (!World.getWorld().getRegionManager().checkWalkStep(entity.getTile().getPlane(), lastX, lastY, dir, entity.getSize())) {
 				return false;
 			}
 		}

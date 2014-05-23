@@ -37,7 +37,7 @@ public class NPCSpawnParser implements IOParser<List<NPC>> {
 				String[] split = line.split(" - ");
 				int npcId = Integer.valueOf(split[0]);
 				String[] location = split[1].split(" ");
-				npc_spawns.add(new NPC(npcId, new Tile(Integer.valueOf(location[0]), Integer.valueOf(location[1]), Integer.valueOf(location[2]))));
+				npc_spawns.add(NPC.create(npcId, new Tile(Integer.valueOf(location[0]), Integer.valueOf(location[1]), Integer.valueOf(location[2]))));
 			}
 			buffer.close();
 			} catch(Exception e) {

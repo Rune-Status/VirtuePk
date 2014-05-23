@@ -258,7 +258,7 @@ public class ObjectDefinition {
 					obj = buffer.getBigSmart();
 				}
 				int length = buffer.getUnsignedByte();
-				toObjectIDs = new int[2 + length];
+				toObjectIDs = new int[2 + length];//TODO: Figure out how to handle this...
 				for (int index = 0; index <= length; index++) {
 				    toObjectIDs[index] = buffer.getBigSmart();
 				}

@@ -106,7 +106,7 @@ public class NPCEncoder implements PacketEncoder<Player> {
 				stream.putBits(largeSceneView ? 8 : 5, x);
 				stream.putBits(1, needUpdate ? 1 : 0);
 				stream.putBits(2, npc.getTile().getPlane());
-				stream.putBits(15, npc.getId());
+				stream.putBits(15, npc.getID());
 				stream.putBits(3, (npc.getDirection() >> 11) - 4);
 				stream.putBits(largeSceneView ? 8 : 5, y);
 				localNPCs.add(npc);

@@ -32,7 +32,7 @@ public class SpawnNpc implements Command {
 
 	@Override
 	public String[] getPossibleSyntaxes() {
-		return new String[] { "spawnnpc", "addnpc", "spawn" };
+		return new String[] { "spawnnpc", "addnpc", "spawn", "npc" };
 	}
 
 }
