@@ -12,10 +12,10 @@ public class FriendsChatMessageEncoder implements PacketEncoder<FriendsChatMessa
 	public RS3PacketBuilder buildPacket(FriendsChatMessage node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder(260);
 		buffer.putPacketVarByte(OutgoingOpcodes.FRIENDS_CHAT_MESSAGE_PACKET);
-		buffer.put(node.hasDifferentNames() ? 1 : 0);
-		buffer.putString(node.getSenderRespond());
-		if (node.hasDifferentNames()) {
-			buffer.putString(node.getSenderDisplay());
+		buffer.put(node.hasFilteredName() ? 1 : 0);
+		buffer.putString(node.getSenderName());
+		if (node.hasFilteredName()) {
+			buffer.putString(node.getNameUnfiltered());
 		}
 		buffer.putString(node.getPrefix());
 		byte[] hashCode = node.getMessageHash();

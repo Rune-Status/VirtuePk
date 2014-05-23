@@ -248,6 +248,7 @@ public class Player extends Entity {
 				World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).getPlayers().remove(this);
 			}
 			IOHub.getAccountIo().save(this);
+			IOHub.getInterfaceIO().save(this.getAccount().getUsername().getAccountNameAsProtocol(), interfaceManager.getScreen().getLayout());
 		}		
 		chatManager.disconnect();
 		status = PlayerStatus.LOGGED_OUT;

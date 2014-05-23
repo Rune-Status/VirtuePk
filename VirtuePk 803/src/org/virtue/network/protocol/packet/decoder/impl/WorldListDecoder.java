@@ -10,12 +10,12 @@ import org.virtue.network.session.Session;
  * @author Taylor
  * @date Jan 20, 2014
  */
-public class WorlListDecoder implements PacketDecoder<WorldlistHandler> {
+public class WorldListDecoder implements PacketDecoder<WorldlistHandler> {
 
 	@Override
 	public WorldlistHandler decodePacket(RS3PacketReader buffer, Session session, int opcode) {
 		WorldlistHandler handler = new WorldlistHandler();
-		System.out.println("Received request for world list...");
+		//System.out.println("Received request for world list...");
 		/*
 		 * Represents the opcode that the client requested as the lobby loading
 		 * procedure. The opcodes consist of a full update and a fixed update,

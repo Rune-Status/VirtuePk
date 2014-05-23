@@ -2,6 +2,7 @@ package org.virtue.network.io;
 
 import org.virtue.network.io.channel.AccountParser;
 import org.virtue.network.io.channel.FriendsParser;
+import org.virtue.network.io.channel.InterfaceLayoutParser;
 import org.virtue.network.io.channel.maps.WorldMapIO;
 
 /**
@@ -24,6 +25,8 @@ public class IOHub {
 	 * Represents the friends/ignores IO stream handler
 	 */
 	private static final FriendsParser FRIEND_IO = new FriendsParser();
+	
+	private static final InterfaceLayoutParser INTERFACE_IO = new InterfaceLayoutParser();
 	
 	/**
 	 * Loads any parsers that need to be ran on startup.
@@ -51,5 +54,12 @@ public class IOHub {
 	 */
 	public static FriendsParser getFriendsIO () {
 		return FRIEND_IO;
+	}
+	
+	/**
+	 * @return The interface layout IO manager
+	 */
+	public static InterfaceLayoutParser getInterfaceIO () {
+		return INTERFACE_IO;
 	}
 }

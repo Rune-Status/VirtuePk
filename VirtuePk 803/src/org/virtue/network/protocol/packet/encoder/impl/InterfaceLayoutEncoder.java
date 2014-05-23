@@ -3,13 +3,14 @@ package org.virtue.network.protocol.packet.encoder.impl;
 import java.util.Map.Entry;
 
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
+import org.virtue.game.logic.node.entity.player.screen.InterfaceLayout;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
-public class InterfaceLayoutEncoder implements PacketEncoder<ClientScreen> {
+public class InterfaceLayoutEncoder implements PacketEncoder<InterfaceLayout> {
 
 	@Override
-	public RS3PacketBuilder buildPacket(ClientScreen node) {
+	public RS3PacketBuilder buildPacket(InterfaceLayout node) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(2);
 		buffer.put(1);//If 1, this is the only layout config packet

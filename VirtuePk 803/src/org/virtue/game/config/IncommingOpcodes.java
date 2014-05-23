@@ -30,12 +30,12 @@ public class IncommingOpcodes {
 	public final static int COMMANDS_PACKET = 73;//803
 	
 	//Client information (mostly useless, apart from auto-logout)
-	public final static int MOUSE_MOVEMENT_PACKET = 93;//803
+	public final static int EVENT_MOUSE_MOVE = 93;//803
+	public final static int EVENT_KEYBOARD = 1;//803
+	public final static int EVENT_CAMERA_POSITION = 7;//803
+	public final static int EVENT_APPLET_FOCUS = 105;//803
+	public final static int EVENT_MOUSE_CLICK = 34;//803
 	public final static int ANOTHER_MOUSE_PACKET = 11;//803
-	public final static int KEY_TYPED_PACKET = 1;//803
-	public final static int CAMERA_MOVEMENT_PACKET = 7;//803
-	public final static int WINDOW_FOCUS_PACKET = 105;//803
-	public final static int CLICK_PACKET = 34;//803
 	public final static int ANOTHER_CLICK_PACKET = 3;//803
 	public final static int CLIENT_SPECS_PACKET = 83;//803	
 	

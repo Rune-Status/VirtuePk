@@ -1,5 +1,5 @@
 /*
- * This file is part of RS3Emulator.
+ * This file is part of the RS3Emulator social module.
  *
  * RS3Emulator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.WorldHub;
+import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.game.logic.social.OnlineStatus;
@@ -42,17 +43,18 @@ import org.virtue.utility.StringUtils.FormatType;
  * Also has the tools for managing the player's own friends chat (though the friends chat channel itself is run separately)
  *
  * @author Sundays211
- *
  */
 public class InternalFriendManager implements FriendManager {
 	
+	/**
+	 * A map linking the protocol name to the friend manager object for all players which are currently online
+	 */
 	private static final ConcurrentHashMap<String, InternalFriendManager> onlinePlayers = new ConcurrentHashMap<String, InternalFriendManager>();
 	
+	/**
+	 * A queue for requesting immediate updates to the player's friends chat. Used if there are friends chat changes which haven't been applied when the player logs out. 
+	 */
 	protected static final Queue<InternalFriendManager> immediateChangeQueue = new LinkedList<InternalFriendManager>();
-	
-	static {
-		onlinePlayers.put("test44", new InternalFriendManager(null));
-	}
 	
 	protected static boolean isOnline (String name) {
 		return onlinePlayers.containsKey(name);
@@ -68,6 +70,9 @@ public class InternalFriendManager implements FriendManager {
 	private static final int FRIENDS_LIST_MAX = 400;
 	private static final int IGNORE_LIST_MAX = 400;
 	
+	/**
+	 * Represents the version of the friend data file. This should be incremented by one every time additional fields are added to the file
+	 */
 	private static final int FILE_VERSION = 3;
 	
 	private final EnumMap<ChannelPermission, ChannelRank> fcPermissions = new EnumMap<ChannelPermission, ChannelRank>(ChannelPermission.class);
@@ -118,7 +123,7 @@ public class InternalFriendManager implements FriendManager {
 			return;//Only send the ignore data if the player is already logged in.
 		}*/
 		currentWorld = World.getWorld();//player.getWorld().getData();
-		isLobby = !player.getPlayer().isInWorld();
+		isLobby = !player.isInWorld();
 		for (Friend f : friends.values()) {
 			//DisplayName nameData = nameManager.getDisplayNamesFromUsername(f.username);
 			//if (nameData == null) {
@@ -271,8 +276,13 @@ public class InternalFriendManager implements FriendManager {
 			}
 			output.writeShort(ignores.size());
 			for (Ignore i : ignores.values()) {
-				RS2Utils.writeString(output, i.username);
-				RS2Utils.writeString(output, i.getNote());
+				if (i.isTemporary()) {//Write an empty entry if the ignore is temporary (easier than re-calculating the length)
+					RS2Utils.writeString(output, "");
+					RS2Utils.writeString(output, "");
+				} else {
+					RS2Utils.writeString(output, i.username);
+					RS2Utils.writeString(output, i.getNote());
+				}
 			}
 			RS2Utils.writeString(output, (channelName == null ? "" : channelName));
 			output.writeByte(fcPermissions.get(ChannelPermission.JOIN).getID());
@@ -313,7 +323,7 @@ public class InternalFriendManager implements FriendManager {
 					if (name.length() == 0) {
 						continue;
 					}
-					Ignore ig = new Ignore(name, note);
+					Ignore ig = new Ignore(name, false, note);
 					ignores.put(name, ig);
 				}
 				if (version >= 3) {
@@ -478,7 +488,7 @@ public class InternalFriendManager implements FriendManager {
 			player.sendGameMessage("You can't add yourself to your own ignore list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
-		Ignore ignore = new Ignore(protocolName);
+		Ignore ignore = new Ignore(protocolName, tillLogout);
 		ignore.setDisplayNames(StringUtils.format(displayName, FormatType.NAME), "");
 		/*DisplayName nameData = nameManager.getNameObject(displayName);
 		Ignore ignore = null;

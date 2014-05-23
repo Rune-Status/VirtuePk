@@ -20,7 +20,7 @@ public class InterfaceInformationDecoder implements PacketDecoder<InterfaceLayou
 		while (packet.remaining() > 0) {
 			int key = packet.getUnsignedShort();
 			int value = packet.getInt();
-			((WorldSession) session).getPlayer().getInterfaces().getScreen().setLayoutKey(key, value);
+			((WorldSession) session).getPlayer().getInterfaces().getScreen().getLayout().setLayoutKey(key, value);
 			//System.out.println("Key="+key+", value="+value);
 		}
 		return handler;

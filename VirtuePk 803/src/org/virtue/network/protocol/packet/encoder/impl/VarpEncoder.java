@@ -18,11 +18,11 @@ public class VarpEncoder implements PacketEncoder<VarpMessage> {
 		int value = context.getValue();
 		if (context.isCs2()) {
 			if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
-				buffer.putPacket(OutgoingOpcodes.LARGE_CS2_VARP_PACKET);
+				buffer.putPacket(OutgoingOpcodes.LARGE_VARBIT_PACKET);
 				buffer.putLEShortA(context.getVarpId());
 				buffer.putIntV2(value);
 			} else {
-				buffer.putPacket(OutgoingOpcodes.SMALL_CS2_VARP_PACKET);
+				buffer.putPacket(OutgoingOpcodes.SMALL_VARBIT_PACKET);
 				buffer.putShort(context.getVarpId());
 				buffer.putByteS(value);
 			}

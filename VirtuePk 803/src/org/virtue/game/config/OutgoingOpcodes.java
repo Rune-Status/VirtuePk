@@ -27,8 +27,8 @@ public class OutgoingOpcodes {
 	//Configuration related
 	public static final int LARGE_VARP_PACKET = 153;//803
 	public static final int SMALL_VARP_PACKET = 96;//803
-	public static final int LARGE_CS2_VARP_PACKET = 154;//803
-	public static final int SMALL_CS2_VARP_PACKET = 7;//803
+	public static final int LARGE_VARBIT_PACKET = 154;//803
+	public static final int SMALL_VARBIT_PACKET = 7;//803
 	public static final int LARGE_GLOBAL_STRING_PACKET = 0;//803
 	public static final int SMALL_GLOBAL_STRING_PACKET = 41;//803
 	
@@ -99,6 +99,7 @@ public class OutgoingOpcodes {
 	public static final int IGNORES_PACKET = 68;//803
 	public static final int FRIENDS_CHANNEL_PACKET = 8;//803
 	public static final int FRIENDS_CHANNEL_UPDATE_PACKET = 119;//803
-	public static final int CLAN_CHANNEL_PACKET = 47;//795
+	public static final int CLAN_CHANNEL_FULL = 92;//803
+	public static final int CLAN_CHANNEL_DELTA = 13;//803
 	
 }

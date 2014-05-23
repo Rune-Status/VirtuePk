@@ -6,6 +6,9 @@ import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ */
 public class PrivateMessageEncoder implements PacketEncoder<PrivateMessage> {
 
 	@Override
@@ -13,10 +16,10 @@ public class PrivateMessageEncoder implements PacketEncoder<PrivateMessage> {
 		RS3PacketBuilder buffer = new RS3PacketBuilder(260);
 		if (node.isIncomming()) {
 			buffer.putPacketVarShort(OutgoingOpcodes.INCOMMING_PRIVATE_MESSAGE_PACKET);
-			buffer.put(node.hasDifferentNames() ? 1 : 0);
-			buffer.putString(node.getSenderRespond());
-			if (node.hasDifferentNames()) {
-				buffer.putString(node.getSenderDisplay());
+			buffer.put(node.hasFilteredName() ? 1 : 0);
+			buffer.putString(node.getSenderName());
+			if (node.hasFilteredName()) {
+				buffer.putString(node.getSenderNameUnfiltered());
 			}
 			byte[] hashCode = node.getMessageHash();
 			for (int i=0;i<5;i++) {
@@ -25,7 +28,7 @@ public class PrivateMessageEncoder implements PacketEncoder<PrivateMessage> {
 			buffer.put(node.getRank().getID());
 		} else {
 			buffer.putPacketVarShort(OutgoingOpcodes.OUTGOING_PRIVATE_MESSAGE_PACKET);
-			buffer.putString(node.getSenderDisplay());
+			buffer.putString(node.getSenderNameUnfiltered());
 		}
 		Launcher.getHuffman().huffmanEncrypt(buffer, node.getMessage());		
 		buffer.endPacketVarShort();

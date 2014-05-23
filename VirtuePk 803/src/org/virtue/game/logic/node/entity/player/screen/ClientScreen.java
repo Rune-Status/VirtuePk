@@ -1,14 +1,9 @@
 package org.virtue.game.logic.node.entity.player.screen;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.io.IOException;
 
-import org.virtue.Constants;
+import org.virtue.network.io.IOHub;
 import org.virtue.utility.DisplayMode;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public class ClientScreen {
 	
@@ -33,9 +28,10 @@ public class ClientScreen {
 	private int rootPaneID;	
 	
 	/**
-	 * Represents the interface layout keys for this player
+	 * Represents the interface layout for this player
 	 */
-	private HashMap<Integer, Object> interfaceLayout = new HashMap<Integer, Object>();
+	private InterfaceLayout interfaceLayout = new InterfaceLayout(InterfaceLayout.DEFAULT_LAYOUT);
+	//private HashMap<Integer, Object> interfaceLayout = new HashMap<Integer, Object>();
 	
 	/**
 	 * Specifies the root pane for the client
@@ -73,55 +69,42 @@ public class ClientScreen {
 		return displayMode;
 	}
 	
-	public void setLayoutKey (int key, Object value) {
-		if (interfaceLayout.containsKey(key)) {
-			interfaceLayout.remove(key);
-		}
-		interfaceLayout.put(key, value);
-	}
-	
-	public HashMap<Integer, Object> getLayoutInfo () {
-		//System.out.println("Layout info size: "+interfaceLayout.size());
-		if (interfaceLayout.isEmpty()) {
-			//System.out.println("The interface layout is empty. Resetting to defaults....................");
-			setDefaultLayout();
-		}
+	public InterfaceLayout getLayout () {
 		return interfaceLayout;
 	}
 	
-	public void setDefaultLayout () {
-		//System.out.println("Setting default layout...");
-		interfaceLayout.clear();
-		for (int i=0;i<Constants.NIS_CONFIG.length;i++) {
-			if (Constants.NIS_CONFIG[i] == 0) {
-				continue;
-			}
-			interfaceLayout.put(i, Constants.NIS_CONFIG[i]);
+	public void setLayout (InterfaceLayout interfaceLayout) {
+		this.interfaceLayout = interfaceLayout;
+	}
+	
+	/*public void setLayoutKey (int key, Object value) {
+		interfaceLayout.setLayoutKey(key, value);
+	}*/
+	
+	/*public HashMap<Integer, Object> getLayoutInfo () {
+		return interfaceLayout.getLayoutInfo();
+	}*/
+	
+	/*public void setDefaultLayout () {
+		interfaceLayout.setDefaultLayout();
+	}*/
+	
+	public void loadLayout (String layoutFileName) {
+		InterfaceLayout oldLayout = interfaceLayout;
+		try {
+			interfaceLayout = IOHub.getInterfaceIO().load(layoutFileName);
+		} catch (IOException ex) {
+			interfaceLayout = oldLayout;
 		}
 	}
 	
-	public void deserialiseLayout (JsonArray data) {
-		setDefaultLayout();
-		if (data != null) {
-			for (JsonElement setting : data) {
-				JsonObject keyValuePair = setting.getAsJsonObject();
-				setLayoutKey(keyValuePair.get("key").getAsInt(), keyValuePair.get("value").getAsInt());
-			}
-		}
-		//System.out.println("Initialised layout. Size="+interfaceLayout.size());
-	}
+	/*public void deserialiseLayout (JsonArray data) {
+		interfaceLayout.deserialiseLayout(data);
+	}*/
 	
-	public JsonArray serialiseLayout () {
-		//System.out.println("Serialising layout. Size="+interfaceLayout.size());
-		JsonArray data = new JsonArray();
-		for (Entry<Integer, Object> value : interfaceLayout.entrySet()) {
-			JsonObject obj = new JsonObject();
-			obj.addProperty("key", value.getKey());
-			obj.addProperty("value", (Integer) value.getValue());
-			data.add(obj);
-		}
-		return data;
-	}
+	/*public JsonArray serialiseLayout () {
+		return interfaceLayout.serialiseLayout();
+	}*/
 	
 	/*public int[] getNisInit () {
 		return Constants.NIS_CONFIG;

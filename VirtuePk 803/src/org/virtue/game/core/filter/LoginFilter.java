@@ -70,7 +70,8 @@ public class LoginFilter extends LogicEvent {
 			break;
 		case WORLD_PART_1:
 			player = null;
-			account.getSession().getTransmitter().send(InterfaceLayoutEncoder.class, account.getClientScreen());
+			account.getClientScreen().loadLayout(account.getUsername().getAccountNameAsProtocol());
+			account.getSession().getTransmitter().send(InterfaceLayoutEncoder.class, account.getClientScreen().getLayout());
 			return;
 		case WORLD_PART_2:
 			System.out.println("Sending login response data...");

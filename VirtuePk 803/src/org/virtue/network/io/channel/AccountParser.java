@@ -94,12 +94,12 @@ public class AccountParser implements IOParser<Account> {
 			 z = coords.get("z").getAsInt();
 		}
 		ClientScreen screen = new ClientScreen();
-		JsonElement layout = obj.get("interfaceLayout");
+		/*JsonElement layout = obj.get("interfaceLayout");
 		if (layout == null || layout.isJsonNull()) {
-			screen.deserialiseLayout(null);
+			screen.getLayout().deserialiseLayout(null);
 		} else {
-			screen.deserialiseLayout(layout.getAsJsonArray());
-		}
+			screen.getLayout().deserialiseLayout(layout.getAsJsonArray());
+		}*/
 		
 		return new Account(new Username(username), new Password(password, false), rank, new Email(email), new Age(age), new DateOfBirth(new GregorianCalendar(year, month, day)), new Tile(x, y, z), screen, obj);
 	}
@@ -147,7 +147,7 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.add("chatData", p.getChatManager().serialiseData());
 		
-		obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());
+		//obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());
 		
 		obj.addProperty("runEnergy", p.getRunEnergy());
 		obj.addProperty("isRunning", (p.getUpdateArchive().getMovement().isRunning() && !p.getUpdateArchive().getMovement().isForceRun()));

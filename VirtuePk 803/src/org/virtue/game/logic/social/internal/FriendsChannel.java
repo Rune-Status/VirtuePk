@@ -1,9 +1,26 @@
+/*
+ * This file is part of RS3Emulator.
+ *
+ * RS3Emulator is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RS3Emulator is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.virtue.game.logic.social.internal;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 
+import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
@@ -11,8 +28,9 @@ import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.utility.GameClock;
 
 /**
+ * Represents a friends chat channel
  *
- * @author Virtue Development Team 2014 (c).
+ * @author Sundays211
  */
 public class FriendsChannel {
 	
@@ -21,12 +39,6 @@ public class FriendsChannel {
 	private String channelName;
 	
 	private final EnumMap<ChannelPermission, ChannelRank> requirements = new EnumMap<ChannelPermission, ChannelRank>(ChannelPermission.class);
-	
-	/*private ChannelRank kickRequirement = ChannelRank.OWNER;
-	
-	private ChannelRank talkRequirement = ChannelRank.FRIEND;
-	
-	private ChannelRank joinRequirement = ChannelRank.GUEST;*/
 	
 	private ArrayList<String> bans = new ArrayList<String>();
 	
@@ -212,7 +224,7 @@ public class FriendsChannel {
 	/**
 	 * Attempts to bump a lower-ranking user from the channel, in order to allow a higher-ranking one to join a full channel
 	 * @param playerRank	The rank of the player wishing to join
-	 * @return				True if a user was successfully bumpped, false otherwise
+	 * @return				True if a user was successfully bumped, false otherwise
 	 */
 	private boolean tryBump (ChannelRank playerRank) {
 		for (ChannelRank rank : ChannelRank.values()) {
