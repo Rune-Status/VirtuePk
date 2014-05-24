@@ -3,10 +3,13 @@ package org.virtue.network.io.channel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.network.io.IOParser;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -36,8 +39,18 @@ public class ClanSettingsParser implements IOParser<ClanSettings> {
 
 	@Override
 	public boolean save(Object... params) {
-		// TODO Auto-generated method stub
-		return false;
+		File file = new File(getPath(), params[0]+".json");
+		ClanSettings settings = (ClanSettings) params[1];
+		JsonObject data = settings.serialise();
+		data.addProperty("version", LATEST_VERSION);
+		try (FileWriter writer = new FileWriter(file)) {
+			writer.write(data.toString());
+			writer.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 
 	@Override

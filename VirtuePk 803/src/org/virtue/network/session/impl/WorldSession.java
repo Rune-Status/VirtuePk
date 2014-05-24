@@ -61,7 +61,10 @@ public class WorldSession extends Session {
 		if (!isLobby) {			
 			System.out.println("Removing "+player.getAccount().getUsername().getName()+" from the game.");
 		}
-		player.destroy();
+		if (player != null) {
+			player.destroy();
+		}
+		
 		
 		//World.getWorld().removePlayer(player);
 		//player.destroy();

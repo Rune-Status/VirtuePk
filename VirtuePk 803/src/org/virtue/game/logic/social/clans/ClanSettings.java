@@ -17,9 +17,16 @@
 package org.virtue.game.logic.social.clans;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
+import org.virtue.game.logic.social.clans.csdelta.AddMember;
+import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
+import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
+import org.virtue.game.logic.social.internal.SocialUser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -48,7 +55,9 @@ public class ClanSettings {
 	
 	private int updateNumber = 0;
 	
-	private List<ClanMember> members = new ArrayList<ClanMember>();
+	private List<ClanMember> members = Collections.synchronizedList(new ArrayList<ClanMember>());
+	
+	private final Queue<ClanSettingsDelta> updateQueue = new LinkedList<ClanSettingsDelta>();
 	
 	
 	public ClanSettings (long clanHash) {
@@ -59,6 +68,28 @@ public class ClanSettings {
 		this.clanHash = clanHash;
 		this.updateNumber = updateNumber;
 		this.clanName = clanName;
+	}
+	
+	/**
+	 * Queues an update to the clan settings which will be sent on the next tick
+	 * @param node	The update node to queue
+	 */
+	protected void queueUpdate (ClanSettingsDelta node) {
+		synchronized (updateQueue) {
+			updateQueue.offer(node);
+		}
+	}
+	
+	public boolean needsUpdate () {
+		return !updateQueue.isEmpty();
+	}
+	
+	/**
+	 * Sends the clan settings delta updates to every clan member who is currently logged in
+	 */
+	protected void dispatchUpdates () {
+		//TODO: Complete this
+		updateQueue.clear();
 	}
 	
 	public void deserialise (JsonObject clanData, int version) {
@@ -114,25 +145,25 @@ public class ClanSettings {
 		return clanData;
 	}
 	
-	public void linkChannel (ClanChannel channel) {
+	protected void linkChannel (ClanChannel channel) {
 		this.linkedChannel = channel;
 	}	
 	
-	public void setName (String name) {
+	protected void setName (String name) {
 		this.clanName = name;
 		updateChannelDetails();
 	}
 	
-	public void setAllowNonMembers (boolean allowNonMembers) {
+	protected void setAllowNonMembers (boolean allowNonMembers) {
 		this.allowNonMembers = allowNonMembers;
 	}
 	
-	public void setMinTalkRank (ClanRank minTalkRank) {
+	protected void setMinTalkRank (ClanRank minTalkRank) {
 		this.minTalkRank = minTalkRank;
 		updateChannelDetails();
 	}
 	
-	public void setMinKickRank (ClanRank minKickRank) {
+	protected void setMinKickRank (ClanRank minKickRank) {
 		this.minKickRank = minKickRank;
 		updateChannelDetails();
 	}
@@ -175,7 +206,95 @@ public class ClanSettings {
 		return minKickRank;
 	}
 	
+	/**
+	 * Returns whether guests are allowed to join the clan channel associated with this clan
+	 * @return	True if guests are allowed to join, false otherwise
+	 */
 	public boolean allowNonMembers () {
 		return allowNonMembers;
+	}
+	
+	/**
+	 * Returns whether the player of the specified name is a part of the clan.
+	 * @param protocolName	The protocol name of the player to check
+	 * @return				True if the player is a member of the clan, false otherwise
+	 */
+	public boolean inClan (String protocolName) {
+		ClanMember member = getMember(protocolName);
+		return member != null;
+	}
+	
+	/**
+	 * Returns the rank of a player in the clan
+	 * @param protocolName	The protocol username of the player to check
+	 * @return				The rank of the player
+	 */
+	public ClanRank getRank (String protocolName) {
+		ClanMember member = getMember(protocolName);
+		if (member != null) {
+			return member.getRank();
+		} else {
+			return ClanRank.GUEST;
+		}
+	}
+	
+	/**
+	 * Returns the clan member object for a specified player. 
+	 * @param protocolName	The protocol name of the player to search for
+	 * @return				The {@link ClanMember} object for the player, or null if the player is not in the clan.
+	 */
+	private ClanMember getMember (String protocolName) {
+		//TODO: Find a more efficient way of doing this
+		for (ClanMember member : members) {
+			if (member.getProtocolName().equalsIgnoreCase(protocolName)) {
+				return member;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Adds the provided player to the clan. 
+	 * Note that setting the player's clan within the player data and sending the clan channel must be handled separately
+	 * @param player The player to add to the clan
+	 */
+	protected void addMember (SocialUser player) {
+		if (inClan(player.getProtocolName())) {
+			return;
+		}
+		ClanMember newMember = new ClanMember(player.getProtocolName());
+		members.add(newMember);
+		queueUpdate(new AddMember(newMember.getDisplayName()));
+		if (linkedChannel != null) {
+			linkedChannel.updateUser(player.getProtocolName());
+		}
+	}
+	
+	protected void setRank (String protocolName, ClanRank rank) throws NullPointerException {
+		ClanMember member = getMember(protocolName);
+		if (member == null) {
+			throw new NullPointerException(protocolName+" is not in "+clanName);
+		}
+		member.setRank(rank);
+		synchronized (updateQueue) {
+			int index = members.indexOf(member);
+			queueUpdate(new UpdateRank(index, rank));
+		}
+		if (linkedChannel != null) {
+			linkedChannel.updateUser(protocolName);
+		}
+	}
+	
+	@Override
+	public boolean equals (Object anObject) {
+		if (this == anObject) {
+            return true;
+        }
+		if (anObject instanceof ClanSettings) {
+			ClanSettings anotherClan = (ClanSettings) anObject;
+			return anotherClan.clanHash == this.clanHash;
+		}
+		return false;
+		
 	}
 }

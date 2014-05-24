@@ -53,4 +53,12 @@ public class ClanMember {
 	public ClanRank getRank () {
 		return rank;
 	}
+	
+	/**
+	 * Sets the rank of the clan member. Note that no checks are performed within this method, so it should be used with care.
+	 * @param desiredRank	The rank to set
+	 */
+	protected void setRank (ClanRank desiredRank) {
+		this.rank = desiredRank;
+	}
 }

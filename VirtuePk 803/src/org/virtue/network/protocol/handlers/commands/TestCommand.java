@@ -1,7 +1,11 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Username;
+import org.virtue.game.logic.social.ChatManager;
 import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.ClanSettings;
 
 /**
  * @author Taylor Moon
@@ -9,11 +13,22 @@ import org.virtue.game.logic.social.clans.ClanChannelManager;
  */
 public class TestCommand implements Command {
 	
-	private ClanChannelManager mng = new ClanChannelManager();
+	Player testRecruiter = new Player(new Account(new Username("TestRecruiter"), null, null, null, 0, 0));
+	
+	public TestCommand () {
+		testRecruiter.getChatManager().setMyClanHash(1004L);
+	}
 
 	@Override
-	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {
-		mng.joinChannel(player, 40L);
+	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {		
+		if (syntax == "rank") {
+			
+		} else {
+			ChatManager.clanManager.joinClan(testRecruiter, player);
+			//player.getChatManager().getClanChatManager().joinChannel(player, settings.getClanHash());
+			ChatManager.clanManager.autoSaveClanData();
+		}
+		//ChatManager..joinChannel(player, 40L);
 		/*ClanSettings settings = new ClanSettings(12L);
 		settings.setName("A clan");
 		ClanChannel channel = new ClanChannel(settings);
@@ -28,6 +43,6 @@ public class TestCommand implements Command {
 
 	@Override
 	public String[] getPossibleSyntaxes() {
-		return new String[] { "test" };
+		return new String[] { "test", "rank" };
 	}
 }

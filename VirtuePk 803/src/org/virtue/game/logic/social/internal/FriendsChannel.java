@@ -1,5 +1,5 @@
 /*
- * This file is part of RS3Emulator.
+ * This file is part of the RS3Emulator social module.
  *
  * RS3Emulator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,10 +64,19 @@ public class FriendsChannel {
 		return ownerName;
 	}
 	
+	/**
+	 * Returns the minimum rank needed to kick other users from the channel
+	 * @return	The minimum kick rank
+	 */
 	public ChannelRank getKickReq () {
 		return requirements.get(ChannelPermission.KICK);
 	}
 	
+	/**
+	 * Returns whether or not the specified rank can kick other users from the channel
+	 * @param rank	The rank to check
+	 * @return		True if the rank can kick, false otherwise
+	 */
 	public boolean canKick (ChannelRank rank) {
 		return getKickReq().getID() <= rank.getID();
 	}
@@ -259,6 +268,11 @@ public class FriendsChannel {
 		return users.isEmpty();
 	}
 	
+	/**
+	 * Removes a user from the friends chat channel. This method assumes the user is actually in the channel, and does not send the leave packet to the player.
+	 * Should only be used in conjunction with a method where "users" is synchronised and the player is confirmed to be in the channel.
+	 * @param user	The user to remove
+	 */
 	private void removeUser (SocialUser user) {
 		String displayName = users.get(user.getProtocolName()).getDisplayName();
 		users.remove(user.getProtocolName());
@@ -290,6 +304,10 @@ public class FriendsChannel {
 		}
 	}
 	
+	/**
+	 * Sends the specified friends chat update packet to all users currently in the channel
+	 * @param packet	The packet to send
+	 */
 	private void sendPacket (FriendsChatPacket packet) {		
 		for (SocialUser u : users.values()) {
 			if (u == null) {
@@ -299,11 +317,20 @@ public class FriendsChannel {
 		}
 	}
 	
+	/**
+	 * Creates a {@link FriendsChatPacket.User} packet representing an update to the specified user
+	 * @param player	The player to include in the update
+	 * @return			A packet representing the update
+	 */
 	private FriendsChatPacket.User makeUpdatePacket (SocialUser player) {
 		return new FriendsChatPacket.User(player.getDisplayName(), player.getDisplayName(), 
 				getPlayerRank(player.getProtocolName()), player.getWorldID(), player.getWorldName());
 	}
 	
+	/**
+	 * Creates a full {@link FriendsChatPacket} containing all the information about the friends chat channel
+	 * @return	A full FriendsChatPacket
+	 */
 	private FriendsChatPacket makeFullPacket () {
 		FriendsChatPacket.User[] currentUsers;
 		synchronized (users) {

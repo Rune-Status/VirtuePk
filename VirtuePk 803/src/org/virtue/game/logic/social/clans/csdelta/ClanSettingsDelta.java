@@ -14,37 +14,18 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans.ccdelta;
+package org.virtue.game.logic.social.clans.csdelta;
 
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 /**
- * An update which removes the specified member from the clan channel
+ * An interface for defining a clan settings update
  *
  * @author Sundays211
  */
-public class DeleteMember implements ClanChannelDelta {
+public interface ClanSettingsDelta {
+
+	public void packDelta (RS3PacketBuilder buffer);
 	
-	private final int memberIndex;
-	
-	/**
-	 * Creates a new {@code DeleteMember} delta object
-	 * @param memberIndex	The index of the member to remove from the clan channel
-	 */
-	public DeleteMember (int memberIndex) {
-		this.memberIndex = memberIndex;
-	}
-
-	@Override
-	public void packDelta(RS3PacketBuilder buffer) {
-		buffer.putShort(memberIndex);
-		buffer.put(0);//Not used
-		buffer.put(255);//Do not include user hash
-	}
-
-	@Override
-	public int getTypeID() {
-		return 2;
-	}
-
+	public int getTypeID ();
 }

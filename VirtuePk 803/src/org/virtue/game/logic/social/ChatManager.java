@@ -18,16 +18,16 @@ package org.virtue.game.logic.social;
 
 import java.io.FileNotFoundException;
 
-import org.virtue.game.logic.social.clans.ClanChannelManager;
-import org.virtue.game.logic.social.clans.ClanManager;
-import org.virtue.game.logic.social.internal.InternalFriendManager;
-import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
-import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
+import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.ClanManager;
+import org.virtue.game.logic.social.internal.InternalFriendManager;
+import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
+import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
@@ -53,7 +53,8 @@ public class ChatManager {
 	
 	private static final FriendsChatManager friendsChatManager = new InternalFriendsChatManager();
 	
-	private static final ClanManager clanManager = new ClanManager();
+	//TODO: Make this private
+	public static final ClanManager clanManager = new ClanManager();
 	
 	/**
 	 * Represents the player.
@@ -106,6 +107,10 @@ public class ChatManager {
 	
 	private long myClanHash = 0L;
 	
+	private long guestClanHash = 0L;
+	
+	private boolean inClanChannel = false;
+	
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
 	 * @param player	The player
@@ -140,7 +145,7 @@ public class ChatManager {
 		chatType = type;
 	}
 	
-	public void init (boolean lobby) {//autoJoinFriendsChat
+	public void init (boolean lobby) {
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1303, lastFriendsChat, autoJoinFriendsChat ? 1 : 0, lastFriendsChat.length() == 0 ? 0 : 1, 93519895));//Runscript: [1303, 93519895, 1, 1, Test]
 		
 		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
@@ -168,6 +173,10 @@ public class ChatManager {
 	 */
 	public FriendManager getFriendManager () {
 		return friendManager;
+	}
+	
+	public ClanChannelManager getClanChatManager () {
+		return clanManager.getChannelManager();
 	}
 	
 	public JsonObject serialiseData () {
@@ -266,6 +275,32 @@ public class ChatManager {
 	
 	public void handleFriendsChatKick (String name) {		
 		friendsChatManager.kickBanUser(player, name);
+	}
+	
+	//=================================Clan section=================================//
+	
+	public long getMyClanHash () {
+		return myClanHash;
+	}
+	
+	public void setMyClanHash (long myClanHash) {
+		this.myClanHash = myClanHash;
+	}
+	
+	public long getGuestClanHash () {
+		return guestClanHash;
+	}
+	
+	public void setGuestClanHash (long clanHash) {
+		this.guestClanHash = clanHash;
+	}
+	
+	public boolean inClanChannel () {
+		return inClanChannel;
+	}
+	
+	public void setInClanChannel (boolean inClanChannel) {
+		this.inClanChannel = inClanChannel;
 	}
 	
 	/**

@@ -182,4 +182,8 @@ public class SocialUser {
 		buffer.endPacketVarShort();
 		player.getAccount().getSession().getTransmitter().send(buffer);
 	}
+	
+	public boolean isMyClan (long hash) {
+		return hash == player.getChatManager().getMyClanHash();
+	}
 }

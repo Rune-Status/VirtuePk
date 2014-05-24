@@ -20,12 +20,10 @@ import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.virtue.network.io.channel.ClanIndexParser;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.network.io.channel.ClanSettingsParser;
-import org.virtue.utility.StringUtils;
-import org.virtue.utility.StringUtils.FormatType;
 
 /**
  * The top-level object which handles everything to do with clans
@@ -34,33 +32,38 @@ import org.virtue.utility.StringUtils.FormatType;
  */
 public class ClanManager {
 	
-	private final ClanIndexParser CLAN_INDEX_PARSER = new ClanIndexParser();
 	
 	private final ClanSettingsParser CLAN_DATA_PARSER = new ClanSettingsParser();
 	
-	private Map<String, Long> clanIndex;
+	private final ClanNameIndex clanIndex;
 	
-	private Map<Long, ClanSettings> clanDataCache = Collections.synchronizedMap(new HashMap<Long, ClanSettings>());
+	private final Map<Long, ClanSettings> clanDataCache = Collections.synchronizedMap(new HashMap<Long, ClanSettings>());
 	
-	private ClanChannelManager clanChatManager = new ClanChannelManager();
+	private final ClanChannelManager clanChatManager;
 
-	private long lastClanIndex = 100L;
 	
 	public ClanManager () {
-		loadIndex();
+		clanChatManager = new ClanChannelManager(this);
+		clanIndex = new ClanNameIndex();
 	}
-		
-	public void loadIndex () {
-		try {
-			clanIndex = Collections.synchronizedMap(CLAN_INDEX_PARSER.load());
-		} catch (FileNotFoundException e) {
-			System.err.println("No clan index file was found. ");
-			clanIndex = Collections.synchronizedMap(new HashMap<String, Long>());
+	
+	public void autoSaveClanData () {
+		if (clanIndex.needsUpdate()) {
+			clanIndex.saveIndex();
+		}
+		for (ClanSettings clanData : clanDataCache.values()) {
+			if (clanData.needsUpdate()) {
+				saveClanData(clanData);
+			}
 		}
 	}
 	
-	public void saveIndex () {
-		CLAN_INDEX_PARSER.save(clanIndex);
+	/**
+	 * Saves the data for the specified clan to a file
+	 * @param clanData	The clan data to save
+	 */
+	public void saveClanData(ClanSettings clanData) {
+		CLAN_DATA_PARSER.save(clanData.getClanHash(), clanData);
 	}
 	
 	/**
@@ -88,18 +91,24 @@ public class ClanManager {
 		return clanChatManager;
 	}
 	
-	/**
-	 * Retrieves the clan hash for the clan with the specified name
-	 * @param name	The name of the clan to find the hash of
-	 * @return		The clan hash, or 0L if no hash was found
-	 */
-	public long resolveClan (String name) {
-		String protocol = StringUtils.format(name, FormatType.PROTOCOL);
-		if (!clanIndex.containsKey(protocol)) {
-			return 0L;
-		} else {
-			return clanIndex.get(protocol);
+	public ClanNameIndex getClanIndex () {
+		return clanIndex;
+	}
+	
+	public boolean joinClan (Player recruiter, Player joiner) {
+		long clanHash = recruiter.getChatManager().getMyClanHash();
+		ClanSettings clan = getClanData (clanHash);
+		if (clan == null) {
+			return false;
 		}
+		//TODO: Make sure the recruiter is allowed to recruit and the joiner isn't banned from the channel
+		clan.addMember(new SocialUser(joiner));
+		joiner.getChatManager().setMyClanHash(clanHash);
+		if (joiner.getChatManager().getGuestClanHash() == clanHash) {
+			clanChatManager.leaveChannel(joiner, true);
+		}
+		clanChatManager.joinChannel(joiner, clanHash);
+		return true;
 	}
 	
 	/**
@@ -107,38 +116,21 @@ public class ClanManager {
 	 * @param name	The desired name of the clan
 	 * @return		A {@link ClanSettings} object containing the new clan data, or null if a clan already exists with the specified name
 	 */
-	public ClanSettings createClan (String name) {
-		String protocol = StringUtils.format(name, FormatType.PROTOCOL);
-		if (clanIndex.containsKey(protocol)) {
+	public ClanSettings createClan (String name, Player owner, Player... founders) {
+		if (clanIndex.clanExists(name)) {
 			return null;
 		} else {
-			long clanHash = lastClanIndex++;
-			clanIndex.put(protocol, clanHash);
+			long clanHash = clanIndex.addClan(name);
 			ClanSettings settings = new ClanSettings(clanHash, 100, name);
 			clanDataCache.put(clanHash, settings);
-			saveIndex();//TODO: Do we want to re-save the index every time a new clan is created or renamed?
+			SocialUser ownerObject = new SocialUser(owner);
+			settings.addMember(new SocialUser(owner));
+			settings.setRank(ownerObject.getProtocolName(), ClanRank.OWNER);
+			for (Player founder : founders) {
+				settings.addMember(new SocialUser(founder));
+			}
+			saveClanData(settings);
 			return settings;
 		}
-	}
-	
-	public void renameClan (long hash, String oldName, String newName) {
-		String protocolOld = StringUtils.format(oldName, FormatType.PROTOCOL);
-		String protocolNew = StringUtils.format(newName, FormatType.PROTOCOL);
-		if (clanIndex.containsKey(protocolOld)) {
-			clanIndex.remove(protocolOld);
-		} else {
-			removeAllWithHash(hash);			
-		}
-		clanIndex.put(protocolNew, hash);
-		saveIndex();
-	}
-	
-	private String removeAllWithHash (long hash) {
-		for (Entry<String, Long> entry : clanIndex.entrySet()) {
-			if (entry.getValue() == hash) {
-				clanIndex.remove(entry);
-			}
-		}
-		return null;
 	}
 }

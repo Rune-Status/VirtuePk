@@ -18,7 +18,7 @@ import com.google.gson.JsonParser;
 
 public class ClanIndexParser implements IOParser<Map<String, Long>> {
 
-	private File SAVE_PATH = new File("data/clans/index.json");
+	private File SAVE_PATH = new File("data/clans/0000_index.json");
 	
 	@Override
 	public Map<String, Long> load(Object... params) throws FileNotFoundException {
@@ -29,7 +29,9 @@ public class ClanIndexParser implements IOParser<Map<String, Long>> {
 			JsonArray data = parsed.getAsJsonArray();
 			for (JsonElement element : data) {
 				JsonObject keyValuePair = element.getAsJsonObject();
-				index.put(keyValuePair.get("name").getAsString(), keyValuePair.get("hash").getAsLong());
+				String name = keyValuePair.get("name").getAsString();
+				long hash = keyValuePair.get("hash").getAsLong();
+				index.put(name, hash);
 			}
 		}
 		return index;
@@ -41,8 +43,8 @@ public class ClanIndexParser implements IOParser<Map<String, Long>> {
 		JsonArray data = new JsonArray();
 		for (Entry<?, ?> value : index.entrySet()) {
 			JsonObject obj = new JsonObject();
-			obj.addProperty("key", (String) value.getKey());
-			obj.addProperty("value", (Long) value.getValue());
+			obj.addProperty("name", (String) value.getKey());
+			obj.addProperty("hash", (Long) value.getValue());
 			data.add(obj);
 		}
 		try (FileWriter writer = new FileWriter(getPath())) {

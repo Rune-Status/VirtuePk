@@ -24,6 +24,7 @@ import java.util.Queue;
 import org.virtue.game.logic.social.clans.ccdelta.AddMember;
 import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.clans.ccdelta.DeleteMember;
+import org.virtue.game.logic.social.clans.ccdelta.UpdateMember;
 import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
 
@@ -46,24 +47,16 @@ public class ClanChannel {
 	
 	public ClanChannel (ClanSettings data) {
 		this.clanData = data;
+		clanData.linkChannel(this);
 		updateNumber = 1L;
 	}
 	
 	/**
-	 * Returns the underlying data for the clan. TODO: Is there any need to make this public?
+	 * Returns the underlying data for the clan.
 	 * @return	The clan data
 	 */
-	public ClanSettings getSettings () {
+	protected ClanSettings getSettings () {
 		return clanData;
-	}
-	
-	/**
-	 * Returns the rank of a player in the clan
-	 * @param protocolName	The protocol username of the player to check
-	 * @return				The rank of the player
-	 */
-	public ClanRank getRank(String protocolName) {
-		return ClanRank.ADMIN;//TODO: Use the clan data to find the actual rank
 	}
 	
 	public boolean join (SocialUser player, boolean isGuest) {
@@ -72,7 +65,7 @@ public class ClanChannel {
 			if (initQueue.contains(player) || getUser(player.getProtocolName()) != null) {
 				return false;//Join already in progress
 			}
-			queueUpdate(new AddMember(player.getDisplayName(), getRank(player.getProtocolName()), player.getWorldID()));
+			queueUpdate(new AddMember(player.getDisplayName(), clanData.getRank(player.getProtocolName()), player.getWorldID()));
 			initQueue.offer(player);
 		}
 		return true;
@@ -111,24 +104,48 @@ public class ClanChannel {
 		return null;
 	}
 	
-	public boolean guestsCanJoin () {
-		return true;
+	public boolean canTalk (String protocolName) {
+		return clanData.getMinTalk().getID() <= clanData.getRank(protocolName).getID();
 	}
 	
 	/**
 	 * Queues an update to the clan channel which will be sent on the next tick
 	 * @param node	The update node to queue
 	 */
-	public void queueUpdate (ClanChannelDelta node) {
+	protected void queueUpdate (ClanChannelDelta node) {
 		synchronized (updates) {
 			updates.offer(node);
 		}
 	}
 	
 	/**
+	 * Queues an update packet for the user with the specified name within the channel. If the user is not in the channel, no update is sent
+	 * @param protocolName	The name of the user to update
+	 */
+	protected void updateUser (String protocolName) {
+		//int index;
+		SocialUser member = null;
+		synchronized (users) {
+			for (SocialUser u : users) {
+				//SocialUser u = users.get(index);
+				if (u.getProtocolName().equalsIgnoreCase(protocolName)) {
+					member = u;
+					break;
+				}
+			}
+		}
+		if (member != null) {
+			synchronized (updates) {
+				int index = users.indexOf(member);
+				queueUpdate(new UpdateMember(index, member.getDisplayName(), clanData.getRank(protocolName), member.getWorldID()));
+			}
+		}
+	}
+	
+	/**
 	 * Sends the clan channel delta updates to everyone currently in the channel
 	 */
-	public void update () {
+	protected void dispatchUpdates () {
 		if (updates.isEmpty()) {
 			sendInitPackets();
 			return;
@@ -142,8 +159,8 @@ public class ClanChannel {
 			updateNumber++;
 		}
 		synchronized (users) {
-			for (SocialUser u : users) {//TODO: Add a check for guest clan chat
-				u.sendClanChannelDelta(false, clanData.getClanHash(), thisUpdate, deltaNodes);
+			for (SocialUser u : users) {
+				u.sendClanChannelDelta(!u.isMyClan(clanData.getClanHash()), clanData.getClanHash(), thisUpdate, deltaNodes);
 			}
 			sendInitPackets();
 		}
@@ -164,12 +181,12 @@ public class ClanChannel {
 			entries = new ClanChannelPacket.User[users.size()];
 			for (int i=0;i<users.size();i++) {
 				SocialUser u = users.get(i);
-				entries[i] = new ClanChannelPacket.User(u.getDisplayName(), getRank(u.getProtocolName()), u.getWorldID());
+				entries[i] = new ClanChannelPacket.User(u.getDisplayName(), clanData.getRank(u.getProtocolName()), u.getWorldID());
 			}
 		}
 		SocialUser u = null;
 		while ((u = initQueue.poll()) != null) {
-			sendInitPacket(u, entries, false);//TODO: Determine whether the user is a guest
+			sendInitPacket(u, entries, !u.isMyClan(clanData.getClanHash()));
 		}
 	}
 	
