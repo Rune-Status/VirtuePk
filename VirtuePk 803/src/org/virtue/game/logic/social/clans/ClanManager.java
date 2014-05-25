@@ -23,7 +23,8 @@ import java.util.Map;
 
 import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.network.io.channel.ClanSettingsParser;
 
 /**
@@ -40,11 +41,11 @@ public class ClanManager {
 	
 	private final Map<Long, ClanSettings> clanDataCache = Collections.synchronizedMap(new HashMap<Long, ClanSettings>());
 	
-	private final ClanChannelManager clanChatManager;
+	private final InternalClanChannelManager clanChatManager;
 
 	
 	public ClanManager () {
-		clanChatManager = new ClanChannelManager(this);
+		clanChatManager = new InternalClanChannelManager(this);
 		clanIndex = new ClanNameIndex();
 		Launcher.getEngine().getLogicProcessor().registerEvent(new ClanUpdateEvent(this));
 	}
@@ -67,6 +68,8 @@ public class ClanManager {
 		if (clanIndex.needsUpdate()) {
 			clanIndex.saveIndex();
 		}
+		//Sends clan channel updates to the players
+		clanChatManager.runUpdateTasks();
 		for (ClanSettings clanData : clanDataCache.values()) {
 			if (clanData.needsSave()) {
 				saveClanData(clanData);
@@ -113,19 +116,19 @@ public class ClanManager {
 		return clanIndex;
 	}
 	
-	public boolean joinClan (Player recruiter, Player joiner) {
-		if (joiner.getChatManager().getMyClanHash() != 0L) {
+	public boolean joinClan (InternalSocialUser recruiter, InternalSocialUser joiner) {
+		if (joiner.getMyClanHash() != 0L) {
 			return false;//Already in clan
 		}
-		long clanHash = recruiter.getChatManager().getMyClanHash();
+		long clanHash = recruiter.getMyClanHash();
 		ClanSettings clan = getClanData (clanHash);
 		if (clan == null) {
 			return false;
 		}
 		//TODO: Make sure the recruiter is allowed to recruit and the joiner isn't banned from the channel
-		clan.addMember(new SocialUser(joiner));
-		joiner.getChatManager().setMyClanHash(clanHash);
-		if (joiner.getChatManager().getGuestClanHash() == clanHash) {
+		clan.addMember(joiner);
+		joiner.setMyClanHash(clanHash);
+		if (joiner.getGuestClanHash() == clanHash) {
 			clanChatManager.leaveChannel(joiner, true, false);
 		}
 		clanChatManager.joinMyChannel(joiner);
@@ -144,11 +147,11 @@ public class ClanManager {
 			long clanHash = clanIndex.addClan(name);
 			ClanSettings settings = new ClanSettings(clanHash, 100, name);
 			clanDataCache.put(clanHash, settings);
-			SocialUser ownerObject = new SocialUser(owner);
-			settings.addMember(new SocialUser(owner));
+			InternalSocialUser ownerObject = new InternalSocialUser(owner);
+			settings.addMember(new InternalSocialUser(owner));
 			settings.setRank(ownerObject.getProtocolName(), ClanRank.OWNER);
 			for (Player founder : founders) {
-				settings.addMember(new SocialUser(founder));
+				settings.addMember(new InternalSocialUser(founder));
 			}
 			saveClanData(settings);
 			return settings;

@@ -27,7 +27,7 @@ import org.virtue.game.logic.social.clans.ClanChannelManager;
 import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
-import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.game.logic.social.messages.PublicMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
@@ -60,6 +60,8 @@ public class ChatManager {
 	 * Represents the player.
 	 */
 	private final Player player;
+	
+	private final InternalSocialUser socialUser;
 	
 	/**
 	 * Represents the type of message that the next message(s) will be
@@ -117,15 +119,16 @@ public class ChatManager {
 	 */
 	public ChatManager (Player player) {
 		this.player = player;
+		this.socialUser = new InternalSocialUser(player);
 		String protocolName = player.getAccount().getUsername().getAccountNameAsProtocol();
 		if (IOHub.getFriendsIO().exists(protocolName)) {
 			try {
-				friendManager = IOHub.getFriendsIO().load(protocolName, new SocialUser(player));
+				friendManager = IOHub.getFriendsIO().load(protocolName, new InternalSocialUser(player));
 			} catch (FileNotFoundException e) {
-				friendManager = new InternalFriendManager(new SocialUser(player));
+				friendManager = new InternalFriendManager(new InternalSocialUser(player));
 			}
 		} else {
-			friendManager = new InternalFriendManager(new SocialUser(player));
+			friendManager = new InternalFriendManager(new InternalSocialUser(player));
 		}
 	}
 	
@@ -152,7 +155,7 @@ public class ChatManager {
 		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
 		friendManager.init();
 		if (myClanHash != 0L) {
-			clanManager.getChannelManager().joinMyChannel(player);
+			clanManager.getChannelManager().joinMyChannel(socialUser);
 		}
 	}
 	
@@ -163,11 +166,11 @@ public class ChatManager {
 		IOHub.getFriendsIO().save(player.getAccount().getUsername().getAccountNameAsProtocol(), friendManager);
 		friendManager.shutdown();
 		if (channelStage.equals(ChannelStage.JOINED)) {
-			friendsChatManager.leaveChannel(player, true);
+			friendsChatManager.leaveChannel(socialUser, true);
 		}
 		//Leave both the clan channel and guest clan channel
-		clanManager.getChannelManager().leaveChannel(player, true, true);
-		clanManager.getChannelManager().leaveChannel(player, false, true);
+		clanManager.getChannelManager().leaveChannel(socialUser, true, true);
+		clanManager.getChannelManager().leaveChannel(socialUser, false, true);
 	}
 	
 	/**
@@ -226,7 +229,7 @@ public class ChatManager {
 				player.getPacketDispatcher().dispatchMessage("You are not currently in a channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);				
 			} else if (channelStage.equals(ChannelStage.JOINED)) {
 				channelStage = ChannelStage.LEAVING;
-				friendsChatManager.leaveChannel(player, false);				
+				friendsChatManager.leaveChannel(socialUser, false);				
 			}
 		} else {
 			if (channelStage.equals(ChannelStage.LEAVING) || channelStage.equals(ChannelStage.JOINED)) {
@@ -236,7 +239,7 @@ public class ChatManager {
 			} else if (channelStage.equals(ChannelStage.NONE)) {
 				player.getPacketDispatcher().dispatchMessage("Attempting to join channel...", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 				channelStage = ChannelStage.JOINING;
-				friendsChatManager.joinChannel(player, name);
+				friendsChatManager.joinChannel(socialUser, name);
 			}
 		}
 	}
@@ -273,11 +276,11 @@ public class ChatManager {
 	
 	public void handleFriendsChatMessage (String message) {
 		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
-		friendsChatManager.sendMessage(player, formattedMessage);
+		friendsChatManager.sendMessage(socialUser, formattedMessage);
 	}
 	
 	public void handleFriendsChatKick (String name) {		
-		friendsChatManager.kickBanUser(player, name);
+		friendsChatManager.kickBanUser(socialUser, name);
 	}
 	
 	//=================================Clan section=================================//
@@ -308,23 +311,23 @@ public class ChatManager {
 	
 	public void joinMyClanChannel () {
 		if (!inClanChannel) {
-			clanManager.getChannelManager().joinMyChannel(player);
+			clanManager.getChannelManager().joinMyChannel(socialUser);
 		}
 	}
 	
 	public void joinGuestChannel (String clanName) {
 		if (guestClanHash == 0L) {
-			clanManager.getChannelManager().joinGuestChannel(player, clanName);
+			clanManager.getChannelManager().joinGuestChannel(socialUser, clanName);
 		}
 	}
 	
 	public void leaveClanChannel (boolean isGuest) {
-		clanManager.getChannelManager().leaveChannel(player, isGuest, false);
+		clanManager.getChannelManager().leaveChannel(socialUser, isGuest, false);
 	}
 	
 	public void handleClanChannelMessage (String message, boolean isGuest) {
 		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
-		clanManager.getChannelManager().sendMessage(player, formattedMessage, isGuest);
+		clanManager.getChannelManager().sendMessage(socialUser, formattedMessage, isGuest);
 	}
 	
 	/**

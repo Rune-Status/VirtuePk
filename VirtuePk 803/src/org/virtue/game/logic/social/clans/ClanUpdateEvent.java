@@ -15,8 +15,6 @@ public class ClanUpdateEvent extends LogicEvent {
 	public void run() {
 		//Sends clan data updates to the players
 		clanManager.runUpdateTasks();
-		//Sends clan channel updates to the players
-		clanManager.getChannelManager().runUpdateTasks();
 		//Saves clan data to the permanent storage areas
 		clanManager.runSaveTasks();//TODO: This should be run less frequently
 	}

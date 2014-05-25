@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
+import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -131,7 +132,7 @@ public class FriendsChannel {
 		if (!data.hasFriendsChat()) {
 			synchronized (users) {
 				for (SocialUser u : users.values()) {
-					u.sendGameMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+					u.sendSystemMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 					u.sendLeaveFriendsChat();
 				}
 			}
@@ -162,7 +163,7 @@ public class FriendsChannel {
 					needsFullRefresh = true;//Much easier just to do a full refresh if one or more users have been updated
 					if(!canJoin(newRank)) {
 						leave(u);
-						u.sendGameMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+						u.sendSystemMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 					}
 					//sendPacket(new FriendsChatPacket(makeUpdatePacket(u)));
 				}
@@ -244,7 +245,7 @@ public class FriendsChannel {
 				if (getPlayerRank(name).equals(rank)) {
 					removeUser(users.get(name));
 					users.get(name).sendLeaveFriendsChat();
-					users.get(name).sendGameMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+					users.get(name).sendSystemMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 					return true;
 				}
 			}
@@ -285,7 +286,7 @@ public class FriendsChannel {
 			if (users.containsKey(name)) {
 				SocialUser u = users.get(name);
 				removeUser(u);
-				u.sendGameMessage("You have been kicked from the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				u.sendSystemMessage("You have been kicked from the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 				u.sendLeaveFriendsChat();
 			}
 		}

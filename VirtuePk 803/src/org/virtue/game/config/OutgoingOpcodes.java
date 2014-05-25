@@ -102,5 +102,7 @@ public class OutgoingOpcodes {
 	public static final int FRIENDS_CHANNEL_UPDATE_PACKET = 119;//803
 	public static final int CLAN_CHANNEL_FULL = 92;//803
 	public static final int CLAN_CHANNEL_DELTA = 13;//803
+	public static final int CLAN_SETTINGS_FULL = 157;//803
+	public static final int CLAN_SETTINGS_DELTA = 33;//803
 	
 }

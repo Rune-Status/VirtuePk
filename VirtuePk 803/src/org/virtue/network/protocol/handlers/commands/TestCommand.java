@@ -4,7 +4,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.player.identity.Username;
 import org.virtue.game.logic.social.ChatManager;
-import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.InternalClanChannelManager;
 import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.game.logic.social.clans.ClanSettings;
 

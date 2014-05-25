@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
-import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.network.io.IOParser;
 
 public class FriendsParser implements IOParser<InternalFriendManager> {
@@ -25,7 +25,7 @@ public class FriendsParser implements IOParser<InternalFriendManager> {
 	public InternalFriendManager load(Object... params) throws FileNotFoundException {
 		System.out.println("Loading friends...");
 		File friendData = new File(getPath(), params[0]+".bin");
-		SocialUser player = (SocialUser)params[1];
+		InternalSocialUser player = (InternalSocialUser)params[1];
 		InternalFriendManager friendManager = new InternalFriendManager(player);
 		try (DataInputStream input = new DataInputStream(new FileInputStream(friendData))) {
 			friendManager.deserialise(input);

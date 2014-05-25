@@ -26,7 +26,7 @@ import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
 import org.virtue.game.logic.social.clans.csdelta.AddMember;
 import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
 import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
-import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.internal.InternalSocialUser;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -269,7 +269,7 @@ public class ClanSettings {
 	 * Note that setting the player's clan within the player data and sending the clan channel must be handled separately
 	 * @param player The player to add to the clan
 	 */
-	protected void addMember (SocialUser player) {
+	protected void addMember (InternalSocialUser player) {
 		if (inClan(player.getProtocolName())) {
 			return;
 		}

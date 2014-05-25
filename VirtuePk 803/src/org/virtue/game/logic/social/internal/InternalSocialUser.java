@@ -22,7 +22,7 @@ import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
-import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
+import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
@@ -51,80 +51,63 @@ import org.virtue.utility.StringUtils.FormatType;
  *
  * @author Sundays211
  */
-public class SocialUser {
+public class InternalSocialUser implements SocialUser {
 	
 	private final Player player;
 	private final String protocolName;
 	
-	public SocialUser (Player p) {
+	public InternalSocialUser (Player p) {
 		this(p, p.getAccount().getUsername().getAccountNameAsProtocol());
 	}
 	
-	public SocialUser (Player p, String protocolName) {
+	public InternalSocialUser (Player p, String protocolName) {
 		this.player = p;
 		this.protocolName = protocolName;
 	}
 	
-	/**
-	 * Gets the current display name for the player
-	 * @return	The display name
-	 */
+	@Override
 	public String getDisplayName () {
 		return (player == null ? StringUtils.format(protocolName, FormatType.NAME) : player.getAccount().getUsername().getName());
 	}
 	
-	/**
-	 * Gets the protocol name for the player. Used as the unique ID for representing the player
-	 * @return	The protocol name
-	 */
+	@Override
 	public String getProtocolName () {
 		return protocolName;
 	}
 	
+	@Override
 	public boolean isInWorld () {
 		return player.isInWorld();
 	}
 	
+	@Override
 	public String getWorldName () {
 		return "World 1";
 	}
 	
+	@Override
 	public int getWorldID () {
 		return (player.isInWorld() ? 1 : 1100);
 	}
 	
-	public Rank getRank () {
+	@Override
+	public Rank getRights () {
 		return player.getAccount().getRank();
 	}
 	
-	public void sendGameMessage (String message, MessageOpcode type) {
+	@Override
+	public void sendSystemMessage (String message, MessageOpcode type) {
 		player.getPacketDispatcher().dispatchMessage(message, type);
 	}
 	
+	//=================================Friends/Ignores section=================================//
+	
+	@Override
 	public void sendPrivateMessage (PrivateMessage message) {
 		player.getAccount().getSession().getTransmitter().send(PrivateMessageEncoder.class, message);
 	}
 	
-	public void sendFriendsChatPacket (FriendsChatPacket packet) {
-		try {
-			player.getAccount().getSession().getTransmitter().send(FriendsChatEncoder.class, packet);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
-	public void sendLeaveFriendsChat () {
-		player.getChatManager().setCurrentChannelOwner(null);
-		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_CHANNEL_PACKET);
-		buffer.endPacketVarShort();
-		player.getAccount().getSession().getTransmitter().send(buffer);
-	}
-	
-	public void sendFriendsChatMessage (FriendsChatMessage message) {
-		player.getAccount().getSession().getTransmitter().send(FriendsChatMessageEncoder.class, message);
-	}
-	
+	@Override
 	public void sendFriendsList (Friend[] friends) {
 		FriendsPacket.Entry[] entries = new FriendsPacket.Entry[friends.length];
 		for (int i=0;i<friends.length;i++) {
@@ -133,6 +116,7 @@ public class SocialUser {
 		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(entries));
 	}
 	
+	@Override
 	public void sendIgnoreList(Ignore[] ignores) {
 		IgnoresPacket.Entry[] entries = new IgnoresPacket.Entry[ignores.length];
 		for (int i=0;i<ignores.length;i++) {
@@ -141,16 +125,54 @@ public class SocialUser {
 		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(entries));
 	}
 	
+	@Override
 	public void sendFriendUpdate (Friend friend, boolean isNameChange) {
 		FriendsPacket.Entry entry = FriendsPacket.Entry.fromFriendObject(friend);
 		player.getAccount().getSession().getTransmitter().send(FriendEncoder.class, new FriendsPacket(entry, false));
 	}
 	
+	@Override
 	public void sendIgnoreUpdate (Ignore ignore, boolean isNameChange) {
 		IgnoresPacket.Entry entry = IgnoresPacket.Entry.fromIgnoreObject(ignore);
 		player.getAccount().getSession().getTransmitter().send(IgnoreEncoder.class, new IgnoresPacket(entry, false));
 	}
 	
+	//=================================Friends chat section=================================//
+	
+	@Override
+	public String getCurrentChannelOwner () {
+		return player.getChatManager().getCurrentChannelOwner();
+	}
+	
+	@Override
+	public void setCurrentChannelOwner (String ownerName) {
+		player.getChatManager().setCurrentChannelOwner(ownerName);;
+	}
+	
+	@Override
+	public void sendFriendsChatPacket (FriendsChatPacket packet) {
+		try {
+			player.getAccount().getSession().getTransmitter().send(FriendsChatEncoder.class, packet);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void sendLeaveFriendsChat () {
+		player.getChatManager().setCurrentChannelOwner(null);
+		RS3PacketBuilder buffer = new RS3PacketBuilder();
+		buffer.putPacketVarShort(OutgoingOpcodes.FRIENDS_CHANNEL_PACKET);
+		buffer.endPacketVarShort();
+		player.getAccount().getSession().getTransmitter().send(buffer);
+	}
+	
+	@Override
+	public void sendFriendsChatMessage (FriendsChatMessage message) {
+		player.getAccount().getSession().getTransmitter().send(FriendsChatMessageEncoder.class, message);
+	}
+	
+	@Override
 	public void sendPermissionUpdate (ChannelPermission permission, ChannelRank rank) {
 		FriendsChatSettings settings = player.getChatManager().getFriendsChatSettings();
 		if (settings == null) {
@@ -159,6 +181,7 @@ public class SocialUser {
 		settings.sendPermission(permission, rank);
 	}
 	
+	@Override
 	public void sendChannelPrefix (String prefix) {
 		FriendsChatSettings settings = player.getChatManager().getFriendsChatSettings();
 		if (settings == null) {
@@ -167,12 +190,49 @@ public class SocialUser {
 		settings.sendPrefix(prefix);
 	}
 	
-	public void sendClanChannelDelta (boolean isGuestCc, long clanHash, long updateNum, ClanChannelDelta[] deltaNodes) {
-		ClanChannelDeltaPacket deltaPacket = new ClanChannelDeltaPacket(isGuestCc, clanHash, 
-				updateNum, deltaNodes);
-		player.getAccount().getSession().getTransmitter().send(ClanChannelDeltaEncoder.class, deltaPacket);
+	//=================================Clan channel section=================================//
+	
+	@Override
+	public long getMyClanHash () {
+		return player.getChatManager().getMyClanHash();
 	}
 	
+	@Override
+	public void setMyClanHash (long myClanHash) {
+		player.getChatManager().setMyClanHash(myClanHash);
+	}
+	
+	@Override
+	public long getGuestClanHash () {
+		return player.getChatManager().getGuestClanHash();
+	}
+	
+	@Override
+	public void setGuestClanHash (long clanHash) {
+		player.getChatManager().setGuestClanHash(clanHash);
+	}
+	
+	@Override
+	public boolean inClanChannel () {
+		return player.getChatManager().inClanChannel();
+	}
+	
+	@Override
+	public void setInClanChannel (boolean inClanChannel) {
+		player.getChatManager().setInClanChannel(inClanChannel);
+	}
+	
+	@Override
+	public boolean isMyClan (long hash) {
+		return hash == player.getChatManager().getMyClanHash();
+	}
+	
+	@Override
+	public void sendClanChannelDelta (ClanChannelDeltaPacket packet) {
+		player.getAccount().getSession().getTransmitter().send(ClanChannelDeltaEncoder.class, packet);
+	}
+	
+	@Override
 	public void sendClanChannelFull (ClanChannelPacket packet) {
 		if (packet.isGuestUpdate()) {
 			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4453, 72744972, 72744974, 72745036, 72745072));
@@ -182,9 +242,11 @@ public class SocialUser {
 	}
 	
 	public void sendLeaveClanChannel (boolean isGuest) {
-		//TODO: Also set the current clan chat to null
 		if (isGuest) {
 			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4438, 72744972));
+			setGuestClanHash(0L);
+		} else {
+			setInClanChannel(false);
 		}
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(OutgoingOpcodes.CLAN_CHANNEL_FULL);
@@ -193,12 +255,9 @@ public class SocialUser {
 		player.getAccount().getSession().getTransmitter().send(buffer);
 	}
 	
+	@Override
 	public void sendClanChatMessage (ClanChannelMessage message) {
 		player.getAccount().getSession().getTransmitter().send(ClanChannelMessageEncoder.class, message);
-	}
-	
-	public boolean isMyClan (long hash) {
-		return hash == player.getChatManager().getMyClanHash();
 	}
 	
 	@Override
@@ -206,8 +265,8 @@ public class SocialUser {
 		if (anotherObject == this) {
 			return true;
 		}
-		if (anotherObject instanceof SocialUser) {
-			SocialUser anotherUser = (SocialUser) anotherObject;
+		if (anotherObject instanceof InternalSocialUser) {
+			InternalSocialUser anotherUser = (InternalSocialUser) anotherObject;
 			return anotherUser.player.equals(this.player);
 		}
 		return false;

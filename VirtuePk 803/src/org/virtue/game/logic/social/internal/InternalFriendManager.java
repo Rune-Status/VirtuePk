@@ -32,6 +32,7 @@ import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.FriendManager;
 import org.virtue.game.logic.social.OnlineStatus;
+import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.utility.RS2Utils;
@@ -171,7 +172,7 @@ public class InternalFriendManager implements FriendManager {
 	 */
 	private void queueChannelUpdate () {
 		if (!fcUpdateFlagged) {
-			player.sendGameMessage("Changes will take effect on your friends chat in the next 60 seconds.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+			player.sendSystemMessage("Changes will take effect on your friends chat in the next 60 seconds.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 		}
 		fcUpdateFlagged = true;
 	}
@@ -243,10 +244,10 @@ public class InternalFriendManager implements FriendManager {
 		if (isDisabled != wasDisabled) {
 			if (!hasFriendsChat()) {
 				queueChannelUpdate();
-				player.sendGameMessage("Your friends chat channel has now been disabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				player.sendSystemMessage("Your friends chat channel has now been disabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 			} else {
-				player.sendGameMessage("Your friends chat channel has now been enabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
-				player.sendGameMessage("Join your channel by clicking 'Join Chat' and typing: "+player.getDisplayName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				player.sendSystemMessage("Your friends chat channel has now been enabled!", MessageOpcode.FRIENDS_CHAT_SYSTEM);
+				player.sendSystemMessage("Join your channel by clicking 'Join Chat' and typing: "+player.getDisplayName(), MessageOpcode.FRIENDS_CHAT_SYSTEM);
 			}
 		} else {
 			queueChannelUpdate();
@@ -404,7 +405,7 @@ public class InternalFriendManager implements FriendManager {
 		}
 		String protocolName = StringUtils.format(displayName, FormatType.PROTOCOL);
 		if (protocolName.equals(player.getProtocolName())) {
-			player.sendGameMessage("You can't add yourself to your own friends list.", MessageOpcode.PRIVATE_SYSTEM);
+			player.sendSystemMessage("You can't add yourself to your own friends list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		Friend friend = new Friend(protocolName, false);
@@ -427,16 +428,16 @@ public class InternalFriendManager implements FriendManager {
 		
 		synchronized (this) {//Synchronised to avoid concurrent modification issues
 			if (friends.size() >= FRIENDS_LIST_MAX) {
-				player.sendGameMessage("Your friends list is full (400 names maximum)", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage("Your friends list is full (400 names maximum)", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			
 			if (ignores.containsKey(protocolName)) {
-				player.sendGameMessage("Please remove "+displayName+" from your ignore list first.", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage("Please remove "+displayName+" from your ignore list first.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}		
 			if (friends.containsKey(protocolName)) {
-				player.sendGameMessage(displayName+" is already on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage(displayName+" is already on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			friends.put(protocolName, friend);
@@ -485,7 +486,7 @@ public class InternalFriendManager implements FriendManager {
 		}
 		String protocolName = StringUtils.format(displayName, FormatType.PROTOCOL);
 		if (protocolName.equals(player.getProtocolName())) {
-			player.sendGameMessage("You can't add yourself to your own ignore list.", MessageOpcode.PRIVATE_SYSTEM);
+			player.sendSystemMessage("You can't add yourself to your own ignore list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		Ignore ignore = new Ignore(protocolName, tillLogout);
@@ -502,16 +503,16 @@ public class InternalFriendManager implements FriendManager {
 		}*/
 		synchronized (this) {
 			if (ignores.size() >= IGNORE_LIST_MAX) {
-				player.sendGameMessage("Your ignore list is full. Max of 400 users.", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage("Your ignore list is full. Max of 400 users.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			
 			if (friends.containsKey(ignore.username)) {
-				player.sendGameMessage("Please remove "+displayName+" from your friends list first.", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage("Please remove "+displayName+" from your friends list first.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			if (ignores.containsKey(ignore.username)) {
-				player.sendGameMessage(displayName+" is already on your ignore list.", MessageOpcode.PRIVATE_SYSTEM);
+				player.sendSystemMessage(displayName+" is already on your ignore list.", MessageOpcode.PRIVATE_SYSTEM);
 				return;
 			}
 			ignores.put(protocolName, ignore);
@@ -550,21 +551,21 @@ public class InternalFriendManager implements FriendManager {
 		String protocolName = StringUtils.format(recipient, FormatType.PROTOCOL);
 		System.out.println("Sending message '"+message+"' to player "+recipient);
 		if (!friends.containsKey(protocolName)) {
-			player.sendGameMessage("Unable to send message - player not on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
+			player.sendSystemMessage("Unable to send message - player not on your friends list.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		if (!onlinePlayers.containsKey(protocolName)) {
-			player.sendGameMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
+			player.sendSystemMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		InternalFriendManager friend = onlinePlayers.get(protocolName);
 		if (friend.getWorldInfo(this) == null) {
-			player.sendGameMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
+			player.sendSystemMessage("That player is offline, or has privacy mode enabled.", MessageOpcode.PRIVATE_SYSTEM);
 			return;
 		}
 		message = StringUtils.format(message, FormatType.DISPLAY);
 		PrivateMessage messageObject = new PrivateMessage(message, player.getDisplayName(),
-				player.getDisplayName(), player.getRank());
+				player.getDisplayName(), player.getRights());
 		friend.receivePrivateMessage(getProtocolName(), messageObject);
 		messageObject = messageObject.clone();
 		messageObject.setIncomming(false);

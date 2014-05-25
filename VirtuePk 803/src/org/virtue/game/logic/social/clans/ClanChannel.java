@@ -21,11 +21,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.clans.ccdelta.AddMember;
 import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.clans.ccdelta.DeleteMember;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateMember;
-import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.internal.InternalSocialUser;
+import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
 
@@ -181,9 +183,15 @@ public class ClanChannel {
 			updates.clear();
 			updateNumber++;
 		}
+		ClanChannelDeltaPacket memberPacket = new ClanChannelDeltaPacket(false, clanData.getClanHash(), thisUpdate, deltaNodes);
+		ClanChannelDeltaPacket guestPacket = new ClanChannelDeltaPacket(true, clanData.getClanHash(), thisUpdate, deltaNodes);
 		synchronized (users) {
 			for (SocialUser u : users) {
-				u.sendClanChannelDelta(!u.isMyClan(clanData.getClanHash()), clanData.getClanHash(), thisUpdate, deltaNodes);
+				if (u.isMyClan(clanData.getClanHash())) {
+					u.sendClanChannelDelta(memberPacket);
+				} else {
+					u.sendClanChannelDelta(guestPacket);
+				}
 			}
 			sendInitPackets();
 		}

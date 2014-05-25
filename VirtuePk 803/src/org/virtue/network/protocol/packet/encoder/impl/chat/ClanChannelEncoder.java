@@ -11,9 +11,10 @@ import org.virtue.network.protocol.packet.encoder.PacketEncoder;
  */
 public class ClanChannelEncoder implements PacketEncoder<ClanChannelPacket> {
 
+	public static final int VERSION = 2;
+	
 	@Override
-	public RS3PacketBuilder buildPacket(ClanChannelPacket node) {
-		int version = 2;
+	public RS3PacketBuilder buildPacket(ClanChannelPacket node) {		
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(OutgoingOpcodes.CLAN_CHANNEL_FULL);
 		buffer.put(node.isGuestUpdate() ? 0 : 1);
@@ -22,7 +23,7 @@ public class ClanChannelEncoder implements PacketEncoder<ClanChannelPacket> {
 		flags |= 0x2;//Use display names
 		flags |= 0x4;//Includes version number
 		buffer.put(flags);
-		buffer.put(version);
+		buffer.put(VERSION);
 		buffer.putLong(node.getClanHash());
 		buffer.putLong(node.getUpdateNumber());
 		buffer.putString(node.getClanName());
