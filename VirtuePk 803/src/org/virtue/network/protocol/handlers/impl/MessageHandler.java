@@ -22,12 +22,18 @@ public class MessageHandler extends PacketHandler<WorldSession> {
 		} else {			
 			int colourEffect = getFlag("colourEffect", 0);
 			int moveEffect = getFlag("moveEffect", 0);
+			boolean isGuest = false;
 			switch (session.getPlayer().getChatManager().getChatType()) {
 			case PUBLIC:
 				session.getPlayer().getChatManager().handlePublicMessage(message, colourEffect, moveEffect);
 				break;
 			case FRIENDS_CHAT:
 				session.getPlayer().getChatManager().handleFriendsChatMessage(message);
+				break;
+			case GUEST_CLAN:
+				isGuest = true;
+			case CLAN:
+				session.getPlayer().getChatManager().handleClanChannelMessage(message, isGuest);
 				break;
 			default:
 				System.out.println("Unhandled message: message="+message+", type="+session.getPlayer().getChatManager().getChatType());

@@ -90,11 +90,12 @@ public class OutgoingOpcodes {
 	public static final int INCOMMING_PRIVATE_MESSAGE_PACKET = 116;//803
 	public static final int OUTGOING_PRIVATE_MESSAGE_PACKET = 38;//803
 	public static final int FRIENDS_CHAT_MESSAGE_PACKET = 85;//803
+	public static final int CLAN_CHANNEL_MESSAGE_PACKET = 22;//803
 	
 	//Chat-related
 	public static final int UNLOCK_FRIENDS_LIST = 18;//803
 	public static final int ONLINE_STATUS_PACKET = 43;//803
-	public static final int TRADE_PUBLIC_STATUS_PACKET = 128;//803
+	public static final int CHAT_FILTER_STATUS_PACKET = 128;//803
 	public static final int FRIENDS_PACKET = 56;//803
 	public static final int IGNORES_PACKET = 68;//803
 	public static final int FRIENDS_CHANNEL_PACKET = 8;//803

@@ -5,6 +5,7 @@ import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.game.logic.node.entity.player.identity.Username;
 import org.virtue.game.logic.social.ChatManager;
 import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.game.logic.social.clans.ClanSettings;
 
 /**
@@ -21,12 +22,14 @@ public class TestCommand implements Command {
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {		
-		if (syntax == "rank") {
-			
+		if (syntax.equalsIgnoreCase("rank")) {
+			//ChatManager.clanManager.getClanData(player.getChatManager().getMyClanHash()).setRank(
+			//		player.getAccount().getUsername().getAccountNameAsProtocol(), ClanRank.COORDINATOR);;
 		} else {
-			ChatManager.clanManager.joinClan(testRecruiter, player);
+			//ChatManager.clanManager.getChannelManager().joinGuestChannel(testRecruiter, "test_clan_1");
+			//ChatManager.clanManager.joinClan(testRecruiter, player);
 			//player.getChatManager().getClanChatManager().joinChannel(player, settings.getClanHash());
-			ChatManager.clanManager.autoSaveClanData();
+			//ChatManager.clanManager.autoSaveClanData();
 		}
 		//ChatManager..joinChannel(player, 40L);
 		/*ClanSettings settings = new ClanSettings(12L);

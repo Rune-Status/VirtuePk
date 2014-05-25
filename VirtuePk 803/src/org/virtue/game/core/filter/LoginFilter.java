@@ -88,6 +88,7 @@ public class LoginFilter extends LogicEvent {
 				player = new Player(account);
 				World.getWorld().addPlayer(player);
 			}
+			((WorldSession) session).setPlayer(player);
 			account.putFlag("playerIndex", player.getIndex());
 			account.getSession().getTransmitter().send(LoginEncoder.class, account);
 			player.getViewport().loadViewport();
@@ -104,7 +105,7 @@ public class LoginFilter extends LogicEvent {
 			}
 		}
 		if (!type.equals(LoginType.WORLD_PART_1)) {
-			((WorldSession) session).setPlayer(player);
+			//((WorldSession) session).setPlayer(player);
 			System.out.println(account.getUsername().getName() + " has logged into the " + type.toString().split("_")[0].toLowerCase() + " (index="+player.getIndex()+").");
 		}
 	}

@@ -95,6 +95,7 @@ public class IncommingOpcodes {
 	//Friends/Ignores management
 	public final static int JOIN_FRIEND_CHAT_PACKET = 19;//803
 	public final static int FRIENDS_CHAT_KICK_PACKET = 8;//803
+	public final static int CLAN_KICK_PACKET = 62;//803
 	public final static int ONLINE_STATUS_PACKET = 22;//803
 	public final static int ADD_FRIEND_PACKET = 97;//803
 	public final static int REMOVE_FRIEND_PACKET = 58;//803

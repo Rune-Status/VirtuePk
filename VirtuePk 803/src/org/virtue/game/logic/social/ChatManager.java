@@ -152,7 +152,7 @@ public class ChatManager {
 		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
 		friendManager.init();
 		if (myClanHash != 0L) {
-			clanManager.getChannelManager().joinChannel(player, myClanHash);
+			clanManager.getChannelManager().joinMyChannel(player);
 		}
 	}
 	
@@ -165,6 +165,9 @@ public class ChatManager {
 		if (channelStage.equals(ChannelStage.JOINED)) {
 			friendsChatManager.leaveChannel(player, true);
 		}
+		//Leave both the clan channel and guest clan channel
+		clanManager.getChannelManager().leaveChannel(player, true, true);
+		clanManager.getChannelManager().leaveChannel(player, false, true);
 	}
 	
 	/**
@@ -301,6 +304,27 @@ public class ChatManager {
 	
 	public void setInClanChannel (boolean inClanChannel) {
 		this.inClanChannel = inClanChannel;
+	}
+	
+	public void joinMyClanChannel () {
+		if (!inClanChannel) {
+			clanManager.getChannelManager().joinMyChannel(player);
+		}
+	}
+	
+	public void joinGuestChannel (String clanName) {
+		if (guestClanHash == 0L) {
+			clanManager.getChannelManager().joinGuestChannel(player, clanName);
+		}
+	}
+	
+	public void leaveClanChannel (boolean isGuest) {
+		clanManager.getChannelManager().leaveChannel(player, isGuest, false);
+	}
+	
+	public void handleClanChannelMessage (String message, boolean isGuest) {
+		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
+		clanManager.getChannelManager().sendMessage(player, formattedMessage, isGuest);
 	}
 	
 	/**

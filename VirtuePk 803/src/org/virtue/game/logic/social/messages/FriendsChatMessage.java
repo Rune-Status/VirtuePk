@@ -1,5 +1,5 @@
 /*
- * This file is part of RS3Emulator.
+ * This file is part of the RS3Emulator social module.
  *
  * RS3Emulator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

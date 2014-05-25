@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.internal.SocialUser;
 import org.virtue.network.io.channel.ClanSettingsParser;
@@ -45,15 +46,31 @@ public class ClanManager {
 	public ClanManager () {
 		clanChatManager = new ClanChannelManager(this);
 		clanIndex = new ClanNameIndex();
+		Launcher.getEngine().getLogicProcessor().registerEvent(new ClanUpdateEvent(this));
 	}
 	
-	public void autoSaveClanData () {
+	/**
+	 * Runs the update tasks for a clan, such as dispatching any delta updates to the players in the clan
+	 */
+	protected void runUpdateTasks () {
+		for (ClanSettings clanData : clanDataCache.values()) {
+			if (clanData.needsUpdate()) {
+				clanData.dispatchUpdates();
+			}
+		}
+	}
+	
+	/**
+	 * Runs tasks related to saving clan data. This should be run less frequently than runUpdateTasks, but should be run fairly regularly to avoid clan data being lost due to a server crash.
+	 */
+	protected void runSaveTasks () {
 		if (clanIndex.needsUpdate()) {
 			clanIndex.saveIndex();
 		}
 		for (ClanSettings clanData : clanDataCache.values()) {
-			if (clanData.needsUpdate()) {
+			if (clanData.needsSave()) {
 				saveClanData(clanData);
+				clanData.onSaved();
 			}
 		}
 	}
@@ -72,6 +89,7 @@ public class ClanManager {
 	 * @return	A {@link ClanSettings} object containing the clan data, or null if the data was not found
 	 */
 	public ClanSettings getClanData (long clanHash) {
+		//TODO: Make this "protected" once testing is completed
 		ClanSettings settings = clanDataCache.get(clanHash);
 		if (settings != null) {
 			return settings;
@@ -96,6 +114,9 @@ public class ClanManager {
 	}
 	
 	public boolean joinClan (Player recruiter, Player joiner) {
+		if (joiner.getChatManager().getMyClanHash() != 0L) {
+			return false;//Already in clan
+		}
 		long clanHash = recruiter.getChatManager().getMyClanHash();
 		ClanSettings clan = getClanData (clanHash);
 		if (clan == null) {
@@ -105,9 +126,9 @@ public class ClanManager {
 		clan.addMember(new SocialUser(joiner));
 		joiner.getChatManager().setMyClanHash(clanHash);
 		if (joiner.getChatManager().getGuestClanHash() == clanHash) {
-			clanChatManager.leaveChannel(joiner, true);
+			clanChatManager.leaveChannel(joiner, true, false);
 		}
-		clanChatManager.joinChannel(joiner, clanHash);
+		clanChatManager.joinMyChannel(joiner);
 		return true;
 	}
 	

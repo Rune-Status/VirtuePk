@@ -114,9 +114,7 @@ public class FriendsChatSettings extends AbstractInterface {
 			getPlayer().getChatManager().getFriendManager().setFriendsChatPrefix(prefix);
 		}
 		@Override
-		public void onCancel() {
-			
-		}		
+		public void onCancel() { }		
 	};
 
 	@Override

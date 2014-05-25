@@ -1,5 +1,5 @@
 /*
- * This file is part of RS3Emulator.
+ * This file is part of the RS3Emulator social module.
  *
  * RS3Emulator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,16 +24,19 @@ import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
+import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.game.logic.social.messages.FriendsPacket;
 import org.virtue.game.logic.social.messages.IgnoresPacket;
 import org.virtue.game.logic.social.messages.PrivateMessage;
+import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelDeltaEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelMessageEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatMessageEncoder;
@@ -50,7 +53,7 @@ import org.virtue.utility.StringUtils.FormatType;
  */
 public class SocialUser {
 	
-	private Player player;
+	private final Player player;
 	private final String protocolName;
 	
 	public SocialUser (Player p) {
@@ -171,11 +174,18 @@ public class SocialUser {
 	}
 	
 	public void sendClanChannelFull (ClanChannelPacket packet) {
+		if (packet.isGuestUpdate()) {
+			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4453, 72744972, 72744974, 72745036, 72745072));
+			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4453, 94371842, 94371866, 94371861, 94371968));
+		}
 		player.getAccount().getSession().getTransmitter().send(ClanChannelEncoder.class, packet);
 	}
 	
 	public void sendLeaveClanChannel (boolean isGuest) {
 		//TODO: Also set the current clan chat to null
+		if (isGuest) {
+			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4438, 72744972));
+		}
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		buffer.putPacketVarShort(OutgoingOpcodes.CLAN_CHANNEL_FULL);
 		buffer.put(isGuest ? 0 : 1);
@@ -183,7 +193,23 @@ public class SocialUser {
 		player.getAccount().getSession().getTransmitter().send(buffer);
 	}
 	
+	public void sendClanChatMessage (ClanChannelMessage message) {
+		player.getAccount().getSession().getTransmitter().send(ClanChannelMessageEncoder.class, message);
+	}
+	
 	public boolean isMyClan (long hash) {
 		return hash == player.getChatManager().getMyClanHash();
+	}
+	
+	@Override
+	public boolean equals (Object anotherObject) {
+		if (anotherObject == this) {
+			return true;
+		}
+		if (anotherObject instanceof SocialUser) {
+			SocialUser anotherUser = (SocialUser) anotherObject;
+			return anotherUser.player.equals(this.player);
+		}
+		return false;
 	}
 }

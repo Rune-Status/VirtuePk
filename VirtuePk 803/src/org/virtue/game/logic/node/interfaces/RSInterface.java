@@ -24,6 +24,8 @@ public class RSInterface {
         
         public static final int FRIENDS_CHAT_INFO = 1427;
         
+        public static final int CLAN = 1110;
+        
         public static final int EQUIPMENT = 1464;
     
         public static final int INVENTORY = 1473;

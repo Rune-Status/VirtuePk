@@ -59,6 +59,8 @@ public class ClanSettings {
 	
 	private final Queue<ClanSettingsDelta> updateQueue = new LinkedList<ClanSettingsDelta>();
 	
+	private boolean needsSave;
+	
 	
 	public ClanSettings (long clanHash) {
 		this.clanHash = clanHash;
@@ -78,10 +80,19 @@ public class ClanSettings {
 		synchronized (updateQueue) {
 			updateQueue.offer(node);
 		}
+		needsSave = true;
 	}
 	
 	public boolean needsUpdate () {
 		return !updateQueue.isEmpty();
+	}
+	
+	public boolean needsSave () {
+		return needsSave;
+	}
+	
+	public void onSaved () {
+		needsSave = false;
 	}
 	
 	/**
@@ -270,7 +281,7 @@ public class ClanSettings {
 		}
 	}
 	
-	protected void setRank (String protocolName, ClanRank rank) throws NullPointerException {
+	public void setRank (String protocolName, ClanRank rank) throws NullPointerException {
 		ClanMember member = getMember(protocolName);
 		if (member == null) {
 			throw new NullPointerException(protocolName+" is not in "+clanName);

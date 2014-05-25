@@ -44,7 +44,7 @@ public class DeleteMember implements ClanChannelDelta {
 
 	@Override
 	public int getTypeID() {
-		return 2;
+		return 3;
 	}
 
 }

@@ -20,11 +20,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
-import org.virtue.utility.GameClock;
 
 /**
  * Contains the tools necessary for managing clans.
@@ -38,22 +37,21 @@ public class ClanChannelManager {
 	
 	private final ClanManager clanManager;
 	
-	//private HashMap<String, Long> clanNameResolver = new HashMap<String, Long>();
-	
 	public ClanChannelManager (ClanManager clanManager) {
 		this.clanManager = clanManager;
 		System.out.println("Initialising clan channel manager.");
-		Launcher.getEngine().registerLogicEvent(new Runnable() {
-			@Override
-			public void run() {
-				synchronized (clanCache) {
-					//System.out.println("Updating channels.");
-					for (ClanChannel channel : clanCache.values()) {
-						channel.dispatchUpdates();//Run through any pending tick events for the channel
-					}
-				}
-			}			
-		}, GameClock.ONE_TICK, GameClock.ONE_TICK);
+	}
+	
+	/**
+	 * Runs the update tasks for a clan, such as dispatching any delta updates to the players in the clan channel
+	 */
+	protected void runUpdateTasks () {
+		synchronized (clanCache) {
+			//System.out.println("Updating channels.");
+			for (ClanChannel channel : clanCache.values()) {
+				channel.dispatchUpdates();//Run through any pending tick events for the channel
+			}
+		}
 	}
 	
 	private ClanChannel getClanChannel (long clanHash) {
@@ -68,7 +66,8 @@ public class ClanChannelManager {
 		return clanCache.get(clanHash);
 	}
 	
-	public void joinChannel(Player player, long clanHash) {
+	public void joinMyChannel(Player player) {
+		long clanHash = player.getChatManager().getMyClanHash();
 		//System.out.println("Joining channel "+clanHash);
 		ClanChannel channel = getClanChannel(clanHash);
 		if (channel == null) {
@@ -104,18 +103,32 @@ public class ClanChannelManager {
 			return;
 		}
 		//TODO: Check whether the player is banned and whether the channel is full
+		//System.out.println("Joining clan "+clanName+" of hash "+clanHash+" as a guest.");
 		channel.join(new SocialUser(player), true);
 		player.getChatManager().setGuestClanHash(clanHash);
 	}
 	
-	public void leaveChannel (Player player, boolean isGuest) {
+	public void leaveChannel (Player player, boolean isGuest, boolean isLogout) {
+		SocialUser user = new SocialUser(player);
 		long clanHash = isGuest ? player.getChatManager().getGuestClanHash() : player.getChatManager().getMyClanHash();
-		ClanChannel channel = getClanChannel(clanHash);
-		if (channel == null) {
-			//Clan channel doesn't exist
+		if (clanHash == 0L) {
 			return;
 		}
-		channel.leave(new SocialUser(player), isGuest);
+		ClanChannel channel = getClanChannel(clanHash);
+		if (channel == null) {
+			if (!isLogout) {
+				setNotInChannel(player, isGuest);
+			}
+			return;
+		}
+		channel.leave(user, isGuest);
+		if (!isLogout) {
+			user.sendLeaveClanChannel(isGuest);
+			setNotInChannel(player, isGuest);
+		}		
+	}
+	
+	private void setNotInChannel (Player player, boolean isGuest) {
 		if (isGuest) {
 			player.getChatManager().setGuestClanHash(0L);
 		} else {
@@ -123,17 +136,26 @@ public class ClanChannelManager {
 		}
 	}
 	
+	/**
+	 * Sends a message in a clan channel the player is currently in
+	 * @param player	The player sending the message
+	 * @param message	The message to send
+	 * @param isGuest	Whether the message is being sent in a guest channel or not
+	 */
 	public void sendMessage (Player player, String message, boolean isGuest) {
 		SocialUser user = new SocialUser(player);
 		long clanHash = isGuest ? player.getChatManager().getGuestClanHash() : player.getChatManager().getMyClanHash();
 		ClanChannel channel = getClanChannel(clanHash);
 		if (channel == null) {
-			user.sendGameMessage("Not in channel.", MessageOpcode.CLAN_SYSTEM);//TODO: Fix message
+			user.sendGameMessage("You aren't"+(isGuest?" a guest":"")+" in a"+(isGuest?" visited":"")+" Clan Chat channel.", MessageOpcode.CLAN_SYSTEM);
 			return;
 		}
 		if (!channel.canTalk(user.getProtocolName())) {
 			user.sendGameMessage("Cannot talk.", MessageOpcode.CLAN_SYSTEM);//TODO: Fix message
 			return;
 		}
+		ClanChannelMessage mainMessage = new ClanChannelMessage(false, message, user.getDisplayName(), user.getRank());
+		ClanChannelMessage guestMessage = new ClanChannelMessage(mainMessage, true);
+		channel.sendMessage(mainMessage, guestMessage);
 	}
 }

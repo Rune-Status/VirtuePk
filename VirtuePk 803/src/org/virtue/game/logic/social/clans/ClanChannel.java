@@ -26,6 +26,7 @@ import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.clans.ccdelta.DeleteMember;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateMember;
 import org.virtue.game.logic.social.internal.SocialUser;
+import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
 
 /**
@@ -49,6 +50,7 @@ public class ClanChannel {
 		this.clanData = data;
 		clanData.linkChannel(this);
 		updateNumber = 1L;
+		
 	}
 	
 	/**
@@ -59,7 +61,8 @@ public class ClanChannel {
 		return clanData;
 	}
 	
-	public boolean join (SocialUser player, boolean isGuest) {
+	protected boolean join (SocialUser player, boolean isGuest) {
+		//System.out.println("Joining clan "+clanData.getClanName()+" of hash "+clanData.getClanHash()+" as a guest.");
 		//TODO: Check whether the channel is full
 		synchronized (users) {
 			if (initQueue.contains(player) || getUser(player.getProtocolName()) != null) {
@@ -77,22 +80,22 @@ public class ClanChannel {
 	 * @param isGuest	Whether the user is leaving a guest clan channel
 	 * @return			True if the player was the last user in the channel (and therefore is empty), false otherwise
 	 */
-	public boolean leave (SocialUser player, boolean isGuest) {
+	protected boolean leave (SocialUser player, boolean isGuest) {
 		removeUser(player);
-		player.sendLeaveClanChannel(isGuest);
 		return users.isEmpty();
 	}
 	
-	private void removeUser (SocialUser user) {
+	protected void removeUser (SocialUser user) {
 		int index;
 		synchronized (users) {
 			index = users.indexOf(user);
+			System.out.println("Removing user "+user.getDisplayName()+" at index "+index);
 			if (index == -1) {
 				return;
 			}
 			users.remove(index);
+			queueUpdate(new DeleteMember(index));
 		}		
-		queueUpdate(new DeleteMember(index));
 	}
 	
 	public SocialUser getUser (String protocolName) {
@@ -106,6 +109,26 @@ public class ClanChannel {
 	
 	public boolean canTalk (String protocolName) {
 		return clanData.getMinTalk().getID() <= clanData.getRank(protocolName).getID();
+	}
+	
+	/**
+	 * Sends the specified message to all users in the channel
+	 * @param mainMessage	The message to send to all clan members
+	 * @param guestMessage	The message to send to all guests
+	 */
+	protected void sendMessage (ClanChannelMessage mainMessage, ClanChannelMessage guestMessage) {
+		synchronized (users) {
+			for (SocialUser u : users) {
+				if (u == null) {
+					continue;
+				}
+				if (u.isMyClan(clanData.getClanHash())) {
+					u.sendClanChatMessage(mainMessage);
+				} else {
+					u.sendClanChatMessage(guestMessage);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -186,6 +209,7 @@ public class ClanChannel {
 		}
 		SocialUser u = null;
 		while ((u = initQueue.poll()) != null) {
+			System.out.println("Sending init packet to player "+u.getDisplayName()+", clan="+clanData.getClanName()+", isGuest="+!u.isMyClan(clanData.getClanHash()));
 			sendInitPacket(u, entries, !u.isMyClan(clanData.getClanHash()));
 		}
 	}

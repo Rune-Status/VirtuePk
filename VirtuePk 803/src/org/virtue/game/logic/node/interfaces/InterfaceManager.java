@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
+import org.virtue.game.logic.node.interfaces.impl.ClanInterface;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatInfo;
 import org.virtue.game.logic.node.interfaces.impl.FriendsList;
 import org.virtue.game.logic.node.interfaces.impl.MinimapInterface;
@@ -113,12 +114,14 @@ public class InterfaceManager {
 		sendInterfaceSettings(1427, 23, 0, 600, 1024);//IfaceSettings: 93519895, 600, 0, 1024*/
 		//sendCs2(new ClientScriptVar(8862, 15, 1));//Runscript: [8862, 15, 1]
 		
-		sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361] (Clan chat)
+		setInterface(new ClanInterface(player), 361, true);
+		
+		/*sendInterface(true, 1477, 361, 1110);//Interface: id=1110, clipped=1, parent=[1477, 361] (Clan chat)
 		//sendCs2(new ClientScriptVar(8862, 16, 1));//Runscript: [8862, 16, 1]
 		sendInterfaceSettings(1110, 20, 0, 200, 2);//IfaceSettings: 72744980, 200, 0, 2
 		sendInterfaceSettings(1110, 25, 0, 600, 2);//IfaceSettings: 72744985, 600, 0, 2
 		sendInterfaceSettings(1110, 23, 0, 600, 1024);//IfaceSettings: 72744983, 600, 0, 1024
-		sendInterfaceSettings(1110, 14, 0, 600, 1024);//IfaceSettings: 72744974, 600, 0, 1024
+		sendInterfaceSettings(1110, 14, 0, 600, 1024);//IfaceSettings: 72744974, 600, 0, 1024*/
 		
 		sendInterface(true, 1477, 303, 590);//Interface: id=590, clipped=1, parent=[1477, 303]
 		sendCs2(new ClientScriptVar(4717, 3874, 38666249, 38666247, 38666248));//Runscript: [4717, 38666248, 38666247, 38666249, 3874]
