@@ -342,7 +342,7 @@ public class Movement {
 				World.getWorld().getRegionManager().getRegionByID(tile.getRegionID(), true).addPlayer((Player) entity);
 			}
 		}
-		entity.getTile().copy(tile);//FIXME: Something is still going wrong with teleporting, where the entity isn't received at the right location on the client side...
+		entity.getTile().copy(tile);
 		if (entity instanceof Player) {
 			if (((Player) entity).getViewport().needsMapUpdate()) {
 				((Player) entity).getViewport().loadViewport();

@@ -22,15 +22,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
 import org.virtue.game.logic.social.clans.csdelta.AddMember;
 import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
 import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
-import org.virtue.game.logic.social.internal.InternalSocialUser;
+import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 /**
  * Represents the underlying settings data for a clan
@@ -56,6 +58,12 @@ public class ClanSettings {
 	private int updateNumber = 0;
 	
 	private List<ClanMember> members = Collections.synchronizedList(new ArrayList<ClanMember>());
+	
+	private List<ClanBan> bans = Collections.synchronizedList(new ArrayList<ClanBan>());
+	
+	private final List<SocialUser> onlineMembers = Collections.synchronizedList(new ArrayList<SocialUser>());
+	
+	private final Queue<SocialUser> initQueue = new LinkedList<SocialUser>();
 	
 	private final Queue<ClanSettingsDelta> updateQueue = new LinkedList<ClanSettingsDelta>();
 	
@@ -83,10 +91,6 @@ public class ClanSettings {
 		needsSave = true;
 	}
 	
-	public boolean needsUpdate () {
-		return !updateQueue.isEmpty();
-	}
-	
 	public boolean needsSave () {
 		return needsSave;
 	}
@@ -99,8 +103,73 @@ public class ClanSettings {
 	 * Sends the clan settings delta updates to every clan member who is currently logged in
 	 */
 	protected void dispatchUpdates () {
-		//TODO: Complete this
-		updateQueue.clear();
+		if (updateQueue.isEmpty()) {
+			sendInitPackets();
+			return;
+		}
+		ClanSettingsDelta[] deltaNodes;
+		int thisUpdate = updateNumber;
+		synchronized (updateQueue) {
+			deltaNodes = new ClanSettingsDelta[updateQueue.size()];
+			updateQueue.toArray(deltaNodes);
+			updateQueue.clear();
+			updateNumber++;
+		}
+		//TODO: Dispatch the delta updates
+		sendInitPackets();
+	}
+	
+	/**
+	 * Sends any queued initialisation packets
+	 */
+	private void sendInitPackets () {
+		if (initQueue.isEmpty()) {
+			return;
+		}
+		ClanSettingsPacket.Member[] entries;
+		String[] banEntries;
+		synchronized (onlineMembers) {
+			for (SocialUser u : initQueue) {
+				onlineMembers.add(u);
+			}
+		}
+		synchronized (members) {
+			entries = new ClanSettingsPacket.Member[members.size()];
+			for (int i=0;i<members.size();i++) {
+				ClanMember u = members.get(i);
+				entries[i] = new ClanSettingsPacket.Member(u.getDisplayName(), u.getRank());
+			}
+		}
+		synchronized (bans) {
+			banEntries = new String[bans.size()];
+			for (int i=0;i<bans.size();i++) {
+				banEntries[i] = bans.get(i).getDisplayName();
+			}
+		}
+		ClanSettingsPacket packet = new ClanSettingsPacket(false, clanName, entries, banEntries,
+					updateNumber, allowNonMembers, minTalkRank, minKickRank);
+		SocialUser user = null;
+		while ((user = initQueue.poll()) != null) {
+			user.sendClanSettingsFull(packet);
+		}
+	}
+	
+	public void registerOnlineMember (SocialUser user) {
+		synchronized(initQueue) {
+			if (!initQueue.contains(user)) {
+				initQueue.offer(user);
+			}
+		}
+	}
+	
+	public void deregisterOnlineMember (SocialUser user) {
+		synchronized(initQueue) {
+			if (initQueue.contains(user)) {
+				initQueue.remove(user);
+			} else if (onlineMembers.contains(user)) {
+				onlineMembers.remove(user);
+			}
+		}
 	}
 	
 	public void deserialise (JsonObject clanData, int version) {
@@ -117,7 +186,8 @@ public class ClanSettings {
 		if (minLootShareRank == null) {
 			minLootShareRank = ClanRank.RECRUIT;
 		}
-		JsonArray membersData = clanData.get("members").getAsJsonArray();	
+		JsonArray membersData = clanData.get("members").getAsJsonArray();
+		members.clear();
 		for (JsonElement member : membersData) {
 			JsonObject memberData = member.getAsJsonObject();
 			String protocolName = memberData.get("username").getAsString();
@@ -126,6 +196,11 @@ public class ClanSettings {
 				rank = ClanRank.RECRUIT;
 			}
 			members.add(new ClanMember(protocolName, rank));
+		}
+		JsonArray banData = clanData.get("bans").getAsJsonArray();
+		bans.clear();
+		for (JsonElement ban : banData) {
+			bans.add(new ClanBan(ban.getAsString()));
 		}
 	}
 	
@@ -152,6 +227,11 @@ public class ClanSettings {
 		clanData.add("members", memberData);
 		
 		//Clan ban data
+		JsonArray banData = new JsonArray();
+		for (ClanBan ban : bans) {
+			banData.add(new JsonPrimitive(ban.getProtocolName()));
+		}
+		clanData.add("bans", banData);
 		
 		return clanData;
 	}
@@ -269,7 +349,7 @@ public class ClanSettings {
 	 * Note that setting the player's clan within the player data and sending the clan channel must be handled separately
 	 * @param player The player to add to the clan
 	 */
-	protected void addMember (InternalSocialUser player) {
+	protected void addMember (SocialUser player) {
 		if (inClan(player.getProtocolName())) {
 			return;
 		}

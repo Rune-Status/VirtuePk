@@ -27,6 +27,10 @@ public class ClanInterface extends AbstractInterface {
 	@Override
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
 		switch (component) {
+		case 78:
+		case 80:
+		case 82://These indicate changing tabs on the clan interface. No need to worry about them...
+			break;
 		case 106://Join/leave main clan chat
 			if (player.getChatManager().inClanChannel()) {
 				player.getChatManager().leaveClanChannel(false);
@@ -49,12 +53,18 @@ public class ClanInterface extends AbstractInterface {
 				getPlayer().setInputEvent(onJoinGuestClan);
 			}
 			break;
+		case 104://Clan settings
+			if (player.getChatManager().getMyClanHash() == 0L) {
+				player.getPacketDispatcher().dispatchMessage("You're not in a clan.", MessageOpcode.CLAN_SYSTEM);
+			} else {
+				getPlayer().getInterfaces().setTopInterface(new ClanSettings(player));
+			}
+			break;
 		case 103://Clan info
 			if (player.getChatManager().getMyClanHash() == 0L) {
 				player.getPacketDispatcher().dispatchMessage("You're not in a clan.", MessageOpcode.CLAN_SYSTEM);
 			}
 		case 153://Clan noticeboard functions
-		case 104://Clan settings
 		case 124://Leave clan
 		case 135://Check resources
 		case 120://Kick/ban guest

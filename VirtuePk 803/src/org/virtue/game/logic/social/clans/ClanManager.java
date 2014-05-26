@@ -50,14 +50,30 @@ public class ClanManager {
 		Launcher.getEngine().getLogicProcessor().registerEvent(new ClanUpdateEvent(this));
 	}
 	
+	public void registerPlayer (SocialUser user) {
+		if (user.getMyClanHash() != 0L) {
+			ClanSettings clanData = getClanData(user.getMyClanHash());
+			if (clanData != null) {
+				clanData.registerOnlineMember(user);
+			}
+		}
+	}
+	
+	public void deregisterPlayer (SocialUser user) {
+		if (user.getMyClanHash() != 0L) {
+			ClanSettings clanData = getClanData(user.getMyClanHash());
+			if (clanData != null) {
+				clanData.deregisterOnlineMember(user);
+			}
+		}
+	}
+	
 	/**
 	 * Runs the update tasks for a clan, such as dispatching any delta updates to the players in the clan
 	 */
 	protected void runUpdateTasks () {
 		for (ClanSettings clanData : clanDataCache.values()) {
-			if (clanData.needsUpdate()) {
-				clanData.dispatchUpdates();
-			}
+			clanData.dispatchUpdates();
 		}
 	}
 	

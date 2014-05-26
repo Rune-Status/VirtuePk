@@ -26,7 +26,6 @@ import org.virtue.game.logic.social.clans.ccdelta.AddMember;
 import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.clans.ccdelta.DeleteMember;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateMember;
-import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
@@ -192,9 +191,9 @@ public class ClanChannel {
 				} else {
 					u.sendClanChannelDelta(guestPacket);
 				}
-			}
-			sendInitPackets();
+			}			
 		}
+		sendInitPackets();
 	}
 	
 	/**

@@ -154,6 +154,7 @@ public class ChatManager {
 		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
 		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
 		friendManager.init();
+		clanManager.registerPlayer(socialUser);
 		if (myClanHash != 0L) {
 			clanManager.getChannelManager().joinMyChannel(socialUser);
 		}
@@ -168,6 +169,7 @@ public class ChatManager {
 		if (channelStage.equals(ChannelStage.JOINED)) {
 			friendsChatManager.leaveChannel(socialUser, true);
 		}
+		clanManager.deregisterPlayer(socialUser);
 		//Leave both the clan channel and guest clan channel
 		clanManager.getChannelManager().leaveChannel(socialUser, true, true);
 		clanManager.getChannelManager().leaveChannel(socialUser, false, true);

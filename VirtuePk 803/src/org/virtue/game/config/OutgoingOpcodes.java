@@ -29,8 +29,8 @@ public class OutgoingOpcodes {
 	public static final int SMALL_VARP_PACKET = 96;//803
 	public static final int LARGE_VARBIT_PACKET = 154;//803
 	public static final int SMALL_VARBIT_PACKET = 7;//803
-	public static final int LARGE_GLOBAL_STRING_PACKET = 0;//803
-	public static final int SMALL_GLOBAL_STRING_PACKET = 41;//803
+	public static final int LARGE_VARC_STRING_PACKET = 0;//803
+	public static final int SMALL_VARC_STRING_PACKET = 41;//803
 	
 	//Item containers
 	public static final int ITEMS_PACKET = 130;//803

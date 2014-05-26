@@ -23,6 +23,7 @@ import org.virtue.game.logic.social.internal.Ignore;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
+import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.game.logic.social.messages.PrivateMessage;
@@ -54,6 +55,8 @@ public interface SocialUser {
 	//TODO: Move all the world details into a single class
 	
 	public Rank getRights ();
+	
+	public boolean isOnline ();
 	
 	/**
 	 * Sends a system message of the specified type to the player
@@ -191,6 +194,14 @@ public interface SocialUser {
 	 */
 	public void sendClanChatMessage (ClanChannelMessage message);
 	
+	/**
+	 * Informs the player that they have left the clan chat channel they are currently in
+	 * @param isGuest	True if the player left their guest cc, false if they left their main cc
+	 */
 	public void sendLeaveClanChannel (boolean isGuest);
 	
+	//=================================Clan data section=================================//
+	
+	
+	public void sendClanSettingsFull (ClanSettingsPacket packet);
 }

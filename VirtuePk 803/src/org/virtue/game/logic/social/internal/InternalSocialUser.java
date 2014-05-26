@@ -26,6 +26,7 @@ import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
+import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.game.logic.social.messages.FriendsPacket;
@@ -37,6 +38,7 @@ import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelDeltaEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelMessageEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.ClanSettingsEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatMessageEncoder;
@@ -88,6 +90,10 @@ public class InternalSocialUser implements SocialUser {
 	@Override
 	public int getWorldID () {
 		return (player.isInWorld() ? 1 : 1100);
+	}
+	
+	public boolean isOnline () {
+		return player.exists();
 	}
 	
 	@Override
@@ -241,6 +247,7 @@ public class InternalSocialUser implements SocialUser {
 		player.getAccount().getSession().getTransmitter().send(ClanChannelEncoder.class, packet);
 	}
 	
+	@Override
 	public void sendLeaveClanChannel (boolean isGuest) {
 		if (isGuest) {
 			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4438, 72744972));
@@ -258,6 +265,12 @@ public class InternalSocialUser implements SocialUser {
 	@Override
 	public void sendClanChatMessage (ClanChannelMessage message) {
 		player.getAccount().getSession().getTransmitter().send(ClanChannelMessageEncoder.class, message);
+	}
+	
+	//=================================Clan data section=================================//
+	
+	public void sendClanSettingsFull (ClanSettingsPacket packet) {
+		player.getAccount().getSession().getTransmitter().send(ClanSettingsEncoder.class, packet);
 	}
 	
 	@Override
