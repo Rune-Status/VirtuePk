@@ -9,7 +9,7 @@ import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.messages.ClientScriptVar;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarMessage;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -40,7 +40,7 @@ public class Bank extends AbstractInterface {
 		sendInterfaceSettings(39, 0, 871, 2622718);
 		sendInterfaceSettings(54, 0, 27, 2361214);
 		sendInterfaceSettings(132, 0, 27, 4260990);
-		getPlayer().getPacketDispatcher().dispatchVarp(new VarpMessage(111, lastDepositAmount));
+		getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
 		refresh();
 	}
 	
@@ -139,7 +139,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVarp(new VarpMessage(111, lastDepositAmount));
+						getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
 						withdrawItem(itemID, slotID, amount);
 					}
 					@Override
@@ -187,7 +187,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVarp(new VarpMessage(111, lastDepositAmount));
+						getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
 						depositInventoryItem(itemID, slotID, amount);
 					}
 					@Override

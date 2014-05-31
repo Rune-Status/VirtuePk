@@ -344,6 +344,10 @@ public class ClanSettings {
 		return null;
 	}
 	
+	public void sendMemberInfo (SocialUser user, int index) {
+		user.sendClanMemberInfo(members.get(index));
+	}
+	
 	/**
 	 * Adds the provided player to the clan. 
 	 * Note that setting the player's clan within the player data and sending the clan channel must be handled separately

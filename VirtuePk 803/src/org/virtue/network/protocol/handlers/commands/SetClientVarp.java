@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarMessage;
 
 public class SetClientVarp implements Command {
 
@@ -14,7 +14,7 @@ public class SetClientVarp implements Command {
 		} catch (Exception ex) {
 			return false;
 		}
-		player.getPacketDispatcher().dispatchVarp(new VarpMessage(key, value));
+		player.getPacketDispatcher().dispatchVarp(new VarMessage(key, value));
 		System.out.println("Sending varp to client: key="+key+", value="+value);
 		return true;
 	}

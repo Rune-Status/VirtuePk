@@ -18,6 +18,7 @@ package org.virtue.game.logic.social;
 
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
+import org.virtue.game.logic.social.clans.ClanMember;
 import org.virtue.game.logic.social.internal.Friend;
 import org.virtue.game.logic.social.internal.Ignore;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
@@ -204,4 +205,6 @@ public interface SocialUser {
 	
 	
 	public void sendClanSettingsFull (ClanSettingsPacket packet);
+	
+	public void sendClanMemberInfo (ClanMember member);
 }

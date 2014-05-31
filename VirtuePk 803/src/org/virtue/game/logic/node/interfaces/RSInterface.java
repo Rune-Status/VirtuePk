@@ -27,6 +27,8 @@ public class RSInterface {
         public static final int CLAN = 1110;
         
         public static final int CLAN_SETTINGS = 1096;
+		
+		public static final int CLAN_BROADCAST_SETTINGS = 573;
         
         public static final int EQUIPMENT = 1464;
     

@@ -509,11 +509,15 @@ public class InterfaceManager {
 	}
 	
 	public void setTopInterface (AbstractInterface iFace) {
+		setTopInterface(iFace, 236);
+	}
+	
+	public void setTopInterface (AbstractInterface iFace, int component) {
 		if (topLevelInterface != null) {
 			topLevelInterface.close();
 		}
 		this.topLevelInterface = iFace;
-		setInterface(iFace, 236, false);
+		setInterface(iFace, component, false);
 	}
 	
 	public void openBank () {

@@ -7,8 +7,6 @@ import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
-import org.virtue.utility.StringUtils;
-import org.virtue.utility.StringUtils.FormatType;
 
 public class ClanInterface extends AbstractInterface {
 
@@ -57,7 +55,7 @@ public class ClanInterface extends AbstractInterface {
 			if (player.getChatManager().getMyClanHash() == 0L) {
 				player.getPacketDispatcher().dispatchMessage("You're not in a clan.", MessageOpcode.CLAN_SYSTEM);
 			} else {
-				getPlayer().getInterfaces().setTopInterface(new ClanSettings(player));
+				getPlayer().getInterfaces().setTopInterface(new ClanSettingsInterface(player));
 			}
 			break;
 		case 103://Clan info

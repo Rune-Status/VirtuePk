@@ -18,7 +18,8 @@ import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.ItemsMessage;
 import org.virtue.network.protocol.messages.ObjectMessage;
 import org.virtue.network.protocol.messages.ObjectMessage.ObjectUpdateType;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarcStringMessage;
+import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.GameMessageEncoder;
@@ -30,7 +31,8 @@ import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ObjectUpdateEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.SkillEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.VarcStringEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.VarEncoder;
 
 /**
  * A class used for organization of outgoing packets so the transmitter doesn't
@@ -170,13 +172,25 @@ public class PacketDispatcher {
 		player.getAccount().getSession().getTransmitter().send(MapSceneEncoder.class, player.getViewport());
 	}
 	
+	public void dispatchVarp(int id, int value) {
+		dispatchVarp(new VarMessage(id, value));
+	}
+	
 	/**
 	 * Dispatches a varp to the client. The varp may consist of many different
 	 * properties, this is used for specific client events
 	 * @param message The varp message to be dispatched.
 	 */
-	public void dispatchVarp(VarpMessage message) {
-		player.getAccount().getSession().getTransmitter().send(VarpEncoder.class, message);
+	public void dispatchVarp(VarMessage message) {
+		player.getAccount().getSession().getTransmitter().send(VarEncoder.class, message);
+	}
+	
+	public void dispatchVarcString(VarcStringMessage message) {
+		player.getAccount().getSession().getTransmitter().send(VarcStringEncoder.class, message);
+	}
+	
+	public void dispatchClientScriptVar(int scriptID, Object... params) {
+		dispatchClientScriptVar(new ClientScriptVar(scriptID, params));
 	}
 
 	/**

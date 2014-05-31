@@ -4,7 +4,9 @@ package org.virtue.network.protocol.messages;
  * @author Taylor
  * @version 1.0
  */
-public class VarpMessage {
+public class VarMessage {
+	
+	public static enum Type {PLAYER, NPC, CLIENT, BIT};
 
 	/**
 	 * The ID of the varp
@@ -17,41 +19,41 @@ public class VarpMessage {
 	private final int value;
 	
 	/**
-	 * If the varp 
+	 * Whether the var is varclient (varc) or varplayer (varp)
 	 */
-	private final boolean cs2;
+	private final boolean varClient;
 	
 	/**
 	 * Constructs a new {@code VarpContext.java}
 	 * @param varpId The varp ID
 	 * @param cs2 If this is a cs2 varp
 	 */
-	public VarpMessage(int varpId, int value, boolean cs2) {
+	public VarMessage(int varpId, int value, boolean varClient) {
 		this.varpId = varpId;
 		this.value = value;
-		this.cs2 = cs2;
+		this.varClient = varClient;
 	}
 	
 	/**
 	 * Constructs a new {@code VarpContext.java}
 	 * @param varpId The varp ID
 	 */
-	public VarpMessage(int varpId, int value) {
+	public VarMessage(int varpId, int value) {
 		this(varpId, value, false);
 	}
 
 	/**
 	 * @return The varpId
 	 */
-	public int getVarpId() {
+	public int getVarID() {
 		return varpId;
 	}
 
 	/**
 	 * @return The cs2
 	 */
-	public boolean isCs2() {
-		return cs2;
+	public boolean isVarClient() {
+		return varClient;
 	}
 
 	/**

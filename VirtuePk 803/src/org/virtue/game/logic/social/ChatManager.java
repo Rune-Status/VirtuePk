@@ -22,9 +22,11 @@ import org.virtue.Launcher;
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.interfaces.impl.ClanSettingsInterface;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.clans.ClanChannelManager;
 import org.virtue.game.logic.social.clans.ClanManager;
+import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
 import org.virtue.game.logic.social.internal.InternalSocialUser;
@@ -112,6 +114,8 @@ public class ChatManager {
 	private long guestClanHash = 0L;
 	
 	private boolean inClanChannel = false;
+	
+	private ClanSettingsInterface clanSettings = null;
 	
 	/**
 	 * Constructs a new {@code ChatManager} instance for the specified player
@@ -330,6 +334,18 @@ public class ChatManager {
 	public void handleClanChannelMessage (String message, boolean isGuest) {
 		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
 		clanManager.getChannelManager().sendMessage(socialUser, formattedMessage, isGuest);
+	}
+	
+	public void setClanSettings (ClanSettingsInterface settings) {
+		this.clanSettings = settings;
+	}
+	
+	public ClanSettingsInterface getClanSettingsInterface () {
+		return clanSettings;
+	}
+	
+	public ClanSettings getClanData () {//TODO: Don't display this publicly
+		return clanManager.getClanData(myClanHash);
 	}
 	
 	/**

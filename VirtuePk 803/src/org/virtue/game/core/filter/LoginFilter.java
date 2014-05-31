@@ -10,13 +10,12 @@ import org.virtue.game.logic.Lobby;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Account;
-import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.network.protocol.codec.login.LoginType;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarMessage;
+import org.virtue.network.protocol.packet.encoder.impl.InterfaceLayoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LoginEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.InterfaceLayoutEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.VarpEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.VarEncoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.impl.WorldSession;
 
@@ -62,7 +61,7 @@ public class LoginFilter extends LogicEvent {
 			for (int i = 0; i < varps.length; i++) {
 				int val = varps[i];
 				if (val != 0) {
-					session.getTransmitter().send(VarpEncoder.class, new VarpMessage(i, val));
+					session.getTransmitter().send(VarEncoder.class, new VarMessage(i, val));
 				}
 			}
 			System.out.println("Initialising lobby for player "+account.getUsername().getAccountName());
@@ -112,7 +111,7 @@ public class LoginFilter extends LogicEvent {
 
 	@Override
 	public long getIntervalDelay() {
-		return 5;
+		return 10;
 	}
 
 	@Override

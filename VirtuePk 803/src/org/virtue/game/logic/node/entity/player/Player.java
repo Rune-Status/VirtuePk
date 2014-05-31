@@ -22,7 +22,7 @@ import org.virtue.game.logic.social.ChatManager;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
@@ -191,7 +191,7 @@ public class Player extends Entity {
 		for (int i = 0; i < varps.length; i++) {
 			int val = varps[i];
 			if (val != 0) {
-				packetDispatcher.dispatchVarp(new VarpMessage(i, val));
+				packetDispatcher.dispatchVarp(new VarMessage(i, val));
 			}
 		}
 		interfaceManager.sendScreen();
@@ -199,7 +199,7 @@ public class Player extends Entity {
 		for (int i = 0; i < varps2.length; i++) {
 			int val = varps2[i];
 			if (val != 0) {
-				packetDispatcher.dispatchVarp(new VarpMessage(i, val));
+				packetDispatcher.dispatchVarp(new VarMessage(i, val));
 			}
 		}
 		inventory.load();
@@ -384,7 +384,7 @@ public class Player extends Entity {
 	}
 	
 	public void sendRunButtonConfig() {
-		packetDispatcher.dispatchVarp(new VarpMessage(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0));
+		packetDispatcher.dispatchVarp(new VarMessage(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0));
 	}
 	
 	public void drainRunEnergy () {

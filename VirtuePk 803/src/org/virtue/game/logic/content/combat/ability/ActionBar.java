@@ -4,7 +4,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
-import org.virtue.network.protocol.messages.VarpMessage;
+import org.virtue.network.protocol.messages.VarMessage;
 
 /**
  * @author Virtue Development Team 2014 (c).

@@ -7,6 +7,10 @@ public class CacheIndex {
 	public static final int HUFFMAN_ENCODING = 10;
 	
     public static final int OBJECT_DEFINITIONS = 16;
+    
+    public static final int CLIENT_SCRIPT_MAPS = 17;
+    
+    public static final int GENERAL_MAPS = 22;
 
     public static final int NPC_DEFINITIONS = 18;
 
