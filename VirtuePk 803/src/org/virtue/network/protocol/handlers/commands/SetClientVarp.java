@@ -14,7 +14,7 @@ public class SetClientVarp implements Command {
 		} catch (Exception ex) {
 			return false;
 		}
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(key, value));
+		player.getPacketDispatcher().dispatchVar(new VarMessage(key, value));
 		System.out.println("Sending varp to client: key="+key+", value="+value);
 		return true;
 	}

@@ -1,24 +1,12 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.identity.Account;
-import org.virtue.game.logic.node.entity.player.identity.Username;
-import org.virtue.game.logic.social.ChatManager;
-import org.virtue.game.logic.social.clans.InternalClanChannelManager;
-import org.virtue.game.logic.social.clans.ClanRank;
-import org.virtue.game.logic.social.clans.ClanSettings;
 
 /**
  * @author Taylor Moon
  * @since Jan 26, 2014
  */
 public class TestCommand implements Command {
-	
-	Player testRecruiter = new Player(new Account(new Username("TestRecruiter"), null, null, null, 0, 0));
-	
-	public TestCommand () {
-		testRecruiter.getChatManager().setMyClanHash(1004L);
-	}
 
 	@Override
 	public boolean handle(String syntax, Player player, boolean clientCommand, String... args) {		

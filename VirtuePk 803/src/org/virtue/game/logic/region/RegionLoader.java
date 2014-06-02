@@ -1,6 +1,5 @@
 package org.virtue.game.logic.region;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.virtue.Launcher;

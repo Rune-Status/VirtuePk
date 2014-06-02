@@ -32,6 +32,8 @@ public class ClanMember {
 	
 	private ClanRank rank;
 	
+	private boolean bannedFromCitadel = true;
+	
 	public ClanMember (String protocolName) {
 		this(protocolName, ClanRank.RECRUIT);
 	}
@@ -52,6 +54,10 @@ public class ClanMember {
 	
 	public ClanRank getRank () {
 		return rank;
+	}
+	
+	public boolean isBannedFromCitadel () {
+		return bannedFromCitadel;
 	}
 	
 	/**

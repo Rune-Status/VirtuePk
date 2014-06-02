@@ -28,9 +28,14 @@ public class InterfaceManager {
 	/**
 	 * Represents all interfaces currently in use for the player
 	 */
-	private HashMap<Integer, AbstractInterface> tabInterfaces = new HashMap<Integer, AbstractInterface>();
+	private HashMap<Integer, AbstractInterface> interfaces = new HashMap<Integer, AbstractInterface>();
 	
-	private AbstractInterface topLevelInterface = null;
+	/**
+	 * Represents the current top-level interface
+	 */
+	private AbstractInterface topInterface = null;
+	
+	private ManagementInterface managementInterface;
 	
 	/**
 	 * Constructs a new {@code InterfaceManager.java}.
@@ -39,6 +44,7 @@ public class InterfaceManager {
 	public InterfaceManager(Player player, ClientScreen screen) {
 		this.player = player;
 		this.screenInfo = screen;
+		this.managementInterface = new ManagementInterface(player);
 	}
 	
 	public static final int GAME_WINDOW_PANE = 1477;
@@ -196,7 +202,10 @@ public class InterfaceManager {
 		sendInterface(true, 1477, 409, 745);//Interface: id=745, clipped=1, parent=[1477, 409] (Assisting interface)
 		sendInterface(true, 1477, 386, 1485);//Interface: id=1485, clipped=1, parent=[1477, 386]
 		sendInterface(true, 1477, 0, 1213);//Interface: id=1213, clipped=1, parent=[1477, 0] (Skill popups)
-		sendInterface(true, 1477, 76, 1448);//Interface: id=1448, clipped=1, parent=[1477, 76]
+		
+		setInterface(managementInterface, 76, true);
+		//sendInterface(true, 1477, 76, 1448);//Interface: id=1448, clipped=1, parent=[1477, 76] (Management interface)
+		
 		sendInterface(true, 1477, 832, 557);//Interface: id=557, clipped=1, parent=[1477, 832] (Current task)
 		sendInterface(true, 1477, 18, 1484);//Interface: id=1484, clipped=1, parent=[1477, 18]
 		sendInterface(true, 1477, 106, 137);//Interface: id=137, clipped=1, parent=[1477, 106] (Chat box)
@@ -513,26 +522,30 @@ public class InterfaceManager {
 	}
 	
 	public void setTopInterface (AbstractInterface iFace, int component) {
-		if (topLevelInterface != null) {
-			topLevelInterface.close();
+		if (topInterface != null) {
+			topInterface.close();
 		}
-		this.topLevelInterface = iFace;
+		this.topInterface = iFace;
 		setInterface(iFace, component, false);
 	}
 	
 	public void openBank () {
-		if (topLevelInterface != null) {
-			topLevelInterface.close();
+		if (topInterface != null) {
+			topInterface.close();
 		}
-		this.topLevelInterface = player.getBank();
+		this.topInterface = player.getBank();
 		setInterface(player.getBank(), 13, false);
 	}
 	
+	public ManagementInterface getManagementInterface () {
+		return managementInterface;
+	}
+	
 	public void closeTopInterface () {
-		if (topLevelInterface != null) {
-			topLevelInterface.close();
+		if (topInterface != null) {
+			topInterface.close();
 		}
-		this.topLevelInterface = null;
+		this.topInterface = null;
 	}
 	
 	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped) {
@@ -541,7 +554,7 @@ public class InterfaceManager {
 	
 	public void setInterface(AbstractInterface tab, int windowLocation, boolean clipped, int windowID) {
 		tab.send(windowID, windowLocation, clipped);
-		tabInterfaces.put(tab.getID(), tab);
+		interfaces.put(tab.getID(), tab);
 	}
 	
 	/**
@@ -550,7 +563,7 @@ public class InterfaceManager {
 	 * @return		The {@code AbstractInterface} object for the interface 
 	 */
 	public AbstractInterface getInterface (int id) {
-		return tabInterfaces.get(id);
+		return interfaces.get(id);
 	}
 	
 	/**
@@ -573,7 +586,7 @@ public class InterfaceManager {
 	}
 	
 
-	public void sendHideIcomponent(int interfaceID, int component, boolean hidden) {
+	public void sendHideComponent(int interfaceID, int component, boolean hidden) {
 		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(interfaceID, component, hidden));
 	}
 	

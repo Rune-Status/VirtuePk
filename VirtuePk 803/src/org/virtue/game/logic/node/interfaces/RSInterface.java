@@ -18,8 +18,6 @@ public class RSInterface {
         
         public static final int RIBBON = 1431;
         
-        public static final int POLLS = 1029;
-        
         public static final int FRIENDS_CHAT_SETTINGS = 1108;
         
         public static final int FRIENDS_CHAT_INFO = 1427;
@@ -40,6 +38,19 @@ public class RSInterface {
         
         public static final int GAME_SCREEN = 1477;
         
+        public static final int MANAGEMENT = 1448;
+        
         public static final int BANK = 762;
+        
+        //Management interfaces
+        
+        public static final int POLLS = 1029;
+        
+        public static final int CHALLANGES = 1343;   
+        
+        public static final int MINIGAMES = 1344; 
+        
+        public static final int LOADOUT = 1463;  //1474  
+        
         
 }

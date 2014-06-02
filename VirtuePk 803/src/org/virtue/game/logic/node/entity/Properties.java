@@ -107,7 +107,7 @@ public final class Properties {
 			adrenaline = 100;
 		}
 		if (e instanceof Player) {
-			((Player) e).getPacketDispatcher().dispatchVarp(new VarMessage(679, adrenaline * 10));
+			((Player) e).getPacketDispatcher().dispatchVar(new VarMessage(679, adrenaline * 10));
 		}
 		e.appendBar(Bar.ADRENALINE);
 	}

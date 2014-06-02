@@ -216,7 +216,7 @@ public class ClanChannel {
 		}
 		SocialUser u = null;
 		while ((u = initQueue.poll()) != null) {
-			System.out.println("Sending init packet to player "+u.getDisplayName()+", clan="+clanData.getClanName()+", isGuest="+!u.isMyClan(clanData.getClanHash()));
+			//System.out.println("Sending init packet to player "+u.getDisplayName()+", clan="+clanData.getClanName()+", isGuest="+!u.isMyClan(clanData.getClanHash()));
 			sendInitPacket(u, entries, !u.isMyClan(clanData.getClanHash()));
 		}
 	}

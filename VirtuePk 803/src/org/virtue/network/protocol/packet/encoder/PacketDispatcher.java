@@ -173,7 +173,7 @@ public class PacketDispatcher {
 	}
 	
 	public void dispatchVarp(int id, int value) {
-		dispatchVarp(new VarMessage(id, value));
+		dispatchVar(new VarMessage(id, value));
 	}
 	
 	/**
@@ -181,7 +181,7 @@ public class PacketDispatcher {
 	 * properties, this is used for specific client events
 	 * @param message The varp message to be dispatched.
 	 */
-	public void dispatchVarp(VarMessage message) {
+	public void dispatchVar(VarMessage message) {
 		player.getAccount().getSession().getTransmitter().send(VarEncoder.class, message);
 	}
 	

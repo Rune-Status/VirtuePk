@@ -1,12 +1,14 @@
-package org.virtue.game.logic.node.interfaces.toplevel;
+package org.virtue.game.logic.node.interfaces.management;
 
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.interfaces.AbstractInterface;
+import org.virtue.game.logic.node.interfaces.ActionTab;
 import org.virtue.game.logic.node.interfaces.ActionButton;
+import org.virtue.game.logic.node.interfaces.ManagementInterface.Type;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
+import org.virtue.network.protocol.messages.VarMessage;
 
-public class Polls extends AbstractInterface {
+public class Polls extends ActionTab {
 
 	public Polls(Player p) {
 		super(RSInterface.POLLS, p);
@@ -15,10 +17,13 @@ public class Polls extends AbstractInterface {
 	@Override
 	public void postSend() {
 		System.out.println("Opening polls...");
-		//Interface: id=1029, clipped=1, parentID=1448, compID=3
-		getPlayer().getInterfaces().sendHideIcomponent(1477, 4, true);//Received component hidden: hash=94896132, hidden=1
-		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23327130, 0, 67436629));//Runscript: [9602, 67436629, 0, 23327130]
-		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23317035, 1, 67436630));//Runscript: [9602, 67436630, 1, 23317035]
+		//player.getInterfaces().sendInterface(true, 1448, 3, 1029);//Interface: id=1029, clipped=1, parentID=1448, compID=3
+		player.getInterfaces().sendHideComponent(1477, 4, true);//Received component hidden: hash=94896132, hidden=1
+		player.getPacketDispatcher().dispatchVar(new VarMessage(2911, 4, true));//Received VarClient: key=2911, value=4
+		player.getPacketDispatcher().dispatchVar(new VarMessage(1957, -1, true));//Received VarClient: key=1957, value=-1
+		player.getPacketDispatcher().dispatchVar(new VarMessage(1958, -1, true));//Received VarClient: key=1958, value=-1
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23327130, 0, 67436629));//Runscript: [9602, 67436629, 0, 23327130]
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23317035, 1, 67436630));//Runscript: [9602, 67436630, 1, 23317035]
 		setComponentHidden(39, true);//Received component hidden: hash=67436583, hidden=1
 		setComponentHidden(101, true);//Received component hidden: hash=67436645, hidden=1
 		setComponentHidden(134, true);//Received component hidden: hash=67436678, hidden=1
@@ -55,26 +60,32 @@ public class Polls extends AbstractInterface {
 		setComponentHidden(100, false);//Received component hidden: hash=67436644, hidden=0
 		setComponentHidden(96, false);//Received component hidden: hash=67436640, hidden=0
 		setComponentHidden(97, true);//Received component hidden: hash=67436641, hidden=1
-		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9598, 0));//Runscript: [9598, 0]
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 5, true);//Received component hidden: hash=94896133, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 6, true);//Received component hidden: hash=94896134, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 7, true);//Received component hidden: hash=94896135, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 8, true);//Received component hidden: hash=94896136, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 9, true);//Received component hidden: hash=94896137, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 10, true);//Received component hidden: hash=94896138, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 11, true);//Received component hidden: hash=94896139, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 12, true);//Received component hidden: hash=94896140, hidden=1
-		getPlayer().getInterfaces().sendHideIcomponent(1448, 1, true);//Received component hidden: hash=94896129, hidden=1
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9598, 0));//Runscript: [9598, 0]
 	}
 
 	@Override
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
-		System.out.println("Unhandled community interface button: component="+component+", button="+button.getID()+", slot1="+slot1+", slot2="+slot2);
+		System.out.println("Unhandled polls interface button: component="+component+", button="+button.getID()+", slot1="+slot1+", slot2="+slot2);
 	}
 
 	@Override
-	public int getTabID() {
-		return -1;
+	public boolean isCompHidden(int tabID) {
+		return tabID != 3;
+	}
+
+	@Override
+	public int getUnknownInt() {
+		return 40633348;
+	}
+
+	@Override
+	public int getTab() {
+		return 1;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.COMMUNITY;
 	}
 
 }

@@ -28,7 +28,7 @@ public class Bank extends AbstractInterface {
 	private final ItemsContainer<Item> items = new ItemsContainer<>(MAX_ITEMS, true);
 	
 	private int lastDepositAmount = 1;
-	private int currentTab = 0;
+	//private int currentTab = 0;
 
 	public Bank(Player p) {
 		super(RSInterface.BANK, p);
@@ -40,7 +40,7 @@ public class Bank extends AbstractInterface {
 		sendInterfaceSettings(39, 0, 871, 2622718);
 		sendInterfaceSettings(54, 0, 27, 2361214);
 		sendInterfaceSettings(132, 0, 27, 4260990);
-		getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
+		getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 		refresh();
 	}
 	
@@ -139,7 +139,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
+						getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 						withdrawItem(itemID, slotID, amount);
 					}
 					@Override
@@ -187,7 +187,7 @@ public class Bank extends AbstractInterface {
 							return;
 						}
 						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVarp(new VarMessage(111, lastDepositAmount));
+						getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 						depositInventoryItem(itemID, slotID, amount);
 					}
 					@Override

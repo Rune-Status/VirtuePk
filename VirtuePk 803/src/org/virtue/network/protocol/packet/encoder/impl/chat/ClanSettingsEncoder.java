@@ -57,7 +57,7 @@ public class ClanSettingsEncoder implements PacketEncoder<ClanSettingsPacket> {
 			buffer.putInt(0);//TODO: Find out what this is
 		}
 		if (VERSION >= 5) {
-			buffer.putShort(0);//TODO: Find out what this is
+			buffer.putShort(0);//Recruitment day (days since 22 February 2002)
 		}
 		if (VERSION >= 6) {
 			buffer.put(0);//TODO: Find out what this boolean does
