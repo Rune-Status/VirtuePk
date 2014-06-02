@@ -7,9 +7,9 @@ import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.config.UpdateMasks;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.update.UpdateBlock;
-import org.virtue.game.logic.node.entity.player.update.blocks.AppearanceBlock;
-import org.virtue.game.logic.node.entity.player.update.movement.MovementUtils;
+import org.virtue.game.logic.node.entity.update.UpdateBlock;
+import org.virtue.game.logic.node.entity.update.blocks.AppearanceBlock;
+import org.virtue.game.logic.node.entity.update.movement.MovementUtils;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;
 

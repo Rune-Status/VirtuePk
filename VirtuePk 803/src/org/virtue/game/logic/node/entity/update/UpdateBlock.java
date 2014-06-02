@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update;
+package org.virtue.game.logic.node.entity.update;
 
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;

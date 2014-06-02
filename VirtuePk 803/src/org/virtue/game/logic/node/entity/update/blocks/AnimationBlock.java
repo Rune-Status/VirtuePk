@@ -1,9 +1,9 @@
-package org.virtue.game.logic.node.entity.player.update.blocks;
+package org.virtue.game.logic.node.entity.update.blocks;
 
 import org.virtue.game.config.UpdateMasks;
 import org.virtue.game.logic.node.entity.Entity;
-import org.virtue.game.logic.node.entity.player.update.UpdateBlock;
-import org.virtue.game.logic.node.entity.player.update.ref.Animation;
+import org.virtue.game.logic.node.entity.update.UpdateBlock;
+import org.virtue.game.logic.node.entity.update.ref.Animation;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 
 public class AnimationBlock extends UpdateBlock {

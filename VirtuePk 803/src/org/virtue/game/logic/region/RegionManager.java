@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.virtue.game.logic.node.entity.player.update.movement.MovementUtils;
+import org.virtue.game.logic.node.entity.update.movement.MovementUtils;
 
 /**
  * @author Taylor Moon

@@ -1,7 +1,7 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.Constants;
-import org.virtue.game.logic.node.entity.player.update.movement.Movement;
+import org.virtue.game.logic.node.entity.update.movement.Movement;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.packet.encoder.impl.MinimapFlagEncoder;

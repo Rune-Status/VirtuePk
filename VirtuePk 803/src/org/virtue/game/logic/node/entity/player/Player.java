@@ -554,6 +554,19 @@ public class Player extends Entity {
 		return -1;
   }
 
+	
+	public boolean isInteractOption (PlayerOption option) {
+		return true;//At this stage, all player options are interact ones
+	}
+	
+	public void interact (Player player, PlayerOption option) {
+		System.out.println("Clicked Player: index="+getIndex()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+option);
+	}
+	
+	public void handleDistanceOption (Player player, PlayerOption option) {
+		System.out.println("Clicked Player: index="+getIndex()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+option);
+	}
+
 	@Override
 	public int getSize() {
 		return 1;

@@ -2,7 +2,7 @@ package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.cache.def.GraphicsDefinitionLoader;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
+import org.virtue.game.logic.node.entity.update.masks.Graphics;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 /**

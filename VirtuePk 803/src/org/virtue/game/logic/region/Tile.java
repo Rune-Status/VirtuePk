@@ -443,8 +443,12 @@ public class Tile {
 	 */
 	@Override
 	public boolean equals(Object other) {
-		if (!(other instanceof Tile))
+		if (other == null) {
 			return false;
+		}
+		if (!(other instanceof Tile)) {
+			return false;
+		}
 		Tile t = (Tile) other;
 		return x == t.x && y == t.y && plane == t.plane;
 	}

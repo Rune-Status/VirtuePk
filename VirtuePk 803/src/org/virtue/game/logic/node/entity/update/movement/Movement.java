@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update.movement;
+package org.virtue.game.logic.node.entity.update.movement;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -119,6 +119,11 @@ public class Movement {
 
 	public boolean addWalkStepsInteract(int destX, int destY, int maxStepsCount, int size, boolean calculate) {
 		return addWalkStepsInteract(destX, destY, maxStepsCount, size, size, calculate);
+	}
+	
+	public boolean calculateWalkStepsInteract (Tile target,
+			int maxStepsCount, int size) {
+		return calculateWalkStepsInteract(target, maxStepsCount, size, size);
 	}
 	
 	public boolean calculateWalkStepsInteract (Tile target,

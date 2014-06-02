@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update.ref;
+package org.virtue.game.logic.node.entity.update.ref;
 
 /**
  * @author Taylor

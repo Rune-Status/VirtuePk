@@ -19,16 +19,19 @@ public class NpcOptionHandler extends MovementHandler {
 			throw new RuntimeException("Invalid NPC Index: "+npcIndex);	
 		}
 		NPC npc = World.getWorld().getNpcs().get(npcIndex);
-		int baseX = npc.getTile().getX();
-		int baseY = npc.getTile().getY();		
+		if (npc == null) {
+			return;//NPC does not exist; ignore request
+		}	
 		if (npc.isInteractOption(option)) {
+			int baseX = npc.getTile().getX();
+			int baseY = npc.getTile().getY();	
 			session.getPlayer().getUpdateArchive().queueFaceEntity(npc);
 			putFlag("facing", true);
 			putFlag("baseX", baseX);
 			putFlag("baseY", baseY);
 			putFlag("sizeX", npc.getDefinition().getSize());
 			putFlag("sizeY", npc.getDefinition().getSize());
-			super.handle(session);//Handle the movement aspect. TODO: Track the NPC if they move
+			super.handle(session);//Handle the movement aspect.
 			session.getPlayer().setCoordinateEvent(new NPCInteractEvent(npc, option));
 		} else {
 			npc.handleDistanceOption(session.getPlayer(), option);

@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update.masks;
+package org.virtue.game.logic.node.entity.update.masks;
 
 
 /**

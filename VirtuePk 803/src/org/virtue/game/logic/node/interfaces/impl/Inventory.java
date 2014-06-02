@@ -6,7 +6,7 @@ import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
-import org.virtue.game.logic.node.entity.player.update.ref.Appearance.Gender;
+import org.virtue.game.logic.node.entity.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.RSInterface;

@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
-import org.virtue.game.logic.node.entity.player.update.ref.Appearance;
+import org.virtue.game.logic.node.entity.update.ref.Appearance;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**

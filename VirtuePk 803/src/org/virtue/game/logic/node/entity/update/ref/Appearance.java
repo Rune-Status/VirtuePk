@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update.ref;
+package org.virtue.game.logic.node.entity.update.ref;
 
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;

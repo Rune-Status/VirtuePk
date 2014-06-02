@@ -2,7 +2,7 @@ package org.virtue.game.logic.node.entity;
 
 import org.virtue.game.logic.content.Bonuses;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.update.masks.Bar;
+import org.virtue.game.logic.node.entity.update.masks.Bar;
 import org.virtue.network.protocol.messages.VarMessage;
 
 

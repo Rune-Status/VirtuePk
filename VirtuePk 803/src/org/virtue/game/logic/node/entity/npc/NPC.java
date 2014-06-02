@@ -36,6 +36,7 @@ public class NPC extends Entity {
 	public NPC(int id, Tile tile) {
 		super();
 		super.setTile(tile);
+		super.lastTile = new Tile(tile);
 		this.id = id;
 		//this.tile = tile;
 		this.definition = NPCDefinitionLoader.forId(id);

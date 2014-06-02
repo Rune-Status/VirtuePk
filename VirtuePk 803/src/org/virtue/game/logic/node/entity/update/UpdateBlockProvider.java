@@ -1,13 +1,13 @@
-package org.virtue.game.logic.node.entity.player.update;
+package org.virtue.game.logic.node.entity.update;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.virtue.game.logic.node.entity.player.update.blocks.AnimationBlock;
-import org.virtue.game.logic.node.entity.player.update.blocks.AppearanceBlock;
-import org.virtue.game.logic.node.entity.player.update.blocks.FaceDirectionBlock;
-import org.virtue.game.logic.node.entity.player.update.blocks.FaceEntityBlock;
-import org.virtue.game.logic.node.entity.player.update.blocks.GraphicsBlock;
+import org.virtue.game.logic.node.entity.update.blocks.AnimationBlock;
+import org.virtue.game.logic.node.entity.update.blocks.AppearanceBlock;
+import org.virtue.game.logic.node.entity.update.blocks.FaceDirectionBlock;
+import org.virtue.game.logic.node.entity.update.blocks.FaceEntityBlock;
+import org.virtue.game.logic.node.entity.update.blocks.GraphicsBlock;
 
 /**
  * @author Taylor

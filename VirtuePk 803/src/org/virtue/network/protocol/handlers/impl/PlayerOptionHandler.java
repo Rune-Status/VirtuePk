@@ -18,14 +18,18 @@ public class PlayerOptionHandler extends PacketHandler<WorldSession> {
 		boolean forceRun = getFlag("forceRun", false);
 		PlayerOption option = PlayerOption.fromOpcode(getFlag("opcode", -1));
 		
-		if (option == null || playerIndex < 1 || playerIndex > 2048) {//TODO: Replace with max player constant
+		if (option == null || playerIndex < 1 || playerIndex > World.getWorld().getPlayers().capacity) {
 			throw new RuntimeException("Invalid paramaters: opcode="+getFlag("opcode", -1)+", playerIndex="+playerIndex);
 		}
 		
 		Player player = World.getWorld().getPlayer(playerIndex);
-		if (player == null) {
-			//Player does not exist; ignore request
-			return;
+		if (player == null) {			
+			return;//Player does not exist; ignore request
+		}
+		if (player.isInteractOption(option)) {
+			
+		} else {
+			player.handleDistanceOption(session.getPlayer(), option);
 		}
 		System.out.println("Received player action: option="+option.getID()+", playerIndex="+playerIndex+", player="+player.getAccount().getUsername().getName()+", forceRun="+forceRun);
 	}

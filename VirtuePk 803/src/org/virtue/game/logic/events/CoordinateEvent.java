@@ -28,9 +28,10 @@ public abstract class CoordinateEvent {
 		if (player.getTile().getPlane() != tile.getPlane()) {
 			return true;
 		}
-		int distanceX = player.getTile().getX() - tile.getX();
-		int distanceY = player.getTile().getY() - tile.getY();
-		if (distanceX > sizeX || distanceX < -1 || distanceY > sizeY || distanceY < -1) {
+		//int distanceX = player.getTile().getX() - tile.getX();
+		//int distanceY = player.getTile().getY() - tile.getY();
+		//if (distanceX > sizeX || distanceX < -1 || distanceY > sizeY || distanceY < -1) {
+		if (!reachedTarget(player)) {
 			return cantReach(player);
 		}
 		if (player.getUpdateArchive().getMovement().hasWalkSteps()) {
@@ -41,6 +42,17 @@ public abstract class CoordinateEvent {
 	}
 	
 	public abstract void run(Player player);
+	
+	/**
+	 * Returns whether the player has reached the target, and can therefore exit the event
+	 * @param player	The player interacting with the node
+	 * @return			True if the event can exit, false otherwise
+	 */
+	public boolean reachedTarget (Player player) {
+		int distanceX = player.getTile().getX() - tile.getX();
+		int distanceY = player.getTile().getY() - tile.getY();
+		return (distanceX <= sizeX && distanceX >= -1 && distanceY <= sizeY && distanceY >= -1);
+	}
 
 	public boolean cantReach(Player player) {
 		if (!player.getUpdateArchive().getMovement().hasWalkSteps() && player.getUpdateArchive().getMovement().getNextWalkDirection() == -1) {

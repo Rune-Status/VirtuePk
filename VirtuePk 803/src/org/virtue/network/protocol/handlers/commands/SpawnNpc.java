@@ -1,5 +1,6 @@
 package org.virtue.network.protocol.handlers.commands;
 
+import org.virtue.Constants;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
@@ -24,9 +25,10 @@ public class SpawnNpc implements Command {
 			return false;
 		}
 		Tile spawnPosition = new Tile(x, y, 0);
-		NPC npc = new NPC(id, spawnPosition);
+		NPC npc = NPC.create(id, spawnPosition);
 		World.getWorld().getNpcs().add(npc);
-		npc.getUpdateArchive().getMovement().addWalkSteps(x-10, y+10, 400);
+		Tile target = Tile.edit(spawnPosition, (byte) -10, (byte) 10, 0);
+		npc.getUpdateArchive().getMovement().calculateWalkStepsInteract(target, Constants.MAX_WALK_STEPS, npc.getSize());
 		return true;
 	}
 

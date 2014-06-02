@@ -1,4 +1,4 @@
-package org.virtue.game.logic.node.entity.player.update.movement;
+package org.virtue.game.logic.node.entity.update.movement;
 
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.region.Flags;

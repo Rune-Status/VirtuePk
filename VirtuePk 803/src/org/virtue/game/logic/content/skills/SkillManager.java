@@ -3,7 +3,7 @@ package org.virtue.game.logic.content.skills;
 import java.util.EnumMap;
 
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.update.masks.Graphics;
+import org.virtue.game.logic.node.entity.update.masks.Graphics;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
