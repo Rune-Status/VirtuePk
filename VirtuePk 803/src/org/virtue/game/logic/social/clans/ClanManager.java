@@ -154,6 +154,8 @@ public class ClanManager {
 	/**
 	 * Creates a new clan and places the data into the index
 	 * @param name	The desired name of the clan
+	 * @param owner The player who will become the clan owner
+	 * @param founders	The players who will be initially recruited into the clan
 	 * @return		A {@link ClanSettings} object containing the new clan data, or null if a clan already exists with the specified name
 	 */
 	public ClanSettings createClan (String name, Player owner, Player... founders) {

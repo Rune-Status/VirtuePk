@@ -36,6 +36,10 @@ public class Constants {
 	 */
 	public static final Tile DEFAULT_LOCATION = new Tile(3200, 3200, 0);
 
+	/**
+	 * Represents the global xp modifier. Note that this affects the base xp rate, and will not be shown as bonus xp. 1.0 represents the normal RuneScape xp rates
+	 */
+	public static final double GLOBAL_XP_MODIFIER = 1.0;
 
 	/**
 	 * Represents the packet size capacity.

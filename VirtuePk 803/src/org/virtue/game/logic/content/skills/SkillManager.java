@@ -2,6 +2,7 @@ package org.virtue.game.logic.content.skills;
 
 import java.util.EnumMap;
 
+import org.virtue.Constants;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.update.masks.Graphics;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
@@ -49,6 +50,7 @@ public class SkillManager extends AbstractInterface {
 	 * @param canHaveBonus		Whether global (or skill-specific) bonuses can be applied
 	 */
 	public void addExperience (Skill skill, double totalXpToAdd, int bonusExperience, boolean canHaveBonus) {
+		totalXpToAdd = totalXpToAdd * Constants.GLOBAL_XP_MODIFIER;//Runs the xp through the global modifier
 		SkillData skillData = skills.get(skill);
 		int levelBefore = skillData.getBaseLevel();
 		skillData.addExperienceFloat(totalXpToAdd);//TODO: Handle bonus experience

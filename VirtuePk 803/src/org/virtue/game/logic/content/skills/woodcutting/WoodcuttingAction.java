@@ -15,7 +15,7 @@ import org.virtue.network.protocol.messages.GameMessage;
 public class WoodcuttingAction extends PlayerActionEvent {
 	
 	private int emoteID;
-	private Hatchet axe = Hatchet.BRONZE;
+	private Hatchet axe;
 	private final WoodcuttingTree tree;
 	private int calculatedTime;
 	private int ticks = 0;
