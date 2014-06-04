@@ -21,13 +21,13 @@ public class TemporaryObject extends RS3Object {
 	public void deplete () {
 		super.setId(replacementID);
 		//super.setType(10);
-		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this, defaultDepleted);
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateTempObject(this, defaultDepleted);
 	}
 	
 	public void respawn () {
 		super.setId(originalID);
 		respawnTime = 0;
-		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateObject(this, !defaultDepleted);
+		World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID()).updateTempObject(this, !defaultDepleted);
 	}
 	
 	public boolean checkRespawn () {

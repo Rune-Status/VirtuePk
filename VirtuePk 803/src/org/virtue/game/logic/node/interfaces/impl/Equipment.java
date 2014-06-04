@@ -40,11 +40,10 @@ public class Equipment extends AbstractInterface {
 	 */
 	public Equipment(Player player) {
 		super(RSInterface.EQUIPMENT, player);
-		//this.player = player;
-		Item testItem = new Item(26587, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
+		/*Item testItem = Item.create(26587, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
 		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);
-		testItem = new Item(26591, 1);
-		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);
+		testItem = Item.create(26591, 1);
+		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);*/
 	}
 	
 	@Override
@@ -206,7 +205,7 @@ public class Equipment extends AbstractInterface {
 			int slotID = data.get("slot").getAsInt();
 			int itemID = data.get("item").getAsInt();
 			int amount = data.get("amount").getAsInt();
-			Item item = new Item(itemID, amount);
+			Item item = Item.create(itemID, amount);
 			if (item.getDefinition() == null) {
 				continue;//Item does not exist
 			}

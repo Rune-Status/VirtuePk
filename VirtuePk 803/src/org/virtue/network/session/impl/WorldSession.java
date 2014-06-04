@@ -6,7 +6,6 @@ import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.RS2Network;
-import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.packet.RS3Packet;
 import org.virtue.network.protocol.packet.RS3PacketReader;
@@ -49,6 +48,8 @@ public class WorldSession extends Session {
 			System.err.println("Unhandled packet: " + ((RS3Packet) message).getOpcode());
 			return;
 		}
+		//System.out.println("Received packet: opcode="+((RS3Packet) message).getOpcode());
+		
 		@SuppressWarnings("unchecked")
 		PacketHandler<? super Session> handler = (PacketHandler<? super Session>) decoder.decodePacket(new RS3PacketReader(((RS3Packet) message).getBuffer().buffer()), this, ((RS3Packet) message).getOpcode());
 		if (handler != null) {

@@ -275,13 +275,14 @@ public class Region extends AttributeSet implements SubRegion {
 		return 0;
 	}
 	
-	public void updateObject (TemporaryObject object) {
-		updateObject(object, false);
+	public void updateTempObject (TemporaryObject object) {
+		updateTempObject(object, false);
 	}
 	
-	public void updateObject (TemporaryObject object, boolean remove) {
+	public void updateTempObject (TemporaryObject object, boolean remove) {
 		if (!tempObjects.contains(object) && !remove) {
 			tempObjects.add(object);
+			addObject(object, object.getTile().getPlane(), object.getTile().getXInRegion(), object.getTile().getYInRegion());
 		}
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
@@ -303,13 +304,34 @@ public class Region extends AttributeSet implements SubRegion {
 		}
 	}
 	
-	public void removeTemporyObject (RS3Object object) {
+	/**
+	 * Removes a temporary object from the game scene
+	 * @param object	The temporary object to remove
+	 */
+	public void destroyTemporyObject (TemporaryObject object) {
 		synchronized (tempObjects) {
 			tempObjects.remove(object);
 		}
+		destroyObject(object);
 	}
 	
 	public void destroyObject (RS3Object object) {
+		if (objects != null) {
+			synchronized (objects) {
+				RS3Object[] tileObjects = objects[object.getTile().getPlane()][object.getTile().getXInRegion()][object.getTile().getYInRegion()];
+				if (tileObjects != null) {
+					List<RS3Object> newTileObjects = new ArrayList<RS3Object>(tileObjects.length);
+					for (RS3Object o : tileObjects) {
+						if (o.equals(object)) {
+							continue;
+						}
+						newTileObjects.add(o);
+					}
+					RS3Object[] objectArray = newTileObjects.toArray(new RS3Object[newTileObjects.size()]);
+					objects[object.getTile().getPlane()][object.getTile().getXInRegion()][object.getTile().getYInRegion()] = objectArray;
+				}
+			}
+		}		
 		for (Player p : World.getWorld().getPlayers()) {
 			if (p.getViewport().getRegions().contains(id)) {
 				p.getPacketDispatcher().dispatchObjectUpdate(object, ObjectUpdateType.DESTROY);
@@ -330,14 +352,16 @@ public class Region extends AttributeSet implements SubRegion {
 		if (objects == null) {
 			objects = new RS3Object[4][64][64][];
 		}
-		RS3Object[] tileObjects = objects[plane][localX][localY];
-		if (tileObjects == null) {
-			objects[plane][localX][localY] = new RS3Object[] { object };
-		} else {
-			RS3Object[] newTileObjects = new RS3Object[tileObjects.length + 1];
-			newTileObjects[tileObjects.length] = object;
-			System.arraycopy(tileObjects, 0, newTileObjects, 0, tileObjects.length);
-			objects[plane][localX][localY] = newTileObjects;
+		synchronized (objects) {
+			RS3Object[] tileObjects = objects[plane][localX][localY];
+			if (tileObjects == null) {
+				objects[plane][localX][localY] = new RS3Object[] { object };
+			} else {
+				RS3Object[] newTileObjects = new RS3Object[tileObjects.length + 1];
+				newTileObjects[tileObjects.length] = object;
+				System.arraycopy(tileObjects, 0, newTileObjects, 0, tileObjects.length);
+				objects[plane][localX][localY] = newTileObjects;
+			}
 		}
 	}
 
@@ -360,7 +384,7 @@ public class Region extends AttributeSet implements SubRegion {
 		if (x < 0 || y < 0 || x >= map.getMasks()[plane].length || y >= map.getMasks()[plane][x].length) {
 			return;
 		}
-		ObjectDefinition objectDef = object.getDefinition();//ObjectDefinitionLoader.forId(object.getId());
+		ObjectDefinition objectDef = object.getDefinition();
 		if (type == 22 ? objectDef.clipType != 0 : objectDef.clipType == 0) {
 			return;
 		}
@@ -408,6 +432,22 @@ public class Region extends AttributeSet implements SubRegion {
 	
 	public RS3Object[] getObjects (Tile location) {
 		return objects[location.getPlane()][location.getXInRegion()][location.getYInRegion()];
+	}
+	
+	public boolean isTileEmpty (Tile tile) {
+		RS3Object[] tileObjects = objects[tile.getPlane()][tile.getXInRegion()][tile.getYInRegion()];
+		if (tileObjects == null) {
+			return true;
+		} else if (tileObjects.length == 0) {
+			return true;
+		} else {
+			for (RS3Object object : tileObjects) {
+				if (object != null) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 	
 	public RS3Object getObject (int id, Tile location) {

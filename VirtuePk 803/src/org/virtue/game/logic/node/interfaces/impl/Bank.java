@@ -69,7 +69,7 @@ public class Bank extends AbstractInterface {
 	
 	public boolean depositItem (Item item) {
 		if (item.getDefinition().isNoted()) {
-			item = new Item(item.getDefinition().getNotedID(), item.getAmount());
+			item = Item.create(item.getDefinition().getNotedID(), item.getAmount());
 		}
 		return items.add(item);
 	}
@@ -339,7 +339,7 @@ public class Bank extends AbstractInterface {
 			int slotID = data.get("slot").getAsInt();
 			int itemID = data.get("item").getAsInt();
 			int amount = data.get("amount").getAsInt();
-			Item item = new Item(itemID, amount);
+			Item item = Item.create(itemID, amount);
 			if (item.getDefinition() == null) {
 				continue;//Item does not exist
 			}

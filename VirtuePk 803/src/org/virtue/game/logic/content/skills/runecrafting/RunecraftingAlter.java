@@ -4,7 +4,6 @@ import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.update.masks.Graphics;
-import org.virtue.game.logic.node.entity.update.ref.Animation;
 import org.virtue.game.logic.node.object.ObjectOption;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.region.Tile;
@@ -43,10 +42,10 @@ public class RunecraftingAlter extends RS3Object {
 			player.getPacketDispatcher().dispatchMessage("You need a runecrafting level of "+alterDetails.getLevel()+" to craft this rune.", MessageOpcode.CHAT_BOX);
 			return;
 		}
-		Item runes = new Item(Runecrafting.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.PURE_ESSENCE));
+		Item runes = Item.create(Runecrafting.PURE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.PURE_ESSENCE));
 		if (runes.getAmount() == 0) {
 			if (!alterDetails.requiresPureEssence()) {
-				runes = new Item(Runecrafting.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.RUNE_ESSENCE));
+				runes = Item.create(Runecrafting.RUNE_ESSENCE, player.getInventory().getItems().getNumberOf(Runecrafting.RUNE_ESSENCE));
 			}
 			if (runes.getAmount() == 0) {
 				player.getPacketDispatcher().dispatchMessage("You don't have " + (alterDetails.requiresPureEssence() ? "pure" : "rune") + " essence.", MessageOpcode.CHAT_BOX);

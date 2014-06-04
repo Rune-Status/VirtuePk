@@ -72,7 +72,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 			for (int i = 0; i < data.length; i++) {
 				if (data[i] != null) {
 					if (data[i].getId() == item.getId()) {
-						data[i] = new Item(data[i].getId(), data[i].getAmount() + item.getAmount());
+						data[i] = Item.create(data[i].getId(), data[i].getAmount() + item.getAmount());
 						return true;
 					}
 				}
@@ -82,7 +82,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 				if (freeSlots() >= item.getAmount()) {
 					for (int i = 0; i < item.getAmount(); i++) {
 						int index = freeSlot();
-						data[index] = new Item(item.getId(), 1);
+						data[index] = Item.create(item.getId(), 1);
 					}
 					return true;
 				} else {
@@ -312,7 +312,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 					toRemove = 0;
 					// data[preferredSlot] = new
 					// SendItem(data[preferredSlot].getDefinition().getId(), amt);
-					set2(preferredSlot, new Item(data[preferredSlot].getId(), amt));
+					set2(preferredSlot, Item.create(data[preferredSlot].getId(), amt));
 					return removed;
 				} else {
 					removed += amt;
@@ -332,7 +332,7 @@ public final class ItemsContainer<T extends Item> implements Serializable {
 						toRemove = 0;
 						// data[i] = new SendItem(data[i].getDefinition().getId(),
 						// amt);
-						set2(i, new Item(data[i].getId(), amt));
+						set2(i, Item.create(data[i].getId(), amt));
 						return removed;
 					} else {
 						removed += amt;

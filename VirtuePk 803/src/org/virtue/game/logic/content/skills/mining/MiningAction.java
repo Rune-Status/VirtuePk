@@ -81,7 +81,7 @@ public class MiningAction extends PlayerActionEvent {
 	}
 	
 	private void success (Player player) {
-		Item ore = new Item(rock.getOre().getOreID(), 1);
+		Item ore = Item.create(rock.getOre().getOreID(), 1);
 		//System.out.println("You mine some " + ore.getDefinition().getName() + ".");
 		player.getPacketDispatcher().dispatchMessage("You mine some " + ore.getDefinition().getName() + ".", MessageOpcode.CHAT_BOX_FILTER);		
 		rock.deplete();		

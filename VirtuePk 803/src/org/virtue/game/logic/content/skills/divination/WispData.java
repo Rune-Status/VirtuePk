@@ -29,7 +29,7 @@ public enum WispData {
 		this.level = level;
 	}
 
-	public static WispData forNpcId(int id) {
+	public static WispData forNpcID(int id) {
 		for (WispData info : WispData.values()) {
 			if (info.getNpcId() == id)
 				return info;
@@ -45,7 +45,7 @@ public enum WispData {
 		return npcId;
 	}
 
-	public int getSpringNpcId() {
+	public int getSpringNpcID() {
 		return npcId + 23;
 	}
 

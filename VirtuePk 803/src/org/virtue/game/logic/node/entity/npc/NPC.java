@@ -33,7 +33,7 @@ public class NPC extends Entity {
 	 * @param id The id.
 	 * @param tile The tile.
 	 */
-	public NPC(int id, Tile tile) {
+	protected NPC(int id, Tile tile) {
 		super();
 		super.setTile(tile);
 		super.lastTile = new Tile(tile);

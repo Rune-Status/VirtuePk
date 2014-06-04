@@ -43,7 +43,7 @@ public class SendItem implements Command {
 				return false;
 			}
 		}
-		Item item = new Item(id, amount);
+		Item item = Item.create(id, amount);
 		if (item.getDefinition() == null) {
 			player.getPacketDispatcher().dispatchMessage("Item "+id+" does not exist!", GameMessage.MessageOpcode.CONSOLE);
 			return false;

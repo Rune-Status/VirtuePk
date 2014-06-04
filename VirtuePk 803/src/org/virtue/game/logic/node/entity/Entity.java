@@ -3,10 +3,8 @@ package org.virtue.game.logic.node.entity;
 import java.util.List;
 
 import org.virtue.game.logic.node.Node;
-import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.update.UpdateBlockArchive;
 import org.virtue.game.logic.node.entity.update.masks.Bar;
-import org.virtue.game.logic.region.LandscapeRepository;
 import org.virtue.game.logic.region.Tile;
 
 

@@ -15,7 +15,12 @@ public class ItemOnItemDecoder implements PacketDecoder<ItemOnItemHandler> {
     @Override
     public ItemOnItemHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
         ItemOnItemHandler handler = new ItemOnItemHandler();
-        
+        handler.putFlag("prevItem", packet.getLEShortA());
+        handler.putFlag("prevCompHash", packet.getLEInt());
+        handler.putFlag("compHash", packet.getIntV1());
+        handler.putFlag("prevSlot", packet.getLEShort());
+        handler.putFlag("slot", packet.getLEShort());
+        handler.putFlag("item", packet.getShortA());        
         return handler;
     }
 

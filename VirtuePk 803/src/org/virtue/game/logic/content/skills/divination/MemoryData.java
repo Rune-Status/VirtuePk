@@ -33,7 +33,7 @@ public enum MemoryData {
 		return level;
 	}
 
-	public int getMemoryId() {
+	public int getMemoryID() {
 		return memoryId;
 	}
 

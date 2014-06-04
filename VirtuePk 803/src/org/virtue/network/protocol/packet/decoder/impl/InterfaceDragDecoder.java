@@ -2,16 +2,16 @@ package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.game.logic.node.interfaces.RSInterface;
-import org.virtue.network.protocol.handlers.impl.SwitchInterfaceHandler;
+import org.virtue.network.protocol.handlers.impl.InterfaceDragHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 
-public class SwitchInterfaceDecoder implements PacketDecoder<SwitchInterfaceHandler> {
+public class InterfaceDragDecoder implements PacketDecoder<InterfaceDragHandler> {
 
 	@Override
-	public SwitchInterfaceHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
-		SwitchInterfaceHandler handler = new SwitchInterfaceHandler();
+	public InterfaceDragHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
+		InterfaceDragHandler handler = new InterfaceDragHandler();
 		handler.putFlag("newSlot", packet.getLEShort());
 		handler.putFlag("oldHash", packet.getInt());
 		handler.putFlag("newHash", packet.getInt());

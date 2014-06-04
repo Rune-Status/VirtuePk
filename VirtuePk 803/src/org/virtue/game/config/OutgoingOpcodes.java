@@ -33,6 +33,9 @@ public class OutgoingOpcodes {
 	public static final int SMALL_VARC_PACKET = 132;//803
 	public static final int LARGE_VARC_STRING_PACKET = 0;//803
 	public static final int SMALL_VARC_STRING_PACKET = 41;//803
+	public static final int ENABLE_VARCLAN_PACKET = 11;//803
+	public static final int DISABLE_VARCLAN_PACKET = 102;//803
+	public static final int VARCLAN_PACKET = 72;//803
 	
 	//Item containers
 	public static final int ITEMS_PACKET = 130;//803
@@ -79,12 +82,14 @@ public class OutgoingOpcodes {
 	//Interface-related
 	public static final int INTERFACE_PACKET = 49;//803
 	public static final int INTERFACE_SETTINGS_PACKET = 134;//803
-	public static final int COMPONENT_TEXT_PACKET = 30;//803
 	public static final int WINDOW_PANE_PACKET = 76;//803
 	public static final int RUN_CS2_PACKET = 167;//803
 	public static final int RESET_LAYOUT_INFORMATION = 35;//803
 	public static final int CLOSE_INTERFACE_PACKET = 15;//803
 	public static final int HIDE_COMPONENT_PACKET = 9;//803
+	public static final int COMPONENT_TEXT_PACKET = 30;//803
+	public static final int COMPONENT_COLOUR_PACKET = 39;//803
+	public static final int COMPONENT_FONT_PACKET = 144;//803
 	
 	//Messages
 	public static final int GAME_MESSAGE_PACKET = 137;//803

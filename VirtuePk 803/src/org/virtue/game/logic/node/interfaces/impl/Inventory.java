@@ -36,7 +36,7 @@ public class Inventory extends AbstractInterface {
 	public Inventory(Player player) {
 		super(RSInterface.INVENTORY, player);
 		//this.player = player;
-		items.add(new Item(54, 1));//Just for testing purposes; This can be updated with the actual items later
+		items.add(Item.create(54, 1));//Just for testing purposes; This can be updated with the actual items later
 	}
 
 	@Override
@@ -83,19 +83,31 @@ public class Inventory extends AbstractInterface {
 	/**
 	 * Removes an item from the inventory.
 	 * @param slot The slot to remove from.
+	 * @return The number of items removed
 	 */
-	public void remove(int slot) {
-		items.remove(items.get(slot));
+	public int remove(int slot) {
+		int removed = items.remove(slot, items.get(slot));
 		refresh(slot);
+		return removed;
+	}
+	
+	public int remove(Item item) {
+		return remove(item, -1);
 	}
 	
 	/**
 	 * Removes an item.
 	 * @param item The item to remove.
+	 * @param slot The preferred slot to remove from
 	 * @return The number of items removed
 	 */
-	public int remove(Item item) {
-		int removed = items.remove(item);
+	public int remove(Item item, int slot) {
+		int removed = 0;
+		if (slot == -1) {
+			removed = items.remove(item);
+		} else {
+			removed = items.remove(slot, item);
+		}
 		refresh();
 		return removed;
 	}
@@ -216,7 +228,7 @@ public class Inventory extends AbstractInterface {
 			int slotID = data.get("slot").getAsInt();
 			int itemID = data.get("item").getAsInt();
 			int amount = data.get("amount").getAsInt();
-			Item item = new Item(itemID, amount);
+			Item item = Item.create(itemID, amount);
 			if (item.getDefinition() == null) {
 				continue;//Item does not exist
 			}
@@ -252,6 +264,22 @@ public class Inventory extends AbstractInterface {
 		}
 		return null;
 	}
+	
+
+	
+	public void handleItemOnItem (int componentID, int itemIID1, int slot1, int itemID2, int slot2) {
+		if (componentID == 8) {
+			Item item = items.get(slot1);
+			if (item.getId() != itemIID1) {
+				return;//Item1 does not exist
+			}
+			Item item2 = items.get(slot2);
+			if (item2.getId() != itemID2) {
+				return;
+			}
+			item.handleItemOnItem(player, slot2, item2, slot2);
+		}
+	}
 
 	@Override
 	public void handleActionButton(int componentID, int slotID, int itemID, ActionButton button) {
@@ -276,6 +304,9 @@ public class Inventory extends AbstractInterface {
                     		refresh(slotID);
                     		return;
                     	}
+                    } else {
+                    	item.handleInventoryOption(player, option, button, slotID);
+                    	return;
                     }
                     System.out.println("Inventory item pressed: slot="+slotID+", itemID="+itemID+", option="+option+" ("+button.getID()+")");
                     return;

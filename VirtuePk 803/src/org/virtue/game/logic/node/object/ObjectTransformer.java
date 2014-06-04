@@ -6,7 +6,7 @@ import org.virtue.game.logic.content.skills.runecrafting.MysteriousRunes;
 import org.virtue.game.logic.content.skills.runecrafting.Runecrafting;
 import org.virtue.game.logic.content.skills.runecrafting.RunecraftingAlter;
 import org.virtue.game.logic.content.skills.runecrafting.AlterDefinition;
-import org.virtue.game.logic.content.skills.woodcutting.Log;
+import org.virtue.game.logic.content.skills.woodcutting.TreeDefinition;
 import org.virtue.game.logic.content.skills.woodcutting.WoodcuttingTree;
 
 public class ObjectTransformer {
@@ -58,27 +58,27 @@ public class ObjectTransformer {
 		case "runite ore rocks":
 			return new MiningRock(object, Ore.RUNITE);
 		case "tree":
-			return new WoodcuttingTree(object, Log.NORMAL);
+			return new WoodcuttingTree(object, TreeDefinition.NORMAL);
 		case "oak tree":
 		case "oak":
-			return new WoodcuttingTree(object, Log.OAK);
+			return new WoodcuttingTree(object, TreeDefinition.OAK);
 		case "willow tree":
 		case "willow":
-			return new WoodcuttingTree(object, Log.WILLOW);
+			return new WoodcuttingTree(object, TreeDefinition.WILLOW);
 		case "teak":
-			return new WoodcuttingTree(object, Log.TEAK);
+			return new WoodcuttingTree(object, TreeDefinition.TEAK);
 		case "maple tree":
 		case "maple":
-			return new WoodcuttingTree(object, Log.MAPLE);
+			return new WoodcuttingTree(object, TreeDefinition.MAPLE);
 		case "mahogany":
-			return new WoodcuttingTree(object, Log.MAHOGANY);
+			return new WoodcuttingTree(object, TreeDefinition.MAHOGANY);
 		case "yew tree":
 		case "yew":
-			return new WoodcuttingTree(object, Log.YEW);
+			return new WoodcuttingTree(object, TreeDefinition.YEW);
 		case "magic tree":
-			return new WoodcuttingTree(object, Log.MAGIC);
+			return new WoodcuttingTree(object, TreeDefinition.MAGIC);
 		case "elder tree":
-			return new WoodcuttingTree(object, Log.ELDER);
+			return new WoodcuttingTree(object, TreeDefinition.ELDER);
 		}
 		return object;
 	}

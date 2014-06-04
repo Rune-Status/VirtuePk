@@ -106,12 +106,12 @@ public class FishingAction extends PlayerActionEvent {
 	 * @param player The player.
 	 */
 	private void success (Player player) {
-		Item fish = new Item(nextCatch.getID(), 1);
+		Item fish = Item.create(nextCatch.getID(), 1);
 		player.getPacketDispatcher().dispatchMessage("You catch some " + fish.getDefinition().getName() + ".", GameMessage.MessageOpcode.CHAT_BOX_FILTER);		
 		//TODO: Send filterable message
 		player.getInventory().add(fish);
 		if (type.getBaitID() != -1) {
-			player.getInventory().remove(new Item(type.getBaitID(), 1));
+			player.getInventory().remove(Item.create(type.getBaitID(), 1));
 		}
 		player.getSkills().addExperience(Skill.FISHING, nextCatch.getExperience(), 0, true);
 	}

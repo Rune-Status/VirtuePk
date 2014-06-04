@@ -4,6 +4,7 @@ import org.virtue.Launcher;
 import org.virtue.game.logic.content.skills.Skill;
 import org.virtue.game.logic.events.PlayerActionEvent;
 import org.virtue.game.logic.item.Item;
+import org.virtue.game.logic.item.Logs;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.network.protocol.messages.GameMessage;
@@ -94,7 +95,7 @@ public class WoodcuttingAction extends PlayerActionEvent {
 	 * @param player The player.
 	 */
 	private void success (Player player) {
-		Item log = new Item(tree.getLog().getLogID(), 1);
+		Item log = new Logs(tree.getLog().getLogType(), 1);
 		player.getPacketDispatcher().dispatchMessage("You get some " + log.getDefinition().getName() + ".", GameMessage.MessageOpcode.CHAT_BOX_FILTER);		
 		tree.deplete();
 		player.getInventory().add(log);

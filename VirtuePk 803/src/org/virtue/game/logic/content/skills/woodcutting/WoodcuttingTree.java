@@ -15,10 +15,10 @@ import org.virtue.game.logic.region.Tile;
  */
 public class WoodcuttingTree extends TemporaryObject {
 	
-	private final Log log;
+	private final TreeDefinition log;
 	private RS3Object top;
 
-	public WoodcuttingTree(int id, int rotation, int type, Tile tile, int replacementID, Log log) {
+	public WoodcuttingTree(int id, int rotation, int type, Tile tile, int replacementID, TreeDefinition log) {
 		super(id, rotation, type, tile, replacementID, log.getRespawnTime());
 		this.log = log;		
 	}
@@ -50,14 +50,14 @@ public class WoodcuttingTree extends TemporaryObject {
 		return top;
 	}
 	
-	public WoodcuttingTree(RS3Object object, Log log) {
+	public WoodcuttingTree(RS3Object object, TreeDefinition log) {
 		super(object.getId(), object.getRotation(), object.getType(), object.getTile(), log.getStumpID(), log.getRespawnTime());
 		this.log = log;
 	}
 	
 	@Override
 	public void deplete () {
-		if (log.equals(Log.ELDER)) {
+		if (log.equals(TreeDefinition.ELDER)) {
 			return;//TODO: Implement depletion handling for elder trees
 		}
 		if (log.getRandomLifeProbability() == 0 || Launcher.getRandom().nextInt(log.getRandomLifeProbability()) == 0) {
@@ -76,7 +76,7 @@ public class WoodcuttingTree extends TemporaryObject {
 		}
 	}
 	
-	public Log getLog () {
+	public TreeDefinition getLog () {
 		return log;
 	}	
 	

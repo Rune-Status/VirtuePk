@@ -4,7 +4,7 @@ import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
-public class SwitchInterfaceHandler extends PacketHandler<WorldSession> {
+public class InterfaceDragHandler extends PacketHandler<WorldSession> {
 
 	@Override
 	public void handle(WorldSession session) {
@@ -22,7 +22,7 @@ public class SwitchInterfaceHandler extends PacketHandler<WorldSession> {
 			return;
 		}
 		
-		System.out.println("Switched interfaces: fromSlot="+fromSlot+" oldID: "+oldInterfaceID+", oldComp: "+(oldHash & 0xffff)
+		System.out.println("Dragged interface: fromSlot="+fromSlot+" oldID: "+oldInterfaceID+", oldComp: "+(oldHash & 0xffff)
 				+", toSlot="+toSlot+", newID: "+(newHash >> 16)+", newComp: "+(newHash & 0xffff));
 	}
 
