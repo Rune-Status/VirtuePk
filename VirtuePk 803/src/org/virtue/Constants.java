@@ -24,7 +24,7 @@ public class Constants {
 	 * Represents if Developer mode is enabled.
 	 */
 
-	public static final boolean DEVELOPER_MODE = true;
+	public static boolean DEVELOPER_MODE = true;
 	
 	/**
 	 * Represents the world ID.

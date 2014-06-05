@@ -1,8 +1,14 @@
 package org.virtue.game.logic.content.skills.firemaking;
 
+import org.virtue.Constants;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.item.GroundItem;
+import org.virtue.game.logic.item.Item;
+import org.virtue.game.logic.item.Logs;
 import org.virtue.game.logic.item.Logs.LogType;
+import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
+import org.virtue.game.logic.node.object.ObjectOption;
 import org.virtue.game.logic.node.object.TemporaryObject;
 import org.virtue.game.logic.region.Region;
 import org.virtue.game.logic.region.Tile;
@@ -45,15 +51,15 @@ public class Fire extends TemporaryObject {
 		}
 
 		/**
-		 * Gets the item ID of the log
-		 * @return	The log ID
+		 * Gets the LogType of the logs used to start the fire
+		 * @return	The log type
 		 */
 		public LogType getLogType () {
 			return logs;
 		}
 
 		/**
-		 * Gets the level needed to chop this log from a tree
+		 * Gets the level needed to light this log
 		 * @return	The level needed
 		 */
 		public int getLevel () {
@@ -101,6 +107,8 @@ public class Fire extends TemporaryObject {
 			return null;
 		}
 	}	
+	
+	private boolean exists = true;
 
 	public Fire(Tile tile, Type type) {
 		super(type.getFireID(), 0, 10, tile, -1, type.getDuration());
@@ -111,11 +119,38 @@ public class Fire extends TemporaryObject {
 		return true;//The object is always in the "depletable" state, as it is not respawnable
 	}
 	
+	public boolean exists () {
+		return exists;
+	}
+	
 	@Override
 	public void respawn () {
+		exists = false;
 		Region region = World.getWorld().getRegionManager().getRegionByID(getTile().getRegionID());
 		region.destroyTemporyObject(this);//Remove the fire
 		region.addItem(new GroundItem(592, 1, getTile()));//Spawn ashes
+	}
+	
+	@Override
+	public void interact (Player player, ObjectOption option) {
+		super.interact(player, option);//TODO: Implement fire interaction
+	}
+	
+	@Override
+	public void useItem (Player player, Item item) {
+		if (item instanceof Logs) {
+			Logs logs = (Logs) item;
+			BonfireAction.Type addType = BonfireAction.Type.forLogType(logs.getType());
+			if (addType != null) {
+				player.setActionEvent(new BonfireAction(this, addType));
+				return;
+			}
+		}		
+		String message = "Nothing interesting happens.";
+		if (Constants.DEVELOPER_MODE || player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			message = "Used item "+item.getDefinition().getName()+" ("+item.getId()+") on fire at x="+getTile().getX()+", y="+getTile().getY()+", z="+getTile().getPlane();
+		}
+		player.getPacketDispatcher().dispatchMessage(message);
 	}
 	
 }

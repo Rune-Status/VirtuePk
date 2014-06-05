@@ -295,6 +295,6 @@ public class RouteFinder {
 		int distanceX = currentX - target.getX();
 		int distanceY = currentY - target.getY();
 		//Is within x distance - Distance is greater than zero - Is within y distance - Distance y greater than zero
-		return distanceX <= destSizeX && distanceX >= 0 && distanceY <= destSizeY && distanceY >= 0;
+		return distanceX <= destSizeX && distanceX >= -destSizeX && distanceY <= destSizeY && distanceY >= -destSizeY;
 	}
 }

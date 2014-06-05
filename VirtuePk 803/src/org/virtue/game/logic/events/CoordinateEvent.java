@@ -51,7 +51,7 @@ public abstract class CoordinateEvent {
 	public boolean reachedTarget (Player player) {
 		int distanceX = player.getTile().getX() - tile.getX();
 		int distanceY = player.getTile().getY() - tile.getY();
-		return (distanceX <= sizeX && distanceX >= -1 && distanceY <= sizeY && distanceY >= -1);
+		return (distanceX <= sizeX && distanceX >= -sizeX && distanceY <= sizeY && distanceY >= -sizeY);
 	}
 
 	public boolean cantReach(Player player) {

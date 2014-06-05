@@ -5,6 +5,7 @@ import java.util.List;
 import org.virtue.game.logic.node.Node;
 import org.virtue.game.logic.node.entity.update.UpdateBlockArchive;
 import org.virtue.game.logic.node.entity.update.masks.Bar;
+import org.virtue.game.logic.node.entity.update.movement.Movement;
 import org.virtue.game.logic.region.Tile;
 
 
@@ -160,4 +161,60 @@ public abstract class Entity extends Node {
 	}
 	
 	public abstract int getSize();
+	
+	public boolean isAdjacentTo (Tile tile, boolean diagonalOk) {
+		int deltaX = Math.abs(getTile().getX() - tile.getX());
+		int deltaY = Math.abs(getTile().getY() - tile.getY());
+		if (deltaX == 1 && deltaY == 0
+				|| deltaX == 0 && deltaY == 1) {
+			return true;
+		} else if (deltaX == 1 && deltaY == 1 && diagonalOk) {
+			return true;//Entity is diagonally adjacent to the tile
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean moveAdjacentTo (Tile tile, boolean diagonalOk) {
+		Movement movement = getUpdateArchive().getMovement();
+		int deltaX = getTile().getX() - tile.getX();
+		int deltaY = getTile().getY() - tile.getY();
+		if (deltaX == 0 && deltaY == 0) {//Entity is standing on tile
+			if (!movement.addWalkSteps(getTile().getX() - 1, getTile().getY(), 1, true)) {
+				if (!movement.addWalkSteps(getTile().getX() + 1, getTile().getY(), 1, true)) {
+					if (!movement.addWalkSteps(getTile().getX(), getTile().getY() + 1, 1, true)) {
+						return movement.addWalkSteps(getTile().getX(), getTile().getY() - 1, 1, true);
+					}
+				}
+			}
+			return true;
+		} else if ((Math.abs(deltaX) == 1 && Math.abs(deltaY) == 0)
+				|| Math.abs(deltaX) == 0 && Math.abs(deltaY) == 1) {
+			return true;//Entity is already adjacent to the tile
+		} else if (Math.abs(deltaX) == 1 && Math.abs(deltaY) == 1 && diagonalOk) {
+			return true;//Entity is diagonally adjacent to the tile
+		} else if (deltaX == 1 && deltaY == 1) {//Entity is north-east of the tile
+			if (!movement.addWalkSteps(getTile().getX() - 1, getTile().getY(), 1, true)) {
+				return movement.addWalkSteps(getTile().getX(), getTile().getY() - 1, 1, true);
+			}
+			return true;
+		} else if (deltaX == -1 && deltaY == -1) {//Entity is south-west of the tile
+			if (!movement.addWalkSteps(getTile().getX() + 1, getTile().getY(), 1, true)) {
+				return movement.addWalkSteps(getTile().getX(), getTile().getY() + 1, 1, true);
+			}
+			return true;
+		} else if (deltaX == 1 && deltaY == -1) {//Entity is north-west of the tile
+			if (!movement.addWalkSteps(getTile().getX() - 1, getTile().getY(), 1, true)) {
+				return movement.addWalkSteps(getTile().getX(), getTile().getY() + 1, 1, true);
+			}
+			return true;
+		} else if (deltaX == -1 && deltaY == 1) {//Entity is south-east of the tile
+			if (!movement.addWalkSteps(getTile().getX() + 1, getTile().getY(), 1, true)) {
+				return movement.addWalkSteps(getTile().getX(), getTile().getY() - 1, 1, true);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

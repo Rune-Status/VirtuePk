@@ -410,6 +410,10 @@ public class Appearance {
 		this.title = title;
 	}
 
+	public void setRenderEmote(int emote) {
+		this.renderEmote = emote;
+	}
+
 	/**
 	 * @return The skullIconId
 	 */

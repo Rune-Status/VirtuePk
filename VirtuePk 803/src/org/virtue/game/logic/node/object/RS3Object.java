@@ -1,5 +1,6 @@
 package org.virtue.game.logic.node.object;
 
+import org.virtue.Constants;
 import org.virtue.cache.def.ObjectDefinition;
 import org.virtue.cache.def.ObjectDefinitionLoader;
 import org.virtue.game.logic.item.Item;
@@ -148,18 +149,20 @@ public class RS3Object extends Node {
 			player.getInterfaces().openBank();
 			return;
 		}
-		String message = "Clicked object: objectID="+id+", type="+type+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", zCoord="+getTile().getPlane()+", optionID="+option.getID();
-		System.out.println(message);
-		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
-			player.getPacketDispatcher().dispatchMessage(message);
+		String message = "This feature has not been implemented.";
+		if (Constants.DEVELOPER_MODE || player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			message = "Clicked object: objectID="+id+", type="+type+", x="+getTile().getX()+", y="+getTile().getY()+", z="+getTile().getPlane()+", optionID="+option.getID();
+			System.out.println(message);
 		}
+		player.getPacketDispatcher().dispatchMessage(message);
 	}
 
 	public void useItem (Player player, Item item) {
-		String message = "Used item on object: objectID="+id+", type="+type+", itemID"+item.getId()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", zCoord="+getTile().getPlane();
-		System.out.println(message);
-		if (player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
-			player.getPacketDispatcher().dispatchMessage(message);
+		String message = "Nothing interesting happens.";
+		if (Constants.DEVELOPER_MODE || player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			message = "Used item on object: objectID="+id+", type="+type+", itemID"+item.getId()+", x="+getTile().getX()+", y="+getTile().getY()+", z="+getTile().getPlane();
+			System.out.println(message);
 		}
+		player.getPacketDispatcher().dispatchMessage(message);
 	}
 }

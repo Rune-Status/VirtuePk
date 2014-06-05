@@ -53,6 +53,7 @@ public class FiremakingAction extends PlayerActionEvent {
 			player.getPacketDispatcher().dispatchMessage("You can't light a fire here.", GameMessage.MessageOpcode.CHAT_BOX);
 			return false;
 		}
+		player.getPacketDispatcher().dispatchMessage("You attempt to light the logs.", GameMessage.MessageOpcode.CHAT_BOX_FILTER);
 		calculatedTime = fireType.getSpawnTime();//TODO: Calculate this based of the player's level, etc
 		return true;
 	}
@@ -69,13 +70,13 @@ public class FiremakingAction extends PlayerActionEvent {
 	}
 	
 	private void success (Player player) {
-		Tile location = new Tile(player.getTile());
-		//TODO: Make the player move by one tile.
+		Tile location = new Tile(player.getTile());		
 		player.getPacketDispatcher().dispatchMessage("The fire catches and the logs begin to burn.", GameMessage.MessageOpcode.CHAT_BOX_FILTER);
 		player.getInventory().remove(logs, logSlot);
 		player.getSkills().addExperience(Skill.FIREMAKING, fireType.getExperience(), 0, true);
 		Fire fire = new Fire(location, fireType);
 		World.getWorld().getRegionManager().getRegionByID(player.getTile().getRegionID()).updateTempObject(fire);
+		player.moveAdjacentTo(location, false);//Moves the player to beside the fire
 	}
 	
 	public boolean checkTile (Player player) {

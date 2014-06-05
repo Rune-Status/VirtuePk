@@ -1,6 +1,5 @@
 package org.virtue;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.Random;
@@ -10,8 +9,6 @@ import java.util.concurrent.Executors;
 import org.virtue.cache.Cache;
 import org.virtue.cache.ChecksumTable;
 import org.virtue.cache.Container;
-import org.virtue.cache.FileStore;
-import org.virtue.cache.def.AnimationDefinition;
 import org.virtue.cache.def.CacheIndex;
 import org.virtue.cache.def.ItemDefinitionLoader;
 import org.virtue.cache.def.NPCDefinitionLoader;
@@ -20,7 +17,6 @@ import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
-import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.loginserver.DataServer;
@@ -82,6 +78,7 @@ public class Launcher {
 			Lobby.load();
 			IOHub.load();
 			NETWORK.load();
+			System.out.println("Test");
 			System.out.println("VirtuePK took " + (TimeUtil.currentTimeMillis() - currentTime) + " milli seconds to launch.");
 		} catch (Exception e) {
 			ENGINE.handleException(e);

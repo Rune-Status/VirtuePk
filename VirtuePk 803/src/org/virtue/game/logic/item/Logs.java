@@ -13,6 +13,7 @@ public class Logs extends Item {
 		TEAK(6333),
 		MAPLE(1517),
 		MAHOGANY(6332),
+		EUCALYPTUS(12581),
 		YEW(1515),
 		MAGIC(1513),
 		ELDER(29556);
@@ -56,6 +57,8 @@ public class Logs extends Item {
 	public void handleItemOnItem (Player player, int invSlot, Item item2, int item2Slot) {
 		if (item2.getId() == 590) {//Tinderbox
 			player.setActionEvent(new FiremakingAction(this, invSlot));
+		} else {
+			super.handleItemOnItem(player, invSlot, item2, item2Slot);
 		}
 	}
 	

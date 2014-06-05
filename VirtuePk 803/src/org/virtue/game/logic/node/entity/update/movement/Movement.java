@@ -126,6 +126,10 @@ public class Movement {
 		return calculateWalkStepsInteract(target, maxStepsCount, size, size);
 	}
 	
+	public boolean moveBy (int deltaX, int deltaY) {
+		return true;
+	}
+	
 	public boolean calculateWalkStepsInteract (Tile target,
 			int maxStepsCount, int sizeX, int sizeY) {
 		if (noclipped) {
