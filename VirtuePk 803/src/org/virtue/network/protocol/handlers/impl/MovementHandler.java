@@ -4,9 +4,12 @@ import org.virtue.Constants;
 import org.virtue.game.logic.node.entity.update.movement.Movement;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.handlers.PacketHandler;
-import org.virtue.network.protocol.packet.encoder.impl.MinimapFlagEncoder;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ * @since Apr 20, 2014
+ */
 public class MovementHandler extends PacketHandler<WorldSession> {
 
 	@Override
@@ -49,7 +52,8 @@ public class MovementHandler extends PacketHandler<WorldSession> {
 					target.getLocalY(session.getPlayer().getViewport().getLastLoadedTile()), 0);
 			//target = Tile.edit(target, session.getPlayer().getLastTile(), yOff, 0)
 		}//Change the minimap flag if the destination is not reachable
-		session.getTransmitter().send(MinimapFlagEncoder.class, flagPos);
+		session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(flagPos);
+		//session.getTransmitter().send(MinimapFlagEncoder.class, flagPos);
 	}
 
 }

@@ -17,6 +17,7 @@ import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.loginserver.DataServer;
@@ -61,6 +62,11 @@ public class Launcher {
 	private static Huffman HUFFMAN;
 	
 	/**
+	 * Represents the clan management system
+	 */
+	private static ClanManager CLANS;
+	
+	/**
 	 * Represents the main method.
 	 * @param args The arguments casted on runtime.
 	 */
@@ -78,7 +84,7 @@ public class Launcher {
 			Lobby.load();
 			IOHub.load();
 			NETWORK.load();
-			System.out.println("Test");
+			CLANS = new ClanManager();
 			System.out.println("VirtuePK took " + (TimeUtil.currentTimeMillis() - currentTime) + " milli seconds to launch.");
 		} catch (Exception e) {
 			ENGINE.handleException(e);
@@ -154,5 +160,12 @@ public class Launcher {
 	 */
 	public static Huffman getHuffman () {
 		return HUFFMAN;
+	}
+	
+	/**
+	 * @return The clan management system
+	 */
+	public static ClanManager getClanManager () {
+		return CLANS;
 	}
 }

@@ -10,6 +10,10 @@ import org.virtue.game.logic.node.entity.update.masks.Graphics;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.messages.GameMessage;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class BonfireAction extends PlayerActionEvent {
 	
 	public static enum Type {

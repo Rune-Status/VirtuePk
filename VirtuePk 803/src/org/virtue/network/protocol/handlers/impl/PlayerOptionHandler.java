@@ -30,6 +30,7 @@ public class PlayerOptionHandler extends PacketHandler<WorldSession> {
 			
 		} else {
 			player.handleDistanceOption(session.getPlayer(), option);
+			session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(null);
 		}
 		System.out.println("Received player action: option="+option.getID()+", playerIndex="+playerIndex+", player="+player.getAccount().getUsername().getName()+", forceRun="+forceRun);
 	}

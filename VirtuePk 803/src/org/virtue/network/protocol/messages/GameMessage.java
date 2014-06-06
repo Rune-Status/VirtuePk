@@ -29,7 +29,12 @@ public class GameMessage {
 		 */
 		FRIENDS_CHAT_SYSTEM(11),
 		
-		CLAN_SYSTEM(0),//TODO: Find the proper opcode for this
+		/**
+		 * Clan-related system message (NOTE: There is a separate packet for larger clan system messages)
+		 */
+		CLAN_SYSTEM(43),
+		
+		GUEST_CLAN_SYSTEM(0),
 		
 		/**
 		 * Represents a default game message in the chatbox, yet with filter

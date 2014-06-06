@@ -8,6 +8,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.Viewport;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.object.RS3Object;
+import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.messages.GameMessage;
@@ -28,6 +29,7 @@ import org.virtue.network.protocol.packet.encoder.impl.InterfaceEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ItemsEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.LogoutEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.MinimapFlagEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ObjectUpdateEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.SkillEncoder;
@@ -202,6 +204,10 @@ public class PacketDispatcher {
 	 */
 	public void dispatchClientScriptVar(ClientScriptVar script) {
 		player.getAccount().getSession().getTransmitter().send(ClientScriptVarEncoder.class, script);
+	}
+	
+	public void dispatchMinimapFlag (Tile location) {
+		player.getAccount().getSession().getTransmitter().send(MinimapFlagEncoder.class, location);
 	}
 	
 	/**

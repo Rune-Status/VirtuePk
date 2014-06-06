@@ -4,6 +4,10 @@ import org.virtue.game.config.IncommingOpcodes;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class MessageHandler extends PacketHandler<WorldSession> {
 
 	@Override

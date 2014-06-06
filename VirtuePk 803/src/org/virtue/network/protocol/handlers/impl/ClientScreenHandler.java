@@ -5,6 +5,10 @@ import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 import org.virtue.utility.DisplayMode;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class ClientScreenHandler extends PacketHandler<WorldSession> {
 
 	@Override

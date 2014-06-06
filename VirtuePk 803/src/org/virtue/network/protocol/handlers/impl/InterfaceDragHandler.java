@@ -4,6 +4,10 @@ import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class InterfaceDragHandler extends PacketHandler<WorldSession> {
 
 	@Override

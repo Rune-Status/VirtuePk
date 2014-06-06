@@ -34,6 +34,7 @@ public class CommandRepository {
 		commands.add(new CheckPassword());
 		commands.add(new SpawnObject());
 		commands.add(new Teleport());
+		commands.add(new ClanCommands());
 		
 	}
 	

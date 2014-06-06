@@ -1,5 +1,6 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
+import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
@@ -8,6 +9,7 @@ import org.virtue.game.logic.social.clans.ClanMember;
 import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.network.protocol.messages.ClientScriptVar;
+import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.messages.VarcStringMessage;
 
@@ -17,14 +19,18 @@ public class ClanSettingsInterface extends AbstractInterface {
 	
 	public static enum PermissionTab {ADMIN,CHAT,EVENTS,CITADEL,SKILL};
 	
+	private final long clanHash;
+	
 	private Tab currentTab = Tab.CLANMATES;
 	
 	private PermissionTab permTab = PermissionTab.ADMIN;
 	
 	private ClanMember selectedMember = null;
+	private ClanRank memberNewRank = null;
 
-	public ClanSettingsInterface(Player p) {
+	public ClanSettingsInterface(Player p, long clanHash) {
 		super(RSInterface.CLAN_SETTINGS, p);
+		this.clanHash = clanHash;
 	}	
 
 	@Override
@@ -68,7 +74,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 		case 71://Clan member ban from island
 		case 324://Clan member save
 		case 315://Clan member kick
-			System.out.println("Unhandled clan member button: component="+component+", slot1="+slot1+", slot2="+slot2+", button="+button.getID());
+			handleMemberOption(component, slot1);
 			break;
 		/*Clan permissions tab*/
 		case 399://Recruit
@@ -101,24 +107,63 @@ public class ClanSettingsInterface extends AbstractInterface {
 		}		
 	}
 	
-	public void editMember (ClanMember member) {
-		/*player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 131));
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1846, 0));
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 32768));
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1500, 1, true));//Received VarClient: key=1500, value=1
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1501, 131, true));//Received VarClient: key=1501, value=131
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1564, 0, true));//Received VarClient: key=1564, value=0
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1566, 0, true));//Received VarClient: key=1566, value=0
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1565, 0, true));//Received VarClient: key=1565, value=0
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1567, 0, true));//Received VarClient: key=1567, value=0
-		player.getPacketDispatcher().dispatchVarp(new VarMessage(1568, 2, true));//Received VarClient: key=1568, value=2
-		player.getPacketDispatcher().dispatchVarcString(new VarcStringMessage(2521, "Test"));
-		//test();
-		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));*/
+	public void handleMemberOption (int component, int slot) {
+		if (selectedMember == null) {
+			return;
+		}
+		switch (component) {
+		case 324://Clan member save
+			if (memberNewRank != null) {
+				Launcher.getClanManager().setRank(clanHash, player, selectedMember.getProtocolName(), memberNewRank);
+			}
+			player.getPacketDispatcher().dispatchMessage("Changes have been saved to clanmate.", MessageOpcode.CLAN_SYSTEM);
+			sendClanMemberInfo(selectedMember);
+			break;
+		case 315://Clan member kick
+			//TODO: Add confirmation of kick
+			if (Launcher.getClanManager().kickClanMember(clanHash, player, selectedMember.getProtocolName())) {
+				sendClanMemberInfo(null);
+				player.getPacketDispatcher().dispatchMessage("Successfully kicked clan member.", MessageOpcode.CLAN_SYSTEM);
+			} else {
+				player.getPacketDispatcher().dispatchMessage("Failed to kick clan member.", MessageOpcode.CLAN_SYSTEM);
+			}			
+			break;
+		case 282://Clan member rank select
+			if (selectedMember.getRank().equals(ClanRank.OWNER)) {
+				if (slot >= ClanRank.DEPUTY_OWNER.getID()) {
+					player.getPacketDispatcher().dispatchMessage("You can only adjust your rank to overseer or lower.", MessageOpcode.CLAN_SYSTEM);
+					return;
+				}
+				//TODO: This should be handled via dialogs using confirmation
+				//Applying changes to clan settings.
+				//You must appoint a deputy owner to take over as owner before you can demote yourself.
+			}
+			memberNewRank = ClanRank.forID(slot);
+			break;
+		case 268://Clan member job select
+		case 63://Clan member ban from citadel
+		case 67://Clan member ban from keep
+		case 71://Clan member ban from island
+		default:
+			System.out.println("Unhandled clan member button: component="+component+", slot1="+slot);			
+			break;
+		}
 	}
 	
 	public void sendClanMemberInfo (ClanMember member) {
 		selectedMember = member;
+		if (member == null) {
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1500, -1, true));//Rank
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1501, -1, true));//Job
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1564, -1, true));//[Unknown]
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1566, -1, true));//Ban from citadel
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1565, -1, true));//Ban from keep
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1567, -1, true));//Ban from island
+			player.getPacketDispatcher().dispatchVar(new VarMessage(1568, -1, true));//Probation status
+			player.getPacketDispatcher().dispatchVarcString(new VarcStringMessage(2521, ""));//Display name
+			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));
+			return;
+		}
 		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13
 		//player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 131));
 		player.getPacketDispatcher().dispatchVar(new VarMessage(1846, 0));

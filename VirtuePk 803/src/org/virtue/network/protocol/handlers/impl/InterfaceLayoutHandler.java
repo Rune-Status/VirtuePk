@@ -5,6 +5,10 @@ import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class InterfaceLayoutHandler extends PacketHandler<WorldSession> {
 
 	@Override

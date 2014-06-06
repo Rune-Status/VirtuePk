@@ -26,7 +26,9 @@ import org.virtue.game.logic.social.SocialUser;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
 import org.virtue.game.logic.social.clans.csdelta.AddMember;
 import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
+import org.virtue.game.logic.social.clans.csdelta.DeleteMember;
 import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
+import org.virtue.game.logic.social.messages.ClanSettingsDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 
 import com.google.gson.JsonArray;
@@ -56,6 +58,10 @@ public class ClanSettings {
 	private transient ClanChannel linkedChannel;
 	
 	private int updateNumber = 0;
+	
+	private int ownerSlot = -1;
+	
+	private int replacementOwnerSlot = -1;
 	
 	private List<ClanMember> members = Collections.synchronizedList(new ArrayList<ClanMember>());
 	
@@ -115,7 +121,12 @@ public class ClanSettings {
 			updateQueue.clear();
 			updateNumber++;
 		}
-		//TODO: Dispatch the delta updates
+		ClanSettingsDeltaPacket memberPacket = new ClanSettingsDeltaPacket(false, thisUpdate, deltaNodes);
+		synchronized (onlineMembers) {
+			for (SocialUser u : onlineMembers) {
+				u.sendClanSettingsDelta(memberPacket);
+			}
+		}
 		sendInitPackets();
 	}
 	
@@ -187,9 +198,9 @@ public class ClanSettings {
 			minLootShareRank = ClanRank.RECRUIT;
 		}
 		JsonArray membersData = clanData.get("members").getAsJsonArray();
-		members.clear();
-		for (JsonElement member : membersData) {
-			JsonObject memberData = member.getAsJsonObject();
+		members.clear();		
+		for (JsonElement memberElement : membersData) {
+			JsonObject memberData = memberElement.getAsJsonObject();
 			String protocolName = memberData.get("username").getAsString();
 			ClanRank rank = ClanRank.forID(memberData.get("rank").getAsByte());
 			if (rank == null) {
@@ -197,6 +208,7 @@ public class ClanSettings {
 			}
 			members.add(new ClanMember(protocolName, rank));
 		}
+		findClanOwner();//Finds the owner of the clan
 		JsonArray banData = clanData.get("bans").getAsJsonArray();
 		bans.clear();
 		for (JsonElement ban : banData) {
@@ -234,6 +246,32 @@ public class ClanSettings {
 		clanData.add("bans", banData);
 		
 		return clanData;
+	}
+	
+	private void findClanOwner () {
+		ownerSlot = -1;
+		replacementOwnerSlot = -1;
+		int highestRankSlot = 0;
+		synchronized (members) {
+			ClanRank highestRank = members.get(0).getRank();
+			for (int index = 1;index<members.size();index++) {
+				ClanRank rank = members.get(index).getRank();
+				if (rank.getID() > highestRank.getID()) {
+					if (highestRank.equals(ClanRank.DEPUTY_OWNER)) {
+						replacementOwnerSlot = highestRankSlot;
+					}
+					highestRankSlot = index;
+					highestRank = rank;
+				} else if (rank.equals(ClanRank.DEPUTY_OWNER) && replacementOwnerSlot == -1) {
+					replacementOwnerSlot = index;
+				}
+				
+			}
+			ownerSlot = highestRankSlot;
+			if (highestRankSlot != -1) {
+				members.get(ownerSlot).setRank(ClanRank.OWNER);
+			}		
+		}
 	}
 	
 	protected void linkChannel (ClanChannel channel) {
@@ -344,6 +382,15 @@ public class ClanSettings {
 		return null;
 	}
 	
+	public ClanMember getOwner () {
+		if (ownerSlot == -1) {
+			return null;
+		}
+		synchronized (members) {
+			return members.get(ownerSlot);
+		}
+	}
+	
 	public void sendMemberInfo (SocialUser user, int index) {
 		user.sendClanMemberInfo(members.get(index));
 	}
@@ -358,26 +405,66 @@ public class ClanSettings {
 			return;
 		}
 		ClanMember newMember = new ClanMember(player.getProtocolName());
-		members.add(newMember);
+		synchronized (members) {
+			members.add(newMember);
+			findClanOwner();
+		}
 		queueUpdate(new AddMember(newMember.getDisplayName()));
 		if (linkedChannel != null) {
 			linkedChannel.updateUser(player.getProtocolName());
 		}
 	}
 	
-	public void setRank (String protocolName, ClanRank rank) throws NullPointerException {
+	protected void removeMember (String protocolName) {
 		ClanMember member = getMember(protocolName);
 		if (member == null) {
 			throw new NullPointerException(protocolName+" is not in "+clanName);
 		}
+		synchronized (members) {
+			int index = members.indexOf(member);
+			members.remove(member);
+			findClanOwner();
+			queueUpdate(new DeleteMember(index));
+		}
+		if (linkedChannel != null) {
+			linkedChannel.updateUser(member.getProtocolName());
+		}		
+	}
+	
+	protected void setRank (String protocolName, ClanRank rank) throws NullPointerException {
+		ClanMember member = getMember(protocolName);
+		if (member == null) {
+			throw new NullPointerException(protocolName+" is not in "+clanName);
+		}
+		setRank(member, rank);
+	}
+	
+	private void setRank (ClanMember member, ClanRank rank) {
 		member.setRank(rank);
 		synchronized (updateQueue) {
 			int index = members.indexOf(member);
 			queueUpdate(new UpdateRank(index, rank));
 		}
 		if (linkedChannel != null) {
-			linkedChannel.updateUser(protocolName);
+			linkedChannel.updateUser(member.getProtocolName());
 		}
+		findClanOwner();
+	}
+	
+	protected void setOwnerRank (ClanRank rank) throws NullPointerException {
+		ClanMember member = getOwner();
+		setRank(member, rank);
+		ClanMember newOwner = null;
+		synchronized (members) {
+			newOwner = getOwner();
+			synchronized (updateQueue) {
+				queueUpdate(new UpdateRank(ownerSlot, rank));
+			}
+		}
+		if (linkedChannel != null && newOwner != null) {
+			linkedChannel.updateUser(newOwner.getProtocolName());
+		}
+		
 	}
 	
 	@Override

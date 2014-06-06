@@ -33,6 +33,7 @@ public class ObjectOptionHandler extends MovementHandler {
 		
 		if (object.isDistanceOption(option)) {
 			object.interact(session.getPlayer(), option);
+			session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(null);
 		} else {
 			putFlag("sizeX", object.getSizeX());
 			putFlag("sizeY", object.getSizeY());

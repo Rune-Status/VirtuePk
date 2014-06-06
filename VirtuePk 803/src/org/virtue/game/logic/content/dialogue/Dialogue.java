@@ -13,9 +13,9 @@ public abstract class Dialogue {
 	public enum Options {
 		FIRST, SECOND, THIRD, FOURTH, FIFTH;
 
-		public static Options forComponent(int componentId) {
+		public static Options forComponent(int componentID) {
 			for (Options opt : Options.values()) {
-				if ((opt.ordinal() + 3) == componentId) {
+				if ((opt.ordinal() + 3) == componentID) {
 					return opt;
 				}
 			}

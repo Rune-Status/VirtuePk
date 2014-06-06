@@ -25,7 +25,6 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.impl.ClanSettingsInterface;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.clans.ClanChannelManager;
-import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
@@ -54,9 +53,6 @@ public class ChatManager {
 	private enum ChannelStage { NONE, JOINING, JOINED, LEAVING }
 	
 	private static final FriendsChatManager friendsChatManager = new InternalFriendsChatManager();
-	
-	//TODO: Make this private
-	public static final ClanManager clanManager = new ClanManager();
 	
 	/**
 	 * Represents the player.
@@ -158,9 +154,9 @@ public class ChatManager {
 		player.getAccount().getSession().getTransmitter().send(OnlineStatusEncoder.class, onlineStatus);
 		player.getAccount().getSession().getTransmitter().send(EmptyPacketEncoder.class, OutgoingOpcodes.UNLOCK_FRIENDS_LIST);
 		friendManager.init();
-		clanManager.registerPlayer(socialUser);
+		Launcher.getClanManager().registerPlayer(socialUser);
 		if (myClanHash != 0L) {
-			clanManager.getChannelManager().joinMyChannel(socialUser);
+			Launcher.getClanManager().getChannelManager().joinMyChannel(socialUser);
 		}
 	}
 	
@@ -173,10 +169,10 @@ public class ChatManager {
 		if (channelStage.equals(ChannelStage.JOINED)) {
 			friendsChatManager.leaveChannel(socialUser, true);
 		}
-		clanManager.deregisterPlayer(socialUser);
+		Launcher.getClanManager().deregisterPlayer(socialUser);
 		//Leave both the clan channel and guest clan channel
-		clanManager.getChannelManager().leaveChannel(socialUser, true, true);
-		clanManager.getChannelManager().leaveChannel(socialUser, false, true);
+		Launcher.getClanManager().getChannelManager().leaveChannel(socialUser, true, true);
+		Launcher.getClanManager().getChannelManager().leaveChannel(socialUser, false, true);
 	}
 	
 	/**
@@ -188,7 +184,7 @@ public class ChatManager {
 	}
 	
 	public ClanChannelManager getClanChatManager () {
-		return clanManager.getChannelManager();
+		return Launcher.getClanManager().getChannelManager();
 	}
 	
 	public JsonObject serialiseData () {
@@ -317,23 +313,23 @@ public class ChatManager {
 	
 	public void joinMyClanChannel () {
 		if (!inClanChannel) {
-			clanManager.getChannelManager().joinMyChannel(socialUser);
+			Launcher.getClanManager().getChannelManager().joinMyChannel(socialUser);
 		}
 	}
 	
 	public void joinGuestChannel (String clanName) {
 		if (guestClanHash == 0L) {
-			clanManager.getChannelManager().joinGuestChannel(socialUser, clanName);
+			Launcher.getClanManager().getChannelManager().joinGuestChannel(socialUser, clanName);
 		}
 	}
 	
 	public void leaveClanChannel (boolean isGuest) {
-		clanManager.getChannelManager().leaveChannel(socialUser, isGuest, false);
+		Launcher.getClanManager().getChannelManager().leaveChannel(socialUser, isGuest, false);
 	}
 	
 	public void handleClanChannelMessage (String message, boolean isGuest) {
 		String formattedMessage = StringUtils.format(message, FormatType.DISPLAY);
-		clanManager.getChannelManager().sendMessage(socialUser, formattedMessage, isGuest);
+		Launcher.getClanManager().getChannelManager().sendMessage(socialUser, formattedMessage, isGuest);
 	}
 	
 	public void setClanSettings (ClanSettingsInterface settings) {
@@ -345,7 +341,7 @@ public class ChatManager {
 	}
 	
 	public ClanSettings getClanData () {//TODO: Don't display this publicly
-		return clanManager.getClanData(myClanHash);
+		return Launcher.getClanManager().getClanData(myClanHash);
 	}
 	
 	/**

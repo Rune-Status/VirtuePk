@@ -3,6 +3,9 @@ package org.virtue.game.logic.events;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.region.Tile;
 
+/**
+ * @author Virtue Development Team 2014 (c).
+ */
 public abstract class CoordinateEvent {
 	
 	protected Tile tile;

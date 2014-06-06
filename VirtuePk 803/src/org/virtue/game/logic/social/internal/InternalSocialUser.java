@@ -27,6 +27,7 @@ import org.virtue.game.logic.social.clans.ClanMember;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
+import org.virtue.game.logic.social.messages.ClanSettingsDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
@@ -39,6 +40,7 @@ import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelDeltaEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanChannelMessageEncoder;
+import org.virtue.network.protocol.packet.encoder.impl.chat.ClanSettingsDeltaEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.ClanSettingsEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.chat.FriendsChatEncoder;
@@ -270,10 +272,17 @@ public class InternalSocialUser implements SocialUser {
 	
 	//=================================Clan data section=================================//
 	
+	@Override
 	public void sendClanSettingsFull (ClanSettingsPacket packet) {
 		player.getAccount().getSession().getTransmitter().send(ClanSettingsEncoder.class, packet);
 	}
+
+	@Override
+	public void sendClanSettingsDelta(ClanSettingsDeltaPacket packet) {
+		player.getAccount().getSession().getTransmitter().send(ClanSettingsDeltaEncoder.class, packet);		
+	}
 	
+	@Override
 	public void sendClanMemberInfo (ClanMember member) {
 		if (player.getChatManager().getClanSettingsInterface() != null) {
 			player.getChatManager().getClanSettingsInterface().sendClanMemberInfo(member);

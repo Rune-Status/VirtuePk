@@ -7,6 +7,10 @@ import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class MovementDecoder implements PacketDecoder<MovementHandler> {
 
 	@Override

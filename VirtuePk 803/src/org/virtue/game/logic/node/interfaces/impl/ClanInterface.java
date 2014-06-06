@@ -55,7 +55,7 @@ public class ClanInterface extends AbstractInterface {
 			if (player.getChatManager().getMyClanHash() == 0L) {
 				player.getPacketDispatcher().dispatchMessage("You're not in a clan.", MessageOpcode.CLAN_SYSTEM);
 			} else {
-				getPlayer().getInterfaces().setTopInterface(new ClanSettingsInterface(player));
+				getPlayer().getInterfaces().setTopInterface(new ClanSettingsInterface(player, player.getChatManager().getMyClanHash()));
 			}
 			break;
 		case 103://Clan info

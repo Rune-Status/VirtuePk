@@ -6,6 +6,10 @@ import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.npc.NPCOption;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class NpcOptionHandler extends MovementHandler {
 
 	@Override
@@ -35,6 +39,7 @@ public class NpcOptionHandler extends MovementHandler {
 			session.getPlayer().setCoordinateEvent(new NPCInteractEvent(npc, option));
 		} else {
 			npc.handleDistanceOption(session.getPlayer(), option);
+			session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(null);
 		}
 		//System.out.println("Clicked NPC: npcIndex="+npcIndex+", id="+npc.getId()+", xCoord="+baseX+", yCoord="+baseY+", optionID="+option.getID());
 	}

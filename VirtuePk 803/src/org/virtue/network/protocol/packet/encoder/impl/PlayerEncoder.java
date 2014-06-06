@@ -79,6 +79,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				removePlayer(buffer, playerIndex, localPlayer);
 			} else {
 				skip = updatePlayer(buffer, updateBlockData, localPlayer, i, skip, playerIndex, nsn0);
+				//System.out.println("Skiping "+skip+" local players.");
 			}
 		}
 		buffer.unSyncBits();
@@ -112,7 +113,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 				queueOutsidePlayer(buffer, updateBlockData, globalPlayer, playerIndex);
 			} else {
 				skip = skipOutsidePlayer(buffer, globalPlayer, playerIndex, counter, skip, nsn2);
-				}
+			}
 		}
 		buffer.unSyncBits();
 	}
@@ -361,6 +362,7 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 			buffer.putBits(1, 1);
 			updateRegionHash(buffer, player.getViewport().getRegionHashes()[playerIndex], hash, outsidePlayer);
 			player.getViewport().getRegionHashes()[playerIndex] = hash;
+			//System.out.println("Queueing player at index: "+playerIndex+". nsn2="+nsn2);
 		} else {
 			buffer.putBits(1, 0);
 			for (int otherCounter = counter + 1; otherCounter < player.getViewport().getOutPlayersIndexesCount(); otherCounter++) {
@@ -373,8 +375,8 @@ public class PlayerEncoder implements PacketEncoder<Player> {
 					break;
 				}
 				skip++;
-				player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 			}
+			player.getViewport().getSlotFlags()[playerIndex] = (byte) (player.getViewport().getSlotFlags()[playerIndex] | 2);
 			skipPlayers(buffer, skip);
 		}
 		return skip;

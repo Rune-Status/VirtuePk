@@ -8,6 +8,10 @@ import org.virtue.game.logic.region.Region;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class GroundItemHandler extends MovementHandler {
 
 	@Override

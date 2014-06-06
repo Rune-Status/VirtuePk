@@ -24,6 +24,7 @@ import org.virtue.game.logic.social.internal.Ignore;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
+import org.virtue.game.logic.social.messages.ClanSettingsDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
@@ -205,6 +206,8 @@ public interface SocialUser {
 	
 	
 	public void sendClanSettingsFull (ClanSettingsPacket packet);
+	
+	public void sendClanSettingsDelta (ClanSettingsDeltaPacket packet);
 	
 	public void sendClanMemberInfo (ClanMember member);
 }

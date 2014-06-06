@@ -132,12 +132,12 @@ public class ClanManager {
 		return clanIndex;
 	}
 	
-	public boolean joinClan (InternalSocialUser recruiter, InternalSocialUser joiner) {
+	public boolean joinClan (SocialUser recruiter, SocialUser joiner) {
 		if (joiner.getMyClanHash() != 0L) {
 			return false;//Already in clan
 		}
 		long clanHash = recruiter.getMyClanHash();
-		ClanSettings clan = getClanData (clanHash);
+		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {
 			return false;
 		}
@@ -174,5 +174,60 @@ public class ClanManager {
 			saveClanData(settings);
 			return settings;
 		}
+	}
+	
+	public boolean setRank (long clanHash, Player player, String protocolName, ClanRank rank) {
+		ClanSettings clan = getClanData(clanHash);
+		if (clan == null) {
+			//player.getPacketDispatcher().dispatchMessage("You need to be in a clan to do that.", MessageOpcode.CLAN_SYSTEM);
+			return false;
+		}
+		ClanRank playerRank = clan.getRank(player.getAccount().getUsername().getAccountNameAsProtocol());
+		if (!clan.inClan(protocolName)) {
+			//player.getPacketDispatcher().dispatchMessage("The specified player is not in your clan.", MessageOpcode.CLAN_SYSTEM);
+			return false;
+		}
+		if (rank == null || rank.getID() > ClanRank.DEPUTY_OWNER.getID() || rank.getID() < ClanRank.RECRUIT.getID()) {
+			//player.getPacketDispatcher().dispatchMessage("You have specified an invalid rank. Only ranks between deputy owner and recruit (inclusive) are valid.", MessageOpcode.CLAN_SYSTEM);
+			return false;
+		}
+		ClanMember owner = clan.getOwner();
+		if (owner.getProtocolName().equalsIgnoreCase(protocolName)) {
+			if (playerRank == null || (!playerRank.equals(ClanRank.JMOD) && !playerRank.equals(ClanRank.OWNER))) {
+				//player.getPacketDispatcher().dispatchMessage("You do not have the appropriate permissions to change the channel owner.", MessageOpcode.CLAN_SYSTEM);
+				return false;
+			}
+			if (rank.equals(ClanRank.DEPUTY_OWNER)) {
+				//player.getPacketDispatcher().dispatchMessage("You must set the owner's rank lower than deputy owner in order to change the clan owner.", MessageOpcode.CLAN_SYSTEM);
+				return false;
+			}
+			clan.setOwnerRank(rank);
+		} else {
+			if (!playerRank.isAdmin() || playerRank.getID() <= clan.getRank(protocolName).getID()) {
+				//player.getPacketDispatcher().dispatchMessage("You do not have the appropriate permissions to change this player's rank.", MessageOpcode.CLAN_SYSTEM);
+				return false;
+			}
+			clan.setRank(protocolName, rank);
+		}
+		return true;
+	}
+	
+	public boolean kickClanMember (long clanHash, Player player, String protocolName) {
+		ClanSettings clan = getClanData(clanHash);
+		if (clan == null) {	
+			System.out.println("Could not kick clan member - clan does not exist.");
+			return false;
+		}
+		ClanRank playerRank = clan.getRank(player.getAccount().getUsername().getAccountNameAsProtocol());
+		if (!clan.inClan(protocolName)) {
+			System.out.println("Could not kick clan member - member is not in clan (name="+protocolName+").");
+			return false;//Player not in clan
+		}
+		if (!playerRank.isAdmin() || playerRank.getID() <= clan.getRank(protocolName).getID()) {	
+			System.out.println("Could not kick clan member - insufficient permissions.");		
+			return false;//Lack appropriate permissions to kick player from clan
+		}
+		clan.removeMember(protocolName);
+		return true;
 	}
 }

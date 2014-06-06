@@ -8,6 +8,10 @@ import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.session.impl.WorldSession;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class FriendOptionHandler extends PacketHandler<WorldSession> {
 
 	@Override

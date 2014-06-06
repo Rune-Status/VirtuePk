@@ -22,18 +22,21 @@ package org.virtue.game.logic.social.clans;
  * @author Sundays211
  */
 public enum ClanRank {
-	GUEST(-1, "Guest"), RECRUIT(0, "Recruit"), CORPORAL(1, "Corporal"), 
-	SERGEANT(2, "Sergeant"), LIEUTENANT(3, "Lieutenant"), CAPTAIN(4, "Captain"), 
-	GENERAL(5, "General"), ADMIN(100, "Admin"), ORGANISER(101, "Organiser"),
-	COORDINATOR(102, "Coordinator"), OVERSEER(103, "Overseer"), DEPUTY_OWNER(125,"Deputy Owner"), 
-	OWNER(126, "Owner"), JMOD(127, "Jagex Moderator");
+	GUEST(-1, "Guest", false), RECRUIT(0, "Recruit", false), CORPORAL(1, "Corporal", false), 
+	SERGEANT(2, "Sergeant", false), LIEUTENANT(3, "Lieutenant", false), CAPTAIN(4, "Captain", false), 
+	GENERAL(5, "General", false), ADMIN(100, "Admin", true), ORGANISER(101, "Organiser", true),
+	COORDINATOR(102, "Coordinator", true), OVERSEER(103, "Overseer", true), 
+	DEPUTY_OWNER(125,"Deputy Owner", true),  OWNER(126, "Owner", true), JMOD(127, "Jagex Moderator", true);
 	
 	private final int id;
 	private final String name;
 	
-	ClanRank (int id, String name) {
+	private final boolean isAdmin;
+	
+	ClanRank (int id, String name, boolean isAdmin) {
 		this.id = id;
 		this.name = name;
+		this.isAdmin = isAdmin;
 	}
 	
 	public int getID () {
@@ -42,6 +45,10 @@ public enum ClanRank {
 	
 	public String getName () {
 		return name;
+	}
+	
+	public boolean isAdmin () {
+		return isAdmin;
 	}
 	
 	public static ClanRank forID (int id) {
