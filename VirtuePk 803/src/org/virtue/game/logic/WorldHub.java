@@ -1,14 +1,9 @@
 package org.virtue.game.logic;
 
-import java.util.ArrayList;
-
 import org.virtue.Launcher;
-import org.virtue.game.core.logic.LogicEvent;
 import org.virtue.game.core.logic.impl.SystemUpdateEvent;
 import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.entity.player.identity.Rank;
-import org.virtue.game.logic.node.object.TemporaryObject;
 import org.virtue.game.logic.region.RegionManager;
 import org.virtue.network.protocol.packet.encoder.impl.SystemUpdateEncoder;
 import org.virtue.utility.EntityList;

@@ -253,6 +253,9 @@ public class ClanSettings {
 		replacementOwnerSlot = -1;
 		int highestRankSlot = 0;
 		synchronized (members) {
+			if (members.size() == 0) {
+				return;
+			}
 			ClanRank highestRank = members.get(0).getRank();
 			for (int index = 1;index<members.size();index++) {
 				ClanRank rank = members.get(index).getRank();
@@ -367,6 +370,14 @@ public class ClanSettings {
 		}
 	}
 	
+	public boolean isBanned (String protocolName) {
+		if (getBan(protocolName) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	/**
 	 * Returns the clan member object for a specified player. 
 	 * @param protocolName	The protocol name of the player to search for
@@ -377,6 +388,15 @@ public class ClanSettings {
 		for (ClanMember member : members) {
 			if (member.getProtocolName().equalsIgnoreCase(protocolName)) {
 				return member;
+			}
+		}
+		return null;
+	}
+	
+	private ClanBan getBan (String protocolName) {
+		for (ClanBan ban : bans) {
+			if (ban.getProtocolName().equalsIgnoreCase(protocolName)) {
+				return ban;
 			}
 		}
 		return null;

@@ -22,9 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.virtue.Launcher;
-import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.social.SocialUser;
-import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.network.io.channel.ClanSettingsParser;
 
 /**
@@ -132,6 +130,12 @@ public class ClanManager {
 		return clanIndex;
 	}
 	
+	/**
+	 * Recruits a player into the recruiter's clan
+	 * @param recruiter		The user performing the invite
+	 * @param joiner		The user who is joining the clan
+	 * @return				True if the user successfully joined the clan, false otherwise
+	 */
 	public boolean joinClan (SocialUser recruiter, SocialUser joiner) {
 		if (joiner.getMyClanHash() != 0L) {
 			return false;//Already in clan
@@ -140,6 +144,9 @@ public class ClanManager {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {
 			return false;
+		}
+		if (clan.isBanned(joiner.getProtocolName())) {
+			return false;//TODO: Somehow send a message to the recruiter that the joiner is banned
 		}
 		//TODO: Make sure the recruiter is allowed to recruit and the joiner isn't banned from the channel
 		clan.addMember(joiner);
@@ -158,31 +165,45 @@ public class ClanManager {
 	 * @param founders	The players who will be initially recruited into the clan
 	 * @return		A {@link ClanSettings} object containing the new clan data, or null if a clan already exists with the specified name
 	 */
-	public ClanSettings createClan (String name, Player owner, Player... founders) {
+	public ClanSettings createClan (String name, SocialUser owner, SocialUser... founders) {
 		if (clanIndex.clanExists(name)) {
 			return null;
 		} else {
 			long clanHash = clanIndex.addClan(name);
 			ClanSettings settings = new ClanSettings(clanHash, 100, name);
 			clanDataCache.put(clanHash, settings);
-			InternalSocialUser ownerObject = new InternalSocialUser(owner);
-			settings.addMember(new InternalSocialUser(owner));
-			settings.setRank(ownerObject.getProtocolName(), ClanRank.OWNER);
-			for (Player founder : founders) {
-				settings.addMember(new InternalSocialUser(founder));
+			owner.setMyClanHash(clanHash);
+			settings.addMember(owner);
+			settings.registerOnlineMember(owner);
+			clanChatManager.joinMyChannel(owner);
+			for (SocialUser founder : founders) {
+				founder.setMyClanHash(clanHash);
+				settings.addMember(founder);
+				settings.registerOnlineMember(founder);
+				clanChatManager.joinMyChannel(founder);
 			}
-			saveClanData(settings);
+			
+			//saveClanData(settings);
 			return settings;
 		}
 	}
 	
-	public boolean setRank (long clanHash, Player player, String protocolName, ClanRank rank) {
+	/**
+	 * Sets the rank of the specified player in the specified clan.
+	 * Note that this method does allow server administrators (who would normally hold a rank of JMOD) to change the ranks of people in clans they don't belong to themselves.
+	 * @param clanHash		The unique hash for the clan with the rank being edited
+	 * @param player		The player performing the edit
+	 * @param protocolName	The protocol displayname of the clan member who's rank is being changed
+	 * @param rank			The rank to change to
+	 * @return				True if the rank was changed successfully, false if there was an error.
+	 */
+	public boolean setRank (long clanHash, SocialUser player, String protocolName, ClanRank rank) {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {
 			//player.getPacketDispatcher().dispatchMessage("You need to be in a clan to do that.", MessageOpcode.CLAN_SYSTEM);
 			return false;
 		}
-		ClanRank playerRank = clan.getRank(player.getAccount().getUsername().getAccountNameAsProtocol());
+		ClanRank playerRank = clan.getRank(player.getProtocolName());
 		if (!clan.inClan(protocolName)) {
 			//player.getPacketDispatcher().dispatchMessage("The specified player is not in your clan.", MessageOpcode.CLAN_SYSTEM);
 			return false;
@@ -212,13 +233,37 @@ public class ClanManager {
 		return true;
 	}
 	
-	public boolean kickClanMember (long clanHash, Player player, String protocolName) {
+	public boolean leaveMyClan (SocialUser player) {
+		long clanHash = player.getMyClanHash();
+		if (clanHash == 0L) {
+			clanChatManager.leaveChannel(player, false, false);
+			return true;//Player is not in a clan
+		}
+		ClanSettings clan = getClanData(clanHash);
+		if (clan == null) {
+			player.setMyClanHash(0L);
+			clanChatManager.leaveChannel(player, false, false);
+			return true;//Clan does not exist anyway. Set clan hash to zero
+		}
+		if (!clan.inClan(player.getProtocolName())) {
+			player.setMyClanHash(0L);
+			clanChatManager.leaveChannel(player, false, false);
+			return true;//Player isn't in the clan. Set clan hash to zero
+		}
+		//TODO: Verify that the player is not the clan owner. If they are, more checks will need to take place.
+		clanChatManager.leaveChannel(player, false, false);
+		clan.removeMember(player.getProtocolName());
+		player.setMyClanHash(0L);
+		return true;
+	}
+	
+	public boolean kickClanMember (long clanHash, SocialUser player, String protocolName) {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {	
 			System.out.println("Could not kick clan member - clan does not exist.");
 			return false;
 		}
-		ClanRank playerRank = clan.getRank(player.getAccount().getUsername().getAccountNameAsProtocol());
+		ClanRank playerRank = clan.getRank(player.getProtocolName());
 		if (!clan.inClan(protocolName)) {
 			System.out.println("Could not kick clan member - member is not in clan (name="+protocolName+").");
 			return false;//Player not in clan

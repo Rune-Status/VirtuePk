@@ -5,6 +5,10 @@ import org.virtue.game.logic.events.CoordinateEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.Player;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public abstract class EntityInteractEvent extends CoordinateEvent {
 	
 	private Entity entity;

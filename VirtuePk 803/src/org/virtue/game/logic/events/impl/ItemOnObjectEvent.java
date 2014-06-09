@@ -6,6 +6,10 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.region.Tile;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class ItemOnObjectEvent extends CoordinateEvent {
 	
 	private final RS3Object object;

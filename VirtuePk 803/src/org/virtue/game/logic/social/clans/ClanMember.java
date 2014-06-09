@@ -26,6 +26,10 @@ import org.virtue.utility.StringUtils.FormatType;
  */
 public class ClanMember {
 	
+	public static final int FLAG_CITADEL_BANNED = 0x2;
+	public static final int FLAG_KEEP_BANNED = 0x2;
+	public static final int FLAG_ISLAND_BANNED = 0x2;
+	
 	private final String protocolName;
 	
 	private String displayName;

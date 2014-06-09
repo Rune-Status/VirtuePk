@@ -1,8 +1,7 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.virtue.cache.def.ItemDefinition;
 import org.virtue.cache.def.ItemDefinitionLoader;
 import org.virtue.game.logic.item.Item;
@@ -24,17 +23,17 @@ public class SendItem implements Command {
 				String fullName = "";
 				for (String arg : args) {
 					fullName+= " "+arg;
-				  }
-				  ItemDefinition item = ItemDefinitionLoader.forName(fullName.trim());
-				  if (item == null) {
-					  player.getPacketDispatcher().dispatchMessage("The item '"+fullName.trim()+"' was not found.", MessageOpcode.CONSOLE);
-					  return false;
-				  }
-				  id = item.getID();
-			  } catch (IOException ex) {
-				  return false;
-			  }
-			  amount = 1;
+				}
+				ItemDefinition item = ItemDefinitionLoader.forName(fullName.trim());
+				if (item == null) {
+					player.getPacketDispatcher().dispatchMessage("The item '"+fullName.trim()+"' was not found.", MessageOpcode.CONSOLE);
+					return false;
+				}
+				id = item.getID();
+			} catch (IOException ex) {
+				return false;
+			}
+			amount = 1;
 		} else {
 			try {
 				id = Integer.parseInt(args[0]);

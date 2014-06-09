@@ -1,5 +1,6 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
+import org.virtue.Launcher;
 import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
@@ -58,12 +59,16 @@ public class ClanInterface extends AbstractInterface {
 				getPlayer().getInterfaces().setTopInterface(new ClanSettingsInterface(player, player.getChatManager().getMyClanHash()));
 			}
 			break;
+		case 124://Leave clan
+			if (Launcher.getClanManager().leaveMyClan(player.getChatManager().getSocialUser())) {
+				player.getPacketDispatcher().dispatchMessage("You have successfully left your clan.", MessageOpcode.CLAN_SYSTEM);
+			}
+			break;
 		case 103://Clan info
 			if (player.getChatManager().getMyClanHash() == 0L) {
 				player.getPacketDispatcher().dispatchMessage("You're not in a clan.", MessageOpcode.CLAN_SYSTEM);
 			}
 		case 153://Clan noticeboard functions
-		case 124://Leave clan
 		case 135://Check resources
 		case 120://Kick/ban guest
 		case 25://Clanmate options
@@ -74,6 +79,17 @@ public class ClanInterface extends AbstractInterface {
 			System.out.println("Unhandled clan button: component="+component+", button="+button+", slot1="+slot1+", slot2="+slot2);
 			break;
 		}		
+	}
+	
+	@Override
+	public void handleInterfaceOnPlayer (Player target, int component, int slot1, int slot2) {
+		if (component == 110) {//TODO: Show the proper recruitment dialogs
+			if (!Launcher.getClanManager().joinClan(player.getChatManager().getSocialUser(), target.getChatManager().getSocialUser())) {
+				player.getPacketDispatcher().dispatchMessage("Error - Could not recruit clan member (already in a clan).");
+			}
+		} else {
+			super.handleInterfaceOnPlayer(target, component, slot1, slot2);
+		}
 	}
 	
 	private InputEnteredEvent onJoinGuestClan = new InputEnteredEvent () {

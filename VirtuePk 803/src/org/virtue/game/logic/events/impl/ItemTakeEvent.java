@@ -6,6 +6,10 @@ import org.virtue.game.logic.item.GroundItem;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.region.Region;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class ItemTakeEvent extends CoordinateEvent {
 	
 	private GroundItem item;	

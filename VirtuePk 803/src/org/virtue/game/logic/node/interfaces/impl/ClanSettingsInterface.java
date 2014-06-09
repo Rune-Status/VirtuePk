@@ -7,7 +7,6 @@ import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.game.logic.social.clans.ClanMember;
 import org.virtue.game.logic.social.clans.ClanRank;
-import org.virtue.game.logic.social.internal.InternalSocialUser;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.messages.VarMessage;
@@ -65,7 +64,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 			System.out.println("Selected clan member rank filter. Rank="+ClanRank.forID(slot1-1));
 			break;
 		case 46://Arrow beside member
-			player.getChatManager().getClanData().sendMemberInfo(new InternalSocialUser(player), slot1);
+			player.getChatManager().getClanData().sendMemberInfo(player.getChatManager().getSocialUser(), slot1);
 			break;
 		case 282://Clan member rank select
 		case 268://Clan member job select
@@ -75,6 +74,9 @@ public class ClanSettingsInterface extends AbstractInterface {
 		case 324://Clan member save
 		case 315://Clan member kick
 			handleMemberOption(component, slot1);
+			break;
+		case 52:
+			sendClanMemberInfo(null);
 			break;
 		/*Clan permissions tab*/
 		case 399://Recruit
@@ -114,14 +116,14 @@ public class ClanSettingsInterface extends AbstractInterface {
 		switch (component) {
 		case 324://Clan member save
 			if (memberNewRank != null) {
-				Launcher.getClanManager().setRank(clanHash, player, selectedMember.getProtocolName(), memberNewRank);
+				Launcher.getClanManager().setRank(clanHash, player.getChatManager().getSocialUser(), selectedMember.getProtocolName(), memberNewRank);
 			}
 			player.getPacketDispatcher().dispatchMessage("Changes have been saved to clanmate.", MessageOpcode.CLAN_SYSTEM);
 			sendClanMemberInfo(selectedMember);
 			break;
 		case 315://Clan member kick
 			//TODO: Add confirmation of kick
-			if (Launcher.getClanManager().kickClanMember(clanHash, player, selectedMember.getProtocolName())) {
+			if (Launcher.getClanManager().kickClanMember(clanHash, player.getChatManager().getSocialUser(), selectedMember.getProtocolName())) {
 				sendClanMemberInfo(null);
 				player.getPacketDispatcher().dispatchMessage("Successfully kicked clan member.", MessageOpcode.CLAN_SYSTEM);
 			} else {
@@ -161,7 +163,6 @@ public class ClanSettingsInterface extends AbstractInterface {
 			player.getPacketDispatcher().dispatchVar(new VarMessage(1567, -1, true));//Ban from island
 			player.getPacketDispatcher().dispatchVar(new VarMessage(1568, -1, true));//Probation status
 			player.getPacketDispatcher().dispatchVarcString(new VarcStringMessage(2521, ""));//Display name
-			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));
 			return;
 		}
 		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13

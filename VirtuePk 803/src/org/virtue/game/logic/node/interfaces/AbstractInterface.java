@@ -77,6 +77,10 @@ public abstract class AbstractInterface {
 	 */
 	public abstract void handleActionButton (int component, int slot1, int slot2, ActionButton button);
 	
+	public void handleInterfaceOnPlayer (Player player, int component, int slot1, int slot2) {
+		System.out.println("Interface used on player: Player="+player.getAccount().getUsername().getName()+", iface="+interfaceID+", comp="+component+", slot1="+slot1+", slot2="+slot2);
+	}
+	
 	public Item getItem (int component, int itemID, int slotID) {
 		return null;
 	}

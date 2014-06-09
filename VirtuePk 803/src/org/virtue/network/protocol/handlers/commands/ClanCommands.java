@@ -4,7 +4,10 @@ import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.social.clans.ClanRank;
+import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
+import org.virtue.utility.StringUtils;
+import org.virtue.utility.StringUtils.FormatType;
 
 /**
  * 
@@ -19,6 +22,30 @@ public class ClanCommands implements Command {
 			return processSetRank(player, args);
 		case "kickclan":
 			return processKick(player, args);
+		case "makeclan":
+			return makeClan(player, args);
+		}
+		return false;
+	}
+	
+	private boolean makeClan (Player player, String...args) {
+		if (player.getChatManager().getMyClanHash() != 0L) {
+			player.getPacketDispatcher().dispatchMessage("You must leave your current clan first.", MessageOpcode.CONSOLE);
+			return false;
+		}
+		if (args.length < 1) {
+			player.getPacketDispatcher().dispatchMessage("You must specify a name for your new clan.", MessageOpcode.CONSOLE);
+			return false;
+		}
+		String clanName = "";
+		for (String arg : args) {
+			clanName+= " "+arg;
+		}
+		String formattedName = StringUtils.format(clanName.trim(), FormatType.NAME);
+		ClanSettings settings = Launcher.getClanManager().createClan(formattedName, player.getChatManager().getSocialUser());
+		if (settings == null) {
+			player.getPacketDispatcher().dispatchMessage("Clan could not be created - Name already in use.", MessageOpcode.CONSOLE);
+			return false;
 		}
 		return false;
 	}
@@ -45,7 +72,7 @@ public class ClanCommands implements Command {
 			player.getPacketDispatcher().dispatchMessage("The clan you have specified does not exist.", MessageOpcode.CONSOLE);
 			return false;
 		}
-		if (Launcher.getClanManager().kickClanMember(clanHash, player, memberName)) {
+		if (Launcher.getClanManager().kickClanMember(clanHash, player.getChatManager().getSocialUser(), memberName)) {
 			player.getPacketDispatcher().dispatchMessage("Successfully kicked "+memberName+" from their clan.", MessageOpcode.CONSOLE);
 			return true;
 		} else {
@@ -82,7 +109,7 @@ public class ClanCommands implements Command {
 			player.getPacketDispatcher().dispatchMessage("The clan you have specified does not exist.", MessageOpcode.CONSOLE);
 			return false;
 		}
-		if (Launcher.getClanManager().setRank(clanHash, player, playerName, rank)) {
+		if (Launcher.getClanManager().setRank(clanHash, player.getChatManager().getSocialUser(), playerName, rank)) {
 			player.getPacketDispatcher().dispatchMessage("Successfully changed the rank of "+playerName+" to "+rank.getName()+".", MessageOpcode.CONSOLE);
 			return true;
 		} else {
@@ -93,7 +120,7 @@ public class ClanCommands implements Command {
 
 	@Override
 	public String[] getPossibleSyntaxes() {
-		return new String[] {"setrank", "kickclan"};
+		return new String[] {"setrank", "kickclan", "makeclan"};
 	}
 
 }

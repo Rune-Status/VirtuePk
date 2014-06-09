@@ -187,6 +187,10 @@ public class ChatManager {
 		return Launcher.getClanManager().getChannelManager();
 	}
 	
+	public SocialUser getSocialUser () {
+		return socialUser;
+	}
+	
 	public JsonObject serialiseData () {
 		JsonObject chatData = new JsonObject();
 		chatData.addProperty("onlineStatus", onlineStatus.getStatusCode());

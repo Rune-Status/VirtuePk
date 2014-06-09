@@ -5,6 +5,10 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.ObjectOption;
 import org.virtue.game.logic.node.object.RS3Object;
 
+/**
+ * 
+ * @author Virtue Development Team 2014 (c).
+ */
 public class ObjectInteractEvent extends CoordinateEvent {
 	
 	private final RS3Object object;
