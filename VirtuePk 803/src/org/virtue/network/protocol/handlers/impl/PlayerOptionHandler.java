@@ -1,16 +1,16 @@
 package org.virtue.network.protocol.handlers.impl;
 
 import org.virtue.game.logic.World;
+import org.virtue.game.logic.events.impl.PlayerInteractEvent;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.PlayerOption;
-import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
 /**
  * @author Virtue Development Team 2014 (c).
  * @since Apr 20, 2014
  */
-public class PlayerOptionHandler extends PacketHandler<WorldSession> {
+public class PlayerOptionHandler extends MovementHandler {
 
 	@Override
 	public void handle(WorldSession session) {
@@ -27,9 +27,18 @@ public class PlayerOptionHandler extends PacketHandler<WorldSession> {
 			return;//Player does not exist; ignore request
 		}
 		if (player.isInteractOption(option)) {
-			
+			int baseX = player.getTile().getX();
+			int baseY = player.getTile().getY();	
+			session.getPlayer().getUpdateArchive().queueFaceEntity(player);
+			putFlag("facing", true);
+			putFlag("baseX", baseX);
+			putFlag("baseY", baseY);
+			putFlag("sizeX", player.getSize());
+			putFlag("sizeY", player.getSize());
+			super.handle(session);//Handle the movement aspect.
+			session.getPlayer().setCoordinateEvent(new PlayerInteractEvent(player, option));
 		} else {
-			player.handleDistanceOption(session.getPlayer(), option);
+			player.interact(session.getPlayer(), option);
 			session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(null);
 		}
 		System.out.println("Received player action: option="+option.getID()+", playerIndex="+playerIndex+", player="+player.getAccount().getUsername().getName()+", forceRun="+forceRun);

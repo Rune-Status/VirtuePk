@@ -1,6 +1,5 @@
 package org.virtue.game.logic.node.entity.player.identity;
 
-import org.virtue.game.logic.social.ChatType;
 
 /**
  * @author Taylor

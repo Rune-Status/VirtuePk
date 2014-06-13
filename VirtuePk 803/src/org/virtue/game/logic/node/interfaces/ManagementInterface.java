@@ -43,7 +43,7 @@ public class ManagementInterface extends AbstractInterface {
 		player.getInterfaces().sendInterfaceSettings(1477, 76, 0, 24, 2);//IfaceSettings: interface=1477, compID=76, fromSlot=0, toSlot=24, settings=2
 		player.getInterfaces().sendInterfaceSettings(1477, 78, 1, 1, 2);//IfaceSettings: interface=1477, compID=78, fromSlot=1, toSlot=1, settings=2
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8194, 1, type.getID()));//Received Cs2:[8194, 1, 1]
-		player.getPacketDispatcher().dispatchVar(new VarMessage(2911, type.getID(), true));//Received VarClient: key=2911, value=4
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2911, type.getID()));//Received VarClient: key=2911, value=4
 		switch (type) {
 		case ADVENTURE:
 			openTab(new Challanges(player));

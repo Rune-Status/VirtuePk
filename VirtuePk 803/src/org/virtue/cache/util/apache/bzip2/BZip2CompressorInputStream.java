@@ -232,8 +232,7 @@ public class BZip2CompressorInputStream extends CompressorInputStream implements
 		setupBlock();
 	}
 
-	private void checkMagicChar(char expected, String position)
-			throws IOException {
+	private void checkMagicChar(char expected, String position) throws IOException {
 		int magic = this.in.read();
 		if (magic != expected) {
 			throw new IOException("Stream is not BZip2 formatted: expected '"

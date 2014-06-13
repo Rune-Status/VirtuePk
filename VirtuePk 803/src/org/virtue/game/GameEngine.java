@@ -3,7 +3,6 @@ package org.virtue.game;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.virtue.game.core.filter.Js5Filter;
@@ -19,7 +18,6 @@ import org.virtue.game.core.threads.LogicThreadFactory;
 import org.virtue.game.core.threads.SynchronousThreadFactory;
 import org.virtue.game.core.threads.WorkerThreadFactory;
 import org.virtue.game.logic.region.RegionUpdateManager;
-import org.virtue.script.GroovyManager;
 import org.virtue.utility.GameClock;
 import org.virtue.utility.TimeUtil;
 

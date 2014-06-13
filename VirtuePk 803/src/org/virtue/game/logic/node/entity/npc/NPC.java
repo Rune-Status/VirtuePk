@@ -1,10 +1,12 @@
 package org.virtue.game.logic.node.entity.npc;
 
+import org.virtue.Constants;
 import org.virtue.cache.def.NPCDefinition;
 import org.virtue.cache.def.NPCDefinitionLoader;
 import org.virtue.game.logic.content.skills.fishing.FishingSpot;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.interfaces.impl.Bank;
 import org.virtue.game.logic.region.Tile;
 
@@ -120,10 +122,11 @@ public class NPC extends Entity {
 			player.getInterfaces().openBank();
 			return;
 		}
-		System.out.println("Clicked NPC: npcIndex="+getIndex()+", id="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", optionID="+option.getID());
-	}
-	
-	public void handleDistanceOption (Player player, NPCOption option) {
-		System.out.println("Clicked NPC: npcIndex="+getIndex()+", id="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", optionID="+option.getID());
+		String message = "This feature has not been implemented.";
+		if (Constants.DEVELOPER_MODE || player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			message = "Clicked NPC: npcIndex="+getIndex()+", id="+id+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", optionID="+option.getID();
+			System.out.println(message);
+		}
+		player.getPacketDispatcher().dispatchMessage(message);
 	}
 }

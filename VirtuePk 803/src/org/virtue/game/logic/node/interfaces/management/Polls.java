@@ -19,9 +19,9 @@ public class Polls extends ActionTab {
 		System.out.println("Opening polls...");
 		//player.getInterfaces().sendInterface(true, 1448, 3, 1029);//Interface: id=1029, clipped=1, parentID=1448, compID=3
 		player.getInterfaces().sendHideComponent(1477, 4, true);//Received component hidden: hash=94896132, hidden=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(2911, 4, true));//Received VarClient: key=2911, value=4
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1957, -1, true));//Received VarClient: key=1957, value=-1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1958, -1, true));//Received VarClient: key=1958, value=-1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2911, 4));//Received VarClient: key=2911, value=4
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1957, -1));//Received VarClient: key=1957, value=-1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1958, -1));//Received VarClient: key=1958, value=-1
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23327130, 0, 67436629));//Runscript: [9602, 67436629, 0, 23327130]
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(9602, 23317035, 1, 67436630));//Runscript: [9602, 67436630, 1, 23317035]
 		setComponentHidden(39, true);//Received component hidden: hash=67436583, hidden=1

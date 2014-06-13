@@ -4,7 +4,6 @@ import org.virtue.game.logic.events.CoordinateEvent;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.object.RS3Object;
-import org.virtue.game.logic.region.Tile;
 
 /**
  * 

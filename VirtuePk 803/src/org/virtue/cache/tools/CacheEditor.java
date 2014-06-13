@@ -1,29 +1,18 @@
 package org.virtue.cache.tools;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFrame;
-import org.virtue.Launcher;
+
 import org.virtue.cache.Archive;
 import org.virtue.cache.Cache;
 import org.virtue.cache.Container;
 import org.virtue.cache.ReferenceTable;
-
-import org.virtue.cache.def.AnimationDefinitionLoader;
 import org.virtue.cache.def.CacheIndex;
-import org.virtue.cache.def.GraphicsDefinitionLoader;
-import org.virtue.cache.def.ItemDefinitionLoader;
-import org.virtue.cache.def.NPCDefinitionLoader;
-import org.virtue.cache.def.ObjectDefinitionLoader;
-import org.virtue.game.logic.node.object.ObjectTransformer;
-import org.virtue.game.logic.node.object.RS3Object;
-import org.virtue.game.logic.region.Tile;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
 /**
- * @author Virtue Development Team 2014 (c).
+ * @author James
  * @since Apr 17, 2014
  */
 public class CacheEditor {
@@ -75,8 +64,8 @@ public class CacheEditor {
 					int y = (location & 0x3f);
 					int z = location >> 12;
 					int objectData = landStream.getUnsignedByte();
-					int type = objectData >> 2;
-					int rotation = objectData & 0x3;
+					//int type = objectData >> 2;
+					//int rotation = objectData & 0x3;
 					if (objectID == expectedID) {
 						System.out.println("Object found at position: "+getCoords(file, x, y, z));//+file+", x="+x+", y="+y+", z="+z);
 					}

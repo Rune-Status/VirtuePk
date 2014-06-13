@@ -6,32 +6,48 @@ package org.virtue.network.protocol.messages;
  */
 public class VarMessage {
 	
-	public static enum Type {PLAYER, NPC, CLIENT, BIT};
+	public static VarMessage varp (int key, int value) {
+		return new VarMessage(DomainType.PLAYER, key, value);
+	}
+	
+	public static VarMessage varc (int key, int value) {
+		return new VarMessage(DomainType.CLIENT, key, value);
+	}
+	
+	public static VarMessage varcStr (int key, String value) {
+		return new VarMessage(DomainType.CLIENT_STR, key, value);
+	}
+	
+	public static VarMessage varbit (int key, int value) {
+		return new VarMessage(DomainType.BIT, key, value);
+	}
+	
+	public static enum DomainType {PLAYER, NPC, CLIENT, CLIENT_STR, BIT};
 
 	/**
-	 * The ID of the varp
+	 * The key for the var
 	 */
-	private final int varpId;
+	private final int key;
 	
 	/**
-	 * The ID of the varp
+	 * The value of the var
 	 */
-	private final int value;
+	private final Object value;
 	
 	/**
 	 * Whether the var is varclient (varc) or varplayer (varp)
 	 */
-	private final boolean varClient;
+	private final DomainType type;
 	
 	/**
 	 * Constructs a new {@code VarpContext.java}
 	 * @param varpId The varp ID
 	 * @param cs2 If this is a cs2 varp
 	 */
-	public VarMessage(int varpId, int value, boolean varClient) {
-		this.varpId = varpId;
+	public VarMessage(DomainType type, int varpId, Object value) {
+		this.key = varpId;
 		this.value = value;
-		this.varClient = varClient;
+		this.type = type;
 	}
 	
 	/**
@@ -39,27 +55,34 @@ public class VarMessage {
 	 * @param varpId The varp ID
 	 */
 	public VarMessage(int varpId, int value) {
-		this(varpId, value, false);
+		this(DomainType.PLAYER, varpId, value);
 	}
 
 	/**
 	 * @return The varpId
 	 */
 	public int getVarID() {
-		return varpId;
+		return key;
 	}
 
 	/**
-	 * @return The cs2
+	 * @return The domain type of the var
 	 */
-	public boolean isVarClient() {
-		return varClient;
+	public DomainType getType() {
+		return type;
 	}
 
 	/**
-	 * @return The value
+	 * @return The value as an integer
 	 */
-	public int getValue() {
-		return value;
+	public int getIntValue() {
+		return (Integer) value;
+	}
+	
+	/**
+	 * @return The value as a string
+	 */
+	public String getStrValue () {
+		return (String) value;
 	}
 }

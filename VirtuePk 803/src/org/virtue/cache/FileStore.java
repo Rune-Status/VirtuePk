@@ -203,8 +203,7 @@ public final class FileStore implements Closeable {
 		if ((type < 0 || type >= indexChannels.length) && type != 255)
 			throw new FileNotFoundException();
 
-		FileChannel indexChannel = type == 255 ? metaChannel
-				: indexChannels[type];
+		FileChannel indexChannel = type == 255 ? metaChannel : indexChannels[type];
 
 		int nextSector = 0;
 		long ptr = id * Index.SIZE;

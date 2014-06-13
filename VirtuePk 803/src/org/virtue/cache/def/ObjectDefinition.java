@@ -58,7 +58,7 @@ public class ObjectDefinition {
     byte[] aByteArray6863;
     public int anInt6864;
     public boolean aBool6865;
-    int configFileID;//anInt6866
+    int varBitID;//anInt6866
     public boolean aBool6867;
     public boolean aBool6868;
     public boolean aBool6869;
@@ -77,7 +77,7 @@ public class ObjectDefinition {
     public int anInt6881;
     public int anInt6883;
     byte aByte6884;
-    int configID;//anInt6885
+    int varpID;//anInt6885
     public int anInt6886;
     public int anInt6887;
     public int anInt6888;
@@ -245,20 +245,20 @@ public class ObjectDefinition {
 		    } else if (opcode == 75) {//Unknown
 		    	anInt6881 = buffer.getUnsignedByte();
 		    } else if (opcode == 77 || opcode == 92) {
-				configFileID = buffer.getUnsignedShort();
-				if (65535 == configFileID) {
-				    configFileID = -1;
+				varBitID = buffer.getUnsignedShort();
+				if (65535 == varBitID) {
+				    varBitID = -1;
 				}
-				configID = buffer.getUnsignedShort();
-				if (65535 == configID) {
-				    configID = -1;
+				varpID = buffer.getUnsignedShort();
+				if (65535 == varpID) {
+				    varpID = -1;
 				}
 				int obj = -1;
 				if (opcode == 92) {
 					obj = buffer.getBigSmart();
 				}
 				int length = buffer.getUnsignedByte();
-				toObjectIDs = new int[2 + length];//TODO: Figure out how to handle this...
+				toObjectIDs = new int[2 + length];
 				for (int index = 0; index <= length; index++) {
 				    toObjectIDs[index] = buffer.getBigSmart();
 				}
@@ -384,7 +384,7 @@ public class ObjectDefinition {
 						buffer.getUnsignedSmart();
 						buffer.getUnsignedSmart();
 						buffer.getUnsignedSmart();
-						buffer.getUnsignedSmart();//NOTE: These aren't the actual methods, but it doesn't matter for these purposes
+						buffer.getUnsignedSmart();//NOTE: These aren't the actual methods, but it shouldn't matter for these purposes
 				    } else if (opcode == 249) {
 						int length = buffer.getUnsignedByte();
 						if (parameters == null) {

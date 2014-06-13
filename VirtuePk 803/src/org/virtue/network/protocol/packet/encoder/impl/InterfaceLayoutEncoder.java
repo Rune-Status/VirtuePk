@@ -2,7 +2,6 @@ package org.virtue.network.protocol.packet.encoder.impl;
 
 import java.util.Map.Entry;
 
-import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.node.entity.player.screen.InterfaceLayout;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.PacketEncoder;

@@ -5,7 +5,6 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.InterfaceSettingsMessage;
-import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.InterfaceSettingsEncoder;
 
 /**

@@ -33,12 +33,12 @@ public class NpcOptionHandler extends MovementHandler {
 			putFlag("facing", true);
 			putFlag("baseX", baseX);
 			putFlag("baseY", baseY);
-			putFlag("sizeX", npc.getDefinition().getSize());
-			putFlag("sizeY", npc.getDefinition().getSize());
+			putFlag("sizeX", npc.getSize());
+			putFlag("sizeY", npc.getSize());
 			super.handle(session);//Handle the movement aspect.
 			session.getPlayer().setCoordinateEvent(new NPCInteractEvent(npc, option));
 		} else {
-			npc.handleDistanceOption(session.getPlayer(), option);
+			npc.interact(session.getPlayer(), option);
 			session.getPlayer().getPacketDispatcher().dispatchMinimapFlag(null);
 		}
 		//System.out.println("Clicked NPC: npcIndex="+npcIndex+", id="+npc.getId()+", xCoord="+baseX+", yCoord="+baseY+", optionID="+option.getID());

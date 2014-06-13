@@ -3,8 +3,6 @@ package org.virtue.network.session.impl;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.virtue.Constants;
 import org.virtue.Launcher;
-import org.virtue.game.logic.Lobby;
-import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Account;
 import org.virtue.network.RS3PacketFilter;
 import org.virtue.network.loginserver.DataServer;

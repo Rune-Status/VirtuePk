@@ -1,7 +1,6 @@
 package org.virtue.cache.def;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.virtue.cache.Archive;
 import org.virtue.cache.Cache;

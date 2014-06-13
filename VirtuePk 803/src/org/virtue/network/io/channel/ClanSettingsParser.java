@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.network.io.IOParser;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

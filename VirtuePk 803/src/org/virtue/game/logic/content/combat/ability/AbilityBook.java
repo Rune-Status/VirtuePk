@@ -2,7 +2,6 @@ package org.virtue.game.logic.content.combat.ability;
 
 import org.virtue.game.logic.content.combat.ability.impl.attackbook.Slice;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.script.GroovyManager;
 
 /**
  * @author Virtue Development Team 2014 (c).

@@ -1,7 +1,5 @@
 package org.virtue.network.protocol.packet.encoder.impl;
 
-import java.util.Arrays;
-
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.item.Item;
 import org.virtue.network.protocol.messages.ItemsMessage;

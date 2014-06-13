@@ -109,6 +109,7 @@ public class IncommingOpcodes {
 	//Inputs
 	public final static int TEXT_INPUT_PACKET = 49;//803
 	public final static int INT_INPUT_PACKET = 85;//803
+	public final static int COLOUR_INPUT_PACKET = 14;//803
 	
 	//Message
 	public final static int CHAT_TYPE_PACKET = 13;//803

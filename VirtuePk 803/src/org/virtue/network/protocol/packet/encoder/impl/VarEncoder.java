@@ -15,25 +15,27 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 	@Override
 	public RS3PacketBuilder buildPacket(VarMessage context) {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
-		if (context.isVarClient()) {
-			packVarClient(context, buffer);
-			/*if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
-				buffer.putPacket(OutgoingOpcodes.LARGE_VARBIT_PACKET);
-				buffer.putLEShortA(context.getVarpId());
-				buffer.putIntV2(value);
-			} else {
-				buffer.putPacket(OutgoingOpcodes.SMALL_VARBIT_PACKET);
-				buffer.putShort(context.getVarpId());
-				buffer.putByteS(value);
-			}*/
-		} else {
+		switch (context.getType()) {
+		case PLAYER:
 			packVarPlayer(context, buffer);
+			break;
+		case CLIENT:
+			packVarClient(context, buffer);
+			break;
+		case CLIENT_STR:
+			packVarClientString(context, buffer);
+			break;
+		case BIT:
+			packVarBit(context, buffer);
+			break;
+		default:
+			break;
 		}
 		return buffer;
 	}
 	
 	private void packVarClient (VarMessage message, RS3PacketBuilder buffer) {
-		int value = message.getValue();
+		int value = message.getIntValue();
 		if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
 			buffer.putPacket(OutgoingOpcodes.LARGE_VARC_PACKET);
 			buffer.putLEShortA(message.getVarID());
@@ -45,8 +47,23 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 		}
 	}
 	
+	private void packVarClientString (VarMessage message, RS3PacketBuilder buffer) {
+		String value = message.getStrValue();
+		if (value.length() >= Byte.MAX_VALUE) {
+			buffer.putPacketVarShort(OutgoingOpcodes.LARGE_VARC_STRING_PACKET);
+			buffer.putString(value);
+			buffer.putLEShortA(message.getVarID());
+			buffer.endPacketVarShort();
+		} else {
+			buffer.putPacketVarByte(OutgoingOpcodes.SMALL_VARC_STRING_PACKET);
+			buffer.putLEShortA(message.getVarID());
+			buffer.putString(value);
+			buffer.endPacketVarByte();
+		}
+	}
+	
 	private void packVarPlayer (VarMessage message, RS3PacketBuilder buffer) {
-		int value = message.getValue();
+		int value = message.getIntValue();
 		if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
 			buffer.putPacket(OutgoingOpcodes.LARGE_VARP_PACKET);
 			buffer.putLEShortA(message.getVarID());
@@ -55,6 +72,19 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 			buffer.putPacket(OutgoingOpcodes.SMALL_VARP_PACKET);
 			buffer.putShortA(message.getVarID());
 			buffer.putByteA(value);
+		}
+	}
+	
+	private void packVarBit (VarMessage message, RS3PacketBuilder buffer) {
+		int value = message.getIntValue();
+		if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
+			buffer.putPacket(OutgoingOpcodes.LARGE_VARBIT_PACKET);
+			buffer.putLEShortA(message.getVarID());
+			buffer.putIntV2(value);
+		} else {
+			buffer.putPacket(OutgoingOpcodes.SMALL_VARBIT_PACKET);
+			buffer.putLEShort(message.getVarID());
+			buffer.putByteS(value);
 		}
 	}
 }

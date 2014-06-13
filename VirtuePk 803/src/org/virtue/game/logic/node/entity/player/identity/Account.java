@@ -6,7 +6,6 @@ import org.virtue.game.core.AttributeSet;
 import org.virtue.game.logic.node.entity.player.screen.ClientScreen;
 import org.virtue.game.logic.region.Tile;
 import org.virtue.network.session.Session;
-import org.virtue.utility.DisplayMode;
 
 import com.google.gson.JsonObject;
 

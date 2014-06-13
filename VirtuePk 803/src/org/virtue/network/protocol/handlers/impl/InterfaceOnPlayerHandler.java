@@ -24,9 +24,11 @@ public class InterfaceOnPlayerHandler extends MovementHandler {
 			return;
 		}
 		Player player = World.getWorld().getPlayer(getFlag("playerIndex", -1));
-		if (player == null) {
-			return;
+		if (player == null || !player.exists()) {
+			return;//Player does not exist
 		}
+		session.getPlayer().getUpdateArchive().queueFaceEntity(player);
+		putFlag("facing", true);
 		putFlag("baseX", player.getTile().getX());
 		putFlag("baseY", player.getTile().getY());
 		putFlag("sizeX", player.getSize());

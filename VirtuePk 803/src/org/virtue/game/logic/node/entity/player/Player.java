@@ -13,6 +13,7 @@ import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.events.PlayerActionEvent;
 import org.virtue.game.logic.node.entity.Entity;
 import org.virtue.game.logic.node.entity.player.identity.Account;
+import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.interfaces.InterfaceManager;
 import org.virtue.game.logic.node.interfaces.impl.Bank;
 import org.virtue.game.logic.node.interfaces.impl.Equipment;
@@ -187,6 +188,7 @@ public class Player extends Entity {
 		getUpdateArchive().getAppearance().packBlock();
 		//System.out.println("Sending game information to player...");
 		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
+		sendDefaultPlayerOptions();
 		int[] varps = clientVarps;
 		for (int i = 0; i < varps.length; i++) {
 			int val = varps[i];
@@ -560,11 +562,12 @@ public class Player extends Entity {
 	}
 	
 	public void interact (Player player, PlayerOption option) {
-		System.out.println("Clicked Player: index="+getIndex()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+option);
-	}
-	
-	public void handleDistanceOption (Player player, PlayerOption option) {
-		System.out.println("Clicked Player: index="+getIndex()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+option);
+		String message = "This feature has not been implemented.";
+		if (Constants.DEVELOPER_MODE || player.getAccount().getRank().equals(Rank.ADMINISTRATOR)) {
+			message = "Clicked Player: index="+getIndex()+", xCoord="+getTile().getX()+", yCoord="+getTile().getY()+", option="+option;
+			System.out.println(message);
+		}
+		player.getPacketDispatcher().dispatchMessage(message);
 	}
 
 	@Override

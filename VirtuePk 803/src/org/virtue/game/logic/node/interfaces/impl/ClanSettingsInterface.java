@@ -10,13 +10,24 @@ import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.network.protocol.messages.VarMessage;
-import org.virtue.network.protocol.messages.VarcStringMessage;
 
 public class ClanSettingsInterface extends AbstractInterface {
 	
 	public static enum Tab {CLANMATES, SETTINGS, PERMISSIONS};
 	
-	public static enum PermissionTab {ADMIN,CHAT,EVENTS,CITADEL,SKILL};
+	public static enum PermissionTab {
+		ADMIN(1),CHAT(2),EVENTS(3),CITADEL(4),SKILL(5);
+		
+		private final int id;
+		
+		PermissionTab (int id) {
+			this.id = id;
+		}
+		
+		public int getID () {
+			return id;
+		}
+	};
 	
 	private final long clanHash;
 	
@@ -80,25 +91,85 @@ public class ClanSettingsInterface extends AbstractInterface {
 			break;
 		/*Clan permissions tab*/
 		case 399://Recruit
-			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(5136, 1));//Admin - Recruit
+			setPermissionGroup(ClanRank.RECRUIT);
 			break;
 		case 407://Corporal
-			
+			setPermissionGroup(ClanRank.CORPORAL);
 			break;
 		case 415://Sergeant
+			setPermissionGroup(ClanRank.SERGEANT);
+			break;
 		case 423://Lieutenant
+			setPermissionGroup(ClanRank.LIEUTENANT);
+			break;
 		case 431://Captain
+			setPermissionGroup(ClanRank.CAPTAIN);
+			break;
 		case 439://General
+			setPermissionGroup(ClanRank.GENERAL);
+			break;
 		case 447://Admin
-		case 455://Organiser
-		case 463://Coordinator
-		case 471://Overseer
-		case 479://Deputy Owner
-			player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(5136, 1));
 			setPermissionGroup(ClanRank.ADMIN);
+			break;
+		case 455://Organiser
+			setPermissionGroup(ClanRank.ORGANISER);
+			break;
+		case 463://Coordinator
+			setPermissionGroup(ClanRank.COORDINATOR);
+			break;
+		case 471://Overseer
+			setPermissionGroup(ClanRank.OVERSEER);
+			break;
+		case 479://Deputy Owner
+			setPermissionGroup(ClanRank.DEPUTY_OWNER);
+			break;
+		case 493://Admin permission tab
+			setPermissionTab(PermissionTab.ADMIN);
+			break;
+		case 502://Chat permission tab
+			setPermissionTab(PermissionTab.CHAT);
+			break;
+		case 510://Events permission tab
+			setPermissionTab(PermissionTab.EVENTS);
+			break;
+		case 518://Citadel permission tab
+			setPermissionTab(PermissionTab.CITADEL);
+			break;
+		case 526://Skills permission tab			
+			setPermissionTab(PermissionTab.SKILL);
 			break;
 		case 859://Clan broadcast settings
 			getPlayer().getInterfaces().setTopInterface(new ClanBroadcastSettings(player, this), 71);
+			break;
+		case 538://Toggle lock lower ranks from keep
+		case 551://Toggle lock lower ranks from citadel
+		case 733://Toggle allowed in citadel
+		case 746://Toggle allowed in keep
+		case 871://Edit broadcast settings
+		case 487://Recruit
+		case 652://RCW leader
+		case 585://Edit signpost
+		case 562://Set min talk rank
+		case 574://Set min kick rank
+		case 596://Edit noticeboard
+		case 853://Broadcast event
+		case 641://Start battlefield event
+		case 664://Start vote
+		case 677://Start meeting
+		case 787://Operate theater
+		case 689://Operate party room
+		case 607://Add citadel upgrades
+		case 618://Add citade downgrades
+		case 629://Edit battlefield
+		case 776://Change clanguage
+		case 842://Remove avatar habitat
+		case 831://Add avatar buff
+		case 820://Customise avatar
+		case 809://Check resources
+		case 713://Change build tick
+		case 798://Lock skill plots
+		case 701://Set objectives
+			handlePermissionButton(component, slot1);
 			break;
 		case 137://Clan motto editor
 		case 130://Clan motif editor
@@ -155,28 +226,28 @@ public class ClanSettingsInterface extends AbstractInterface {
 	public void sendClanMemberInfo (ClanMember member) {
 		selectedMember = member;
 		if (member == null) {
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1500, -1, true));//Rank
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1501, -1, true));//Job
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1564, -1, true));//[Unknown]
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1566, -1, true));//Ban from citadel
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1565, -1, true));//Ban from keep
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1567, -1, true));//Ban from island
-			player.getPacketDispatcher().dispatchVar(new VarMessage(1568, -1, true));//Probation status
-			player.getPacketDispatcher().dispatchVarcString(new VarcStringMessage(2521, ""));//Display name
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1500, -1));//Rank
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1501, -1));//Job
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1564, -1));//[Unknown]
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1566, -1));//Ban from citadel
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1565, -1));//Ban from keep
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1567, -1));//Ban from island
+			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1568, -1));//Probation status
+			player.getPacketDispatcher().dispatchVar(VarMessage.varcStr(2521, ""));//Display name
 			return;
 		}
 		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13
 		//player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 131));
 		player.getPacketDispatcher().dispatchVar(new VarMessage(1846, 0));
 		player.getPacketDispatcher().dispatchVar(new VarMessage(1845, 32768));
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1500, member.getRank().getID(), true));//Rank
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1501, 129, true));//Job
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1564, 0, true));//[Unknown]
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1566, member.isBannedFromCitadel() ? 1 : 0, true));//Ban from citadel
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1565, 0, true));//Ban from keep
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1567, 0, true));//Ban from island
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1568, 2, true));//Probation status
-		player.getPacketDispatcher().dispatchVarcString(new VarcStringMessage(2521, member.getDisplayName()));//Display name
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1500, member.getRank().getID()));//Rank
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1501, 129));//Job
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1564, 0));//[Unknown]
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1566, member.isBannedFromCitadel() ? 1 : 0));//Ban from citadel
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1565, 0));//Ban from keep
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1567, 0));//Ban from island
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1568, 2));//Probation status
+		player.getPacketDispatcher().dispatchVar(VarMessage.varcStr(2521, member.getDisplayName()));//Display name
 		
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));
 	}
@@ -211,6 +282,14 @@ public class ClanSettingsInterface extends AbstractInterface {
 		}
 	}
 	
+	private void handlePermissionButton (int component, int slot) {
+		switch (component) {
+		default:
+			System.out.println("Unhandled clan permission button: component="+component+", slot1="+slot);
+			break;
+		}
+	}
+	
 	public void setPermissionTab(PermissionTab tab) {
 		permTab = tab;
 		setComponentHidden(31, true);//Received component hidden: iFace=1096, compID=31, hidden=1
@@ -219,6 +298,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 		setComponentHidden(22, true);//Received component hidden: iFace=1096, compID=22, hidden=1
 		setComponentHidden(24, true);//Received component hidden: iFace=1096, compID=24, hidden=1
 		setComponentHidden(25, true);//Received component hidden: iFace=1096, compID=25, hidden=1
+		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(5136, tab.getID()));
 		switch (tab) {
 		case ADMIN:
 			setComponentHidden(20, false);
@@ -239,35 +319,35 @@ public class ClanSettingsInterface extends AbstractInterface {
 	}
 	
 	public void setPermissionGroup (ClanRank rank) {
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1569, 100, true));//Received VarClient: key=1569, value=100
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1571, 1, true));//Received VarClient: key=1571, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1570, 1, true));//Received VarClient: key=1570, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1572, 1, true));//Received VarClient: key=1572, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1574, 1, true));//Received VarClient: key=1574, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1573, 1, true));//Received VarClient: key=1573, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1575, 1, true));//Received VarClient: key=1575, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1576, 1, true));//Received VarClient: key=1576, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1577, 1, true));//Received VarClient: key=1577, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1578, 1, true));//Received VarClient: key=1578, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1579, 1, true));//Received VarClient: key=1579, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1580, 1, true));//Received VarClient: key=1580, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1581, 1, true));//Received VarClient: key=1581, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1582, 1, true));//Received VarClient: key=1582, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1583, 1, true));//Received VarClient: key=1583, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1584, 1, true));//Received VarClient: key=1584, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1585, 1, true));//Received VarClient: key=1585, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1586, 1, true));//Received VarClient: key=1586, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1587, 1, true));//Received VarClient: key=1587, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1589, 1, true));//Received VarClient: key=1589, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1649, 0, true));//Received VarClient: key=1649, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1792, 1, true));//Received VarClient: key=1792, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1793, 1, true));//Received VarClient: key=1793, value=1
-		player.getPacketDispatcher().dispatchVar(new VarMessage(2001, 0, true));//Received VarClient: key=2001, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(2002, 0, true));//Received VarClient: key=2002, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(2003, 0, true));//Received VarClient: key=2003, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1590, 0, true));//Received VarClient: key=1590, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(3855, 0, true));//Received VarClient: key=3855, value=0
-		player.getPacketDispatcher().dispatchVar(new VarMessage(4125, 0, true));//Received VarClient: key=4125, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1569, rank.getID()));//Received VarClient: key=1569, value=100
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1571, 1));//Received VarClient: key=1571, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1570, 1));//Received VarClient: key=1570, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1572, 1));//Received VarClient: key=1572, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1574, 1));//Received VarClient: key=1574, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1573, 1));//Received VarClient: key=1573, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1575, 1));//Received VarClient: key=1575, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1576, 1));//Received VarClient: key=1576, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1577, 1));//Received VarClient: key=1577, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1578, 1));//Received VarClient: key=1578, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1579, 1));//Received VarClient: key=1579, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1580, 1));//Received VarClient: key=1580, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1581, 1));//Received VarClient: key=1581, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1582, 1));//Received VarClient: key=1582, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1583, 1));//Received VarClient: key=1583, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1584, 1));//Received VarClient: key=1584, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1585, 1));//Received VarClient: key=1585, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1586, 1));//Received VarClient: key=1586, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1587, 1));//Received VarClient: key=1587, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1589, 1));//Received VarClient: key=1589, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1649, 0));//Received VarClient: key=1649, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1792, 1));//Received VarClient: key=1792, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1793, 1));//Received VarClient: key=1793, value=1
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2001, 0));//Received VarClient: key=2001, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2002, 0));//Received VarClient: key=2002, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2003, 0));//Received VarClient: key=2003, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1590, 0));//Received VarClient: key=1590, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(3855, 0));//Received VarClient: key=3855, value=0
+		player.getPacketDispatcher().dispatchVar(VarMessage.varc(4125, 0));//Received VarClient: key=4125, value=0
 	}
 
 	@Override

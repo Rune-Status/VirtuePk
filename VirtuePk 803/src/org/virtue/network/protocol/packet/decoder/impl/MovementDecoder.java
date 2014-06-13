@@ -5,7 +5,6 @@ import org.virtue.network.protocol.handlers.impl.MovementHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;
 import org.virtue.network.session.Session;
-import org.virtue.network.session.impl.WorldSession;
 
 /**
  * 

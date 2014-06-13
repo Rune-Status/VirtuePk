@@ -3,7 +3,6 @@ package org.virtue.game.core.logic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ScheduledFuture;
 
 import org.virtue.Launcher;
 import org.virtue.game.core.gametick.Tick;

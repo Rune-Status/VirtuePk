@@ -1,7 +1,6 @@
 package org.virtue.network.protocol.packet.decoder.impl;
 
 import org.virtue.game.config.IncommingOpcodes;
-import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.network.protocol.handlers.impl.InterfaceDragHandler;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 import org.virtue.network.protocol.packet.decoder.PacketDecoder;

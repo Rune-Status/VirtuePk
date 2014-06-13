@@ -19,7 +19,6 @@ import org.virtue.network.protocol.messages.InterfaceMessage;
 import org.virtue.network.protocol.messages.ItemsMessage;
 import org.virtue.network.protocol.messages.ObjectMessage;
 import org.virtue.network.protocol.messages.ObjectMessage.ObjectUpdateType;
-import org.virtue.network.protocol.messages.VarcStringMessage;
 import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.protocol.packet.encoder.impl.ClientScriptVarEncoder;
@@ -33,7 +32,6 @@ import org.virtue.network.protocol.packet.encoder.impl.MinimapFlagEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.ObjectUpdateEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.PlayerOptionEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.SkillEncoder;
-import org.virtue.network.protocol.packet.encoder.impl.VarcStringEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.VarEncoder;
 
 /**
@@ -185,10 +183,6 @@ public class PacketDispatcher {
 	 */
 	public void dispatchVar(VarMessage message) {
 		player.getAccount().getSession().getTransmitter().send(VarEncoder.class, message);
-	}
-	
-	public void dispatchVarcString(VarcStringMessage message) {
-		player.getAccount().getSession().getTransmitter().send(VarcStringEncoder.class, message);
 	}
 	
 	public void dispatchClientScriptVar(int scriptID, Object... params) {

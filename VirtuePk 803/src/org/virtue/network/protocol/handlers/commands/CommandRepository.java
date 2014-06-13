@@ -20,7 +20,7 @@ public class CommandRepository {
 	public CommandRepository() {
 		commands.add(new TestCommand());
 		commands.add(new AddPlayer());
-		commands.add(new SetClientVarp());
+		commands.add(new SetClientVar());
 		commands.add(new SendItem());
 		commands.add(new ReloadAppearance());
 		commands.add(new SpawnNpc());

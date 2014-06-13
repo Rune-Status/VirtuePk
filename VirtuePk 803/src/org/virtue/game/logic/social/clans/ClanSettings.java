@@ -63,9 +63,9 @@ public class ClanSettings {
 	
 	private int replacementOwnerSlot = -1;
 	
-	private List<ClanMember> members = Collections.synchronizedList(new ArrayList<ClanMember>());
+	private final List<ClanMember> members = Collections.synchronizedList(new ArrayList<ClanMember>());
 	
-	private List<ClanBan> bans = Collections.synchronizedList(new ArrayList<ClanBan>());
+	private final List<ClanBan> bans = Collections.synchronizedList(new ArrayList<ClanBan>());
 	
 	private final List<SocialUser> onlineMembers = Collections.synchronizedList(new ArrayList<SocialUser>());
 	
@@ -159,7 +159,7 @@ public class ClanSettings {
 		}
 		ClanSettingsPacket packet = new ClanSettingsPacket(false, clanName, entries, banEntries,
 					updateNumber, allowNonMembers, minTalkRank, minKickRank);
-		SocialUser user = null;
+		SocialUser user;
 		while ((user = initQueue.poll()) != null) {
 			user.sendClanSettingsFull(packet);
 		}
@@ -253,7 +253,7 @@ public class ClanSettings {
 		replacementOwnerSlot = -1;
 		int highestRankSlot = 0;
 		synchronized (members) {
-			if (members.size() == 0) {
+			if (members.isEmpty()) {
 				return;
 			}
 			ClanRank highestRank = members.get(0).getRank();
@@ -435,7 +435,12 @@ public class ClanSettings {
 		}
 	}
 	
-	protected void removeMember (String protocolName) {
+	/**
+	 * Removes the member with the specified protocol name from the clan
+	 * @param protocolName	The protocol username of the player to remove
+	 * @throws NullPointerException	if the player is not in the clan.
+	 */
+	protected void removeMember (String protocolName) throws NullPointerException {
 		ClanMember member = getMember(protocolName);
 		if (member == null) {
 			throw new NullPointerException(protocolName+" is not in "+clanName);
@@ -451,6 +456,12 @@ public class ClanSettings {
 		}		
 	}
 	
+	/**
+	 * Sets the rank for the specified player in the clan. Note that permission checks must be done externally
+	 * @param protocolName	The protocol username of the player to set the rank of
+	 * @param rank			The desired rank
+	 * @throws NullPointerException	if the player is not in the clan.
+	 */
 	protected void setRank (String protocolName, ClanRank rank) throws NullPointerException {
 		ClanMember member = getMember(protocolName);
 		if (member == null) {
@@ -474,7 +485,7 @@ public class ClanSettings {
 	protected void setOwnerRank (ClanRank rank) throws NullPointerException {
 		ClanMember member = getOwner();
 		setRank(member, rank);
-		ClanMember newOwner = null;
+		ClanMember newOwner;
 		synchronized (members) {
 			newOwner = getOwner();
 			synchronized (updateQueue) {
@@ -498,5 +509,10 @@ public class ClanSettings {
 		}
 		return false;
 		
+	}
+
+	@Override
+	public int hashCode() {
+		return (int) clanHash;
 	}
 }
