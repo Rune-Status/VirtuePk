@@ -1,28 +1,12 @@
 package org.virtue.network.protocol.messages;
 
+import org.virtue.game.logic.vars.VarDomainType;
+
 /**
  * @author Taylor
  * @version 1.0
  */
 public class VarMessage {
-	
-	public static VarMessage varp (int key, int value) {
-		return new VarMessage(DomainType.PLAYER, key, value);
-	}
-	
-	public static VarMessage varc (int key, int value) {
-		return new VarMessage(DomainType.CLIENT, key, value);
-	}
-	
-	public static VarMessage varcStr (int key, String value) {
-		return new VarMessage(DomainType.CLIENT_STR, key, value);
-	}
-	
-	public static VarMessage varbit (int key, int value) {
-		return new VarMessage(DomainType.BIT, key, value);
-	}
-	
-	public static enum DomainType {PLAYER, NPC, CLIENT, CLIENT_STR, BIT};
 
 	/**
 	 * The key for the var
@@ -35,27 +19,31 @@ public class VarMessage {
 	private final Object value;
 	
 	/**
-	 * Whether the var is varclient (varc) or varplayer (varp)
+	 * The type of the var
 	 */
-	private final DomainType type;
+	private final VarDomainType type;
 	
 	/**
-	 * Constructs a new {@code VarpContext.java}
-	 * @param varpId The varp ID
-	 * @param cs2 If this is a cs2 varp
+	 * Whether the message represents a varBit update
 	 */
-	public VarMessage(DomainType type, int varpId, Object value) {
-		this.key = varpId;
-		this.value = value;
-		this.type = type;
+	private final boolean varBit;
+	
+	public VarMessage(VarDomainType type, int varID, Object value) {
+		this(type, varID, value, false);
 	}
 	
 	/**
 	 * Constructs a new {@code VarpContext.java}
-	 * @param varpId The varp ID
+	 * @param type		The variable type
+	 * @param varID 	The variable ID (aka key)
+	 * @param value		The variable value
+	 * @param varBit	Whether the message represents a varBit update
 	 */
-	public VarMessage(int varpId, int value) {
-		this(DomainType.PLAYER, varpId, value);
+	public VarMessage(VarDomainType type, int varID, Object value, boolean varBit) {
+		this.key = varID;
+		this.value = value;
+		this.type = type;
+		this.varBit = varBit;
 	}
 
 	/**
@@ -68,8 +56,24 @@ public class VarMessage {
 	/**
 	 * @return The domain type of the var
 	 */
-	public DomainType getType() {
+	public VarDomainType getType() {
 		return type;
+	}
+	
+	/**
+	 * Returns whether this message is a varBit update
+	 * @return	True if the message is a varBit update, false otherwise
+	 */
+	public boolean isVarBit () {
+		return varBit;
+	}
+	
+	/**
+	 * Returns whether the value is a string
+	 * @return	True if the value is a string, false if it is an integer
+	 */
+	public boolean isStringValue () {
+		return value instanceof String;
 	}
 
 	/**

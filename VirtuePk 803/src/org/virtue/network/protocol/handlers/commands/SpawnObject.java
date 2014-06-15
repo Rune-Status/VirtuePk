@@ -21,7 +21,7 @@ public class SpawnObject implements Command {
 			player.getPacketDispatcher().dispatchMessage("Invalid object spawn command: requires 1 int paramater", MessageOpcode.CONSOLE);
 			return false;
 		}
-		RS3Object object = new RS3Object(objectID, 0, 10, player.getTile());
+		RS3Object object = RS3Object.create(objectID, 0, 10, player.getTile());
 		if (object.getDefinition() == null) {
 			player.getPacketDispatcher().dispatchMessage("Invalid object spawn command: object does not exist!", MessageOpcode.CONSOLE);
 			return false;

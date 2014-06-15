@@ -129,6 +129,8 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.addProperty("rank", p.getAccount().getRank().getID());
 		
+		//obj.add("varps", p.getVarManager().serialiseVarps());
+		
 		JsonArray location = new JsonArray();
 		JsonObject coords = new JsonObject();
 		coords.addProperty("x", p.getTile().getX());
@@ -147,6 +149,7 @@ public class AccountParser implements IOParser<Account> {
 		
 		obj.add("chatData", p.getChatManager().serialiseData());
 		
+		
 		//obj.add("interfaceLayout", p.getInterfaces().getScreen().serialiseLayout());
 		
 		obj.addProperty("runEnergy", p.getRunEnergy());
@@ -154,7 +157,7 @@ public class AccountParser implements IOParser<Account> {
 		
 		System.out.println("Saving player...");
 		
-		File file = new File(getPath(), p.getAccount().getUsername().getAccountName()+".json");
+		File file = new File(getPath(), p.getAccount().getUsername().getAccountNameAsProtocol()+".json");
 		/*if (file.exists())
 			file.delete();*/
 		try {

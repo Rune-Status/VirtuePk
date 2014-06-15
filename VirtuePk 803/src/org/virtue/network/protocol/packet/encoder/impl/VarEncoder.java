@@ -17,18 +17,23 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		switch (context.getType()) {
 		case PLAYER:
-			packVarPlayer(context, buffer);
+			if (context.isVarBit()) {
+				packVarPlayerBit(context, buffer);
+			} else {
+				packVarPlayer(context, buffer);
+			}
 			break;
 		case CLIENT:
-			packVarClient(context, buffer);
-			break;
-		case CLIENT_STR:
-			packVarClientString(context, buffer);
-			break;
-		case BIT:
-			packVarBit(context, buffer);
+			if (context.isStringValue()) {
+				packVarClientString(context, buffer);
+			} else if (context.isVarBit()) {
+				packVarClientBit(context, buffer);
+			} else {
+				packVarClient(context, buffer);
+			}
 			break;
 		default:
+			System.err.print("Could not encode var - type "+context.getType()+" is not currently supported.");
 			break;
 		}
 		return buffer;
@@ -43,6 +48,19 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 		} else {
 			buffer.putPacket(OutgoingOpcodes.SMALL_VARC_PACKET);
 			buffer.putByteC(value);
+			buffer.putShortA(message.getVarID());
+		}
+	}
+	
+	private void packVarClientBit (VarMessage message, RS3PacketBuilder buffer) {
+		int value = message.getIntValue();
+		if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
+			buffer.putPacket(OutgoingOpcodes.LARGE_VARC_BIT_PACKET);
+			buffer.putLEShortA(message.getVarID());
+			buffer.putIntV1(value);
+		} else {
+			buffer.putPacket(OutgoingOpcodes.SMALL_VARC_BIT_PACKET);
+			buffer.putByteA(value);
 			buffer.putShortA(message.getVarID());
 		}
 	}
@@ -75,14 +93,14 @@ public class VarEncoder implements PacketEncoder<VarMessage> {
 		}
 	}
 	
-	private void packVarBit (VarMessage message, RS3PacketBuilder buffer) {
+	private void packVarPlayerBit (VarMessage message, RS3PacketBuilder buffer) {
 		int value = message.getIntValue();
 		if (value <= Byte.MIN_VALUE || value >= Byte.MAX_VALUE) {
-			buffer.putPacket(OutgoingOpcodes.LARGE_VARBIT_PACKET);
+			buffer.putPacket(OutgoingOpcodes.LARGE_VARPBIT_PACKET);
 			buffer.putLEShortA(message.getVarID());
 			buffer.putIntV2(value);
 		} else {
-			buffer.putPacket(OutgoingOpcodes.SMALL_VARBIT_PACKET);
+			buffer.putPacket(OutgoingOpcodes.SMALL_VARPBIT_PACKET);
 			buffer.putLEShort(message.getVarID());
 			buffer.putByteS(value);
 		}

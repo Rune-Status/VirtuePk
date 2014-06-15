@@ -2,36 +2,37 @@ package org.virtue.game.logic.node.interfaces.impl;
 
 import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.item.Item;
+import org.virtue.game.logic.node.entity.npc.NPC;
 import org.virtue.game.logic.node.entity.player.Player;
+import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.messages.ClientScriptVar;
-import org.virtue.network.protocol.messages.VarMessage;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.virtue.game.logic.node.entity.npc.NPC;
-import org.virtue.game.logic.node.entity.player.container.EquipSlot;
-
 public class Bank extends AbstractInterface {
 	
 	public static int MAX_ITEMS = 500;
+	
+	public static int LAST_DEPOSIT_VARP = 111;
 	
 	/**
 	 * Represents the items in the bank.
 	 */
 	private final ItemsContainer<Item> items = new ItemsContainer<>(MAX_ITEMS, true);
 	
-	private int lastDepositAmount = 1;
+	//private int lastDepositAmount = 1;
 	//private int currentTab = 0;
 
 	public Bank(Player p) {
 		super(RSInterface.BANK, p);
+		//lastDepositAmount = p.getVarManager().getVarPlayer(LAST_DEPOSIT_VARP);
 	}
 
 	@Override
@@ -40,7 +41,8 @@ public class Bank extends AbstractInterface {
 		sendInterfaceSettings(39, 0, 871, 2622718);
 		sendInterfaceSettings(54, 0, 27, 2361214);
 		sendInterfaceSettings(132, 0, 27, 4260990);
-		getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
+		//player.getVarManager().setVarPlayer(111, lastDepositAmount);
+		//getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 		refresh();
 	}
 	
@@ -128,7 +130,7 @@ public class Bank extends AbstractInterface {
 				amount = 10;
 				break;
 			case FOUR://Withdraw last
-				amount = lastDepositAmount;
+				amount = player.getVarManager().getVarPlayer(LAST_DEPOSIT_VARP);
 				break;
 			case FIVE://Withdraw x
 				getPlayer().setInputEvent(new InputEnteredEvent () {
@@ -138,8 +140,9 @@ public class Bank extends AbstractInterface {
 						if (amount == 0) {
 							return;
 						}
-						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
+						//lastDepositAmount = amount;
+						player.getVarManager().setVarPlayer(LAST_DEPOSIT_VARP, amount);
+						//getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 						withdrawItem(itemID, slotID, amount);
 					}
 					@Override
@@ -176,7 +179,7 @@ public class Bank extends AbstractInterface {
 				amount = 10;
 				break;
 			case FOUR://Deposit last
-				amount = lastDepositAmount;
+				amount = player.getVarManager().getVarPlayer(LAST_DEPOSIT_VARP);
 				break;
 			case FIVE://Deposit x
 				getPlayer().setInputEvent(new InputEnteredEvent () {
@@ -186,8 +189,9 @@ public class Bank extends AbstractInterface {
 						if (amount == 0) {
 							return;
 						}
-						lastDepositAmount = amount;
-						getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
+						//lastDepositAmount = amount;
+						player.getVarManager().setVarPlayer(LAST_DEPOSIT_VARP, amount);
+						//getPlayer().getPacketDispatcher().dispatchVar(new VarMessage(111, lastDepositAmount));
 						depositInventoryItem(itemID, slotID, amount);
 					}
 					@Override

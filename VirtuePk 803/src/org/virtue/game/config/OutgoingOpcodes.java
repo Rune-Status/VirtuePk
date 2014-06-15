@@ -27,10 +27,13 @@ public class OutgoingOpcodes {
 	//Configuration related
 	public static final int LARGE_VARP_PACKET = 153;//803
 	public static final int SMALL_VARP_PACKET = 96;//803
-	public static final int LARGE_VARBIT_PACKET = 154;//803
-	public static final int SMALL_VARBIT_PACKET = 7;//803
+	public static final int LARGE_VARPBIT_PACKET = 154;//803
+	public static final int SMALL_VARPBIT_PACKET = 7;//803
+	public static final int RESET_VARP_CACHE = 129;//803 - Sets all varps to zero. Usually used before sending the full varp data
 	public static final int LARGE_VARC_PACKET = 6;//803
 	public static final int SMALL_VARC_PACKET = 132;//803
+	public static final int LARGE_VARC_BIT_PACKET = 117;//803
+	public static final int SMALL_VARC_BIT_PACKET = 1;//803
 	public static final int LARGE_VARC_STRING_PACKET = 0;//803
 	public static final int SMALL_VARC_STRING_PACKET = 41;//803
 	public static final int ENABLE_VARCLAN_PACKET = 11;//803

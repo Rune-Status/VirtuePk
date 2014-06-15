@@ -17,6 +17,7 @@ import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
+import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.social.clans.ClanManager;
 import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
@@ -118,6 +119,8 @@ public class Launcher {
 		NPCDefinitionLoader.load(CACHE);//Loads the NPC definitions
 		
 		ObjectDefinitionLoader.load(CACHE);//Loads the object definitions
+		
+		RS3Object.initTransforms();//Initialises the object transforms
 		
 		//Initialies the huffman codec
 		ByteBuffer huffmanData = Launcher.getCache().read(CacheIndex.HUFFMAN_ENCODING, CACHE.getFileId(CacheIndex.HUFFMAN_ENCODING, "huffman")).getData();

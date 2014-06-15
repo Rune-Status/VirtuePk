@@ -202,7 +202,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			account.getClientScreen().setScreenInfo(screenHeight, screenWidth, displayMode);
 		} else {
 			System.out.println("Loading player data for "+username);
-			account = IOHub.getAccountIo().load(username.trim());
+			account = IOHub.getAccountIo().load(StringUtils.format(username.trim(), FormatType.PROTOCOL));
 			
 			Password loginPass = new Password(password.toLowerCase().trim(), true);
 			if (!account.getPassword().getPassword().equals(loginPass.getPassword())) {
@@ -213,7 +213,7 @@ public class RS3LoginDecoder extends FrameDecoder implements ChannelHandler {
 			account.setClientSessionKey(clientSessionKey);
 			account.setServerSessionKey(serverSessionKey);
 		}
-		if (World.getWorld().contains(username.trim())) {
+		if (World.getWorld().contains(account.getUsername().getAccountNameAsProtocol())) {
 			return new LoginResponse(LoginResponse.NOT_LOGGED_OUT);
 		}
 		account.putFlag("login_type", type);

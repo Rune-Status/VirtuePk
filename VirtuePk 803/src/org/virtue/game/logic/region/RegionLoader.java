@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import org.virtue.Launcher;
 import org.virtue.cache.def.CacheIndex;
-import org.virtue.game.logic.node.object.ObjectTransformer;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.packet.RS3PacketReader;
 
@@ -185,7 +184,7 @@ public class RegionLoader {
 									if (objectID == 38760) {
 										//System.out.println("Object "+objectID+", rotation="+rotation+", type="+type+" found at x="+x+", y="+y+", z="+z+", region="+region.getId());
 									}
-									RS3Object object = ObjectTransformer.transformObject(new RS3Object(objectID, rotation, type, new Tile(x, y, z, region.getId())));
+									RS3Object object = RS3Object.create(objectID, rotation, type, new Tile(x, y, z, region.getId()));
 									region.addObject(object, z, x, y);
 								}
 							}

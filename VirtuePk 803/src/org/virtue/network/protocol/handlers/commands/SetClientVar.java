@@ -1,7 +1,6 @@
 package org.virtue.network.protocol.handlers.commands;
 
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 public class SetClientVar implements Command {
@@ -20,11 +19,11 @@ public class SetClientVar implements Command {
 			return false;
 		}
 		if (syntax.equalsIgnoreCase("varc")) {
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(key, value));
+			player.getVarManager().setVarClient(key, value);
 		} else if (syntax.equalsIgnoreCase("varbit")) {
-			player.getPacketDispatcher().dispatchVar(VarMessage.varbit(key, value));
+			player.getVarManager().setVarBit(key, value);
 		} else {
-			player.getPacketDispatcher().dispatchVar(VarMessage.varp(key, value));
+			player.getVarManager().setVarPlayer(key, value);
 		}		
 		System.out.println("Sending varp to client: key="+key+", value="+value);
 		return true;

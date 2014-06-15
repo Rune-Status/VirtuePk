@@ -1,5 +1,8 @@
 package org.virtue.game.logic.node.entity.player;
 
+import org.virtue.game.logic.vars.VarManager;
+
+import java.io.FileNotFoundException;
 import java.util.EnumMap;
 
 import org.virtue.Constants;
@@ -23,7 +26,6 @@ import org.virtue.game.logic.social.ChatManager;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
-import org.virtue.network.protocol.messages.VarMessage;
 import org.virtue.network.protocol.packet.encoder.PacketDispatcher;
 import org.virtue.network.protocol.packet.encoder.impl.GameScreenEncoder;
 import org.virtue.network.protocol.packet.encoder.impl.MapSceneEncoder;
@@ -81,7 +83,12 @@ public class Player extends Entity {
 	 */
 	private ChatManager chatManager;
 	
-	private int[] clientVarps = ClientVarps.getGameVarps().clone();
+	/**
+	 * Represents the player variable manager
+	 */
+	private VarManager varManager;
+	
+	//private int[] clientVarps = ClientVarps.getGameVarps().clone();
 	
 	private boolean largeSceneView = false;
 	
@@ -142,23 +149,24 @@ public class Player extends Entity {
 		super();
 		//System.out.println("Creating player: "+account.getUsername().getName());
 		this.account = account;
-		tile = new Tile(account.getTile());
-		lastTile = new Tile(getTile());
-		lastLoadedRegion = new Tile(lastTile);
+		this.tile = new Tile(account.getTile());
+		this.lastTile = new Tile(getTile());
+		this.lastLoadedRegion = new Tile(lastTile);
 		//System.out.println("Stage 2");
-		viewport = new Viewport(this);
-		interfaceManager = new InterfaceManager(this, account.getClientScreen());
-		inventory = new Inventory(this);
+		this.viewport = new Viewport(this);
+		this.interfaceManager = new InterfaceManager(this, account.getClientScreen());
+		this.packetDispatcher = new PacketDispatcher(this);
+		this.varManager = new VarManager(this);
 		//System.out.println("Stage 3");
-		equipment = new Equipment(this);
-		bank = new Bank(this);
-		abilityBook = new AbilityBook(this);
-		actionBar = new ActionBar(this);
+		this.inventory = new Inventory(this);
+		this.equipment = new Equipment(this);
+		this.bank = new Bank(this);
+		this.abilityBook = new AbilityBook(this);
+		this.actionBar = new ActionBar(this);
 		//System.out.println("Stage 4");
-		packetDispatcher = new PacketDispatcher(this);
-		skillManager = new SkillManager(this);
+		this.skillManager = new SkillManager(this);
 		//System.out.println("Stage 5");
-		chatManager = new ChatManager(this);
+		this.chatManager = new ChatManager(this);
 		//System.out.println("Stage 6");
 	}
 	
@@ -169,8 +177,9 @@ public class Player extends Entity {
 	@Override
 	public void start() {		
 		status = PlayerStatus.WORLD;
-		
-		if (IOHub.getAccountIo().exists(account.getUsername().getAccountName())) {
+
+		varManager.setVarps(ClientVarps.getGameVarps());
+		if (IOHub.getAccountIo().exists(account.getUsername().getAccountNameAsProtocol())) {
 			skillManager.deserialise(account.getCharFile().get("skills").getAsJsonArray());
 			inventory.deserialise(account.getCharFile().get("inventory").getAsJsonArray());
 			equipment.deserialise(account.getCharFile().get("equipment").getAsJsonArray());
@@ -183,27 +192,32 @@ public class Player extends Entity {
 				getUpdateArchive().getMovement().setRunning(account.getCharFile().get("isRunning").getAsBoolean());
 			}
 		}
-		
-		this.clientVarps[463] = resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0;
-		getUpdateArchive().getAppearance().packBlock();
-		//System.out.println("Sending game information to player...");
-		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
-		sendDefaultPlayerOptions();
-		int[] varps = clientVarps;
-		for (int i = 0; i < varps.length; i++) {
-			int val = varps[i];
-			if (val != 0) {
-				packetDispatcher.dispatchVar(new VarMessage(i, val));
+		if (IOHub.getVarIO().exists(account.getUsername().getAccountNameAsProtocol())) {
+			try {
+				int[] vars = IOHub.getVarIO().load(account.getUsername().getAccountNameAsProtocol());
+				varManager.clearVarps();
+				varManager.setVarps(vars);
+			} catch (FileNotFoundException e) {
+				
 			}
 		}
+		varManager.setVarPlayer(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0);
+		getUpdateArchive().getAppearance().packBlock();
+		
+		varManager.sendAllVarps();
+		//System.out.println("Sending game information to player...");
+		packetDispatcher.dispatchMessage("Welcome to " + Constants.NAME + ".");
+		sendDefaultPlayerOptions();		
+		
 		interfaceManager.sendScreen();
-		int[] varps2 = ClientVarps.getGameVarps2();
+		varManager.setVarps(ClientVarps.getGameVarps2());
+		/*int[] varps2 = ClientVarps.getGameVarps2();
 		for (int i = 0; i < varps2.length; i++) {
 			int val = varps2[i];
 			if (val != 0) {
-				packetDispatcher.dispatchVar(new VarMessage(i, val));
+				varManager.setVarPlayer(i, val);
 			}
-		}
+		}*/
 		inventory.load();
 		equipment.load();
 			
@@ -231,6 +245,8 @@ public class Player extends Entity {
 	
 	public void startLobby() {
 		status = PlayerStatus.LOBBY;
+		varManager.setVarps(ClientVarps.getLobbyVarps());
+		varManager.sendAllVarps();
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
 		if (IOHub.getAccountIo().exists(account.getUsername().getAccountName())) {
 			chatManager.deserialiseData(account.getCharFile().get("chatData").getAsJsonObject());
@@ -242,8 +258,9 @@ public class Player extends Entity {
 	public void destroy() {
 		if (!exists) {
 			return;
-		}
+		}		
 		exists = false;
+		varManager.setReady(false);//Do not send any more varps from now on
 		if (World.getWorld().contains(getAccount().getUsername().getAccountName())) {
 			World.getWorld().removePlayer(this);
 			if (!viewport.isSendGPI()) {
@@ -251,6 +268,7 @@ public class Player extends Entity {
 			}
 			IOHub.getAccountIo().save(this);
 			IOHub.getInterfaceIO().save(this.getAccount().getUsername().getAccountNameAsProtocol(), interfaceManager.getScreen().getLayout());
+			IOHub.getVarIO().save(account.getUsername().getAccountNameAsProtocol(), varManager);
 		}		
 		chatManager.disconnect();
 		status = PlayerStatus.LOGGED_OUT;
@@ -386,7 +404,7 @@ public class Player extends Entity {
 	}
 	
 	public void sendRunButtonConfig() {
-		packetDispatcher.dispatchVar(new VarMessage(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0));
+		varManager.setVarPlayer(463, resting ? 3 : getUpdateArchive().getMovement().isRunning() ? 1 : 0);
 	}
 	
 	public void drainRunEnergy () {
@@ -473,6 +491,13 @@ public class Player extends Entity {
 	 */
 	public void setPacketDispatcher(PacketDispatcher packetDispatcher) {
 		this.packetDispatcher = packetDispatcher;
+	}
+	
+	/**
+	 * @return the VarManager
+	 */
+	public VarManager getVarManager () {
+		return varManager;
 	}
 	
 	/**

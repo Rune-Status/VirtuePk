@@ -30,7 +30,7 @@ public class MovementTypeBlock extends UpdateBlock {
 		} else if (player.getUpdateArchive().getMovement().getNextRunDirection() != -1) {
 			movementType = 2;
 		}
-		return 1;
+		return movementType;
 	}
 
 }

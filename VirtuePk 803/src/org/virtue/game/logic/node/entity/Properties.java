@@ -3,7 +3,6 @@ package org.virtue.game.logic.node.entity;
 import org.virtue.game.logic.content.Bonuses;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.update.masks.Bar;
-import org.virtue.network.protocol.messages.VarMessage;
 
 
 /**
@@ -107,7 +106,8 @@ public final class Properties {
 			adrenaline = 100;
 		}
 		if (e instanceof Player) {
-			((Player) e).getPacketDispatcher().dispatchVar(new VarMessage(679, adrenaline * 10));
+			((Player) e).getVarManager().setVarPlayer(679, adrenaline * 10);
+			//((Player) e).getPacketDispatcher().dispatchVar(new VarMessage(679, adrenaline * 10));
 		}
 		e.appendBar(Bar.ADRENALINE);
 	}

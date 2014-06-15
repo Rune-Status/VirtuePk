@@ -23,6 +23,4 @@ public class CacheIndex {
     public static final int ANIMATION_DEFINITIONS = 20;
     
     public static final int GRAPHICS_DEFINITIONS = 21;
-    
-    public static final int CONFIG_VARBIT = 69;
 }

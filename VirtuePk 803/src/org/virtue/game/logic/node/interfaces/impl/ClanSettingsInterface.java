@@ -226,28 +226,28 @@ public class ClanSettingsInterface extends AbstractInterface {
 	public void sendClanMemberInfo (ClanMember member) {
 		selectedMember = member;
 		if (member == null) {
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1500, -1));//Rank
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1501, -1));//Job
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1564, -1));//[Unknown]
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1566, -1));//Ban from citadel
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1565, -1));//Ban from keep
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1567, -1));//Ban from island
-			player.getPacketDispatcher().dispatchVar(VarMessage.varc(1568, -1));//Probation status
-			player.getPacketDispatcher().dispatchVar(VarMessage.varcStr(2521, ""));//Display name
+			player.getVarManager().setVarClient(1500, -1);//Rank
+			player.getVarManager().setVarClient(1501, -1);//Job
+			player.getVarManager().setVarClient(1564, -1);//[Unknown]
+			player.getVarManager().setVarClient(1566, -1);//Ban from citadel
+			player.getVarManager().setVarClient(1565, -1);//Ban from keep
+			player.getVarManager().setVarClient(1567, -1);//Ban from island
+			player.getVarManager().setVarClient(1568, -1);//Probation status
+			player.getVarManager().setVarClient(2521, "");//Display name
 			return;
 		}
 		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13
 		//player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 131));
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1846, 0));
-		player.getPacketDispatcher().dispatchVar(new VarMessage(1845, 32768));
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1500, member.getRank().getID()));//Rank
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1501, 129));//Job
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1564, 0));//[Unknown]
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1566, member.isBannedFromCitadel() ? 1 : 0));//Ban from citadel
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1565, 0));//Ban from keep
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1567, 0));//Ban from island
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1568, 2));//Probation status
-		player.getPacketDispatcher().dispatchVar(VarMessage.varcStr(2521, member.getDisplayName()));//Display name
+		player.getVarManager().setVarPlayer(1846, 0);
+		player.getVarManager().setVarPlayer(1845, 32768);
+		player.getVarManager().setVarClient(1500, member.getRank().getID());//Rank
+		player.getVarManager().setVarClient(1501, 129);//Job
+		player.getVarManager().setVarClient(1564, 0);//[Unknown]
+		player.getVarManager().setVarClient(1566, member.isBannedFromCitadel() ? 1 : 0);//Ban from citadel
+		player.getVarManager().setVarClient(1565, 0);//Ban from keep
+		player.getVarManager().setVarClient(1567, 0);//Ban from island
+		player.getVarManager().setVarClient(1568, 2);//Probation status
+		player.getVarManager().setVarClient(2521, member.getDisplayName());//Display name
 		
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));
 	}
@@ -319,35 +319,35 @@ public class ClanSettingsInterface extends AbstractInterface {
 	}
 	
 	public void setPermissionGroup (ClanRank rank) {
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1569, rank.getID()));//Received VarClient: key=1569, value=100
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1571, 1));//Received VarClient: key=1571, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1570, 1));//Received VarClient: key=1570, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1572, 1));//Received VarClient: key=1572, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1574, 1));//Received VarClient: key=1574, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1573, 1));//Received VarClient: key=1573, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1575, 1));//Received VarClient: key=1575, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1576, 1));//Received VarClient: key=1576, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1577, 1));//Received VarClient: key=1577, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1578, 1));//Received VarClient: key=1578, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1579, 1));//Received VarClient: key=1579, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1580, 1));//Received VarClient: key=1580, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1581, 1));//Received VarClient: key=1581, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1582, 1));//Received VarClient: key=1582, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1583, 1));//Received VarClient: key=1583, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1584, 1));//Received VarClient: key=1584, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1585, 1));//Received VarClient: key=1585, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1586, 1));//Received VarClient: key=1586, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1587, 1));//Received VarClient: key=1587, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1589, 1));//Received VarClient: key=1589, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1649, 0));//Received VarClient: key=1649, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1792, 1));//Received VarClient: key=1792, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1793, 1));//Received VarClient: key=1793, value=1
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2001, 0));//Received VarClient: key=2001, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2002, 0));//Received VarClient: key=2002, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(2003, 0));//Received VarClient: key=2003, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(1590, 0));//Received VarClient: key=1590, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(3855, 0));//Received VarClient: key=3855, value=0
-		player.getPacketDispatcher().dispatchVar(VarMessage.varc(4125, 0));//Received VarClient: key=4125, value=0
+		player.getVarManager().setVarClient(1569, rank.getID());//Received VarClient: key=1569, value=100
+		player.getVarManager().setVarClient(1571, 1);//Received VarClient: key=1571, value=1
+		player.getVarManager().setVarClient(1570, 1);//Received VarClient: key=1570, value=1
+		player.getVarManager().setVarClient(1572, 1);//Received VarClient: key=1572, value=1
+		player.getVarManager().setVarClient(1574, 1);//Received VarClient: key=1574, value=1
+		player.getVarManager().setVarClient(1573, 1);//Received VarClient: key=1573, value=1
+		player.getVarManager().setVarClient(1575, 1);//Received VarClient: key=1575, value=1
+		player.getVarManager().setVarClient(1576, 1);//Received VarClient: key=1576, value=1
+		player.getVarManager().setVarClient(1577, 1);//Received VarClient: key=1577, value=1
+		player.getVarManager().setVarClient(1578, 1);//Received VarClient: key=1578, value=1
+		player.getVarManager().setVarClient(1579, 1);//Received VarClient: key=1579, value=1
+		player.getVarManager().setVarClient(1580, 1);//Received VarClient: key=1580, value=1
+		player.getVarManager().setVarClient(1581, 1);//Received VarClient: key=1581, value=1
+		player.getVarManager().setVarClient(1582, 1);//Received VarClient: key=1582, value=1
+		player.getVarManager().setVarClient(1583, 1);//Received VarClient: key=1583, value=1
+		player.getVarManager().setVarClient(1584, 1);//Received VarClient: key=1584, value=1
+		player.getVarManager().setVarClient(1585, 1);//Received VarClient: key=1585, value=1
+		player.getVarManager().setVarClient(1586, 1);//Received VarClient: key=1586, value=1
+		player.getVarManager().setVarClient(1587, 1);//Received VarClient: key=1587, value=1
+		player.getVarManager().setVarClient(1589, 1);//Received VarClient: key=1589, value=1
+		player.getVarManager().setVarClient(1649, 0);//Received VarClient: key=1649, value=0
+		player.getVarManager().setVarClient(1792, 1);//Received VarClient: key=1792, value=1
+		player.getVarManager().setVarClient(1793, 1);//Received VarClient: key=1793, value=1
+		player.getVarManager().setVarClient(2001, 0);//Received VarClient: key=2001, value=0
+		player.getVarManager().setVarClient(2002, 0);//Received VarClient: key=2002, value=0
+		player.getVarManager().setVarClient(2003, 0);//Received VarClient: key=2003, value=0
+		player.getVarManager().setVarClient(1590, 0);//Received VarClient: key=1590, value=0
+		player.getVarManager().setVarClient(3855, 0);//Received VarClient: key=3855, value=0
+		player.getVarManager().setVarClient(4125, 0);//Received VarClient: key=4125, value=0
 	}
 
 	@Override

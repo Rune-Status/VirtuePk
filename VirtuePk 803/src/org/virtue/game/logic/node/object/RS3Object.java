@@ -1,8 +1,20 @@
 package org.virtue.game.logic.node.object;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.virtue.Constants;
 import org.virtue.cache.def.ObjectDefinition;
 import org.virtue.cache.def.ObjectDefinitionLoader;
+import org.virtue.game.logic.content.skills.farming.FarmingPatch;
+import org.virtue.game.logic.content.skills.mining.MiningRock;
+import org.virtue.game.logic.content.skills.mining.Ore;
+import org.virtue.game.logic.content.skills.runecrafting.AlterDefinition;
+import org.virtue.game.logic.content.skills.runecrafting.MysteriousRunes;
+import org.virtue.game.logic.content.skills.runecrafting.Runecrafting;
+import org.virtue.game.logic.content.skills.runecrafting.RunecraftingAlter;
+import org.virtue.game.logic.content.skills.woodcutting.TreeDefinition;
+import org.virtue.game.logic.content.skills.woodcutting.WoodcuttingTree;
 import org.virtue.game.logic.item.Item;
 import org.virtue.game.logic.node.Node;
 import org.virtue.game.logic.node.entity.player.Player;
@@ -15,6 +27,91 @@ import org.virtue.game.logic.region.Tile;
  * @date Jan 21, 2014
  */
 public class RS3Object extends Node {
+	
+	private static final Map<Integer, Class<? extends RS3Object>> transforms = new HashMap<Integer, Class<? extends RS3Object>>();
+	
+	public static void initTransforms () {
+		for (FarmingPatch.Definition patch : FarmingPatch.Definition.values()) {
+			transforms.put(patch.getObjectID(), FarmingPatch.class);
+		}
+		for (AlterDefinition alter : AlterDefinition.values()) {
+			transforms.put(alter.getAlterID(), RunecraftingAlter.class);
+		}
+		for (MysteriousRunes.Definition runes : MysteriousRunes.Definition.values()) {
+			transforms.put(runes.getObjectID(), MysteriousRunes.class);
+		}
+		System.out.println("Initialised "+transforms.size()+" object transforms.");
+		/*for (Runecrafting.ExitPortal portal : Runecrafting.ExitPortal.values()) {
+			transforms.put(portal.getID(), Portal.class);
+		}*/
+	}
+	
+	public static RS3Object create (int id, int rotation, int type, Tile tile) {
+		if (transforms.containsKey(id)) {
+			Class<? extends RS3Object> transform = transforms.get(id);
+			if(transform.equals(FarmingPatch.class)) {
+				return new FarmingPatch(id, rotation, type, tile, FarmingPatch.Definition.forID(id));
+			} else if (transform.equals(RunecraftingAlter.class)) {
+				return new RunecraftingAlter(id, rotation, type, tile, AlterDefinition.forAlterID(id));
+			} else if (transform.equals(MysteriousRunes.class)) {
+				return new MysteriousRunes(id, rotation, type, tile, MysteriousRunes.Definition.forID(id));
+			}
+		}
+		Runecrafting.ExitPortal portal = Runecrafting.ExitPortal.forID(id);
+		if (portal != null) {
+			return new Portal(id, rotation, type, tile, portal.getDestination());
+		}
+		RS3Object object = new RS3Object(id, rotation, type, tile);
+		switch (object.getDefinition().getName().toLowerCase()) {
+			case "clay rocks":
+			case "clay vein":
+				return new MiningRock(object, Ore.CLAY);
+			case "copper ore rocks":
+			case "copper ore vein":
+				return new MiningRock(object, Ore.COPPER);
+			case "tin ore rocks":
+			case "tin ore vein":
+				return new MiningRock(object, Ore.TIN);
+			case "iron ore rocks":
+			case "iron ore vein":
+				return new MiningRock(object, Ore.IRON);
+			case "silver ore rocks":
+				return new MiningRock(object, Ore.SILVER);
+			case "coal rocks":
+				return new MiningRock(object, Ore.COAL);
+			case "gold ore rocks":
+				return new MiningRock(object, Ore.GOLD);
+			case "mithril ore rocks":
+				return new MiningRock(object, Ore.MITHRIL);
+			case "adamantite ore rocks":
+				return new MiningRock(object, Ore.ADAMANTITE);
+			case "runite ore rocks":
+				return new MiningRock(object, Ore.RUNITE);
+			case "tree":
+				return new WoodcuttingTree(object, TreeDefinition.NORMAL);
+			case "oak tree":
+			case "oak":
+				return new WoodcuttingTree(object, TreeDefinition.OAK);
+			case "willow tree":
+			case "willow":
+				return new WoodcuttingTree(object, TreeDefinition.WILLOW);
+			case "teak":
+				return new WoodcuttingTree(object, TreeDefinition.TEAK);
+			case "maple tree":
+			case "maple":
+				return new WoodcuttingTree(object, TreeDefinition.MAPLE);
+			case "mahogany":
+				return new WoodcuttingTree(object, TreeDefinition.MAHOGANY);
+			case "yew tree":
+			case "yew":
+				return new WoodcuttingTree(object, TreeDefinition.YEW);
+			case "magic tree":
+				return new WoodcuttingTree(object, TreeDefinition.MAGIC);
+			case "elder tree":
+				return new WoodcuttingTree(object, TreeDefinition.ELDER);
+		}
+		return object;
+	}
 	
 	/**
 	 * Represents the ID of this object.
@@ -32,10 +129,8 @@ public class RS3Object extends Node {
 	private int type;
 	
 	/**
-	 * Represents the tile.
+	 * Represents the cache information for the object	
 	 */
-	private Tile tile;
-	
 	private ObjectDefinition definition;
 	
 	/**
@@ -44,11 +139,11 @@ public class RS3Object extends Node {
 	 * @param rotation The rotation.
 	 * @param type The type.
 	 */
-	public RS3Object(int id, int rotation, int type, Tile tile) {
+	protected RS3Object(int id, int rotation, int type, Tile tile) {
 		this.id = id;
 		this.rotation = rotation;
 		this.type = type;
-		this.tile = tile;
+		super.setTile(tile);
 		this.definition = ObjectDefinitionLoader.forId(id);
 	}
 
@@ -93,20 +188,6 @@ public class RS3Object extends Node {
 	 */
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	/**
-	 * @return the tile
-	 */
-	public Tile getTile() {
-		return tile;
-	}
-
-	/**
-	 * @param tile the tile to set
-	 */
-	public void setTile(Tile tile) {
-		this.tile = tile;
 	}
 	
 	/**

@@ -167,6 +167,7 @@ public final class Cache implements Closeable {
 	 * @param name
 	 *            the name of the file
 	 * @return The file id.
+	 * @throws java.io.IOException
 	 */
 	public int getFileId(int type, String name) throws IOException {
 		int identifier = Djb2.djb2(name);
@@ -279,7 +280,7 @@ public final class Cache implements Closeable {
 	 *            The type of the file.
 	 * @param file
 	 *            The archive id.
-	 * @param file
+	 * @param member
 	 *            The file within the archive.
 	 * @return The file.
 	 * @throws IOException
