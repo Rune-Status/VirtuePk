@@ -22,11 +22,15 @@ package org.virtue.game.config;
  * 4/04/2014
  * @author James
  */
-public class ClientVarps {
+public class ClientVars {
 	
 	public static final int XP_COUNTER_1_VALUE = 91;
 	public static final int XP_COUNTER_2_VALUE = 92;
 	public static final int XP_COUNTER_3_VALUE = 93;
+	
+	//Chat filters - 8498
+	public static final int FILTER_1_VARBIT = 18795;//varp 3707 0-15
+	public static final int FILTER_2_VARBIT = 18795;//varp 3707 0-15
 	
 	private static final int[] LOBBY_VARPS_803 = new int[4500];
 	private static final int[] GAME_VARPS_803 = new int[4500];

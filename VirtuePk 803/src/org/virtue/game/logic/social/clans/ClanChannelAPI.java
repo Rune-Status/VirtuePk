@@ -16,7 +16,7 @@
  */
 package org.virtue.game.logic.social.clans;
 
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 
 /**
  * An {@link Interface} for communicating between the chat management module and the clan channel manager module
@@ -24,20 +24,20 @@ import org.virtue.game.logic.social.SocialUser;
  * @author Sundays211
  * @since May 22, 2014
  */
-public interface ClanChannelManager {
+public interface ClanChannelAPI {
 	
 	/**
 	 * Sends a request to join the player's clan chat channel
 	 * @param player	The player joining the channel
 	 */
-	public void joinMyChannel(SocialUser player);
+	public void joinMyChannel(SocialUserAPI player);
 	
 	/**
 	 * Sends a request for the player to join another clan's chat channel as a guest
 	 * @param player	The player joining the channel
 	 * @param clanName	The name of the clan the player is attempting to join the chat channel of
 	 */
-	public void joinGuestChannel (SocialUser player, String clanName);
+	public void joinGuestChannel (SocialUserAPI player, String clanName);
 	
 	/**
 	 * Sends a request to remove the player from their current clan chat channel
@@ -45,7 +45,7 @@ public interface ClanChannelManager {
 	 * @param isGuest	True if the player is leaving their guest channel
 	 * @param isLogout	If true, the player will rejoin the channel when they next log in
 	 */
-	public void leaveChannel (SocialUser player, boolean isGuest, boolean isLogout);
+	public void leaveChannel (SocialUserAPI player, boolean isGuest, boolean isLogout);
 	
 	/**
 	 * Sends a message in a clan channel the player is currently in
@@ -53,6 +53,6 @@ public interface ClanChannelManager {
 	 * @param message	The message to send
 	 * @param isGuest	Whether the message is being sent in a guest channel or not
 	 */
-	public void sendMessage (SocialUser player, String message, boolean isGuest);
+	public void sendMessage (SocialUserAPI player, String message, boolean isGuest);
 
 }

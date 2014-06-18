@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
@@ -30,7 +30,7 @@ import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
  * @author Sundays211
  * @since May 22, 2014
  */
-public class InternalClanChannelManager implements ClanChannelManager {
+public class InternalClanChannelManager implements ClanChannelAPI {
 	
 	private Map<Long, ClanChannel> clanCache = Collections.synchronizedMap(new HashMap<Long, ClanChannel>());
 	
@@ -66,7 +66,7 @@ public class InternalClanChannelManager implements ClanChannelManager {
 	}
 	
 	@Override
-	public void joinMyChannel(SocialUser player) {
+	public void joinMyChannel(SocialUserAPI player) {
 		long clanHash = player.getMyClanHash();
 		//System.out.println("Joining channel "+clanHash);
 		ClanChannel channel = getClanChannel(clanHash);
@@ -84,7 +84,7 @@ public class InternalClanChannelManager implements ClanChannelManager {
 	}
 	
 	@Override
-	public void joinGuestChannel (SocialUser player, String clanName) {
+	public void joinGuestChannel (SocialUserAPI player, String clanName) {
 		long clanHash = clanManager.getClanIndex().resolveClan(clanName);
 		if (clanHash == 0L) {
 			player.sendSystemMessage("Could not find a clan named "+clanName+". Please check the name and try again.", MessageOpcode.CLAN_SYSTEM);
@@ -110,7 +110,7 @@ public class InternalClanChannelManager implements ClanChannelManager {
 	}
 	
 	@Override
-	public void leaveChannel (SocialUser player, boolean isGuest, boolean isLogout) {
+	public void leaveChannel (SocialUserAPI player, boolean isGuest, boolean isLogout) {
 		//InternalSocialUser user = new InternalSocialUser(player);
 		long clanHash = isGuest ? player.getGuestClanHash() : player.getMyClanHash();
 		if (clanHash == 0L) {
@@ -130,7 +130,7 @@ public class InternalClanChannelManager implements ClanChannelManager {
 	}
 	
 	@Override
-	public void sendMessage (SocialUser user, String message, boolean isGuest) {
+	public void sendMessage (SocialUserAPI user, String message, boolean isGuest) {
 		//InternalSocialUser user = new InternalSocialUser(player);
 		long clanHash = isGuest ? user.getGuestClanHash() : user.getMyClanHash();
 		ClanChannel channel = getClanChannel(clanHash);

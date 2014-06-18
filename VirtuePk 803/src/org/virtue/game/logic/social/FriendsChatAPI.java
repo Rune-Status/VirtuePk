@@ -22,33 +22,33 @@ package org.virtue.game.logic.social;
  *
  * @author Sundays211
  */
-public interface FriendsChatManager {
+public interface FriendsChatAPI {
 	
 	/**
 	 * Sends a request for the specified player to join the specified channel
 	 * @param player	The player wishing to join the channel
 	 * @param owner		The name of the owner who's channel the player wishes to join
 	 */
-	public void joinChannel(SocialUser player, String owner);
+	public void joinChannel(SocialUserAPI player, String owner);
 	
 	/**
 	 * Sends a request for the specified player to leave their current channel
 	 * @param player	The player who wishes to leave the channel
 	 */
-	public void leaveChannel(SocialUser player, boolean isLoggedOut);
+	public void leaveChannel(SocialUserAPI player, boolean isLoggedOut);
 	
 	/**
 	 * Sends a normal message within the friends chat channel
 	 * @param player	The player sending the message
 	 * @param message	The message being sent
 	 */
-	public void sendMessage(SocialUser player, String message);
+	public void sendMessage(SocialUserAPI player, String message);
 	
 	/**
 	 * Sends a request to kick/ban a user from the channel
 	 * @param player	The player sending the request
 	 * @param user		The name of the user being kicked/banned.
 	 */
-	public void kickBanUser (SocialUser player, String user);
+	public void kickBanUser (SocialUserAPI player, String user);
 	
 }

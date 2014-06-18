@@ -20,6 +20,9 @@ public class ClanSettingsDeltaEncoder implements PacketEncoder<ClanSettingsDelta
 		buffer.putLong(0L);//owner (doesn't seem to be used)
 		buffer.putInt(node.getUpdateNumber());
 		for (ClanSettingsDelta delta : node.getDeltaNodes()) {
+			if (delta.getTypeID() <= 0) {
+				continue;
+			}
 			buffer.put(delta.getTypeID());
 			delta.packDelta(buffer);
 		}

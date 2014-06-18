@@ -22,19 +22,25 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
 import org.virtue.game.logic.social.clans.csdelta.AddMember;
 import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
 import org.virtue.game.logic.social.clans.csdelta.DeleteMember;
+import org.virtue.game.logic.social.clans.csdelta.SetClanSettingsVarBit;
 import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
+import org.virtue.game.logic.social.clans.csdelta.SetClanSettingsVar;
 import org.virtue.game.logic.social.messages.ClanSettingsDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanSettingsPacket;
+import org.virtue.game.logic.vars.VarBitOverflowException;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the underlying settings data for a clan
@@ -67,11 +73,13 @@ public class ClanSettings {
 	
 	private final List<ClanBan> bans = Collections.synchronizedList(new ArrayList<ClanBan>());
 	
-	private final List<SocialUser> onlineMembers = Collections.synchronizedList(new ArrayList<SocialUser>());
+	private final List<SocialUserAPI> onlineMembers = Collections.synchronizedList(new ArrayList<SocialUserAPI>());
 	
-	private final Queue<SocialUser> initQueue = new LinkedList<SocialUser>();
+	private final Queue<SocialUserAPI> initQueue = new LinkedList<SocialUserAPI>();
 	
 	private final Queue<ClanSettingsDelta> updateQueue = new LinkedList<ClanSettingsDelta>();
+	
+	private final Map<Integer, Object> varClanSettings = Collections.synchronizedMap(new HashMap<Integer, Object>());
 	
 	private boolean needsSave;
 	
@@ -123,7 +131,7 @@ public class ClanSettings {
 		}
 		ClanSettingsDeltaPacket memberPacket = new ClanSettingsDeltaPacket(false, thisUpdate, deltaNodes);
 		synchronized (onlineMembers) {
-			for (SocialUser u : onlineMembers) {
+			for (SocialUserAPI u : onlineMembers) {
 				u.sendClanSettingsDelta(memberPacket);
 			}
 		}
@@ -139,8 +147,9 @@ public class ClanSettings {
 		}
 		ClanSettingsPacket.Member[] entries;
 		String[] banEntries;
-		synchronized (onlineMembers) {
-			for (SocialUser u : initQueue) {
+		ClanSettingsPacket.VarClanSetting[] varSettingsEntries;
+		synchronized (onlineMembers) {			
+			for (SocialUserAPI u : initQueue) {
 				onlineMembers.add(u);
 			}
 		}
@@ -148,7 +157,7 @@ public class ClanSettings {
 			entries = new ClanSettingsPacket.Member[members.size()];
 			for (int i=0;i<members.size();i++) {
 				ClanMember u = members.get(i);
-				entries[i] = new ClanSettingsPacket.Member(u.getDisplayName(), u.getRank());
+				entries[i] = new ClanSettingsPacket.Member(u.getDisplayName(), u.getRank(), 0, u.getJoinDay());
 			}
 		}
 		synchronized (bans) {
@@ -157,15 +166,22 @@ public class ClanSettings {
 				banEntries[i] = bans.get(i).getDisplayName();
 			}
 		}
+		synchronized (varClanSettings) {
+			varSettingsEntries = new ClanSettingsPacket.VarClanSetting[varClanSettings.size()];
+			int i=0;
+			for (Map.Entry<Integer, Object> setting : varClanSettings.entrySet()) {
+				varSettingsEntries[i++] = new ClanSettingsPacket.VarClanSetting(setting.getKey(), setting.getValue());
+			}
+		}
 		ClanSettingsPacket packet = new ClanSettingsPacket(false, clanName, entries, banEntries,
-					updateNumber, allowNonMembers, minTalkRank, minKickRank);
-		SocialUser user;
+					updateNumber, allowNonMembers, minTalkRank, minKickRank, varSettingsEntries);
+		SocialUserAPI user;
 		while ((user = initQueue.poll()) != null) {
 			user.sendClanSettingsFull(packet);
 		}
 	}
 	
-	public void registerOnlineMember (SocialUser user) {
+	public void registerOnlineMember (SocialUserAPI user) {
 		synchronized(initQueue) {
 			if (!initQueue.contains(user)) {
 				initQueue.offer(user);
@@ -173,7 +189,7 @@ public class ClanSettings {
 		}
 	}
 	
-	public void deregisterOnlineMember (SocialUser user) {
+	public void deregisterOnlineMember (SocialUserAPI user) {
 		synchronized(initQueue) {
 			if (initQueue.contains(user)) {
 				initQueue.remove(user);
@@ -206,7 +222,9 @@ public class ClanSettings {
 			if (rank == null) {
 				rank = ClanRank.RECRUIT;
 			}
-			members.add(new ClanMember(protocolName, rank));
+			int varClanMember = memberData.get("varClanMember") == null ? 0 : memberData.get("varClanMember").getAsInt();
+			int joinDay = memberData.get("joinDay") == null ? 0 : memberData.get("joinDay").getAsInt();
+			members.add(new ClanMember(protocolName, rank, varClanMember, joinDay));
 		}
 		findClanOwner();//Finds the owner of the clan
 		JsonArray banData = clanData.get("bans").getAsJsonArray();
@@ -214,6 +232,30 @@ public class ClanSettings {
 		for (JsonElement ban : banData) {
 			bans.add(new ClanBan(ban.getAsString()));
 		}
+		JsonArray clanSettingsNode = clanData.get("varClanSettings") == null ? null : clanData.get("varClanSettings").getAsJsonArray();
+		if (clanSettingsNode != null) {
+			varClanSettings.clear();
+			for (JsonElement varSettingsElement : clanSettingsNode) {
+				JsonObject settingsData = varSettingsElement.getAsJsonObject();
+				int key = settingsData.get("key").getAsInt();
+				char type = settingsData.get("type").getAsCharacter();
+				Object value;
+				switch (type) {
+					case 's':
+						value = settingsData.get("value").getAsString();
+						break;
+					case 'i':
+						value = settingsData.get("value").getAsInt();
+						break;
+					case 'l':
+						value = settingsData.get("value").getAsLong();
+					default:
+						throw new RuntimeException("Invalid varClanSettings type for key="+key+", type="+type);
+				}
+				varClanSettings.put(key, value);
+			}
+		}
+		
 	}
 	
 	public JsonObject serialise () {
@@ -234,6 +276,8 @@ public class ClanSettings {
 			JsonObject data = new JsonObject();
 			data.addProperty("username", member.getProtocolName());
 			data.addProperty("rank", member.getRank().getID());
+			data.addProperty("varClanMember", member.getVarClanMember());
+			data.addProperty("joinDay", member.getJoinDay());
 			memberData.add(data);
 		}
 		clanData.add("members", memberData);
@@ -245,6 +289,27 @@ public class ClanSettings {
 		}
 		clanData.add("bans", banData);
 		
+		//VarClanSettings
+		JsonArray settingsData = new JsonArray();
+		for (Map.Entry<Integer, Object> varSetting : varClanSettings.entrySet()) {
+			JsonObject data = new JsonObject();
+			data.addProperty("key", varSetting.getKey());
+			Object value = varSetting.getValue();
+			if (value instanceof String) {
+				data.addProperty("type", 's');
+				data.addProperty("value", (String) value);
+			} else if (value instanceof Long) {
+				data.addProperty("type", 'l');
+				data.addProperty("value", (Long) value);
+			} else if (value instanceof Integer) {
+				data.addProperty("type", 'i');
+				data.addProperty("value", (Integer) value);
+			} else {
+				throw new RuntimeException("Invalid varClanSettings type for key "+varSetting.getKey());
+			}
+			settingsData.add(data);
+		}
+		clanData.add("varClanSettings", settingsData);
 		return clanData;
 	}
 	
@@ -411,7 +476,7 @@ public class ClanSettings {
 		}
 	}
 	
-	public void sendMemberInfo (SocialUser user, int index) {
+	public void sendMemberInfo (SocialUserAPI user, int index) {
 		user.sendClanMemberInfo(members.get(index));
 	}
 	
@@ -420,7 +485,7 @@ public class ClanSettings {
 	 * Note that setting the player's clan within the player data and sending the clan channel must be handled separately
 	 * @param player The player to add to the clan
 	 */
-	protected void addMember (SocialUser player) {
+	 protected void addMember (SocialUserAPI player) {
 		if (inClan(player.getProtocolName())) {
 			return;
 		}
@@ -496,6 +561,72 @@ public class ClanSettings {
 			linkedChannel.updateUser(newOwner.getProtocolName());
 		}
 		
+	}
+	
+	protected boolean setClanSettingsVarBit (int key, int value, int start, int end) throws VarBitOverflowException {
+		int maxValue = (1 << (end - start + 1))-1;
+		if (value > maxValue || value < 0) {
+			throw new VarBitOverflowException("VarClanSettings "+key+"("+start+"-"+end+") value "+value+" is outside the allowed range of 0-"+maxValue);
+		}
+		int i_21_ = (1 << start) - 1;
+		int i_22_ = 31 == end ? -1 : (1 << 1 + end) - 1;
+		int mask = i_22_ ^ i_21_;
+		value <<= start;
+		value &= mask;
+		synchronized (varClanSettings) {
+			Object prevValue = varClanSettings.get(key);		
+			if (prevValue == null) {
+				varClanSettings.put(key, value);
+			} else if (prevValue instanceof Integer) {
+				int prevValueInt = (int) prevValue;
+				if ((prevValueInt & mask) == value) {
+					return true;//No updated needed as value hasn't changed
+				}
+				varClanSettings.remove(key);
+				prevValueInt &= (mask ^ 0xffffffff);
+				prevValueInt |= value;
+				varClanSettings.put(key, prevValueInt);
+			} else {
+				return false;
+			}
+		}
+		synchronized (updateQueue) {
+			queueUpdate(new SetClanSettingsVarBit(key, value, start, end));
+		}
+		return true;
+	}
+	
+	protected void setClanSettingsVar (int key, Object value) {
+		SetClanSettingsVar deltaNode = new SetClanSettingsVar(key, value);
+		if (deltaNode.getTypeID() == -1) {
+			throw new RuntimeException("Invalid value type");
+		}
+		synchronized (varClanSettings) {
+			if (varClanSettings.containsKey(key)) {
+				Object oldValue = varClanSettings.get(key);
+				if (oldValue.equals(value)) {
+					return;
+				}
+				varClanSettings.remove(key);
+			}
+			varClanSettings.put(key, value);
+		}
+		synchronized (updateQueue) {
+			queueUpdate(deltaNode);
+		}
+	}
+	
+	public String getClanSettingsVarString (int key) {
+		return (String) varClanSettings.get(key);
+	}
+	
+	public int getClanSettingsVarInt (int key) {
+		return (int) varClanSettings.get(key);
+	}
+	
+	public int getClanSettingsVarBit (int key, int start, int end) {
+		int mask = (start == 31) ? -1 : (1 << 1 + end) - 1;
+		return (getClanSettingsVarInt(key) & mask) >>> start;
 	}
 	
 	@Override

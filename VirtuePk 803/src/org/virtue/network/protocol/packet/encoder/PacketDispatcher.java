@@ -9,7 +9,6 @@ import org.virtue.game.logic.node.entity.player.Viewport;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.game.logic.region.Tile;
-import org.virtue.game.logic.vars.VarDomainType;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.EntityOptionMessage;
 import org.virtue.network.protocol.messages.GameMessage;
@@ -171,10 +170,6 @@ public class PacketDispatcher {
 	 */
 	public void dispatchSceneUpdate() {
 		player.getAccount().getSession().getTransmitter().send(MapSceneEncoder.class, player.getViewport());
-	}
-	
-	public void dispatchVarp(int id, int value) {
-		dispatchVar(new VarMessage(VarDomainType.PLAYER, id, value));
 	}
 	
 	/**

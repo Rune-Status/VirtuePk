@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.clans.ccdelta.AddMember;
 import org.virtue.game.logic.social.clans.ccdelta.ClanChannelDelta;
 import org.virtue.game.logic.social.clans.ccdelta.DeleteMember;
@@ -41,9 +41,9 @@ public class ClanChannel {
 	
 	private final Queue<ClanChannelDelta> updates = new LinkedList<ClanChannelDelta>();
 	
-	private final Queue<SocialUser> initQueue = new LinkedList<SocialUser>();
+	private final Queue<SocialUserAPI> initQueue = new LinkedList<SocialUserAPI>();
 	
-	private final List<SocialUser> users = new ArrayList<SocialUser>();
+	private final List<SocialUserAPI> users = new ArrayList<SocialUserAPI>();
 	
 	private long updateNumber;
 	
@@ -62,7 +62,7 @@ public class ClanChannel {
 		return clanData;
 	}
 	
-	protected boolean join (SocialUser player, boolean isGuest) {
+	protected boolean join (SocialUserAPI player, boolean isGuest) {
 		//System.out.println("Joining clan "+clanData.getClanName()+" of hash "+clanData.getClanHash()+" as a guest.");
 		//TODO: Check whether the channel is full
 		synchronized (users) {
@@ -81,12 +81,12 @@ public class ClanChannel {
 	 * @param isGuest	Whether the user is leaving a guest clan channel
 	 * @return			True if the player was the last user in the channel (and therefore is empty), false otherwise
 	 */
-	protected boolean leave (SocialUser player, boolean isGuest) {
+	protected boolean leave (SocialUserAPI player, boolean isGuest) {
 		removeUser(player);
 		return users.isEmpty();
 	}
 	
-	protected void removeUser (SocialUser user) {
+	protected void removeUser (SocialUserAPI user) {
 		int index;
 		synchronized (users) {
 			index = users.indexOf(user);
@@ -99,8 +99,8 @@ public class ClanChannel {
 		}		
 	}
 	
-	public SocialUser getUser (String protocolName) {
-		for (SocialUser u : users) {
+	public SocialUserAPI getUser (String protocolName) {
+		for (SocialUserAPI u : users) {
 			if (u.getProtocolName().equalsIgnoreCase(protocolName)) {
 				return u;
 			}
@@ -119,7 +119,7 @@ public class ClanChannel {
 	 */
 	protected void sendMessage (ClanChannelMessage mainMessage, ClanChannelMessage guestMessage) {
 		synchronized (users) {
-			for (SocialUser u : users) {
+			for (SocialUserAPI u : users) {
 				if (u == null) {
 					continue;
 				}
@@ -148,9 +148,9 @@ public class ClanChannel {
 	 */
 	protected void updateUser (String protocolName) {
 		//int index;
-		SocialUser member = null;
+		SocialUserAPI member = null;
 		synchronized (users) {
-			for (SocialUser u : users) {
+			for (SocialUserAPI u : users) {
 				//SocialUser u = users.get(index);
 				if (u.getProtocolName().equalsIgnoreCase(protocolName)) {
 					member = u;
@@ -185,7 +185,7 @@ public class ClanChannel {
 		ClanChannelDeltaPacket memberPacket = new ClanChannelDeltaPacket(false, clanData.getClanHash(), thisUpdate, deltaNodes);
 		ClanChannelDeltaPacket guestPacket = new ClanChannelDeltaPacket(true, clanData.getClanHash(), thisUpdate, deltaNodes);
 		synchronized (users) {
-			for (SocialUser u : users) {
+			for (SocialUserAPI u : users) {
 				if (u.isMyClan(clanData.getClanHash())) {
 					u.sendClanChannelDelta(memberPacket);
 				} else {
@@ -205,16 +205,16 @@ public class ClanChannel {
 		}
 		ClanChannelPacket.User[] entries;
 		synchronized (users) {
-			for (SocialUser u : initQueue) {
+			for (SocialUserAPI u : initQueue) {
 				users.add(u);
 			}
 			entries = new ClanChannelPacket.User[users.size()];
 			for (int i=0;i<users.size();i++) {
-				SocialUser u = users.get(i);
+				SocialUserAPI u = users.get(i);
 				entries[i] = new ClanChannelPacket.User(u.getDisplayName(), clanData.getRank(u.getProtocolName()), u.getWorldID());
 			}
 		}
-		SocialUser u = null;
+		SocialUserAPI u = null;
 		while ((u = initQueue.poll()) != null) {
 			//System.out.println("Sending init packet to player "+u.getDisplayName()+", clan="+clanData.getClanName()+", isGuest="+!u.isMyClan(clanData.getClanHash()));
 			sendInitPacket(u, entries, !u.isMyClan(clanData.getClanHash()));
@@ -227,7 +227,7 @@ public class ClanChannel {
 	 * @param entires	An array of users currently in the channel
 	 * @param isGuest	Whether the user is a guest in this channel
 	 */
-	private void sendInitPacket (SocialUser user, ClanChannelPacket.User[] entries, boolean isGuest) {
+	private void sendInitPacket (SocialUserAPI user, ClanChannelPacket.User[] entries, boolean isGuest) {
 		ClanChannelPacket packet = new ClanChannelPacket(isGuest, entries, clanData.getClanHash(),
 				updateNumber, clanData.getClanName(), clanData.getMinTalk(), clanData.getMinKick());
 		user.sendClanChannelFull(packet);

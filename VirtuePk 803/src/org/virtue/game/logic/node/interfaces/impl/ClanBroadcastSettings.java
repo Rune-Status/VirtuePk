@@ -20,16 +20,16 @@ public class ClanBroadcastSettings extends AbstractInterface {
 
 	@Override
 	public void postSend() {
-		player.getPacketDispatcher().dispatchVarp(4285, -1);
-		player.getPacketDispatcher().dispatchVarp(4276, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4277, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4278, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4279, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4280, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4281, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4282, 16843009);
-		player.getPacketDispatcher().dispatchVarp(4283, 257);
-		player.getPacketDispatcher().dispatchVarp(4284, 0);
+		player.getVarManager().setVarPlayer(4285, -1);
+		player.getVarManager().setVarPlayer(4276, 16843009);
+		player.getVarManager().setVarPlayer(4277, 16843009);
+		player.getVarManager().setVarPlayer(4278, 16843009);
+		player.getVarManager().setVarPlayer(4279, 16843009);
+		player.getVarManager().setVarPlayer(4280, 16843009);
+		player.getVarManager().setVarPlayer(4281, 16843009);
+		player.getVarManager().setVarPlayer(4282, 16843009);
+		player.getVarManager().setVarPlayer(4283, 257);
+		player.getVarManager().setVarPlayer(4284, 0);
 		player.getPacketDispatcher().dispatchClientScriptVar(8178);//Run CS2: [8178]
 		sendInterfaceSettings(59, 0, 126, 2);//IfaceSettings: interface=573, compID=59, fromSlot=0, toSlot=126, settings=2
 		sendInterfaceSettings(5, 0, 30, 2);//IfaceSettings: interface=573, compID=5, fromSlot=0, toSlot=30, settings=2
@@ -47,8 +47,8 @@ public class ClanBroadcastSettings extends AbstractInterface {
 	public void handleActionButton(int component, int slot1, int slot2, ActionButton button) {
 		switch (component) {
 		case 71://Enable all
-			player.getPacketDispatcher().dispatchVarp(4286, 28);//CLIENT_VARPS_803[4286] = 28;
-			player.getPacketDispatcher().dispatchVarp(4285, -1);//CLIENT_VARPS_803[4285] = -1;
+			player.getVarManager().setVarPlayer(4286, 28);//CLIENT_VARPS_803[4286] = 28;
+			player.getVarManager().setVarPlayer(4285, -1);//CLIENT_VARPS_803[4285] = -1;
 		case 65://Disable all
 		case 34://Save button pressed
 		case 47://Save confirmed

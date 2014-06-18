@@ -6,10 +6,10 @@ import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.RSInterface;
 import org.virtue.game.logic.social.clans.ClanMember;
+import org.virtue.game.logic.social.clans.ClanMember.VarClanMember;
 import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
-import org.virtue.network.protocol.messages.VarMessage;
 
 public class ClanSettingsInterface extends AbstractInterface {
 	
@@ -236,17 +236,18 @@ public class ClanSettingsInterface extends AbstractInterface {
 			player.getVarManager().setVarClient(2521, "");//Display name
 			return;
 		}
-		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13
-		//player.getPacketDispatcher().dispatchVarp(new VarMessage(1845, 131));
+		//1845 - bits 0-9, bit 10, bit 11, bit 12, bit 13, bits 14-15, bit 30, bit 31
+		//1846 - bits 0-6, 7-13
+		//player.getVarManager().setVarPlayer(new VarMessage(1845, 131));
 		player.getVarManager().setVarPlayer(1846, 0);
-		player.getVarManager().setVarPlayer(1845, 32768);
+		player.getVarManager().setVarPlayer(1845, member.getVarClanMember());//32768
 		player.getVarManager().setVarClient(1500, member.getRank().getID());//Rank
-		player.getVarManager().setVarClient(1501, 129);//Job
+		player.getVarManager().setVarClient(1501, member.getVarMemberBit(VarClanMember.JOB));//Job
 		player.getVarManager().setVarClient(1564, 0);//[Unknown]
-		player.getVarManager().setVarClient(1566, member.isBannedFromCitadel() ? 1 : 0);//Ban from citadel
-		player.getVarManager().setVarClient(1565, 0);//Ban from keep
-		player.getVarManager().setVarClient(1567, 0);//Ban from island
-		player.getVarManager().setVarClient(1568, 2);//Probation status
+		player.getVarManager().setVarClient(1566, member.getVarMemberBit(VarClanMember.CITADEL_BANNED));//Ban from citadel
+		player.getVarManager().setVarClient(1565, member.getVarMemberBit(VarClanMember.KEEP_BANNED));//Ban from keep
+		player.getVarManager().setVarClient(1567, member.getVarMemberBit(VarClanMember.ISLAND_BANNED));//Ban from island
+		player.getVarManager().setVarClient(1568, member.getVarMemberBit(VarClanMember.PROBATION));//Probation status
 		player.getVarManager().setVarClient(2521, member.getDisplayName());//Display name
 		
 		player.getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(4314));
@@ -319,6 +320,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 	}
 	
 	public void setPermissionGroup (ClanRank rank) {
+		//Received VarPlayer: key=1846, value=637 (rank)
 		player.getVarManager().setVarClient(1569, rank.getID());//Received VarClient: key=1569, value=100
 		player.getVarManager().setVarClient(1571, 1);//Received VarClient: key=1571, value=1
 		player.getVarManager().setVarClient(1570, 1);//Received VarClient: key=1570, value=1

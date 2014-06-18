@@ -37,7 +37,7 @@ import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
  *
  * @author Sundays211
  */
-public interface SocialUser {
+public interface SocialUserAPI {
 	
 	/**
 	 * Gets the current display name for the player

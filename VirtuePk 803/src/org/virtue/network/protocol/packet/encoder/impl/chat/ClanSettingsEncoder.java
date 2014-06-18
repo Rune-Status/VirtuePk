@@ -42,22 +42,44 @@ public class ClanSettingsEncoder implements PacketEncoder<ClanSettingsPacket> {
 		}
 		
 		if (VERSION >= 3) {
-			buffer.putShort(0);
-			//TODO: Implement the varclan-related stuff...
+			buffer.putShort(node.getVarClanSettings().length);
+			for (ClanSettingsPacket.VarClanSetting setting : node.getVarClanSettings()) {
+				packVarClanSetting(buffer, setting.getKey(), setting.getValue());
+			}
 		}
 		
 		buffer.endPacketVarShort();
 		return buffer;
 	}
 	
+	private void packVarClanSetting (RS3PacketBuilder buffer, int key, Object value) {
+		int type = (value instanceof Integer) ? 0 : ((value instanceof Long) ? 1 : ((value instanceof String) ? 2 : 3));
+		key &= 0x3fffffff;
+		key |= type << 30;
+		buffer.putInt(key);
+		switch (type) {
+		case 0:
+			buffer.putInt((Integer) value);
+			break;
+		case 1:
+			buffer.putLong((Long) value);
+			break;
+		case 2:
+			buffer.putString((String) value);
+			break;
+		default:
+			break;
+		}
+	}
+	
 	private void packMember (RS3PacketBuilder buffer, ClanSettingsPacket.Member member) {
 		buffer.putString(member.getDisplayName());
 		buffer.put(member.getRank().getID());
 		if (VERSION >= 2) {
-			buffer.putInt(0);//TODO: Find out what this is
+			buffer.putInt(member.getVarClanMember());
 		}
 		if (VERSION >= 5) {
-			buffer.putShort(0);//Recruitment day (days since 22 February 2002)
+			buffer.putShort(member.getJoinDay());//Recruitment day (days since 22 February 2002)
 		}
 		if (VERSION >= 6) {
 			buffer.put(0);//TODO: Find out what this boolean does

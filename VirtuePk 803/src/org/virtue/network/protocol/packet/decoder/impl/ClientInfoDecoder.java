@@ -15,9 +15,9 @@ public class ClientInfoDecoder implements PacketDecoder<ClientInfoHandler> {
     @Override
     public ClientInfoHandler decodePacket(RS3PacketReader packet, Session session, int opcode) {
         if (opcode == IncommingOpcodes.CLIENT_SPECS_PACKET) {
-        	int heap = packet.getByteA();
-        	int ping = packet.getShortA();
-        	int fps = packet.getByteC();
+        	//int heap = packet.getByteA();
+        	//int ping = packet.getShortA();
+        	//int fps = packet.getByteC();
         	//System.out.println("Client specs: var1="+var1+", ping="+ping+", fps="+fps);
         }
         return null;

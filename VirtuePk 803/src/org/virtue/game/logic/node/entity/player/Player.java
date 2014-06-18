@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.EnumMap;
 
 import org.virtue.Constants;
-import org.virtue.game.config.ClientVarps;
+import org.virtue.game.config.ClientVars;
 import org.virtue.game.logic.World;
 import org.virtue.game.logic.content.combat.ability.AbilityBook;
 import org.virtue.game.logic.content.combat.ability.ActionBar;
@@ -178,7 +178,7 @@ public class Player extends Entity {
 	public void start() {		
 		status = PlayerStatus.WORLD;
 
-		varManager.setVarps(ClientVarps.getGameVarps());
+		varManager.setVarps(ClientVars.getGameVarps());
 		if (IOHub.getAccountIo().exists(account.getUsername().getAccountNameAsProtocol())) {
 			skillManager.deserialise(account.getCharFile().get("skills").getAsJsonArray());
 			inventory.deserialise(account.getCharFile().get("inventory").getAsJsonArray());
@@ -210,7 +210,7 @@ public class Player extends Entity {
 		sendDefaultPlayerOptions();		
 		
 		interfaceManager.sendScreen();
-		varManager.setVarps(ClientVarps.getGameVarps2());
+		varManager.setVarps(ClientVars.getGameVarps2());
 		/*int[] varps2 = ClientVarps.getGameVarps2();
 		for (int i = 0; i < varps2.length; i++) {
 			int val = varps2[i];
@@ -245,7 +245,7 @@ public class Player extends Entity {
 	
 	public void startLobby() {
 		status = PlayerStatus.LOBBY;
-		varManager.setVarps(ClientVarps.getLobbyVarps());
+		varManager.setVarps(ClientVars.getLobbyVarps());
 		varManager.sendAllVarps();
 		account.getSession().getTransmitter().send(GameScreenEncoder.class, DisplayMode.LOBBY);
 		if (IOHub.getAccountIo().exists(account.getUsername().getAccountName())) {

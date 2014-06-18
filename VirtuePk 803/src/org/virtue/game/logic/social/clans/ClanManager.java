@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.virtue.Launcher;
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.network.io.channel.ClanSettingsParser;
 
 /**
@@ -48,7 +48,7 @@ public class ClanManager {
 		Launcher.getEngine().getLogicProcessor().registerEvent(new ClanUpdateEvent(this));
 	}
 	
-	public void registerPlayer (SocialUser user) {
+	public void registerPlayer (SocialUserAPI user) {
 		if (user.getMyClanHash() != 0L) {
 			ClanSettings clanData = getClanData(user.getMyClanHash());
 			if (clanData != null) {
@@ -57,7 +57,7 @@ public class ClanManager {
 		}
 	}
 	
-	public void deregisterPlayer (SocialUser user) {
+	public void deregisterPlayer (SocialUserAPI user) {
 		if (user.getMyClanHash() != 0L) {
 			ClanSettings clanData = getClanData(user.getMyClanHash());
 			if (clanData != null) {
@@ -122,7 +122,7 @@ public class ClanManager {
 		return settings;
 	}
 	
-	public ClanChannelManager getChannelManager () {
+	public ClanChannelAPI getChannelManager () {
 		return clanChatManager;
 	}
 	
@@ -136,7 +136,7 @@ public class ClanManager {
 	 * @param joiner		The user who is joining the clan
 	 * @return				True if the user successfully joined the clan, false otherwise
 	 */
-	public boolean joinClan (SocialUser recruiter, SocialUser joiner) {
+	public boolean joinClan (SocialUserAPI recruiter, SocialUserAPI joiner) {
 		if (joiner.getMyClanHash() != 0L) {
 			return false;//Already in clan
 		}
@@ -165,7 +165,7 @@ public class ClanManager {
 	 * @param founders	The players who will be initially recruited into the clan
 	 * @return		A {@link ClanSettings} object containing the new clan data, or null if a clan already exists with the specified name
 	 */
-	public ClanSettings createClan (String name, SocialUser owner, SocialUser... founders) {
+	public ClanSettings createClan (String name, SocialUserAPI owner, SocialUserAPI... founders) {
 		if (clanIndex.clanExists(name)) {
 			return null;
 		} else {
@@ -176,7 +176,7 @@ public class ClanManager {
 			settings.addMember(owner);
 			settings.registerOnlineMember(owner);
 			clanChatManager.joinMyChannel(owner);
-			for (SocialUser founder : founders) {
+			for (SocialUserAPI founder : founders) {
 				founder.setMyClanHash(clanHash);
 				settings.addMember(founder);
 				settings.registerOnlineMember(founder);
@@ -197,7 +197,7 @@ public class ClanManager {
 	 * @param rank			The rank to change to
 	 * @return				True if the rank was changed successfully, false if there was an error.
 	 */
-	public boolean setRank (long clanHash, SocialUser player, String protocolName, ClanRank rank) {
+	public boolean setRank (long clanHash, SocialUserAPI player, String protocolName, ClanRank rank) {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {
 			//player.getPacketDispatcher().dispatchMessage("You need to be in a clan to do that.", MessageOpcode.CLAN_SYSTEM);
@@ -233,7 +233,7 @@ public class ClanManager {
 		return true;
 	}
 	
-	public boolean leaveMyClan (SocialUser player) {
+	public boolean leaveMyClan (SocialUserAPI player) {
 		long clanHash = player.getMyClanHash();
 		if (clanHash == 0L) {
 			clanChatManager.leaveChannel(player, false, false);
@@ -257,7 +257,7 @@ public class ClanManager {
 		return true;
 	}
 	
-	public boolean kickClanMember (long clanHash, SocialUser player, String protocolName) {
+	public boolean kickClanMember (long clanHash, SocialUserAPI player, String protocolName) {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {	
 			System.out.println("Could not kick clan member - clan does not exist.");

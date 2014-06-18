@@ -22,7 +22,7 @@ package org.virtue.game.logic.social;
  *
  * @author Sundays211
  */
-public interface FriendManager {
+public interface FriendManagerAPI {
 
 	/**
 	 * Runs the initialisation tasks for the player's friends list, such as sending the friends and ignore lists to the player

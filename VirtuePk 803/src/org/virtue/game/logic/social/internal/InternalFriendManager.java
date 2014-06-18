@@ -30,9 +30,9 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.WorldHub;
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
-import org.virtue.game.logic.social.FriendManager;
+import org.virtue.game.logic.social.FriendManagerAPI;
 import org.virtue.game.logic.social.OnlineStatus;
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.messages.PrivateMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.utility.RS2Utils;
@@ -45,7 +45,7 @@ import org.virtue.utility.StringUtils.FormatType;
  *
  * @author Sundays211
  */
-public class InternalFriendManager implements FriendManager {
+public class InternalFriendManager implements FriendManagerAPI {
 	
 	/**
 	 * A map linking the protocol name to the friend manager object for all players which are currently online
@@ -65,7 +65,7 @@ public class InternalFriendManager implements FriendManager {
 		return onlinePlayers.get(name);
 	}
 	
-	private SocialUser player;
+	private SocialUserAPI player;
 	//private NameManager nameManager;
 	
 	private static final int FRIENDS_LIST_MAX = 400;
@@ -93,7 +93,7 @@ public class InternalFriendManager implements FriendManager {
 	
 	private boolean isLobby;
 	
-	public InternalFriendManager (SocialUser player) {
+	public InternalFriendManager (SocialUserAPI player) {
 		this.player = player;
 		fcPermissions.put(ChannelPermission.JOIN, ChannelRank.FRIEND);
 		fcPermissions.put(ChannelPermission.TALK, ChannelRank.GUEST);

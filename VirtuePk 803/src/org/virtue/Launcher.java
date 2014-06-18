@@ -171,4 +171,8 @@ public class Launcher {
 	public static ClanManager getClanManager () {
 		return CLANS;
 	}
+	
+	public static int getDay () {
+		return (int) Math.abs((System.currentTimeMillis() - Constants.RUNE_DAY_0) / Constants.MS_PER_DAY);
+	}
 }

@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.game.logic.social.messages.FriendsChatPacket;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -45,7 +45,7 @@ public class FriendsChannel {
 	
 	private HashMap<String, ChannelRank> ranks = new HashMap<String, ChannelRank>();
 	
-	private HashMap<String, SocialUser> users = new HashMap<String, SocialUser>();
+	private HashMap<String, SocialUserAPI> users = new HashMap<String, SocialUserAPI>();
 	
 	private HashMap<String, Long> tempBans = new HashMap<String, Long>();
 	
@@ -131,7 +131,7 @@ public class FriendsChannel {
 		data.resetFcUpdateFlag();
 		if (!data.hasFriendsChat()) {
 			synchronized (users) {
-				for (SocialUser u : users.values()) {
+				for (SocialUserAPI u : users.values()) {
 					u.sendSystemMessage("You have been removed from this channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 					u.sendLeaveFriendsChat();
 				}
@@ -156,7 +156,7 @@ public class FriendsChannel {
 		}
 		HashMap<String, ChannelRank> newRanks = data.getChannelRanks();
 		synchronized (users) {
-			for (SocialUser u : users.values()) {
+			for (SocialUserAPI u : users.values()) {
 				String name = u.getProtocolName();
 				ChannelRank newRank = newRanks.get(name) == null ? (u.getProtocolName().equalsIgnoreCase(ownerName) ? ChannelRank.OWNER : ChannelRank.GUEST) : newRanks.get(name);
 				if (!getPlayerRank(name).equals(newRank)) {
@@ -214,7 +214,7 @@ public class FriendsChannel {
 		return users.size();
 	}
 	
-	public boolean join (SocialUser player) {
+	public boolean join (SocialUserAPI player) {
 		synchronized (users) {
 			if (!users.containsKey(player.getProtocolName())) {
 				if (users.size() >= 100) {
@@ -258,7 +258,7 @@ public class FriendsChannel {
 	 * @param player	The player to remove
 	 * @return			True if the player was the last user in the channel (and therefore is empty), false otherwise
 	 */
-	public boolean leave (SocialUser player) {
+	public boolean leave (SocialUserAPI player) {
 		String name = player.getProtocolName();
 		synchronized (users) {
 			if (users.containsKey(name)) {
@@ -274,7 +274,7 @@ public class FriendsChannel {
 	 * Should only be used in conjunction with a method where "users" is synchronised and the player is confirmed to be in the channel.
 	 * @param user	The user to remove
 	 */
-	private void removeUser (SocialUser user) {
+	private void removeUser (SocialUserAPI user) {
 		String displayName = users.get(user.getProtocolName()).getDisplayName();
 		users.remove(user.getProtocolName());
 		FriendsChatPacket.User packet = new FriendsChatPacket.User(displayName, null, null, user.getWorldID(), null);
@@ -284,7 +284,7 @@ public class FriendsChannel {
 	public void kickBanUser (String name) {
 		synchronized (users) {
 			if (users.containsKey(name)) {
-				SocialUser u = users.get(name);
+				SocialUserAPI u = users.get(name);
 				removeUser(u);
 				u.sendSystemMessage("You have been kicked from the channel.", MessageOpcode.FRIENDS_CHAT_SYSTEM);
 				u.sendLeaveFriendsChat();
@@ -296,7 +296,7 @@ public class FriendsChannel {
 	
 	public void sendMessage(FriendsChatMessage message) {
 		synchronized (users) {
-			for (SocialUser u : users.values()) {
+			for (SocialUserAPI u : users.values()) {
 				if (u == null) {
 					continue;
 				}
@@ -310,7 +310,7 @@ public class FriendsChannel {
 	 * @param packet	The packet to send
 	 */
 	private void sendPacket (FriendsChatPacket packet) {		
-		for (SocialUser u : users.values()) {
+		for (SocialUserAPI u : users.values()) {
 			if (u == null) {
 				continue;
 			}
@@ -323,7 +323,7 @@ public class FriendsChannel {
 	 * @param player	The player to include in the update
 	 * @return			A packet representing the update
 	 */
-	private FriendsChatPacket.User makeUpdatePacket (SocialUser player) {
+	private FriendsChatPacket.User makeUpdatePacket (SocialUserAPI player) {
 		return new FriendsChatPacket.User(player.getDisplayName(), player.getDisplayName(), 
 				getPlayerRank(player.getProtocolName()), player.getWorldID(), player.getWorldName());
 	}
@@ -337,7 +337,7 @@ public class FriendsChannel {
 		synchronized (users) {
 			 currentUsers = new FriendsChatPacket.User[users.size()];
 			 int i = 0;
-			 for (SocialUser user : users.values()) {
+			 for (SocialUserAPI user : users.values()) {
 				 FriendsChatPacket.User u = new FriendsChatPacket.User(user.getDisplayName(), user.getDisplayName(), 
 						 getPlayerRank(user.getProtocolName()), user.getWorldID(), user.getWorldName());
 				 currentUsers[i] = u;

@@ -24,7 +24,7 @@ import org.virtue.game.logic.World;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.impl.ClanSettingsInterface;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
-import org.virtue.game.logic.social.clans.ClanChannelManager;
+import org.virtue.game.logic.social.clans.ClanChannelAPI;
 import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
@@ -52,7 +52,7 @@ public class ChatManager {
 	
 	private enum ChannelStage { NONE, JOINING, JOINED, LEAVING }
 	
-	private static final FriendsChatManager friendsChatManager = new InternalFriendsChatManager();
+	private static final FriendsChatAPI friendsChatManager = new InternalFriendsChatManager();
 	
 	/**
 	 * Represents the player.
@@ -74,7 +74,7 @@ public class ChatManager {
 	/**
 	 * Represents the friends/ignores manager for the player
 	 */
-	private FriendManager friendManager;
+	private FriendManagerAPI friendManager;
 	
 	//=================================Friends chat data=================================//
 	
@@ -179,15 +179,15 @@ public class ChatManager {
 	 * Gets the manager for this player's friends and ignores
 	 * @return	The friend manager
 	 */
-	public FriendManager getFriendManager () {
+	public FriendManagerAPI getFriendManager () {
 		return friendManager;
 	}
 	
-	public ClanChannelManager getClanChatManager () {
+	public ClanChannelAPI getClanChatManager () {
 		return Launcher.getClanManager().getChannelManager();
 	}
 	
-	public SocialUser getSocialUser () {
+	public SocialUserAPI getSocialUser () {
 		return socialUser;
 	}
 	

@@ -22,7 +22,7 @@ import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.clans.ClanMember;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
@@ -56,7 +56,7 @@ import org.virtue.utility.StringUtils.FormatType;
  *
  * @author Sundays211
  */
-public class InternalSocialUser implements SocialUser {
+public class InternalSocialUser implements SocialUserAPI {
 	
 	private final Player player;
 	private final String protocolName;

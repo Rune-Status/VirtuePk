@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Queue;
 
 import org.virtue.Launcher;
-import org.virtue.game.logic.social.FriendsChatManager;
-import org.virtue.game.logic.social.SocialUser;
+import org.virtue.game.logic.social.FriendsChatAPI;
+import org.virtue.game.logic.social.SocialUserAPI;
 import org.virtue.game.logic.social.messages.FriendsChatMessage;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -36,7 +36,7 @@ import org.virtue.utility.StringUtils.FormatType;
  *
  * @author Sundays211
  */
-public class InternalFriendsChatManager implements FriendsChatManager {
+public class InternalFriendsChatManager implements FriendsChatAPI {
 	
 	private final HashMap<String, FriendsChannel> friendsChannelCache = new HashMap<String, FriendsChannel>();
 	
@@ -110,7 +110,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 	}
 
 	@Override
-	public void joinChannel(SocialUser player, String owner) {
+	public void joinChannel(SocialUserAPI player, String owner) {
 		String protocolOwner = StringUtils.format(owner, FormatType.PROTOCOL);
 		if (!friendsChannelCache.containsKey(protocolOwner)) {
 			loadChannel(protocolOwner);
@@ -146,7 +146,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 	}
 
 	@Override
-	public void leaveChannel(SocialUser player, boolean isLoggedOut) {		
+	public void leaveChannel(SocialUserAPI player, boolean isLoggedOut) {		
 		String owner = StringUtils.format(player.getCurrentChannelOwner(), FormatType.PROTOCOL);
 		if (owner == null) {
 			if (isLoggedOut) {
@@ -169,7 +169,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 	}
 
 	@Override
-	public void sendMessage(SocialUser user, String message) {
+	public void sendMessage(SocialUserAPI user, String message) {
 		//SocialUser user = new SocialUser(player);
 		String owner = StringUtils.format(user.getCurrentChannelOwner(), FormatType.PROTOCOL);
 		if (owner == null || !friendsChannelCache.containsKey(owner)) {
@@ -189,7 +189,7 @@ public class InternalFriendsChatManager implements FriendsChatManager {
 	}
 
 	@Override
-	public void kickBanUser(SocialUser user, String username) {
+	public void kickBanUser(SocialUserAPI user, String username) {
 		//SocialUser user = new SocialUser(player);
 		String owner = StringUtils.format(user.getCurrentChannelOwner(), FormatType.PROTOCOL);
 		if (owner == null || !friendsChannelCache.containsKey(owner)) {

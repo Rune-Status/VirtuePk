@@ -8,15 +8,22 @@ public class ClanSettingsPacket {
 		
 		private final String displayName;
 		private final ClanRank rank;
+		private final int varClanMember;
+		private final int joinDay;
+		
 		
 		/**
 		 * Constructs a new {@code User} object for use within the {@code ClanSettingsPacket}
 		 * @param displayName	The display name of the player
 		 * @param rank			The player's rank within the clan
+		 * @param varClanMember	The var data for this clan member
+		 * @param joinDay		The day on which the member joined the clan
 		 */
-		public Member (String displayName, ClanRank rank) {
+		public Member (String displayName, ClanRank rank, int varClanMember, int joinDay) {
 			this.displayName = displayName;
 			this.rank = rank;
+			this.varClanMember = varClanMember;
+			this.joinDay = joinDay;
 		}
 		
 		/**
@@ -34,6 +41,41 @@ public class ClanSettingsPacket {
 		public ClanRank getRank () {
 			return rank;
 		}
+		
+		/**
+		 * Gets the variable data for this clan member
+		 * @return	The varClanMember data
+		 */
+		public int getVarClanMember () {
+			return varClanMember;
+		}
+		
+		/**
+		 * Gets the day on which the member joined the clan
+		 * @return	The join day
+		 */
+		public int getJoinDay () {
+			return joinDay;
+		}
+	}
+	
+	public static class VarClanSetting {
+		
+		private final int key;
+		private final Object value;
+		
+		public VarClanSetting (int key, Object value) {
+			this.key = key;
+			this.value = value;
+		}
+		
+		public int getKey () {
+			return key;
+		}
+		
+		public Object getValue () {
+			return value;
+		}
 	}
 	
 	private final Member[] members;
@@ -50,7 +92,9 @@ public class ClanSettingsPacket {
 	
 	private final String clanName;
 	
-	public ClanSettingsPacket (boolean guestData, String clanName, Member[] members, String[] bans, int updateNum, boolean allowGuests, ClanRank minTalk, ClanRank minKick) {
+	private final VarClanSetting[] varClanSettings;
+	
+	public ClanSettingsPacket (boolean guestData, String clanName, Member[] members, String[] bans, int updateNum, boolean allowGuests, ClanRank minTalk, ClanRank minKick, VarClanSetting[] varClanSettings) {
 		this.isGuestData = guestData;
 		this.clanName = clanName;
 		this.members = members;
@@ -59,6 +103,7 @@ public class ClanSettingsPacket {
 		this.updateNum = updateNum;
 		this.minTalk = minTalk;
 		this.minKick = minKick;
+		this.varClanSettings = varClanSettings;
 	}
 	
 	/**
@@ -123,6 +168,14 @@ public class ClanSettingsPacket {
 	 */
 	public String[] getBans () {
 		return bans;
+	}
+	
+	/**
+	 * Returns an array containing the misc setting data for the clan
+	 * @return	An array of VarClanSettings
+	 */
+	public VarClanSetting[] getVarClanSettings () {
+		return varClanSettings;
 	}
 
 }
