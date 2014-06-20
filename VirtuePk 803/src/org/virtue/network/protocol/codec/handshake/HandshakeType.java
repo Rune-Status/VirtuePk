@@ -13,7 +13,7 @@ public final class HandshakeType {
 	public static enum HandshakeTypes {
 
 		/**
-		 * Js5 connection
+		 * Login connection
 		 */
 		HANDSHAKE_LOGIN,
 		
@@ -25,7 +25,17 @@ public final class HandshakeType {
 		/**
 		 * Js5 container ondemand
 		 */
-		HANDSHAKE_ONDEMAND
+		HANDSHAKE_ONDEMAND,
+		
+		/**
+		 * "header" RSA Block for login
+		 */
+		HANDSHAKE_INIT_SOCIAL_NETWORK,
+		
+		/**
+		 * "footer" XTEA Block for login
+		 */
+		HANDSHAKE_SOCIAL_NETWORK_LOGIN
 	}
 
 	/**
@@ -54,6 +64,10 @@ public final class HandshakeType {
 			return HandshakeTypes.HANDSHAKE_LOGIN;
 		case 28:
 			return HandshakeTypes.HANSHAKE_CREATION;
+		//case 29:
+			//return HandshakeTypes.HANDSHAKE_INIT_SOCIAL_NETWORK;
+		//case 30:
+			//return HandshakeTypes.HANDSHAKE_SOCIAL_NETWORK_LOGIN;
 		}
 		throw new IllegalStateException("No such state for incomming opcode: " + opcode);
 	}

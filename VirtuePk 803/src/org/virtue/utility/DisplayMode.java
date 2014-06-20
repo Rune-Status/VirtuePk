@@ -26,7 +26,15 @@ public enum DisplayMode {
 	 */
 	LOBBY(906),
 	
-	LOGIN(1477);
+	/**
+	 * Represents the login screen
+	 */
+	LOGIN(1477),
+	
+	/**
+	 * Represents the lobby screen
+	 */
+	ACCOUNT_CREATION(1420);
 	
 	/**
 	 * Represents the screen ID.

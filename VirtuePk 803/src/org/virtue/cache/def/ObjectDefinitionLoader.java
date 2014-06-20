@@ -54,7 +54,7 @@ public class ObjectDefinitionLoader {
 	}
 
 	public static ObjectDefinition forId(int id) {
-		if (ObjectDefinitionLoader.objectDefinitions == null) {
+		if (objectDefinitions == null) {
 			try {
 				load(CacheLoader.getCache());
 			} catch (IOException e) {

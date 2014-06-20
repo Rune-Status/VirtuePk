@@ -131,8 +131,9 @@ public class JS5Session extends Session {
 					buffer = ChannelBuffers.wrappedBuffer(Launcher.getCache().getChecksumtable());
 				} else {
 					buffer = ChannelBuffers.wrappedBuffer(cache.getStore().read(type, file));
-					if (type != 255)
+					if (type != 255) {
 						buffer = buffer.slice(0, buffer.readableBytes() - 2);
+					}
 				}
 				getContext().getChannel().write(new FileResponse(request.isPriority(), type, file, buffer));
 			}

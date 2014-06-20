@@ -10,8 +10,7 @@ import org.virtue.cache.FileStore;
  * @author Virtue Development Team 2014 (c).
  * @since Apr 17, 2014
  */
-public class CacheLoader {
-	
+public class CacheLoader {	
 
 	private static Cache CACHE;
 

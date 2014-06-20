@@ -2,6 +2,7 @@ package org.virtue.network;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.virtue.network.protocol.packet.RS3PacketBuilder;
 import org.virtue.network.session.Session;
@@ -35,6 +36,21 @@ public class RS3PacketTransmitter {
 			ChannelBuffer b = ChannelBuffers.copiedBuffer(buffer.buffer(), 0, buffer.getPosition());
 			synchronized (session.getContext().getChannel()) {
 				response = session.getContext().getChannel().write(b);
+			}
+		}
+		return response;
+	}
+	
+	/**
+	 * Transmits a message to the client
+	 * @param buffer The {@link RS3PacketBuilder} containing the message.
+	 */
+	public static ChannelFuture processPacket(final RS3PacketBuilder buffer, Channel channel) {
+		ChannelFuture response = null;
+		if (channel.isConnected()) {
+			ChannelBuffer b = ChannelBuffers.copiedBuffer(buffer.buffer(), 0, buffer.getPosition());
+			synchronized (channel) {
+				response = channel.write(b);
 			}
 		}
 		return response;

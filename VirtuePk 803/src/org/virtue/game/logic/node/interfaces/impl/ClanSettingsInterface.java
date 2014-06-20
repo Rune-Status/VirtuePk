@@ -244,8 +244,8 @@ public class ClanSettingsInterface extends AbstractInterface {
 		player.getVarManager().setVarClient(1500, member.getRank().getID());//Rank
 		player.getVarManager().setVarClient(1501, member.getVarMemberBit(VarClanMember.JOB));//Job
 		player.getVarManager().setVarClient(1564, 0);//[Unknown]
-		player.getVarManager().setVarClient(1566, member.getVarMemberBit(VarClanMember.CITADEL_BANNED));//Ban from citadel
 		player.getVarManager().setVarClient(1565, member.getVarMemberBit(VarClanMember.KEEP_BANNED));//Ban from keep
+		player.getVarManager().setVarClient(1566, member.getVarMemberBit(VarClanMember.CITADEL_BANNED));//Ban from citadel
 		player.getVarManager().setVarClient(1567, member.getVarMemberBit(VarClanMember.ISLAND_BANNED));//Ban from island
 		player.getVarManager().setVarClient(1568, member.getVarMemberBit(VarClanMember.PROBATION));//Probation status
 		player.getVarManager().setVarClient(2521, member.getDisplayName());//Display name
