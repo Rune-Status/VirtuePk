@@ -74,6 +74,7 @@ public class OutgoingOpcodes {
 	//Miscellaneous
 	public static final int PLAYER_OPTION_PACKET = 3;//803
 	public static final int RUN_ENERGY_PACKET = 94;//803
+	public static final int RUN_WEIGHT_PACKET = 163;//803
 	public static final int SKILL_DATA_PACKET = 4;//803
 	public static final int KEEP_ALIVE_PACKET = 155;//803
 	public static final int WORLD_LIST_PACKET = 98;//803

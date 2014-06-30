@@ -4,7 +4,7 @@ import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
 import org.virtue.game.logic.social.clans.ClanRank;
-import org.virtue.game.logic.social.clans.ClanSettings;
+import org.virtue.game.logic.social.clans.internal.ClanSettings;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;
@@ -42,8 +42,7 @@ public class ClanCommands implements Command {
 			clanName+= " "+arg;
 		}
 		String formattedName = StringUtils.format(clanName.trim(), FormatType.NAME);
-		ClanSettings settings = Launcher.getClanManager().createClan(formattedName, player.getChatManager().getSocialUser());
-		if (settings == null) {
+		if (Launcher.getClanManager().createClan(formattedName, player.getChatManager().getSocialUser())) {
 			player.getPacketDispatcher().dispatchMessage("Clan could not be created - Name already in use.", MessageOpcode.CONSOLE);
 			return false;
 		}
@@ -68,7 +67,7 @@ public class ClanCommands implements Command {
 			player.getPacketDispatcher().dispatchMessage("You must specify a clan hash and player name.", MessageOpcode.CONSOLE);
 			return false;
 		}
-		if (Launcher.getClanManager().getClanData(clanHash) == null) {
+		if (!Launcher.getClanManager().clanExists(clanHash)) {
 			player.getPacketDispatcher().dispatchMessage("The clan you have specified does not exist.", MessageOpcode.CONSOLE);
 			return false;
 		}
@@ -105,7 +104,7 @@ public class ClanCommands implements Command {
 			player.getPacketDispatcher().dispatchMessage("You must specify a valid rank ID (recruit=0, general=5, admin=100, overseer=103, deputy owner=125).", MessageOpcode.CONSOLE);
 			return false;
 		}
-		if (Launcher.getClanManager().getClanData(clanHash) == null) {
+		if (!Launcher.getClanManager().clanExists(clanHash)) {
 			player.getPacketDispatcher().dispatchMessage("The clan you have specified does not exist.", MessageOpcode.CONSOLE);
 			return false;
 		}

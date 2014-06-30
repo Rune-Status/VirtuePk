@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.virtue.game.logic.social.SocialUserAPI;
+import org.virtue.game.logic.social.clans.ClanChannelAPI;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
@@ -30,13 +31,13 @@ import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
  * @author Sundays211
  * @since May 22, 2014
  */
-public class InternalClanChannelManager implements ClanChannelAPI {
+public class ClanChannelManager implements ClanChannelAPI {
 	
 	private Map<Long, ClanChannel> clanCache = Collections.synchronizedMap(new HashMap<Long, ClanChannel>());
 	
-	private final ClanManager clanManager;
+	private final ClanSettingsManager clanManager;
 	
-	public InternalClanChannelManager (ClanManager clanManager) {
+	public ClanChannelManager (ClanSettingsManager clanManager) {
 		this.clanManager = clanManager;
 		System.out.println("Initialising clan channel manager.");
 	}

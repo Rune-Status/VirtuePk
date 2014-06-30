@@ -3,7 +3,7 @@ package org.virtue.game.logic.node.interfaces.impl;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 
 /**
  *
@@ -14,7 +14,7 @@ public class ClanBroadcastSettings extends AbstractInterface {
 	private final ClanSettingsInterface settingsInterface;
 
 	public ClanBroadcastSettings(Player p, ClanSettingsInterface settings) {
-		super(RSInterface.CLAN_BROADCAST_SETTINGS, p);
+		super(RS3Interface.CLAN_BROADCAST_SETTINGS, p);
 		this.settingsInterface = settings;
 	}
 

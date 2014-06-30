@@ -4,7 +4,7 @@ import java.io.IOException;
 import org.virtue.Launcher;
 import org.virtue.cache.def.CacheIndex;
 import org.virtue.game.logic.node.entity.player.Player;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 public class SendInterface implements Command {
@@ -35,7 +35,7 @@ public class SendInterface implements Command {
 			player.getPacketDispatcher().dispatchMessage("Invalid interface command: requires 1 int paramater", MessageOpcode.CONSOLE);
 			return false;
 		}
-		if (id == RSInterface.GAME_SCREEN) {
+		if (id == RS3Interface.GAME_SCREEN) {
 			player.getPacketDispatcher().dispatchMessage("You cannot send the game screen using this method.", MessageOpcode.CONSOLE);
 			return false;
 		}
@@ -43,7 +43,7 @@ public class SendInterface implements Command {
 			player.getPacketDispatcher().dispatchMessage("Invalid interface ID: must be between 0 and "+INTERFACE_COUNT, MessageOpcode.CONSOLE);
 			return false;
 		}
-		player.getInterfaces().sendInterface(false, RSInterface.GAME_SCREEN, component, id);
+		player.getInterfaces().sendInterface(false, RS3Interface.GAME_SCREEN, component, id);
 		return false;
 	}
 

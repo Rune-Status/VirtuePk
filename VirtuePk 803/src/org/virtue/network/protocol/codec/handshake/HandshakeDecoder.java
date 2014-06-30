@@ -59,7 +59,10 @@ public class HandshakeDecoder extends FrameDecoder {
 			sendCreationVarps(channel);
 			channel.getPipeline().addFirst("encoder", new AccountCreationEncoder());
 			channel.getPipeline().addBefore("upHandler", "accountDecoder", new AccountCreationDecoder());
-		default:
+			break;
+		case HANDSHAKE_INIT_SOCIAL_NETWORK:
+			break;
+		case HANDSHAKE_SOCIAL_NETWORK_LOGIN:
 			break;
 		}
 		channel.getPipeline().remove(HandshakeDecoder.class);
@@ -89,7 +92,7 @@ public class HandshakeDecoder extends FrameDecoder {
 				RS3PacketTransmitter.processPacket(varPacket, channel);
 			}
 		}
-		RS3PacketBuilder pane = RS2Network.getEncoders().get(GameScreenEncoder.class).buildPacket(DisplayMode.ACCOUNT_CREATION);
-		RS3PacketTransmitter.processPacket(pane, channel);
+		RS3PacketBuilder wpane = RS2Network.getEncoders().get(GameScreenEncoder.class).buildPacket(DisplayMode.ACCOUNT_CREATION);
+		RS3PacketTransmitter.processPacket(wpane, channel);
 	}
 }

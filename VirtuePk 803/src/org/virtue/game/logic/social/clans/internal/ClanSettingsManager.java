@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import java.io.FileNotFoundException;
 import java.util.Collections;
@@ -23,6 +23,9 @@ import java.util.Map;
 
 import org.virtue.Launcher;
 import org.virtue.game.logic.social.SocialUserAPI;
+import org.virtue.game.logic.social.clans.ClanChannelAPI;
+import org.virtue.game.logic.social.clans.ClanRank;
+import org.virtue.game.logic.social.clans.ClanSettingsAPI;
 import org.virtue.network.io.channel.ClanSettingsParser;
 
 /**
@@ -30,7 +33,7 @@ import org.virtue.network.io.channel.ClanSettingsParser;
  *
  * @author Sundays211
  */
-public class ClanManager {
+public class ClanSettingsManager implements ClanSettingsAPI {
 	
 	
 	private final ClanSettingsParser CLAN_DATA_PARSER = new ClanSettingsParser();
@@ -39,15 +42,16 @@ public class ClanManager {
 	
 	private final Map<Long, ClanSettings> clanDataCache = Collections.synchronizedMap(new HashMap<Long, ClanSettings>());
 	
-	private final InternalClanChannelManager clanChatManager;
+	private final ClanChannelManager clanChatManager;
 
 	
-	public ClanManager () {
-		clanChatManager = new InternalClanChannelManager(this);
+	public ClanSettingsManager () {
+		clanChatManager = new ClanChannelManager(this);
 		clanIndex = new ClanNameIndex();
 		Launcher.getEngine().getLogicProcessor().registerEvent(new ClanUpdateEvent(this));
 	}
 	
+	@Override
 	public void registerPlayer (SocialUserAPI user) {
 		if (user.getMyClanHash() != 0L) {
 			ClanSettings clanData = getClanData(user.getMyClanHash());
@@ -57,12 +61,38 @@ public class ClanManager {
 		}
 	}
 	
+	@Override
 	public void deregisterPlayer (SocialUserAPI user) {
 		if (user.getMyClanHash() != 0L) {
 			ClanSettings clanData = getClanData(user.getMyClanHash());
 			if (clanData != null) {
 				clanData.deregisterOnlineMember(user);
 			}
+		}
+	}
+
+	@Override
+	public void sendMemberInfo(SocialUserAPI user, int index, boolean isGuest) {
+		long clanHash = isGuest ? user.getGuestClanHash() : user.getMyClanHash();
+		if (clanHash == 0L) {
+			return;
+		}
+		ClanSettings settings = getClanData(clanHash);
+		if (settings != null) {
+			settings.sendMemberInfo(user, index);
+		}
+	}
+
+	@Override
+	public void sendPermissionInfo(SocialUserAPI user, ClanRank group, boolean isGuest) {
+		long clanHash = isGuest ? user.getGuestClanHash() : user.getMyClanHash();
+		if (clanHash == 0L) {
+			return;
+		}
+		System.out.println("Sending permissions for group "+group);
+		ClanSettings settings = getClanData(clanHash);
+		if (settings != null) {
+			settings.sendPermissionInfo(user, group);
 		}
 	}
 	
@@ -105,7 +135,7 @@ public class ClanManager {
 	 * @param clanHash	The hash of the clan of which to retrieve data
 	 * @return	A {@link ClanSettings} object containing the clan data, or null if the data was not found
 	 */
-	public ClanSettings getClanData (long clanHash) {
+	protected ClanSettings getClanData (long clanHash) {
 		//TODO: Make this "protected" once testing is completed
 		ClanSettings settings = clanDataCache.get(clanHash);
 		if (settings != null) {
@@ -122,6 +152,10 @@ public class ClanManager {
 		return settings;
 	}
 	
+	public boolean clanExists (long clanHash) {
+		return getClanData(clanHash) != null;
+	}
+	
 	public ClanChannelAPI getChannelManager () {
 		return clanChatManager;
 	}
@@ -130,12 +164,6 @@ public class ClanManager {
 		return clanIndex;
 	}
 	
-	/**
-	 * Recruits a player into the recruiter's clan
-	 * @param recruiter		The user performing the invite
-	 * @param joiner		The user who is joining the clan
-	 * @return				True if the user successfully joined the clan, false otherwise
-	 */
 	public boolean joinClan (SocialUserAPI recruiter, SocialUserAPI joiner) {
 		if (joiner.getMyClanHash() != 0L) {
 			return false;//Already in clan
@@ -152,22 +180,15 @@ public class ClanManager {
 		clan.addMember(joiner);
 		joiner.setMyClanHash(clanHash);
 		if (joiner.getGuestClanHash() == clanHash) {
-			clanChatManager.leaveChannel(joiner, true, false);
+			clanChatManager.leaveChannel(joiner, true, false);//You are now part of the clan you were visiting
 		}
 		clanChatManager.joinMyChannel(joiner);
 		return true;
 	}
 	
-	/**
-	 * Creates a new clan and places the data into the index
-	 * @param name	The desired name of the clan
-	 * @param owner The player who will become the clan owner
-	 * @param founders	The players who will be initially recruited into the clan
-	 * @return		A {@link ClanSettings} object containing the new clan data, or null if a clan already exists with the specified name
-	 */
-	public ClanSettings createClan (String name, SocialUserAPI owner, SocialUserAPI... founders) {
+	public boolean createClan (String name, SocialUserAPI owner, SocialUserAPI... founders) {
 		if (clanIndex.clanExists(name)) {
-			return null;
+			return false;
 		} else {
 			long clanHash = clanIndex.addClan(name);
 			ClanSettings settings = new ClanSettings(clanHash, 100, name);
@@ -184,19 +205,10 @@ public class ClanManager {
 			}
 			
 			//saveClanData(settings);
-			return settings;
+			return true;
 		}
 	}
 	
-	/**
-	 * Sets the rank of the specified player in the specified clan.
-	 * Note that this method does allow server administrators (who would normally hold a rank of JMOD) to change the ranks of people in clans they don't belong to themselves.
-	 * @param clanHash		The unique hash for the clan with the rank being edited
-	 * @param player		The player performing the edit
-	 * @param protocolName	The protocol displayname of the clan member who's rank is being changed
-	 * @param rank			The rank to change to
-	 * @return				True if the rank was changed successfully, false if there was an error.
-	 */
 	public boolean setRank (long clanHash, SocialUserAPI player, String protocolName, ClanRank rank) {
 		ClanSettings clan = getClanData(clanHash);
 		if (clan == null) {
@@ -274,5 +286,25 @@ public class ClanManager {
 		}
 		clan.removeMember(protocolName);
 		return true;
+	}
+
+	@Override
+	public boolean setPermission(long clanHash, SocialUserAPI player, ClanRank group, ClanPermission permission, boolean grant) {
+		ClanSettings clan = getClanData(clanHash);
+		if (clan == null) {	
+			System.out.println("Could not set clan permission - clan does not exist.");
+			return false;
+		}
+		ClanRank playerRank = clan.getRank(player.getProtocolName());
+		if (!playerRank.isAdmin() || playerRank.getID() <= group.getID()) {	
+			System.out.println("Could not set clan permission - insufficient permissions.");		
+			return false;
+		}
+		if (grant) {
+			System.out.println("Granting permission "+permission+" to group "+group);
+			return clan.addPermission(group, permission);
+		} else {
+			return clan.removePermission(group, permission);
+		}
 	}
 }

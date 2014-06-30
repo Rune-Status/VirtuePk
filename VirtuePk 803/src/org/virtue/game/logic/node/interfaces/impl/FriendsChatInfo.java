@@ -3,13 +3,13 @@ package org.virtue.game.logic.node.interfaces.impl;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 
 public class FriendsChatInfo extends AbstractInterface {
 
 	public FriendsChatInfo(Player p) {
-		super(RSInterface.FRIENDS_CHAT_INFO, p);
+		super(RS3Interface.FRIENDS_CHAT_INFO, p);
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public class FriendsChatInfo extends AbstractInterface {
 			//TODO: Handle lootshare
 			break;
 		case 31://Kick/ban
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(2688));			
 			break;
@@ -35,8 +35,8 @@ public class FriendsChatInfo extends AbstractInterface {
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));
 				return;
 			}		
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8537));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(194, 1));

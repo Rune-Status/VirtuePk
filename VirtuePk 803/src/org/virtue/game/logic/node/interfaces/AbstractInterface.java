@@ -17,7 +17,7 @@ public abstract class AbstractInterface {
 	
 	private final int interfaceID;
 	
-	private int parentComponent;
+	private int parentHash;
 	
 	/**
 	 * Represents the player.
@@ -52,14 +52,14 @@ public abstract class AbstractInterface {
 	 * @param clipped			Whether or not the interface is "walkable" (ie the player can move with the interface open)
 	 */
 	public void send (int parentID, int parentComponent, boolean clipped) {
-		this.parentComponent = parentComponent;
+		this.parentHash = parentID << 16 | parentComponent & 0xffff;
 		player.getPacketDispatcher().dispatchInterface(new InterfaceMessage(interfaceID, parentComponent, parentID, clipped));
 		postSend();
 		setLock(false);
 	}
 	
 	public void close () {
-		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(parentComponent));
+		player.getAccount().getSession().getTransmitter().send(InterfaceSettingsEncoder.class, new InterfaceSettingsMessage(parentHash));
 	}
 	
 	/**

@@ -3,16 +3,16 @@ package org.virtue.game.logic.node.interfaces.impl;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.InterfaceMessage;
 
 public class FriendsList extends AbstractInterface {
 	
-	public static InterfaceMessage noteEdit = new InterfaceMessage(451, 234, RSInterface.GAME_SCREEN, false);
+	public static InterfaceMessage noteEdit = new InterfaceMessage(451, 234, RS3Interface.GAME_SCREEN, false);
 		
 	public FriendsList(Player p) {
-		super(RSInterface.FRIENDS_LIST, p);
+		super(RS3Interface.FRIENDS_LIST, p);
 	}
 
 	@Override
@@ -32,26 +32,26 @@ public class FriendsList extends AbstractInterface {
 			}
 			break;
 		case 42://Show "add friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(103));
 			break;
 		case 44://Show "remove friend" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(104));
 			break;
 		case 71://Show "add ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(105));			
 			break;
 		case 54://Show "remove ignore" dialog
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-			getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+			getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 			getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(1419));			
 			break;

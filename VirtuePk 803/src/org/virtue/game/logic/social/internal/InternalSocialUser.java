@@ -16,6 +16,8 @@
  */
 package org.virtue.game.logic.social.internal;
 
+import java.util.EnumSet;
+
 import org.virtue.game.config.OutgoingOpcodes;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
@@ -23,7 +25,9 @@ import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.game.logic.social.SocialUserAPI;
-import org.virtue.game.logic.social.clans.ClanMember;
+import org.virtue.game.logic.social.clans.ClanRank;
+import org.virtue.game.logic.social.clans.internal.ClanMember;
+import org.virtue.game.logic.social.clans.internal.ClanPermission;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanChannelMessage;
 import org.virtue.game.logic.social.messages.ClanChannelPacket;
@@ -287,6 +291,13 @@ public class InternalSocialUser implements SocialUserAPI {
 		if (player.getChatManager().getClanSettingsInterface() != null) {
 			player.getChatManager().getClanSettingsInterface().sendClanMemberInfo(member);
 		}
+	}
+
+	@Override
+	public void sendPermissionGroup(ClanRank rank, EnumSet<ClanPermission> permissions) {
+		if (player.getChatManager().getClanSettingsInterface() != null) {
+			player.getChatManager().getClanSettingsInterface().sendPermissionGroup(rank, permissions);
+		}		
 	}
 	
 	@Override

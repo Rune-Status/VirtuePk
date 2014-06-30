@@ -16,9 +16,13 @@
  */
 package org.virtue.game.logic.social;
 
+import java.util.EnumSet;
+
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.player.identity.Rank;
-import org.virtue.game.logic.social.clans.ClanMember;
+import org.virtue.game.logic.social.clans.ClanRank;
+import org.virtue.game.logic.social.clans.internal.ClanMember;
+import org.virtue.game.logic.social.clans.internal.ClanPermission;
 import org.virtue.game.logic.social.internal.Friend;
 import org.virtue.game.logic.social.internal.Ignore;
 import org.virtue.game.logic.social.messages.ClanChannelDeltaPacket;
@@ -210,4 +214,6 @@ public interface SocialUserAPI {
 	public void sendClanSettingsDelta (ClanSettingsDeltaPacket packet);
 	
 	public void sendClanMemberInfo (ClanMember member);
+	
+	public void sendPermissionGroup (ClanRank rank, EnumSet<ClanPermission> permissions);
 }

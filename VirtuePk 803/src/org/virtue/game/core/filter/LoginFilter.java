@@ -101,7 +101,7 @@ public class LoginFilter extends LogicEvent {
 
 	@Override
 	public long getIntervalDelay() {
-		return 10;
+		return 20;
 	}
 
 	@Override

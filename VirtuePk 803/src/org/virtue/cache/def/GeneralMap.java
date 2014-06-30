@@ -97,7 +97,7 @@ public class GeneralMap {
 				if (childEntry == null) {
 					continue;
 				}
-				int id = file * 256 + member;
+				int id = file * 32 + member;
 				GeneralMap map = new GeneralMap(id, archive.getEntry(nonSparseMember++).array());
 				map.printFields(writer);
 				//GraphicsDefinition definition = new GraphicsDefinition(id, archive.getEntry(nonSparseMember++).array());

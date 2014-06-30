@@ -9,7 +9,7 @@ import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.entity.update.ref.Appearance.Gender;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.game.logic.region.Tile;
 
 import com.google.gson.JsonArray;
@@ -34,7 +34,7 @@ public class Inventory extends AbstractInterface {
 	 * @param player The player.
 	 */
 	public Inventory(Player player) {
-		super(RSInterface.INVENTORY, player);
+		super(RS3Interface.INVENTORY, player);
 		//this.player = player;
 		items.add(Item.create(54, 1));//Just for testing purposes; This can be updated with the actual items later
 	}

@@ -25,7 +25,6 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.impl.ClanSettingsInterface;
 import org.virtue.game.logic.node.interfaces.impl.FriendsChatSettings;
 import org.virtue.game.logic.social.clans.ClanChannelAPI;
-import org.virtue.game.logic.social.clans.ClanSettings;
 import org.virtue.game.logic.social.internal.InternalFriendManager;
 import org.virtue.game.logic.social.internal.InternalFriendsChatManager;
 import org.virtue.game.logic.social.internal.InternalSocialUser;
@@ -342,10 +341,6 @@ public class ChatManager {
 	
 	public ClanSettingsInterface getClanSettingsInterface () {
 		return clanSettings;
-	}
-	
-	public ClanSettings getClanData () {//TODO: Don't display this publicly
-		return Launcher.getClanManager().getClanData(myClanHash);
 	}
 	
 	/**

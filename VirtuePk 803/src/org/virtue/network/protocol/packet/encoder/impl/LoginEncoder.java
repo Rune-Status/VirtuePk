@@ -18,7 +18,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 	@Override
 	public RS3PacketBuilder buildPacket(Account node) {
 		//TODO Document the rest.
-                //System.out.println("Sending response.");
+        //System.out.println("Sending response.");
 		RS3PacketBuilder buffer = new RS3PacketBuilder();
 		if (Constants.LOGIN_SERVER) {
 			LoginResult result = node.getFlag("login_result", LoginResult.ERROR);
@@ -93,7 +93,7 @@ public class LoginEncoder implements PacketEncoder<Account> {
 			 * The IP of the default world to login to. Used to create a secure connection
 			 * to all Runescape servers.
 			 */
-			buffer.putShort(1);//Default world node ID
+			buffer.putShort(Constants.WORLD_ID);//Default world node ID
 			buffer.putGJString("127.0.0.1");
 			buffer.endPacketVarByte();
 			return buffer;

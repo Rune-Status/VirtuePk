@@ -6,7 +6,7 @@ import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,7 +39,7 @@ public class Equipment extends AbstractInterface {
 	 * @param player The player.
 	 */
 	public Equipment(Player player) {
-		super(RSInterface.EQUIPMENT, player);
+		super(RS3Interface.EQUIPMENT, player);
 		/*Item testItem = Item.create(26587, 1);//TODO: This stuff is just for testing, replace when proper rendering is available
 		items.set(testItem.getDefinition().getEquiptSlotID(), testItem);
 		testItem = Item.create(26591, 1);

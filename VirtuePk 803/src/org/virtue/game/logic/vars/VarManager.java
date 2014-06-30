@@ -126,17 +126,18 @@ public class VarManager {
 		VarBitType type = VarBitTypeLoader.forID(key);
 		if (type == null) {
 			throw new NullPointerException("Varbit "+key+" does not exist");
-		}		
+		}
 		if (type.getDomainType().equals(VarDomainType.PLAYER)) {
-			varps[key] = type.setVarbitValue(varps[key], value);//TODO: Ensure that the value is within the valid range
+			varps[type.getBaseVarKey()] = type.setVarbitValue(varps[type.getBaseVarKey()], value);//TODO: Ensure that the value is within the valid range
 		}
 		sendVar(new VarMessage(type.getDomainType(), key, value, true));
 	}
 	
-	public int getVarBit (int key) throws NullPointerException {
+	public int getVarBit (int key) {
 		VarBitType type = VarBitTypeLoader.forID(key);
 		if (type == null) {
-			throw new NullPointerException("Varbit "+key+" does not exist");
+			return -1;
+			//throw new NullPointerException("Varbit "+key+" does not exist");
 		}
 		if (type.getDomainType().equals(VarDomainType.PLAYER)) {
 			int fullValue = getVarPlayer(type.getBaseVarKey());

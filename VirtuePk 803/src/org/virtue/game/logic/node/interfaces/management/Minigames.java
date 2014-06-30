@@ -4,12 +4,12 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.ActionTab;
 import org.virtue.game.logic.node.interfaces.ManagementInterface.Type;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 
 public class Minigames extends ActionTab {
 
 	public Minigames(Player p) {
-		super(RSInterface.MINIGAMES, p);
+		super(RS3Interface.MINIGAMES, p);
 	}
 
 	@Override

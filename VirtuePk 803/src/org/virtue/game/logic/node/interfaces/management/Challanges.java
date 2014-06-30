@@ -4,13 +4,13 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.ActionTab;
 import org.virtue.game.logic.node.interfaces.ManagementInterface.Type;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 
 public class Challanges extends ActionTab {
 
 	public Challanges(Player p) {
-		super(RSInterface.CHALLANGES, p);
+		super(RS3Interface.CHALLANGES, p);
 	}
 
 	@Override

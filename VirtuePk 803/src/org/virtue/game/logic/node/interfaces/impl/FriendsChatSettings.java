@@ -4,7 +4,7 @@ import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.game.logic.social.ChannelPermission;
 import org.virtue.game.logic.social.ChannelRank;
 import org.virtue.network.protocol.messages.ClientScriptVar;
@@ -14,7 +14,7 @@ import org.virtue.utility.StringUtils.FormatType;
 public class FriendsChatSettings extends AbstractInterface {
 
 	public FriendsChatSettings(Player p) {
-		super(RSInterface.FRIENDS_CHAT_SETTINGS, p);
+		super(RS3Interface.FRIENDS_CHAT_SETTINGS, p);
 	}
 	
 	public void sendPermission (ChannelPermission permission, ChannelRank rank) {
@@ -73,8 +73,8 @@ public class FriendsChatSettings extends AbstractInterface {
 		switch (component) {
 		case 1:
 			if (button.equals(ActionButton.ONE)) {//Set channel prefix
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+				getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+				getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(110, "Enter chat prefix:"));
 				getPlayer().setInputEvent(onPrefixChange);
 			} else if (button.equals(ActionButton.TWO)) {//Disable channel

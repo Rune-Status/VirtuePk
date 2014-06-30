@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

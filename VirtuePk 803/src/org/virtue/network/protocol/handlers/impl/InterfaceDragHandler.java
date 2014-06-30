@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
@@ -18,10 +18,10 @@ public class InterfaceDragHandler extends PacketHandler<WorldSession> {
 		int toSlot = getFlag("newSlot", -1);
 		int oldInterfaceID = oldHash >> 16;
 		
-		if (oldHash == newHash && oldInterfaceID == RSInterface.INVENTORY) {
+		if (oldHash == newHash && oldInterfaceID == RS3Interface.INVENTORY) {
 			session.getPlayer().getInventory().switchItem(fromSlot, toSlot);
 			return;
-		} else if (oldHash == newHash && oldInterfaceID == RSInterface.BANK) {
+		} else if (oldHash == newHash && oldInterfaceID == RS3Interface.BANK) {
 			session.getPlayer().getBank().switchItems(fromSlot, oldHash & 0xffff, toSlot, newHash & 0xffff);
 			return;
 		}

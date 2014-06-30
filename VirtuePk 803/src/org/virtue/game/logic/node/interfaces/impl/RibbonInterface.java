@@ -5,14 +5,14 @@ import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.ActionTab;
 import org.virtue.game.logic.node.interfaces.ManagementInterface;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.VarMessage;
 
 public class RibbonInterface extends AbstractInterface {
 
 	public RibbonInterface(Player p) {
-		super(RSInterface.RIBBON, p);
+		super(RS3Interface.RIBBON, p);
 	}
 
 	@Override

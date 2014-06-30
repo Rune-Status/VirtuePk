@@ -2,8 +2,6 @@ package org.virtue.cache.tools;
 
 import java.io.IOException;
 
-import javax.swing.JFrame;
-
 import org.virtue.cache.Archive;
 import org.virtue.cache.Cache;
 import org.virtue.cache.Container;
@@ -17,13 +15,13 @@ import org.virtue.network.protocol.packet.RS3PacketReader;
  */
 public class CacheEditor {
 
-	private static JFrame frame = null;
+	//private static JFrame frame = null;
 	
 	public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException {
-		frame = new JFrame("CacheEditor");
-		frame.setSize(500, 400);
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frame = new JFrame("CacheEditor");
+		//frame.setSize(500, 400);
+		//frame.setVisible(true);
+		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		/*int i = 0;
 		while (i < 14484) {
 			ItemDefinition item = new ItemDefinition(i);
@@ -35,11 +33,12 @@ public class CacheEditor {
 		//ObjectDefinitionLoader.dumpObjects();
 		//AnimationDefinitionLoader.dumpAnimations();
 		//GraphicsDefinitionLoader.dumpGfx();
-		findObjectCoords(30548, CacheLoader.getCache());
+		findObjectCoords(84749, CacheLoader.getCache());
 		System.out.println("done");
 	}
 	
 	public static void findObjectCoords (int expectedID, Cache cache) throws IOException {
+		System.out.println("Searching for object "+expectedID);
 		Container tableContainer = Container.decode(cache.getStore().read(255, CacheIndex.LANDSCAPES));
 		ReferenceTable table = ReferenceTable.decode(tableContainer.getData());
 
@@ -63,7 +62,8 @@ public class CacheEditor {
 					int x = (location >> 6 & 0x3f);
 					int y = (location & 0x3f);
 					int z = location >> 12;
-					int objectData = landStream.getUnsignedByte();
+					//int objectData = 
+							landStream.getUnsignedByte();
 					//int type = objectData >> 2;
 					//int rotation = objectData & 0x3;
 					if (objectID == expectedID) {

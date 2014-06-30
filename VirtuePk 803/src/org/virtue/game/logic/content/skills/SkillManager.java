@@ -7,7 +7,7 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.entity.update.masks.Graphics;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,7 +20,7 @@ public class SkillManager extends AbstractInterface {
 	//private SkillData[] skills = new SkillData[Skill.values().length];
 	
 	public SkillManager (Player player) {
-		super(RSInterface.SKILLS, player);
+		super(RS3Interface.SKILLS, player);
 		this.player = player;
 		init();
 	}

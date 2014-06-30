@@ -4,11 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import org.virtue.cache.Archive;
 import org.virtue.cache.Cache;
 import org.virtue.cache.Container;
 import org.virtue.cache.ReferenceTable;
-import static org.virtue.cache.def.GraphicsDefinitionLoader.load;
 import org.virtue.cache.tools.CacheLoader;
 import org.virtue.game.config.Js5ConfigGroup;
 

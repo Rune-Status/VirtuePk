@@ -1,12 +1,15 @@
 package org.virtue.game.logic.node.interfaces.impl;
 
+import java.util.EnumSet;
+
 import org.virtue.Launcher;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
-import org.virtue.game.logic.social.clans.ClanMember;
-import org.virtue.game.logic.social.clans.ClanMember.VarClanMember;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
+import org.virtue.game.logic.social.clans.internal.ClanMember;
+import org.virtue.game.logic.social.clans.internal.ClanPermission;
+import org.virtue.game.logic.social.clans.internal.ClanMember.VarClanMember;
 import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
@@ -31,15 +34,19 @@ public class ClanSettingsInterface extends AbstractInterface {
 	
 	private final long clanHash;
 	
-	private Tab currentTab = Tab.CLANMATES;
+	private ClanRank selectedPermissionGroup;
 	
-	private PermissionTab permTab = PermissionTab.ADMIN;
+	private EnumSet<ClanPermission> heldPermissions;
+	
+	//private Tab currentTab = Tab.CLANMATES;
+	
+	//private PermissionTab permTab = PermissionTab.ADMIN;
 	
 	private ClanMember selectedMember = null;
 	private ClanRank memberNewRank = null;
 
 	public ClanSettingsInterface(Player p, long clanHash) {
-		super(RSInterface.CLAN_SETTINGS, p);
+		super(RS3Interface.CLAN_SETTINGS, p);
 		this.clanHash = clanHash;
 	}	
 
@@ -75,7 +82,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 			System.out.println("Selected clan member rank filter. Rank="+ClanRank.forID(slot1-1));
 			break;
 		case 46://Arrow beside member
-			player.getChatManager().getClanData().sendMemberInfo(player.getChatManager().getSocialUser(), slot1);
+			Launcher.getClanManager().sendMemberInfo(player.getChatManager().getSocialUser(), slot1, false);
 			break;
 		case 282://Clan member rank select
 		case 268://Clan member job select
@@ -254,7 +261,7 @@ public class ClanSettingsInterface extends AbstractInterface {
 	}
 	
 	public void setTab(Tab tab) {
-		currentTab = tab;
+		//currentTab = tab;
 		switch (tab) {
 			case CLANMATES:
 				setComponentHidden(88, false);//Received component hidden: iFace=1096, compID=88, hidden=1
@@ -284,15 +291,103 @@ public class ClanSettingsInterface extends AbstractInterface {
 	}
 	
 	private void handlePermissionButton (int component, int slot) {
+		ClanPermission permission = null;
 		switch (component) {
+		case 487://Recruit
+			permission = ClanPermission.RECRUIT;
+			break;
+		case 538://Toggle lock lower ranks from keep
+			permission = ClanPermission.LOCK_KEEP;
+			break;
+		case 551://Toggle lock lower ranks from citadel
+			permission = ClanPermission.LOCK_CITADEL;
+			break;
+		case 562://Set min talk rank
+		case 574://Set min kick rank
+			System.out.println("Unhandled clan permission button: component="+component+", slot1="+slot);
+			return;
+		case 585://Edit signpost
+			permission = ClanPermission.EDIT_SIGNPOST;
+			break;
+		case 596://Edit noticeboard
+			permission = ClanPermission.EDIT_NOTICEBOARD;
+			break;
+		case 607://Add citadel upgrades
+			permission = ClanPermission.CITADEL_UPGRADE;
+			break;
+		case 618://Add citade downgrades
+			permission = ClanPermission.CITADEL_DOWNGRADE;
+			break;
+		case 629://Edit battlefield
+			permission = ClanPermission.EDIT_BATTLEFIELD;
+			break;
+		case 641://Start battlefield event
+			permission = ClanPermission.START_BATTLEFIELD;
+			break;
+		case 652://RCW leader
+			permission = ClanPermission.LEAD_RCW;
+			break;
+		case 664://Start vote
+			permission = ClanPermission.START_VOTE;
+			break;
+		case 677://Start meeting
+			permission = ClanPermission.START_MEETING;
+			break;
+		case 689://Operate party room
+			permission = ClanPermission.PARTY_TECH;
+			break;
+		case 701://Set objectives
+			permission = ClanPermission.SET_GATHER_TARGETS;
+			break;
+		case 713://Change build tick
+			permission = ClanPermission.MOVE_TICK;
+			break;
+		case 733://Toggle allowed in citadel
+			permission = ClanPermission.ENTER_CITADEL;
+			break;
+		case 746://Toggle allowed in keep
+			permission = ClanPermission.ENTER_KEEP;
+			break;
+		case 776://Change clan language
+			permission = ClanPermission.SET_LANGUAGE;
+			break;
+		case 787://Operate theater
+			permission = ClanPermission.THEATRE_TECH;
+			break;
+		case 798://Lock skill plots
+			permission = ClanPermission.LOCK_SKILLPLOT;
+			break;
+		case 809://Check resources
+			permission = ClanPermission.CHECK_RESOURCES;
+			break;
+		case 820://Customise avatar
+			permission = ClanPermission.CUSTOMISE_AVATAR;
+			break;
+		case 831://Add avatar buff
+			permission = ClanPermission.EDIT_AVATAR_BUFFS;
+			break;
+		case 842://Remove avatar habitat
+			permission = ClanPermission.REMOVE_AVATAR;
+			break;
+		case 853://Broadcast event
+			permission = ClanPermission.BROADCAST_EVENT;
+			break;
+		case 871://Edit broadcast settings
+			permission = ClanPermission.EDIT_BROADCASTS;
+			break;
 		default:
 			System.out.println("Unhandled clan permission button: component="+component+", slot1="+slot);
-			break;
+			return;
+		}
+		//System.out.println("Granting permission "+permission+" to group "+selectedPermissionGroup);
+		if (permission != null && heldPermissions != null) {
+			Launcher.getClanManager().setPermission(player.getChatManager().getMyClanHash(), player.getChatManager().getSocialUser(), 
+					selectedPermissionGroup, permission, !heldPermissions.contains(permission));
 		}
 	}
 	
 	public void setPermissionTab(PermissionTab tab) {
-		permTab = tab;
+		//permTab = tab;
 		setComponentHidden(31, true);//Received component hidden: iFace=1096, compID=31, hidden=1
 		setComponentHidden(20, true);//Received component hidden: iFace=1096, compID=20, hidden=1
 		setComponentHidden(21, true);//Received component hidden: iFace=1096, compID=21, hidden=1
@@ -319,37 +414,55 @@ public class ClanSettingsInterface extends AbstractInterface {
 		}
 	}
 	
-	public void setPermissionGroup (ClanRank rank) {
+	public void sendPermissionGroup (ClanRank rank, EnumSet<ClanPermission> permissions) {
+		this.selectedPermissionGroup = rank;
+		this.heldPermissions = permissions;
+		System.out.println("Permissions for group "+rank+": "+permissions);
+		player.getVarManager().setVarClient(1569, rank.getID());
+		for (ClanPermission p : ClanPermission.values()) {
+			int holds = permissions.contains(p) ? 1 : 0;
+			if (p.getMinRank().getID() > rank.getID()) {
+				holds = 0;
+			}
+			player.getVarManager().setVarClient(p.getVarcID(), holds);
+		}
+		player.getVarManager().setVarClient(1571, 0);
+		player.getVarManager().setVarClient(1570, 1);
+	}
+	
+	public void setPermissionGroup (ClanRank group) {
+		Launcher.getClanManager().sendPermissionInfo(player.getChatManager().getSocialUser(), group, false);
+		/*this.selectedPermissionGroup = rank;
 		//Received VarPlayer: key=1846, value=637 (rank)
 		player.getVarManager().setVarClient(1569, rank.getID());//Received VarClient: key=1569, value=100
-		player.getVarManager().setVarClient(1571, 1);//Received VarClient: key=1571, value=1
-		player.getVarManager().setVarClient(1570, 1);//Received VarClient: key=1570, value=1
-		player.getVarManager().setVarClient(1572, 1);//Received VarClient: key=1572, value=1
-		player.getVarManager().setVarClient(1574, 1);//Received VarClient: key=1574, value=1
-		player.getVarManager().setVarClient(1573, 1);//Received VarClient: key=1573, value=1
-		player.getVarManager().setVarClient(1575, 1);//Received VarClient: key=1575, value=1
-		player.getVarManager().setVarClient(1576, 1);//Received VarClient: key=1576, value=1
-		player.getVarManager().setVarClient(1577, 1);//Received VarClient: key=1577, value=1
-		player.getVarManager().setVarClient(1578, 1);//Received VarClient: key=1578, value=1
-		player.getVarManager().setVarClient(1579, 1);//Received VarClient: key=1579, value=1
-		player.getVarManager().setVarClient(1580, 1);//Received VarClient: key=1580, value=1
-		player.getVarManager().setVarClient(1581, 1);//Received VarClient: key=1581, value=1
-		player.getVarManager().setVarClient(1582, 1);//Received VarClient: key=1582, value=1
-		player.getVarManager().setVarClient(1583, 1);//Received VarClient: key=1583, value=1
-		player.getVarManager().setVarClient(1584, 1);//Received VarClient: key=1584, value=1
-		player.getVarManager().setVarClient(1585, 1);//Received VarClient: key=1585, value=1
-		player.getVarManager().setVarClient(1586, 1);//Received VarClient: key=1586, value=1
-		player.getVarManager().setVarClient(1587, 1);//Received VarClient: key=1587, value=1
-		player.getVarManager().setVarClient(1589, 1);//Received VarClient: key=1589, value=1
-		player.getVarManager().setVarClient(1649, 0);//Received VarClient: key=1649, value=0
-		player.getVarManager().setVarClient(1792, 1);//Received VarClient: key=1792, value=1
-		player.getVarManager().setVarClient(1793, 1);//Received VarClient: key=1793, value=1
-		player.getVarManager().setVarClient(2001, 0);//Received VarClient: key=2001, value=0
-		player.getVarManager().setVarClient(2002, 0);//Received VarClient: key=2002, value=0
-		player.getVarManager().setVarClient(2003, 0);//Received VarClient: key=2003, value=0
-		player.getVarManager().setVarClient(1590, 0);//Received VarClient: key=1590, value=0
-		player.getVarManager().setVarClient(3855, 0);//Received VarClient: key=3855, value=0
-		player.getVarManager().setVarClient(4125, 0);//Received VarClient: key=4125, value=0
+		player.getVarManager().setVarClient(1571, 1);
+		player.getVarManager().setVarClient(1570, 1);
+		player.getVarManager().setVarClient(1572, 1);
+		player.getVarManager().setVarClient(1574, 1);
+		player.getVarManager().setVarClient(1573, 1);
+		player.getVarManager().setVarClient(1575, 1);
+		player.getVarManager().setVarClient(1576, 1);
+		player.getVarManager().setVarClient(1577, 1);
+		player.getVarManager().setVarClient(1578, 1);
+		player.getVarManager().setVarClient(1579, 1);
+		player.getVarManager().setVarClient(1580, 1);
+		player.getVarManager().setVarClient(1581, 1);
+		player.getVarManager().setVarClient(1582, 1);
+		player.getVarManager().setVarClient(1583, 1);
+		player.getVarManager().setVarClient(1584, 1);
+		player.getVarManager().setVarClient(1585, 1);
+		player.getVarManager().setVarClient(1586, 1);
+		player.getVarManager().setVarClient(1587, 1);
+		player.getVarManager().setVarClient(1589, 1);
+		player.getVarManager().setVarClient(1649, 0);
+		player.getVarManager().setVarClient(1792, 1);
+		player.getVarManager().setVarClient(1793, 1);
+		player.getVarManager().setVarClient(2001, 0);
+		player.getVarManager().setVarClient(2002, 0);
+		player.getVarManager().setVarClient(2003, 0);
+		player.getVarManager().setVarClient(1590, 0);
+		player.getVarManager().setVarClient(3855, 0);
+		player.getVarManager().setVarClient(4125, 0);*/
 	}
 
 	@Override

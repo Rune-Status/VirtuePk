@@ -18,7 +18,8 @@ import org.virtue.game.GameEngine;
 import org.virtue.game.core.threads.MainThreadFactory;
 import org.virtue.game.logic.Lobby;
 import org.virtue.game.logic.node.object.RS3Object;
-import org.virtue.game.logic.social.clans.ClanManager;
+import org.virtue.game.logic.social.clans.ClanSettingsAPI;
+import org.virtue.game.logic.social.clans.internal.ClanSettingsManager;
 import org.virtue.network.RS2Network;
 import org.virtue.network.io.IOHub;
 import org.virtue.network.loginserver.DataServer;
@@ -65,7 +66,7 @@ public class Launcher {
 	/**
 	 * Represents the clan management system
 	 */
-	private static ClanManager CLANS;
+	private static ClanSettingsManager CLANS;
 	
 	/**
 	 * Represents the main method.
@@ -85,7 +86,7 @@ public class Launcher {
 			Lobby.load();
 			IOHub.load();
 			NETWORK.load();
-			CLANS = new ClanManager();
+			CLANS = new ClanSettingsManager();
 			System.out.println("VirtuePK took " + (TimeUtil.currentTimeMillis() - currentTime) + " milli seconds to launch.");
 		} catch (Exception e) {
 			ENGINE.handleException(e);
@@ -168,7 +169,7 @@ public class Launcher {
 	/**
 	 * @return The clan management system
 	 */
-	public static ClanManager getClanManager () {
+	public static ClanSettingsAPI getClanManager () {
 		return CLANS;
 	}
 	

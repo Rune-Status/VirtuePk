@@ -14,33 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
+import org.virtue.cache.def.VarBitType;
 import org.virtue.game.logic.social.SocialUserAPI;
+import org.virtue.game.logic.social.clans.ClanBan;
+import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.game.logic.social.clans.ccdelta.UpdateDetails;
 import org.virtue.game.logic.social.clans.csdelta.AddMember;
 import org.virtue.game.logic.social.clans.csdelta.ClanSettingsDelta;
 import org.virtue.game.logic.social.clans.csdelta.DeleteMember;
+import org.virtue.game.logic.social.clans.csdelta.SetClanSettingsVar;
 import org.virtue.game.logic.social.clans.csdelta.SetClanSettingsVarBit;
 import org.virtue.game.logic.social.clans.csdelta.UpdateRank;
-import org.virtue.game.logic.social.clans.csdelta.SetClanSettingsVar;
 import org.virtue.game.logic.social.messages.ClanSettingsDeltaPacket;
 import org.virtue.game.logic.social.messages.ClanSettingsPacket;
 import org.virtue.game.logic.vars.VarBitOverflowException;
+import org.virtue.game.logic.vars.VarDomainType;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Represents the underlying settings data for a clan
@@ -80,6 +85,8 @@ public class ClanSettings {
 	private final Queue<ClanSettingsDelta> updateQueue = new LinkedList<ClanSettingsDelta>();
 	
 	private final Map<Integer, Object> varClanSettings = Collections.synchronizedMap(new HashMap<Integer, Object>());
+	
+	private final EnumMap<ClanRank, EnumSet<ClanPermission>> permissions = new EnumMap<ClanRank, EnumSet<ClanPermission>>(ClanRank.class);
 	
 	private boolean needsSave;
 	
@@ -254,6 +261,7 @@ public class ClanSettings {
 				}
 				varClanSettings.put(key, value);
 			}
+			loadPermissions();
 		}
 		
 	}
@@ -311,6 +319,27 @@ public class ClanSettings {
 		}
 		clanData.add("varClanSettings", settingsData);
 		return clanData;
+	}
+	
+	private void loadPermissions () {
+		for (ClanRank rank : ClanRank.values()) {
+			if (rank.equals(ClanRank.JMOD) || rank.equals(ClanRank.OWNER) || rank.equals(ClanRank.GUEST)) {
+				continue;
+			}
+			if (permissions.get(rank) == null) {
+				permissions.put(rank, EnumSet.noneOf(ClanPermission.class));
+			} else {
+				permissions.get(rank).clear();
+			}
+			for (ClanPermission permission : ClanPermission.values()) {		
+				VarBitType varBit = permission.getVarBit(rank);
+				if (varBit != null) {
+					if (getClanSettingsVarBit(varBit) == 1) {
+						permissions.get(rank).add(permission);
+					}
+				}
+			}
+		}
 	}
 	
 	private void findClanOwner () {
@@ -476,6 +505,19 @@ public class ClanSettings {
 		}
 	}
 	
+	public void sendPermissionInfo (SocialUserAPI user, ClanRank group) {
+		EnumSet<ClanPermission> groupPermissions = permissions.get(group);
+		if (groupPermissions == null) {
+			loadPermissions();
+		} 
+		if (groupPermissions != null) {
+			//System.out.println("Permissions for group "+group+": "+groupPermissions);
+			user.sendPermissionGroup(group, groupPermissions);
+		} else {
+			System.err.println("Permissions not found for group "+group);
+		}
+	}
+	
 	public void sendMemberInfo (SocialUserAPI user, int index) {
 		user.sendClanMemberInfo(members.get(index));
 	}
@@ -563,6 +605,13 @@ public class ClanSettings {
 		
 	}
 	
+	protected boolean setClanSettingsVarBit (VarBitType varBit, int value) throws VarBitOverflowException {
+		if (!varBit.getDomainType().equals(VarDomainType.CLAN_SETTINGS)) {
+			return false;
+		}
+		return setClanSettingsVarBit(varBit.getBaseVarKey(), value, varBit.getStartBit(), varBit.getEndBit());
+	}
+	
 	protected boolean setClanSettingsVarBit (int key, int value, int start, int end) throws VarBitOverflowException {
 		int maxValue = (1 << (end - start + 1))-1;
 		if (value > maxValue || value < 0) {
@@ -621,12 +670,66 @@ public class ClanSettings {
 	}
 	
 	public int getClanSettingsVarInt (int key) {
+		if (!varClanSettings.containsKey(key)) {
+			return 0;
+		}
 		return (int) varClanSettings.get(key);
+	}
+	
+	public int getClanSettingsVarBit (VarBitType varBit) {
+		if (!varBit.getDomainType().equals(VarDomainType.CLAN_SETTINGS)) {
+			return -1;
+		}
+		return getClanSettingsVarBit(varBit.getBaseVarKey(), varBit.getStartBit(), varBit.getEndBit());
 	}
 	
 	public int getClanSettingsVarBit (int key, int start, int end) {
 		int mask = (start == 31) ? -1 : (1 << 1 + end) - 1;
 		return (getClanSettingsVarInt(key) & mask) >>> start;
+	}
+	
+	protected boolean addPermission (ClanRank group, ClanPermission permission) {
+		if (!permissions.containsKey(group)) {
+			return false;
+		}
+		if (permissions.get(group).contains(permission)) {
+			return false;
+		} else {
+			VarBitType varBit = permission.getVarBit(group);
+			if (varBit == null) {
+				return false;
+			}
+			try {
+				setClanSettingsVarBit(varBit, 1);
+			} catch (VarBitOverflowException e) {
+				e.printStackTrace();
+				return false;
+			}
+			permissions.get(group).add(permission);
+			return true;
+		}
+	}
+	
+	protected boolean removePermission (ClanRank group, ClanPermission permission) {
+		if (!permissions.containsKey(group)) {
+			return false;
+		}
+		if (!permissions.get(group).contains(permission)) {
+			return false;
+		} else {
+			VarBitType varBit = permission.getVarBit(group);
+			if (varBit == null) {
+				return false;
+			}
+			try {
+				setClanSettingsVarBit(varBit, 0);
+			} catch (VarBitOverflowException e) {
+				e.printStackTrace();
+				return false;
+			}
+			permissions.get(group).remove(permission);
+			return true;
+		}
 	}
 	
 	@Override

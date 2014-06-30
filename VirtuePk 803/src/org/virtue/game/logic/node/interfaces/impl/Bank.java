@@ -8,7 +8,7 @@ import org.virtue.game.logic.node.entity.player.container.EquipSlot;
 import org.virtue.game.logic.node.entity.player.container.ItemsContainer;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.game.logic.node.object.RS3Object;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 
@@ -31,7 +31,7 @@ public class Bank extends AbstractInterface {
 	//private int currentTab = 0;
 
 	public Bank(Player p) {
-		super(RSInterface.BANK, p);
+		super(RS3Interface.BANK, p);
 		//lastDepositAmount = p.getVarManager().getVarPlayer(LAST_DEPOSIT_VARP);
 	}
 
@@ -242,9 +242,9 @@ public class Bank extends AbstractInterface {
 	}
 	
 	public void requestNumber (String message) {
-		getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-		getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
-		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(RSInterface.INT_INPUT_SCRIPT, message));
+		getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+		getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
+		getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(RS3Interface.INT_INPUT_SCRIPT, message));
 	}
 	
 	public void handleInventoryItemAction (int itemID, int slotID) {

@@ -4,14 +4,14 @@ import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.ActionTab;
 import org.virtue.game.logic.node.interfaces.ActionButton;
 import org.virtue.game.logic.node.interfaces.ManagementInterface.Type;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.VarMessage;
 
 public class Polls extends ActionTab {
 
 	public Polls(Player p) {
-		super(RSInterface.POLLS, p);
+		super(RS3Interface.POLLS, p);
 	}
 
 	@Override

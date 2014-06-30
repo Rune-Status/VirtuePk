@@ -1,13 +1,13 @@
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import org.virtue.game.core.logic.LogicEvent;
 import org.virtue.utility.GameClock;
 
 public class ClanUpdateEvent extends LogicEvent {
 	
-	private final ClanManager clanManager;
+	private final ClanSettingsManager clanManager;
 	
-	public ClanUpdateEvent (ClanManager clanManager) {
+	public ClanUpdateEvent (ClanSettingsManager clanManager) {
 		this.clanManager = clanManager;
 	}
 

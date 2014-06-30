@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with RS3Emulator.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.virtue.game.logic.social.clans;
+package org.virtue.game.logic.social.clans.internal;
 
 import org.virtue.Launcher;
+import org.virtue.game.logic.social.clans.ClanRank;
 import org.virtue.game.logic.vars.VarBitOverflowException;
 import org.virtue.utility.StringUtils;
 import org.virtue.utility.StringUtils.FormatType;

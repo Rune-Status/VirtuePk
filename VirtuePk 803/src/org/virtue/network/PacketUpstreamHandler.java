@@ -23,22 +23,28 @@ public class PacketUpstreamHandler extends SimpleChannelUpstreamHandler {
 	 */
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-		if (ctx.getAttachment() == null) {
-			HandshakeType handshakeType = (HandshakeType) e.getMessage();
-			switch (handshakeType.getType()) {
-			case HANDSHAKE_LOGIN:
-				ctx.setAttachment(new LoginSession(ctx));
-				break;
-			case HANSHAKE_CREATION:
-				ctx.setAttachment(new AccountCreationSession(ctx));
-				break;
-			case HANDSHAKE_ONDEMAND:
-				ctx.setAttachment(new JS5Session(ctx));
-				break;
+		//if (e.getMessage() instanceof HandshakeType) {
+			if (ctx.getAttachment() == null) {
+				HandshakeType handshakeType = (HandshakeType) e.getMessage();
+				switch (handshakeType.getType()) {
+				case HANDSHAKE_LOGIN:
+					ctx.setAttachment(new LoginSession(ctx));
+					break;
+				case HANSHAKE_CREATION:
+					ctx.setAttachment(new AccountCreationSession(ctx));
+					break;
+				case HANDSHAKE_ONDEMAND:
+					ctx.setAttachment(new JS5Session(ctx));
+					break;
+				case HANDSHAKE_INIT_SOCIAL_NETWORK:
+					break;
+				case HANDSHAKE_SOCIAL_NETWORK_LOGIN:
+					break;
+				}
+			} else {
+				((Session) ctx.getAttachment()).decode(e.getMessage());
 			}
-		} else {
-			((Session) ctx.getAttachment()).decode(e.getMessage());
-		}
+		//}
 	}
 
 	/**

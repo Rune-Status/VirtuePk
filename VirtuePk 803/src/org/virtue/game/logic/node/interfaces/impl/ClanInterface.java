@@ -5,14 +5,14 @@ import org.virtue.game.logic.events.InputEnteredEvent;
 import org.virtue.game.logic.node.entity.player.Player;
 import org.virtue.game.logic.node.interfaces.AbstractInterface;
 import org.virtue.game.logic.node.interfaces.ActionButton;
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.messages.ClientScriptVar;
 import org.virtue.network.protocol.messages.GameMessage.MessageOpcode;
 
 public class ClanInterface extends AbstractInterface {
 
 	public ClanInterface(Player p) {
-		super(RSInterface.CLAN, p);
+		super(RS3Interface.CLAN, p);
 	}
 
 	@Override
@@ -45,8 +45,8 @@ public class ClanInterface extends AbstractInterface {
 			if (player.getChatManager().getGuestClanHash() != 0L) {
 				player.getChatManager().leaveClanChannel(true);
 			} else {
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.DIALOG_BOX);
-				getPlayer().getPacketDispatcher().dispatchInterface(RSInterface.INPUT_DIALOG);
+				getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.DIALOG_BOX);
+				getPlayer().getPacketDispatcher().dispatchInterface(RS3Interface.INPUT_DIALOG);
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(8178));
 				getPlayer().getPacketDispatcher().dispatchClientScriptVar(new ClientScriptVar(110, "Please enter the name of the clan to chat in:"));
 				getPlayer().setInputEvent(onJoinGuestClan);

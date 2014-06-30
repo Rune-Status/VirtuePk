@@ -29,7 +29,7 @@ public class ManagementInterface extends AbstractInterface {
 	private ActionTab currentTab;
 
 	public ManagementInterface(Player p) {
-		super(RSInterface.MANAGEMENT, p);
+		super(RS3Interface.MANAGEMENT, p);
 	}
 
 	@Override

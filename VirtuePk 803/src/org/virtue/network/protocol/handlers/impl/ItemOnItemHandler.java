@@ -1,6 +1,6 @@
 package org.virtue.network.protocol.handlers.impl;
 
-import org.virtue.game.logic.node.interfaces.RSInterface;
+import org.virtue.game.logic.node.interfaces.RS3Interface;
 import org.virtue.network.protocol.handlers.PacketHandler;
 import org.virtue.network.session.impl.WorldSession;
 
@@ -24,7 +24,7 @@ public class ItemOnItemHandler extends PacketHandler<WorldSession> {
     	int prevInterfaceID = prevComponentHash >> 16;
     	int prevComponentID = prevComponentHash & 0xffff;   
     	
-    	if (componentHash == prevComponentHash && interfaceID == RSInterface.INVENTORY) {
+    	if (componentHash == prevComponentHash && interfaceID == RS3Interface.INVENTORY) {
     		session.getPlayer().getInventory().handleItemOnItem(componentID, itemID, slot, prevItemID, prevSlot);
     		return;
     	}

@@ -6,6 +6,8 @@ import java.util.Map;
 import org.virtue.Constants;
 import org.virtue.cache.def.ObjectDefinition;
 import org.virtue.cache.def.ObjectDefinitionLoader;
+import org.virtue.game.logic.content.lodestones.Lodestone;
+import org.virtue.game.logic.content.lodestones.LodestoneObject;
 import org.virtue.game.logic.content.skills.farming.FarmingPatch;
 import org.virtue.game.logic.content.skills.mining.MiningRock;
 import org.virtue.game.logic.content.skills.mining.Ore;
@@ -40,6 +42,9 @@ public class RS3Object extends Node {
 		for (MysteriousRunes.Definition runes : MysteriousRunes.Definition.values()) {
 			transforms.put(runes.getObjectID(), MysteriousRunes.class);
 		}
+		for (Lodestone lodestone : Lodestone.values()) {
+			transforms.put(lodestone.getBaseID(), LodestoneObject.class);
+		}
 		System.out.println("Initialised "+transforms.size()+" object transforms.");
 		/*for (Runecrafting.ExitPortal portal : Runecrafting.ExitPortal.values()) {
 			transforms.put(portal.getID(), Portal.class);
@@ -55,6 +60,8 @@ public class RS3Object extends Node {
 				return new RunecraftingAlter(id, rotation, type, tile, AlterDefinition.forAlterID(id));
 			} else if (transform.equals(MysteriousRunes.class)) {
 				return new MysteriousRunes(id, rotation, type, tile, MysteriousRunes.Definition.forID(id));
+			} else if (transform.equals(LodestoneObject.class)) {
+				return new LodestoneObject(Lodestone.forObjectID(id), rotation, type, tile);
 			}
 		}
 		Runecrafting.ExitPortal portal = Runecrafting.ExitPortal.forID(id);

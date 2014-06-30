@@ -15,7 +15,7 @@ public class VarBitType {
 		}
     }
 	
-	public int bitKey;
+	public final int bitKey;
     private VarDomainType type;
     private int varKey;
     int startBit;
@@ -70,6 +70,14 @@ public class VarBitType {
 	public int getVarbitValue(int value) {
 		int mask = masklookup[endBit - startBit];
 		return value >> startBit & mask;
+	}
+	
+	public int getStartBit () {
+		return startBit;
+	}
+	
+	public int getEndBit () {
+		return endBit;
 	}
 	
 	@Override
